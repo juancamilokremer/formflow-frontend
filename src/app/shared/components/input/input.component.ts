@@ -1,4 +1,4 @@
-import { Component, Input, forwardRef } from '@angular/core';
+import { Component, input, signal, computed, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
@@ -14,31 +14,31 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   ],
 })
 export class InputComponent implements ControlValueAccessor {
-  @Input() label = '';
-  @Input() type = 'text';
-  @Input() placeholder = '';
-  @Input() autocomplete = 'off';
-  @Input() prefix: string | null = null;
-  @Input() hint: string | null = null;
-  @Input() errorMessage: string | null = null;
-  @Input() toggleable = false;
+  readonly label = input('');
+  readonly type = input('text');
+  readonly placeholder = input('');
+  readonly autocomplete = input('off');
+  readonly prefix = input<string | null>(null);
+  readonly hint = input<string | null>(null);
+  readonly errorMessage = input<string | null>(null);
+  readonly toggleable = input(false);
 
-  protected value = '';
-  protected isDisabled = false;
-  protected showPassword = false;
+  protected readonly internalValue = signal('');
+  protected readonly isDisabled = signal(false);
+  protected readonly showPassword = signal(false);
 
-  protected get effectiveType(): string {
-    if (this.type === 'password' && this.toggleable) {
-      return this.showPassword ? 'text' : 'password';
+  protected readonly effectiveType = computed(() => {
+    if (this.type() === 'password' && this.toggleable()) {
+      return this.showPassword() ? 'text' : 'password';
     }
-    return this.type;
-  }
+    return this.type();
+  });
 
   private onChange: (v: string) => void = () => {};
   private onTouched: () => void = () => {};
 
   writeValue(value: string): void {
-    this.value = value ?? '';
+    this.internalValue.set(value ?? '');
   }
 
   registerOnChange(fn: (v: string) => void): void {
@@ -50,12 +50,13 @@ export class InputComponent implements ControlValueAccessor {
   }
 
   setDisabledState(disabled: boolean): void {
-    this.isDisabled = disabled;
+    this.isDisabled.set(disabled);
   }
 
   protected onInput(event: Event): void {
-    this.value = (event.target as HTMLInputElement).value;
-    this.onChange(this.value);
+    const value = (event.target as HTMLInputElement).value;
+    this.internalValue.set(value);
+    this.onChange(value);
   }
 
   protected onBlur(): void {
@@ -63,6 +64,6 @@ export class InputComponent implements ControlValueAccessor {
   }
 
   protected togglePasswordVisibility(): void {
-    this.showPassword = !this.showPassword;
+    this.showPassword.update((v) => !v);
   }
 }

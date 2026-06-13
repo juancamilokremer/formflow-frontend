@@ -1,4 +1,4 @@
-import { Component, inject, signal, Input } from '@angular/core';
+import { Component, inject, signal, input, effect } from '@angular/core';
 import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -37,8 +37,14 @@ export class LoginComponent {
     password: ['', [Validators.required, Validators.minLength(8)]],
   });
 
-  @Input() set tenant(slug: string) {
-    if (slug) this.form.patchValue({ tenantSlug: slug });
+  // Receives ?tenant= query param via withComponentInputBinding()
+  readonly tenant = input('');
+
+  constructor() {
+    effect(() => {
+      const slug = this.tenant();
+      if (slug) this.form.patchValue({ tenantSlug: slug });
+    });
   }
 
   protected get tenantSlugError(): string | null {

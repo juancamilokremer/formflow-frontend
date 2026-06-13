@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 
 @Component({
   selector: 'app-button',
@@ -6,9 +6,9 @@ import { Component, Input } from '@angular/core';
   styleUrl: './button.component.scss',
 })
 export class ButtonComponent {
-  @Input() variant: 'primary' | 'secondary' | 'ghost' = 'primary';
-  @Input() type: 'button' | 'submit' | 'reset' = 'button';
-  @Input() loading = false;
-  @Input() disabled = false;
-  @Input() fullWidth = false;
+  readonly variant = input<'primary' | 'secondary' | 'ghost'>('primary');
+  readonly type = input<'button' | 'submit' | 'reset'>('button');
+  readonly loading = input(false);
+  readonly disabled = input(false);
+  readonly fullWidth = input(false);
 }

@@ -36,15 +36,24 @@ describe('AuthService', () => {
 
   describe('login', () => {
     it('stores tokens and sets currentUser on success', () => {
-      const user = { id: '1', tenantId: 't1', email: 'a@b.com', firstName: 'Juan', lastName: 'K', role: 'TENANT_ADMIN', emailVerified: false };
-      const tokens = { accessToken: 'acc', refreshToken: 'ref' };
-
       service.login({ email: 'a@b.com', password: '12345678', tenantSlug: 'acme' }).subscribe();
 
-      httpMock.expectOne(`${environment.apiUrl}/auth/login`).flush({ success: true, data: { user, tokens } });
+      httpMock.expectOne(`${environment.apiUrl}/auth/login`).flush({
+        success: true,
+        data: {
+          accessToken: 'acc',
+          refreshToken: 'ref',
+          tokenType: 'Bearer',
+          expiresInMs: 3600000,
+          user: { id: 'u1', email: 'a@b.com', fullName: 'Juan Kremer', role: 'TENANT_ADMIN', emailVerified: false },
+          tenant: { id: 't1', slug: 'acme', name: 'Acme Corp', plan: 'FREE' },
+        },
+      });
 
       expect(service.isAuthenticated()).toBe(true);
       expect(service.currentUser()?.email).toBe('a@b.com');
+      expect(service.currentUser()?.firstName).toBe('Juan');
+      expect(service.currentUser()?.tenantId).toBe('t1');
       expect(tokenService.getRefreshToken()).toBe('ref');
     });
   });

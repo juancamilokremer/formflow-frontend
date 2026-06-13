@@ -1,17 +1,16 @@
-import { TestBed } from '@angular/core/testing';
-import { Component } from '@angular/core';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { InputComponent } from './input.component';
 
 describe('InputComponent', () => {
   let component: InputComponent;
+  let fixture: ComponentFixture<InputComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [InputComponent],
     }).compileComponents();
 
-    const fixture = TestBed.createComponent(InputComponent);
+    fixture = TestBed.createComponent(InputComponent);
     component = fixture.componentInstance;
   });
 
@@ -19,49 +18,49 @@ describe('InputComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('writeValue updates internal value', () => {
+  it('writeValue updates internal value signal', () => {
     component.writeValue('test@email.com');
-    expect((component as any).value).toBe('test@email.com');
+    expect((component as any).internalValue()).toBe('test@email.com');
   });
 
   it('writeValue handles null gracefully', () => {
     component.writeValue(null as unknown as string);
-    expect((component as any).value).toBe('');
+    expect((component as any).internalValue()).toBe('');
   });
 
-  it('setDisabledState updates disabled flag', () => {
+  it('setDisabledState updates isDisabled signal', () => {
     component.setDisabledState(true);
-    expect((component as any).isDisabled).toBe(true);
+    expect((component as any).isDisabled()).toBe(true);
     component.setDisabledState(false);
-    expect((component as any).isDisabled).toBe(false);
+    expect((component as any).isDisabled()).toBe(false);
   });
 
-  it('togglePasswordVisibility flips showPassword', () => {
-    expect((component as any).showPassword).toBe(false);
+  it('togglePasswordVisibility flips showPassword signal', () => {
+    expect((component as any).showPassword()).toBe(false);
     (component as any).togglePasswordVisibility();
-    expect((component as any).showPassword).toBe(true);
+    expect((component as any).showPassword()).toBe(true);
     (component as any).togglePasswordVisibility();
-    expect((component as any).showPassword).toBe(false);
+    expect((component as any).showPassword()).toBe(false);
   });
 
   it('effectiveType returns password when not toggled', () => {
-    component.type = 'password';
-    component.toggleable = true;
-    expect((component as any).effectiveType).toBe('password');
+    fixture.componentRef.setInput('type', 'password');
+    fixture.componentRef.setInput('toggleable', true);
+    expect((component as any).effectiveType()).toBe('password');
   });
 
   it('effectiveType returns text after toggle', () => {
-    component.type = 'password';
-    component.toggleable = true;
-    (component as any).showPassword = true;
-    expect((component as any).effectiveType).toBe('text');
+    fixture.componentRef.setInput('type', 'password');
+    fixture.componentRef.setInput('toggleable', true);
+    (component as any).showPassword.set(true);
+    expect((component as any).effectiveType()).toBe('text');
   });
 
   it('effectiveType ignores toggle when toggleable is false', () => {
-    component.type = 'password';
-    component.toggleable = false;
-    (component as any).showPassword = true;
-    expect((component as any).effectiveType).toBe('password');
+    fixture.componentRef.setInput('type', 'password');
+    fixture.componentRef.setInput('toggleable', false);
+    (component as any).showPassword.set(true);
+    expect((component as any).effectiveType()).toBe('password');
   });
 
   it('onInput calls onChange with the input value', () => {

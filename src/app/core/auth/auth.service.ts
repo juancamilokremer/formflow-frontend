@@ -7,7 +7,13 @@ import { TokenService } from './token.service';
 import { RouteConstants } from '../constants/route.constants';
 import { ApiResponse } from '../models/api-response.model';
 import { User, UserRole } from '../models/user.model';
-import { LoginRequest, RegisterRequest, AuthTokens, LoginData } from '../models/auth.model';
+import {
+  LoginRequest,
+  RegisterRequest,
+  AuthResponse,
+  AuthUserSummary,
+  AuthTenantSummary,
+} from '../models/auth.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -20,14 +26,13 @@ export class AuthService {
 
   login(request: LoginRequest): Observable<void> {
     return this.http
-      .post<ApiResponse<LoginData>>(`${environment.apiUrl}/auth/login`, request, {
+      .post<ApiResponse<AuthResponse>>(`${environment.apiUrl}/auth/login`, request, {
         headers: new HttpHeaders({ 'X-Tenant-ID': request.tenantSlug }),
       })
       .pipe(
         tap((res) => {
           if (res.success && res.data) {
-            this.tokenService.setTokens(res.data.tokens, request.tenantSlug);
-            this.currentUser.set(res.data.user);
+            this.applyAuthResponse(res.data, request.tenantSlug);
           }
         }),
         map(() => void 0)
@@ -36,12 +41,11 @@ export class AuthService {
 
   register(request: RegisterRequest): Observable<void> {
     return this.http
-      .post<ApiResponse<LoginData>>(`${environment.apiUrl}/auth/register`, request)
+      .post<ApiResponse<AuthResponse>>(`${environment.apiUrl}/auth/register`, request)
       .pipe(
         tap((res) => {
           if (res.success && res.data) {
-            this.tokenService.setTokens(res.data.tokens, request.slug);
-            this.currentUser.set(res.data.user);
+            this.applyAuthResponse(res.data, request.slug);
           }
         }),
         map(() => void 0)
@@ -61,7 +65,7 @@ export class AuthService {
       return of(void 0);
     }
     return this.http
-      .post<ApiResponse<AuthTokens>>(
+      .post<ApiResponse<AuthResponse>>(
         `${environment.apiUrl}/auth/refresh`,
         { refreshToken },
         { headers: new HttpHeaders({ 'X-Tenant-ID': tenantSlug }) }
@@ -69,8 +73,7 @@ export class AuthService {
       .pipe(
         tap((res) => {
           if (res.success && res.data) {
-            this.tokenService.setTokens(res.data, tenantSlug);
-            this.setUserFromToken(res.data.accessToken);
+            this.applyAuthResponse(res.data, tenantSlug);
           }
         }),
         map(() => void 0)
@@ -90,18 +93,24 @@ export class AuthService {
     );
   }
 
-  private setUserFromToken(accessToken: string): void {
-    const payload = this.tokenService.decodeJwt(accessToken);
-    if (payload) {
-      this.currentUser.set({
-        id: payload.sub,
-        tenantId: payload.tenantId,
-        email: payload.email,
-        firstName: '',
-        lastName: '',
-        role: payload.role as UserRole,
-        emailVerified: false,
-      });
-    }
+  private applyAuthResponse(data: AuthResponse, tenantSlug: string): void {
+    this.tokenService.setTokens(
+      { accessToken: data.accessToken, refreshToken: data.refreshToken },
+      tenantSlug
+    );
+    this.currentUser.set(this.mapUser(data.user, data.tenant));
+  }
+
+  private mapUser(user: AuthUserSummary, tenant: AuthTenantSummary): User {
+    const parts = user.fullName.trim().split(/\s+/);
+    return {
+      id: user.id,
+      tenantId: tenant.id,
+      email: user.email,
+      firstName: parts[0] ?? '',
+      lastName: parts.slice(1).join(' '),
+      role: user.role as UserRole,
+      emailVerified: user.emailVerified,
+    };
   }
 }

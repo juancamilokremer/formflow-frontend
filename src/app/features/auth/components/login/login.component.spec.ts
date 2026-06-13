@@ -1,4 +1,4 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { signal } from '@angular/core';
 import { of, throwError, Observable } from 'rxjs';
@@ -9,6 +9,7 @@ import { AuthService } from '../../../../core/auth/auth.service';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
+  let fixture: ComponentFixture<LoginComponent>;
   let loginResult = of<void>(undefined);
 
   const mockAuthService = {
@@ -33,7 +34,7 @@ describe('LoginComponent', () => {
       ],
     }).compileComponents();
 
-    const fixture = TestBed.createComponent(LoginComponent);
+    fixture = TestBed.createComponent(LoginComponent);
     component = fixture.componentInstance;
   });
 
@@ -80,8 +81,9 @@ describe('LoginComponent', () => {
     expect((component as any).loading()).toBe(false);
   });
 
-  it('pre-fills tenantSlug from @Input', () => {
-    (component as any).tenant = 'test-empresa';
+  it('pre-fills tenantSlug from signal input', () => {
+    fixture.componentRef.setInput('tenant', 'test-empresa');
+    fixture.detectChanges();
     expect((component as any).form.value.tenantSlug).toBe('test-empresa');
   });
 

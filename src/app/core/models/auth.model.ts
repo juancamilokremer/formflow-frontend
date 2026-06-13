@@ -1,5 +1,3 @@
-import { User } from './user.model';
-
 export interface LoginRequest {
   email: string;
   password: string;
@@ -20,9 +18,29 @@ export interface AuthTokens {
   refreshToken: string;
 }
 
-export interface LoginData {
-  user: User;
-  tokens: AuthTokens;
+/** Exact shape of ApiResponse<data> returned by /auth/login, /auth/register, /auth/refresh */
+export interface AuthResponse {
+  accessToken: string;
+  refreshToken: string;
+  tokenType: string;
+  expiresInMs: number;
+  user: AuthUserSummary;
+  tenant: AuthTenantSummary;
+}
+
+export interface AuthUserSummary {
+  id: string;
+  email: string;
+  fullName: string;
+  role: string;
+  emailVerified: boolean;
+}
+
+export interface AuthTenantSummary {
+  id: string;
+  slug: string;
+  name: string;
+  plan: string;
 }
 
 export interface JwtPayload {
