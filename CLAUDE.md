@@ -4,11 +4,11 @@
 
 ## Stack
 - Angular 22 (standalone components, sin NgModules)
-- Angular Material — design system
+- Angular Material 22 — design system (Material 3 / CSS variables)
 - CDK Drag Drop — constructor de formularios
-- ApexCharts — gráficas de resultados
+- ApexCharts + ng-apexcharts — gráficas de resultados
 - Angular Signals — gestión de estado reactivo
-- ngx-translate — internacionalización (`src/assets/i18n/es.json`)
+- ngx-translate v18 — internacionalización (`src/assets/i18n/es.json`)
 - Playwright — tests E2E
 
 ## Estructura de carpetas
@@ -16,43 +16,112 @@
 formflow-frontend/
 └── src/
     ├── app/
-    │   ├── core/              — guards, interceptors, servicios singleton
-    │   │   ├── auth/
-    │   │   ├── interceptors/
-    │   │   └── services/
-    │   ├── shared/            — componentes reutilizables entre features
+    │   ├── core/
+    │   │   ├── auth/              — guards, interceptor de auth
+    │   │   ├── constants/
+    │   │   │   ├── app.constants.ts     ← constantes globales de la app
+    │   │   │   └── route.constants.ts   ← paths de rutas + publicFormPath()
+    │   │   ├── interceptors/      — HTTP interceptors (auth, errors)
+    │   │   ├── models/            — interfaces y enums de dominio
+    │   │   │   ├── user.model.ts
+    │   │   │   ├── tenant.model.ts
+    │   │   │   └── api-response.model.ts
+    │   │   ├── services/          — servicios singleton transversales
+    │   │   └── storage/
+    │   │       ├── storage.service.ts        ← wrapper localStorage/sessionStorage
+    │   │       └── storage-keys.constants.ts ← claves tipadas de storage
+    │   ├── shared/
     │   │   ├── components/
-    │   │   │   ├── email-verification-banner/  ← banner hasta verificar email
-    │   │   │   ├── plan-card/                  ← tarjeta de plan (en /plans y onboarding)
-    │   │   │   ├── language-switcher/          ← oculto en MVP, listo para inglés
-    │   │   │   └── legal-page/                 ← layout para /terms y /privacy
+    │   │   │   ├── email-verification-banner/
+    │   │   │   ├── plan-card/
+    │   │   │   ├── language-switcher/
+    │   │   │   └── legal-page/
     │   │   ├── pipes/
     │   │   └── directives/
-    │   └── features/          — módulos de funcionalidad
-    │       ├── auth/          — login, registro, recuperar contraseña, verify email
-    │       ├── forms/         — constructor drag & drop, lista de formularios
-    │       ├── responses/     — formulario público (/r/{convId}/{token})
-    │       ├── dashboard/     — resultados, gráficas, respuesta individual
-    │       ├── convocatorias/ — lista, wizard, detalle con ranking
-    │       ├── tenants/       — configuración del tenant, branding
-    │       ├── users/         — gestión de usuarios y roles
-    │       ├── billing/       — planes, checkout Stripe, portal facturas
-    │       └── landing/       — landing page pública de marketing
+    │   └── features/
+    │       ├── auth/
+    │       │   ├── auth.component.*       ← componente principal (layout shell)
+    │       │   └── components/
+    │       │       ├── login/
+    │       │       ├── register/
+    │       │       ├── forgot-password/
+    │       │       ├── reset-password/
+    │       │       └── verify-email/
+    │       ├── forms/
+    │       │   ├── forms.component.*      ← lista de formularios
+    │       │   └── components/
+    │       │       └── form-builder/
+    │       ├── dashboard/
+    │       ├── convocatorias/
+    │       │   ├── convocatorias.component.*
+    │       │   └── components/
+    │       │       ├── convocatoria-wizard/
+    │       │       └── convocatoria-detail/
+    │       ├── responses/
+    │       │   └── public-form/           ← /r/{convId}/{token}
+    │       ├── tenants/
+    │       │   └── tenant-settings/
+    │       ├── users/
+    │       ├── billing/
+    │       └── landing/
     ├── environments/
+    │   ├── environment.ts        ← dev (apiUrl: localhost:8080)
+    │   └── environment.prod.ts   ← prod (apiUrl: api.formflow.app)
     └── assets/
         └── i18n/
             ├── es.json        ← español (MVP)
             └── en.json        ← vacío, estructura lista
 ```
 
-## Convenciones
-- Standalone components (sin NgModules)
-- Signals para estado reactivo (Angular 22)
-- Idioma del código: inglés
-- Commits en español referenciando issue: `feat: agregar pantalla de login (#10)`
-- Branches: `feature/nombre`, `fix/nombre`
-- Lazy loading en todas las rutas de features
-- **Ningún string visible al usuario hardcodeado** — todo en `es.json` con `| translate`
+## Convenciones de código
+
+### Estructura de cada componente
+Todo componente debe tener archivos separados — nunca `template` o `styles` inline:
+```
+[nombre]/
+├── [nombre].component.ts
+├── [nombre].component.html
+├── [nombre].component.scss
+└── [nombre].component.spec.ts
+```
+
+### Estructura de cada feature
+Cada feature tiene un **componente principal** (`feature.component.*`) y sus subcomponentes
+en `components/[nombre-subcomponente]/[nombre].component.*`:
+```
+feature/
+├── feature.component.ts       ← vista principal o layout shell
+├── feature.component.html
+├── feature.component.scss
+├── feature.component.spec.ts
+└── components/
+    └── sub-component/
+        ├── sub-component.component.ts
+        └── ...
+```
+
+### Modelos
+Los modelos (interfaces, enums, types) viven en `core/models/` (globales) o en
+`features/[feature]/models/` (específicos de la feature). **Nunca** definidos dentro
+de un componente o servicio.
+
+### Tests unitarios
+- **Solo tests de funciones/métodos** — NO tests de DOM ni de template
+- Para clases sin DI: instanciar directamente (`new ComponentClass()`)
+- Para servicios/componentes con DI: usar `TestBed`
+- No usar `fixture.nativeElement` ni `querySelector` en unit tests (eso es para E2E con Playwright)
+
+### Storage
+Usar siempre `StorageService` — nunca `localStorage`/`sessionStorage` directamente.
+Las claves en `StorageKeys` (storage-keys.constants.ts). Solo para datos NO sensibles
+(preferencias, idioma). JWT en memoria, refresh token en httpOnly cookie.
+
+### Rutas
+Usar siempre `RouteConstants` — nunca strings hardcodeados en `router.navigate()` o `[routerLink]`.
+Para el link del formulario público usar `publicFormPath(convId, token)`.
+
+### Strings visibles
+Ningún string visible al usuario hardcodeado — todo en `es.json` con `| translate`.
 
 ## Autenticación
 - JWT almacenado en memoria (no localStorage por seguridad)
@@ -82,14 +151,14 @@ formflow-frontend/
 - `POST /billing/portal` → URL del Stripe Customer Portal para gestionar tarjeta y cancelar
 
 ## Comunicación con backend
-- URL base desde `environment.ts`
+- URL base desde `environment.ts` (`environment.apiUrl`)
 - Todos los servicios HTTP en `features/[modulo]/services/`
-- Manejo centralizado de errores en interceptor
+- Manejo centralizado de errores en interceptor HTTP
 
 ## Issues por milestone
 | Milestone | Issues |
 |-----------|--------|
-| M1 | #9 #10 #11 #18 #19 |
+| M1 | #9 ✅ #10 #11 #18 #19 |
 | M2 | #1 #2 #3 #4 |
 | M3 | #12 #13 #14 #15 #16 #20 |
 | M4 | #5 #6 |

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-billing',
-  template: '<p>BillingComponent</p>',
+  templateUrl: './billing.component.html',
+  styleUrl: './billing.component.scss',
 })
 export class BillingComponent {}

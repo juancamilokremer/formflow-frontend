@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-verify-email',
-  template: '<p>VerifyEmailComponent</p>',
+  templateUrl: './verify-email.component.html',
+  styleUrl: './verify-email.component.scss',
 })
 export class VerifyEmailComponent {}

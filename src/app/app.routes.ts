@@ -1,93 +1,106 @@
 import { Routes } from '@angular/router';
+import { RouteConstants } from './core/constants/route.constants';
 
-// Guards (authGuard, guestGuard) will be added in issue #10
+// authGuard and guestGuard will be added in issue #10
 export const routes: Routes = [
+  {
+    path: RouteConstants.HOME,
+    loadComponent: () =>
+      import('./features/landing/landing.component').then((m) => m.LandingComponent),
+    pathMatch: 'full',
+  },
   {
     path: '',
     loadComponent: () =>
-      import('./features/landing/landing.component').then((m) => m.LandingComponent),
+      import('./features/auth/auth.component').then((m) => m.AuthComponent),
+    children: [
+      {
+        path: RouteConstants.LOGIN,
+        loadComponent: () =>
+          import('./features/auth/components/login/login.component').then(
+            (m) => m.LoginComponent
+          ),
+      },
+      {
+        path: RouteConstants.REGISTER,
+        loadComponent: () =>
+          import('./features/auth/components/register/register.component').then(
+            (m) => m.RegisterComponent
+          ),
+      },
+      {
+        path: RouteConstants.FORGOT_PASSWORD,
+        loadComponent: () =>
+          import(
+            './features/auth/components/forgot-password/forgot-password.component'
+          ).then((m) => m.ForgotPasswordComponent),
+      },
+      {
+        path: RouteConstants.RESET_PASSWORD,
+        loadComponent: () =>
+          import(
+            './features/auth/components/reset-password/reset-password.component'
+          ).then((m) => m.ResetPasswordComponent),
+      },
+      {
+        path: RouteConstants.VERIFY_EMAIL,
+        loadComponent: () =>
+          import(
+            './features/auth/components/verify-email/verify-email.component'
+          ).then((m) => m.VerifyEmailComponent),
+      },
+    ],
   },
   {
-    path: 'login',
-    loadComponent: () =>
-      import('./features/auth/login/login.component').then((m) => m.LoginComponent),
-  },
-  {
-    path: 'register',
-    loadComponent: () =>
-      import('./features/auth/register/register.component').then((m) => m.RegisterComponent),
-  },
-  {
-    path: 'forgot-password',
-    loadComponent: () =>
-      import('./features/auth/forgot-password/forgot-password.component').then(
-        (m) => m.ForgotPasswordComponent
-      ),
-  },
-  {
-    path: 'reset-password',
-    loadComponent: () =>
-      import('./features/auth/reset-password/reset-password.component').then(
-        (m) => m.ResetPasswordComponent
-      ),
-  },
-  {
-    path: 'verify-email',
-    loadComponent: () =>
-      import('./features/auth/verify-email/verify-email.component').then(
-        (m) => m.VerifyEmailComponent
-      ),
-  },
-  {
-    path: 'dashboard',
+    path: RouteConstants.DASHBOARD,
     loadComponent: () =>
       import('./features/dashboard/dashboard.component').then((m) => m.DashboardComponent),
   },
   {
-    path: 'forms',
+    path: RouteConstants.FORMS,
     loadComponent: () =>
       import('./features/forms/forms.component').then((m) => m.FormsComponent),
   },
   {
-    path: 'convocatorias',
+    path: RouteConstants.CONVOCATORIAS,
     loadComponent: () =>
       import('./features/convocatorias/convocatorias.component').then(
         (m) => m.ConvocatoriasComponent
       ),
   },
   {
-    path: 'r/:convId/:token',
+    path: `${RouteConstants.PUBLIC_FORM_PREFIX}/:convId/:token`,
     loadComponent: () =>
       import('./features/responses/public-form/public-form.component').then(
         (m) => m.PublicFormComponent
       ),
   },
   {
-    path: 'billing',
+    path: RouteConstants.BILLING,
     loadComponent: () =>
       import('./features/billing/billing.component').then((m) => m.BillingComponent),
   },
   {
-    path: 'settings',
+    path: RouteConstants.SETTINGS,
     loadComponent: () =>
       import('./features/tenants/tenant-settings/tenant-settings.component').then(
         (m) => m.TenantSettingsComponent
       ),
   },
   {
-    path: 'users',
+    path: RouteConstants.USERS,
     loadComponent: () =>
       import('./features/users/users.component').then((m) => m.UsersComponent),
   },
   {
-    path: 'terms',
+    path: RouteConstants.TERMS,
     loadComponent: () =>
       import('./shared/components/legal-page/legal-page.component').then(
         (m) => m.LegalPageComponent
       ),
   },
   {
-    path: 'privacy',
+    path: RouteConstants.PRIVACY,
     loadComponent: () =>
       import('./shared/components/legal-page/legal-page.component').then(
         (m) => m.LegalPageComponent
@@ -95,6 +108,6 @@ export const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: '',
+    redirectTo: RouteConstants.HOME,
   },
 ];
