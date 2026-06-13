@@ -1,0 +1,68 @@
+{
+  "common": {
+    "loading": "Cargando...",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "back": "Volver",
+    "next": "Siguiente",
+    "confirm": "Confirmar",
+    "error_generic": "Ocurrió un error inesperado. Por favor intenta de nuevo.",
+    "required_field": "Este campo es obligatorio"
+  },
+  "auth": {
+    "login": {
+      "title": "Iniciar sesión",
+      "email": "Correo electrónico",
+      "password": "Contraseña",
+      "tenant": "Identificador de empresa",
+      "submit": "Ingresar",
+      "forgot_password": "¿Olvidaste tu contraseña?",
+      "no_account": "¿No tienes cuenta?",
+      "register_link": "Regístrate"
+    },
+    "register": {
+      "title": "Crear cuenta",
+      "company_name": "Nombre de la empresa",
+      "slug": "Identificador URL de la empresa",
+      "email": "Correo electrónico",
+      "password": "Contraseña",
+      "first_name": "Nombre",
+      "last_name": "Apellido",
+      "submit": "Crear cuenta",
+      "already_account": "¿Ya tienes cuenta?",
+      "login_link": "Inicia sesión"
+    },
+    "forgot_password": {
+      "title": "Recuperar contraseña",
+      "email": "Correo electrónico",
+      "submit": "Enviar instrucciones",
+      "success": "Si el correo existe, recibirás las instrucciones en breve.",
+      "back_to_login": "Volver al inicio de sesión"
+    },
+    "reset_password": {
+      "title": "Nueva contraseña",
+      "new_password": "Nueva contraseña",
+      "submit": "Cambiar contraseña",
+      "success": "Contraseña actualizada. Ahora puedes iniciar sesión.",
+      "invalid_token": "El enlace no es válido o ha expirado."
+    },
+    "verify_email": {
+      "title": "Verificar correo",
+      "success": "Tu correo ha sido verificado correctamente.",
+      "invalid_token": "El enlace de verificación no es válido o ha expirado.",
+      "resend": "Reenviar correo de verificación",
+      "resend_success": "Correo de verificación enviado."
+    },
+    "email_banner": {
+      "message": "Verifica tu correo electrónico para activar todas las funciones.",
+      "resend": "Reenviar"
+    }
+  },
+  "errors": {
+    "unauthorized": "No tienes permiso para realizar esta acción.",
+    "not_found": "El recurso solicitado no existe.",
+    "server_error": "Error del servidor. Por favor intenta más tarde."
+  }
+}
