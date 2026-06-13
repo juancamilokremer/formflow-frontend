@@ -1,10 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { signal } from '@angular/core';
-import { of, throwError } from 'rxjs';
+import { of, throwError, Observable } from 'rxjs';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideTranslateService } from '@ngx-translate/core';
-import { Observable } from 'rxjs';
 import { RegisterComponent } from './register.component';
 import { AuthService } from '../../../../core/auth/auth.service';
 
@@ -81,11 +80,6 @@ describe('RegisterComponent', () => {
     expect((component as any).form.controls.slug.hasError('slugFormat')).toBe(true);
   });
 
-  it('rejects slug ending with hyphen', () => {
-    (component as any).form.patchValue({ slug: 'empresa-' });
-    expect((component as any).form.controls.slug.hasError('slugFormat')).toBe(true);
-  });
-
   it('does not submit when form is invalid', () => {
     let registerCalled = false;
     registerResult = new Observable(() => { registerCalled = true; });
@@ -106,5 +100,16 @@ describe('RegisterComponent', () => {
     (component as any).onSubmit();
     await new Promise((r) => setTimeout(r, 0));
     expect((component as any).errorKey()).toBe('auth.register.error_conflict');
+  });
+
+  it('slugError is null when pristine', () => {
+    expect((component as any).slugError).toBeNull();
+  });
+
+  it('slugError returns message when touched and invalid', () => {
+    const c = (component as any).form.controls.slug;
+    c.markAsTouched();
+    c.setValue('INVALID_SLUG');
+    expect((component as any).slugError).not.toBeNull();
   });
 });

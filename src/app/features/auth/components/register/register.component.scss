@@ -1,72 +1,66 @@
-:host {
-  display: block;
-}
+:host { display: block; }
 
 .auth-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  padding: 16px;
-  background: var(--mat-sys-surface-variant);
+  padding: 24px 16px;
+  background: var(--ff-bg);
 }
 
 .auth-card {
   width: 100%;
   max-width: 480px;
-
-  mat-card-header {
-    margin-bottom: 8px;
-  }
-
-  mat-card-content {
-    padding-top: 8px;
-  }
 }
 
-.full-width {
-  width: 100%;
+.card-header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.logo-icon {
+  width: 44px;
+  height: 44px;
+  background: var(--ff-primary);
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 800;
+  font-size: 18px;
+  margin-bottom: 12px;
+}
+
+.card-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--ff-text-primary);
+  margin: 0 0 4px;
+}
+
+.card-subtitle {
+  font-size: 14px;
+  color: var(--ff-text-secondary);
+  margin: 0;
 }
 
 .name-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
-
-  mat-form-field {
-    width: 100%;
-  }
-}
-
-.submit-btn {
-  margin-top: 8px;
-  height: 48px;
-
-  mat-progress-spinner {
-    display: inline-block;
-  }
 }
 
 .form-error {
-  color: var(--mat-sys-error);
-  font-size: 14px;
-  margin: 4px 0 8px;
+  color: var(--ff-error-text);
+  font-size: 13px;
+  margin: 0 0 12px;
 }
 
-.auth-links {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px;
-  margin-top: 16px;
-  font-size: 14px;
-
-  a {
-    color: var(--mat-sys-primary);
-    text-decoration: none;
-
-    &:hover {
-      text-decoration: underline;
-    }
-  }
+.auth-footer {
+  text-align: center;
+  font-size: 13px;
+  color: var(--ff-text-secondary);
+  margin: 20px 0 0;
 }

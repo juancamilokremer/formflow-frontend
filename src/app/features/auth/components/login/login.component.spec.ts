@@ -1,10 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { signal } from '@angular/core';
-import { of, throwError } from 'rxjs';
+import { of, throwError, Observable } from 'rxjs';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideTranslateService } from '@ngx-translate/core';
-import { Observable } from 'rxjs';
 import { LoginComponent } from './login.component';
 import { AuthService } from '../../../../core/auth/auth.service';
 
@@ -84,5 +83,16 @@ describe('LoginComponent', () => {
   it('pre-fills tenantSlug from @Input', () => {
     (component as any).tenant = 'test-empresa';
     expect((component as any).form.value.tenantSlug).toBe('test-empresa');
+  });
+
+  it('emailError is null when field is pristine', () => {
+    expect((component as any).emailError).toBeNull();
+  });
+
+  it('emailError returns message when field is touched and invalid', () => {
+    const c = (component as any).form.controls.email;
+    c.markAsTouched();
+    c.setValue('not-an-email');
+    expect((component as any).emailError).not.toBeNull();
   });
 });

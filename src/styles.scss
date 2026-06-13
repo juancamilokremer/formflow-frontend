@@ -36,4 +36,26 @@ body {
   margin: 0;
   height: 100%;
 }
-/* You can add global styles to this file, and also import other style files */
+/* ── FormFlow design tokens ── */
+:root {
+  --ff-primary:        #4F46E5;
+  --ff-primary-hover:  #4338CA;
+  --ff-primary-light:  #EEF2FF;
+  --ff-text-primary:   #0F172A;
+  --ff-text-secondary: #64748B;
+  --ff-text-muted:     #94A3B8;
+  --ff-border:         #E2E8F0;
+  --ff-bg:             #F8FAFC;
+  --ff-white:          #FFFFFF;
+  --ff-error:          #EF4444;
+  --ff-error-text:     #B91C1C;
+  --ff-radius-sm:      6px;
+  --ff-radius-md:      8px;
+  --ff-radius-lg:      12px;
+  --ff-radius-xl:      16px;
+}
+
+/* Global resets */
+*, *::before, *::after { box-sizing: border-box; }
+a { color: var(--ff-primary); text-decoration: none; }
+a:hover { text-decoration: underline; }
