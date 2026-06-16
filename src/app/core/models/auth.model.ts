@@ -43,6 +43,12 @@ export interface AuthTenantSummary {
   plan: string;
 }
 
+/** Response of POST /auth/register — no tokens, the admin must confirm their email first. */
+export interface RegisterResponse {
+  user: AuthUserSummary;
+  tenant: AuthTenantSummary;
+}
+
 export interface JwtPayload {
   sub: string;
   tenantId: string;

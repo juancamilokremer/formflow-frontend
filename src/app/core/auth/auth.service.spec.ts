@@ -58,6 +58,35 @@ describe('AuthService', () => {
     });
   });
 
+  describe('register', () => {
+    it('maps the response data without touching tokens or currentUser', () => {
+      let result: { user: { email: string }; tenant: { slug: string } } | undefined;
+      service
+        .register({
+          companyName: 'Acme',
+          slug: 'acme',
+          email: 'admin@acme.com',
+          password: '12345678',
+          firstName: 'Juan',
+          lastName: 'Kremer',
+        })
+        .subscribe((res) => (result = res));
+
+      httpMock.expectOne(`${environment.apiUrl}/auth/register`).flush({
+        success: true,
+        data: {
+          user: { id: 'u1', email: 'admin@acme.com', fullName: 'Juan Kremer', role: 'TENANT_ADMIN', emailVerified: false },
+          tenant: { id: 't1', slug: 'acme', name: 'Acme', plan: 'FREE' },
+        },
+      });
+
+      expect(result?.user.email).toBe('admin@acme.com');
+      expect(result?.tenant.slug).toBe('acme');
+      expect(service.isAuthenticated()).toBe(false);
+      expect(tokenService.getRefreshToken()).toBeNull();
+    });
+  });
+
   describe('logout', () => {
     it('clears tokens and resets currentUser', () => {
       tokenService.setTokens({ accessToken: 'acc', refreshToken: 'ref' }, 'acme');

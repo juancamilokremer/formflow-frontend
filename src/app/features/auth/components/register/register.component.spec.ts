@@ -6,10 +6,16 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideTranslateService } from '@ngx-translate/core';
 import { RegisterComponent } from './register.component';
 import { AuthService } from '../../../../core/auth/auth.service';
+import { RegisterResponse } from '../../../../core/models/auth.model';
+
+const registeredResponse: RegisterResponse = {
+  user: { id: 'u1', email: 'juan@empresa.com', fullName: 'Juan Pérez', role: 'TENANT_ADMIN', emailVerified: false },
+  tenant: { id: 't1', slug: 'mi-empresa', name: 'Mi Empresa', plan: 'FREE' },
+};
 
 describe('RegisterComponent', () => {
   let component: RegisterComponent;
-  let registerResult = of<void>(undefined);
+  let registerResult: Observable<RegisterResponse> = of(registeredResponse);
 
   const mockAuthService = {
     register: () => registerResult,
@@ -22,7 +28,7 @@ describe('RegisterComponent', () => {
   };
 
   beforeEach(async () => {
-    registerResult = of(undefined);
+    registerResult = of(registeredResponse);
 
     await TestBed.configureTestingModule({
       imports: [RegisterComponent],
@@ -85,6 +91,23 @@ describe('RegisterComponent', () => {
     registerResult = new Observable(() => { registerCalled = true; });
     (component as any).onSubmit();
     expect(registerCalled).toBe(false);
+  });
+
+  it('shows the success state with the confirmed email from the response', async () => {
+    registerResult = of(registeredResponse);
+    (component as any).form.setValue({
+      companyName: 'Mi Empresa',
+      slug: 'mi-empresa',
+      firstName: 'Juan',
+      lastName: 'Pérez',
+      email: 'juan@empresa.com',
+      password: 'Password1!',
+    });
+    (component as any).onSubmit();
+    await new Promise((r) => setTimeout(r, 0));
+    expect((component as any).registered()).toBe(true);
+    expect((component as any).registeredEmail).toBe(registeredResponse.user.email);
+    expect((component as any).loading()).toBe(false);
   });
 
   it('sets error_conflict key on 409 response', async () => {

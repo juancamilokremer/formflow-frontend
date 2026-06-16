@@ -10,6 +10,7 @@ import { User, UserRole } from '../models/user.model';
 import {
   LoginRequest,
   RegisterRequest,
+  RegisterResponse,
   AuthResponse,
   AuthUserSummary,
   AuthTenantSummary,
@@ -39,17 +40,10 @@ export class AuthService {
       );
   }
 
-  register(request: RegisterRequest): Observable<void> {
+  register(request: RegisterRequest): Observable<RegisterResponse> {
     return this.http
-      .post<ApiResponse<AuthResponse>>(`${environment.apiUrl}/auth/register`, request)
-      .pipe(
-        tap((res) => {
-          if (res.success && res.data) {
-            this.applyAuthResponse(res.data, request.slug);
-          }
-        }),
-        map(() => void 0)
-      );
+      .post<ApiResponse<RegisterResponse>>(`${environment.apiUrl}/auth/register`, request)
+      .pipe(map((res) => res.data!));
   }
 
   logout(): void {

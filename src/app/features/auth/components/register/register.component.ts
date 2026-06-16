@@ -1,12 +1,13 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../../core/auth/auth.service';
 import { RouteConstants } from '../../../../core/constants/route.constants';
 import { InputComponent } from '../../../../shared/components/input/input.component';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
 import { CardComponent } from '../../../../shared/components/card/card.component';
+import { SuccessCardComponent } from '../../../../shared/components/success-card/success-card.component';
 
 function slugValidator(control: AbstractControl): ValidationErrors | null {
   const valid = /^[a-z0-9]+(-[a-z0-9]+)*$/.test(control.value ?? '');
@@ -22,6 +23,7 @@ function slugValidator(control: AbstractControl): ValidationErrors | null {
     InputComponent,
     ButtonComponent,
     CardComponent,
+    SuccessCardComponent,
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
@@ -29,12 +31,13 @@ function slugValidator(control: AbstractControl): ValidationErrors | null {
 export class RegisterComponent {
   private readonly fb = inject(FormBuilder);
   private readonly authService = inject(AuthService);
-  private readonly router = inject(Router);
   private readonly translate = inject(TranslateService);
 
   protected readonly routeConstants = RouteConstants;
   protected readonly loading = signal(false);
   protected readonly errorKey = signal<string | null>(null);
+  protected readonly registered = signal(false);
+  protected registeredEmail = '';
   protected slugManuallyEdited = false;
 
   protected readonly form = this.fb.nonNullable.group({
@@ -106,10 +109,13 @@ export class RegisterComponent {
     this.errorKey.set(null);
 
     this.authService.register(this.form.getRawValue()).subscribe({
-      next: () => this.router.navigate([`/${RouteConstants.LOGIN}`]),
-      error: (err) => {
-        const status = err?.status;
-        this.errorKey.set(status === 409 ? 'auth.register.error_conflict' : 'common.error_generic');
+      next: (result) => {
+        this.registeredEmail = result.user.email;
+        this.loading.set(false);
+        this.registered.set(true);
+      },
+      error: (err: { status?: number }) => {
+        this.errorKey.set(err?.status === 409 ? 'auth.register.error_conflict' : 'common.error_generic');
         this.loading.set(false);
       },
     });

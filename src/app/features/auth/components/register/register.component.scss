@@ -64,3 +64,15 @@
   color: var(--ff-text-secondary);
   margin: 20px 0 0;
 }
+
+.success-login-link {
+  display: block;
+  text-align: center;
+  margin-top: 24px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ff-primary);
+  text-decoration: none;
+
+  &:hover { text-decoration: underline; }
+}
