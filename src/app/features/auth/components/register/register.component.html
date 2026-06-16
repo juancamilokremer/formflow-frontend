@@ -76,6 +76,16 @@
           [errorMessage]="passwordError"
         />
 
+        <app-input
+          [label]="'auth.register.confirm_password' | translate"
+          type="password"
+          [toggleable]="true"
+          formControlName="confirmPassword"
+          placeholder="••••••••"
+          autocomplete="new-password"
+          [errorMessage]="confirmPasswordError"
+        />
+
         @if (errorKey()) {
           <p class="form-error">{{ errorKey()! | translate }}</p>
         }

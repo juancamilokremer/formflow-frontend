@@ -14,6 +14,12 @@ function slugValidator(control: AbstractControl): ValidationErrors | null {
   return valid ? null : { slugFormat: true };
 }
 
+function passwordsMatchValidator(group: AbstractControl): ValidationErrors | null {
+  const password = group.get('password')?.value;
+  const confirmPassword = group.get('confirmPassword')?.value;
+  return password === confirmPassword ? null : { passwordsMismatch: true };
+}
+
 @Component({
   selector: 'app-register',
   imports: [
@@ -40,14 +46,18 @@ export class RegisterComponent {
   protected registeredEmail = '';
   protected slugManuallyEdited = false;
 
-  protected readonly form = this.fb.nonNullable.group({
-    companyName: ['', [Validators.required, Validators.maxLength(100)]],
-    slug: ['', [Validators.required, slugValidator]],
-    firstName: ['', [Validators.required, Validators.maxLength(50)]],
-    lastName: ['', [Validators.required, Validators.maxLength(50)]],
-    email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(8)]],
-  });
+  protected readonly form = this.fb.nonNullable.group(
+    {
+      companyName: ['', [Validators.required, Validators.maxLength(100)]],
+      slug: ['', [Validators.required, slugValidator]],
+      firstName: ['', [Validators.required, Validators.maxLength(50)]],
+      lastName: ['', [Validators.required, Validators.maxLength(50)]],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(8)]],
+      confirmPassword: ['', [Validators.required]],
+    },
+    { validators: passwordsMatchValidator }
+  );
 
   protected get slugHint(): string {
     const slug = this.form.controls.slug.value || '...';
@@ -93,6 +103,14 @@ export class RegisterComponent {
     return this.t('common.required_field');
   }
 
+  protected get confirmPasswordError(): string | null {
+    const c = this.form.controls.confirmPassword;
+    if (!(c.dirty || c.touched)) return null;
+    if (c.hasError('required')) return this.t('common.required_field');
+    if (this.form.hasError('passwordsMismatch')) return this.t('auth.register.password_mismatch');
+    return null;
+  }
+
   protected onCompanyNameChange(value: string): void {
     if (!this.slugManuallyEdited) {
       this.form.controls.slug.setValue(this.toSlug(value), { emitEvent: false });
@@ -108,7 +126,9 @@ export class RegisterComponent {
     this.loading.set(true);
     this.errorKey.set(null);
 
-    this.authService.register(this.form.getRawValue()).subscribe({
+    const { confirmPassword, ...request } = this.form.getRawValue();
+
+    this.authService.register(request).subscribe({
       next: (result) => {
         this.registeredEmail = result.user.email;
         this.loading.set(false);

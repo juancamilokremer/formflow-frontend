@@ -60,6 +60,7 @@ describe('RegisterComponent', () => {
       lastName: 'Pérez',
       email: 'juan@empresa.com',
       password: 'Password1!',
+      confirmPassword: 'Password1!',
     });
     expect((component as any).form.valid).toBe(true);
   });
@@ -102,6 +103,7 @@ describe('RegisterComponent', () => {
       lastName: 'Pérez',
       email: 'juan@empresa.com',
       password: 'Password1!',
+      confirmPassword: 'Password1!',
     });
     (component as any).onSubmit();
     await new Promise((r) => setTimeout(r, 0));
@@ -119,6 +121,7 @@ describe('RegisterComponent', () => {
       lastName: 'Pérez',
       email: 'juan@empresa.com',
       password: 'Password1!',
+      confirmPassword: 'Password1!',
     });
     (component as any).onSubmit();
     await new Promise((r) => setTimeout(r, 0));
@@ -134,5 +137,58 @@ describe('RegisterComponent', () => {
     c.markAsTouched();
     c.setValue('INVALID_SLUG');
     expect((component as any).slugError).not.toBeNull();
+  });
+
+  it('form is invalid when password and confirmPassword do not match', () => {
+    (component as any).form.setValue({
+      companyName: 'Mi Empresa',
+      slug: 'mi-empresa',
+      firstName: 'Juan',
+      lastName: 'Pérez',
+      email: 'juan@empresa.com',
+      password: 'Password1!',
+      confirmPassword: 'Other1!',
+    });
+    expect((component as any).form.valid).toBe(false);
+    expect((component as any).form.hasError('passwordsMismatch')).toBe(true);
+  });
+
+  it('confirmPasswordError is null when pristine', () => {
+    expect((component as any).confirmPasswordError).toBeNull();
+  });
+
+  it('confirmPasswordError returns mismatch message when touched and passwords differ', () => {
+    const c = (component as any).form.controls.confirmPassword;
+    c.markAsTouched();
+    (component as any).form.patchValue({ password: 'Password1!', confirmPassword: 'Other1!' });
+    expect((component as any).confirmPasswordError).not.toBeNull();
+  });
+
+  it('confirmPasswordError is null when touched and passwords match', () => {
+    const c = (component as any).form.controls.confirmPassword;
+    c.markAsTouched();
+    (component as any).form.patchValue({ password: 'Password1!', confirmPassword: 'Password1!' });
+    expect((component as any).confirmPasswordError).toBeNull();
+  });
+
+  it('does not send confirmPassword to the backend', () => {
+    let sentRequest: Record<string, unknown> | undefined;
+    (mockAuthService.register as any) = (req: Record<string, unknown>) => {
+      sentRequest = req;
+      return registerResult;
+    };
+    (component as any).form.setValue({
+      companyName: 'Mi Empresa',
+      slug: 'mi-empresa',
+      firstName: 'Juan',
+      lastName: 'Pérez',
+      email: 'juan@empresa.com',
+      password: 'Password1!',
+      confirmPassword: 'Password1!',
+    });
+    (component as any).onSubmit();
+    expect(sentRequest).toBeDefined();
+    expect(sentRequest!['confirmPassword']).toBeUndefined();
+    expect(sentRequest!['password']).toBe('Password1!');
   });
 });

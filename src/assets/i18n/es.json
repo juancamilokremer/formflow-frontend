@@ -38,6 +38,8 @@
       "email": "Correo electrónico",
       "password": "Contraseña",
       "password_min": "Mínimo 8 caracteres",
+      "confirm_password": "Confirmar contraseña",
+      "password_mismatch": "Las contraseñas no coinciden",
       "first_name": "Nombre",
       "last_name": "Apellido",
       "submit": "Crear cuenta",
