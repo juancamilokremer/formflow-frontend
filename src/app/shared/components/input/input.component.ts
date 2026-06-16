@@ -1,8 +1,11 @@
 import { Component, input, signal, computed, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { IconComponent } from '../../icons/icon.component';
 
 @Component({
   selector: 'app-input',
+  standalone: true,
+  imports: [IconComponent],
   templateUrl: './input.component.html',
   styleUrl: './input.component.scss',
   providers: [
