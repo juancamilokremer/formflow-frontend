@@ -138,6 +138,26 @@ Ningún string visible al usuario hardcodeado — todo en `es.json` con `| trans
 | `PlanCardComponent` | En `/plans` y en el onboarding |
 | `LegalPageComponent` | Layout de `/terms` y `/privacy` |
 | `LanguageSwitcherComponent` | Oculto en MVP — activar cuando haya inglés |
+| `SuccessCardComponent` | Pantalla de confirmación tras una acción exitosa (registro, recuperar contraseña, verificar email). Inputs `title`/`message` + `<ng-content>` para la acción (ej. link a login) |
+
+## Sistema de iconos
+- `IconComponent` (`shared/icons/icon.component.ts`) — wrapper propio, sin depender de
+  `@angular/material` para iconos. Uso: `<app-icon name="eye" [size]="18" />`.
+- El dibujo de cada ícono vive en `shared/icons/icon.registry.ts` (`Record<IconName, string>`
+  con el contenido interno del `<svg>`, sin el wrapper). Agregar un ícono = agregar una entrada
+  al registro — nunca tocar `icon.component.ts`/`.html`.
+- `@angular/material` SÍ está instalado (`package.json`) pero solo se usa para tokens de tema en
+  `styles.scss` (`@use '@angular/material' as mat`) — ningún componente de Material se consume
+  directamente en features, todo pasa por wrappers propios (`app-input`, `app-button`, `app-card`,
+  `app-icon`).
+- **Si en el futuro se necesita el catálogo de iconos de Material** (Material Icons/Symbols, miles
+  de iconos ya dibujados) en vez de seguir dibujando SVGs a mano: NO consumir `<mat-icon>`
+  directamente en ningún feature. Extender `IconComponent` para que, si `name()` no existe en
+  `ICON_PATHS`, haga fallback interno a `<mat-icon>{{ name() }}</mat-icon>` (import de
+  `MatIconModule` solo dentro de `icon.component.ts`). Requiere además cargar la fuente
+  "Material Icons"/"Material Symbols" en `index.html` (Google Fonts o self-hosted) — hoy NO está
+  cargada. Se decidió no implementar este fallback de entrada para no agregar complejidad sin un
+  caso de uso real (#10).
 
 ## Formulario público — reglas especiales
 - Ruta: `/r/{convId}/{token}` — pública, sin guard de auth

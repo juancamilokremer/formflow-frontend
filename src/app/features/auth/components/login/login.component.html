@@ -1,1 +1,65 @@
-<p>Login</p>
+<div class="auth-wrapper">
+  <app-card class="auth-card">
+
+    <div class="card-header">
+      <div class="logo-icon">F</div>
+      <h2 class="card-title">{{ 'auth.login.heading' | translate }}</h2>
+      <p class="card-subtitle">{{ 'auth.login.subheading' | translate }}</p>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+
+      <app-input
+        [label]="'auth.login.tenant' | translate"
+        formControlName="tenantSlug"
+        placeholder="mi-empresa"
+        autocomplete="organization"
+        [errorMessage]="tenantSlugError"
+      />
+
+      <app-input
+        [label]="'auth.login.email' | translate"
+        type="email"
+        formControlName="email"
+        placeholder="tu@empresa.com"
+        autocomplete="email"
+        [errorMessage]="emailError"
+      />
+
+      <app-input
+        [label]="'auth.login.password' | translate"
+        type="password"
+        [toggleable]="true"
+        formControlName="password"
+        placeholder="••••••••"
+        autocomplete="current-password"
+        [errorMessage]="passwordError"
+      />
+
+      <div class="forgot-row">
+        <a [routerLink]="['/', routeConstants.FORGOT_PASSWORD]">
+          {{ 'auth.login.forgot_password' | translate }}
+        </a>
+      </div>
+
+      @if (errorKey()) {
+        <p class="form-error">{{ errorKey()! | translate }}</p>
+      }
+
+      <app-button
+        type="submit"
+        [loading]="loading()"
+        [disabled]="form.invalid || loading()"
+        [fullWidth]="true"
+      >
+        {{ 'auth.login.submit' | translate }}
+      </app-button>
+    </form>
+
+    <p class="auth-footer">
+      {{ 'auth.login.no_account' | translate }}
+      <a [routerLink]="['/', routeConstants.REGISTER]">{{ 'auth.login.register_link' | translate }}</a>
+    </p>
+
+  </app-card>
+</div>

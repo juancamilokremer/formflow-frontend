@@ -1,0 +1,32 @@
+:host { display: block; }
+
+.success-card {
+  text-align: center;
+}
+
+.success-icon {
+  width: 44px;
+  height: 44px;
+  background: #16a34a;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 800;
+  font-size: 22px;
+  margin-bottom: 12px;
+}
+
+.success-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--ff-text-primary);
+  margin: 0 0 4px;
+}
+
+.success-message {
+  font-size: 14px;
+  color: var(--ff-text-secondary);
+  margin: 0;
+}

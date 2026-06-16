@@ -1,7 +1,8 @@
 import { Routes } from '@angular/router';
 import { RouteConstants } from './core/constants/route.constants';
+import { authGuard } from './core/auth/guards/auth.guard';
+import { publicGuard } from './core/auth/guards/public.guard';
 
-// authGuard and guestGuard will be added in issue #10
 export const routes: Routes = [
   {
     path: RouteConstants.HOME,
@@ -13,6 +14,7 @@ export const routes: Routes = [
     path: '',
     loadComponent: () =>
       import('./features/auth/auth.component').then((m) => m.AuthComponent),
+    canActivate: [publicGuard],
     children: [
       {
         path: RouteConstants.LOGIN,
@@ -31,38 +33,41 @@ export const routes: Routes = [
       {
         path: RouteConstants.FORGOT_PASSWORD,
         loadComponent: () =>
-          import(
-            './features/auth/components/forgot-password/forgot-password.component'
-          ).then((m) => m.ForgotPasswordComponent),
+          import('./features/auth/components/forgot-password/forgot-password.component').then(
+            (m) => m.ForgotPasswordComponent
+          ),
       },
       {
         path: RouteConstants.RESET_PASSWORD,
         loadComponent: () =>
-          import(
-            './features/auth/components/reset-password/reset-password.component'
-          ).then((m) => m.ResetPasswordComponent),
+          import('./features/auth/components/reset-password/reset-password.component').then(
+            (m) => m.ResetPasswordComponent
+          ),
       },
       {
         path: RouteConstants.VERIFY_EMAIL,
         loadComponent: () =>
-          import(
-            './features/auth/components/verify-email/verify-email.component'
-          ).then((m) => m.VerifyEmailComponent),
+          import('./features/auth/components/verify-email/verify-email.component').then(
+            (m) => m.VerifyEmailComponent
+          ),
       },
     ],
   },
   {
     path: RouteConstants.DASHBOARD,
+    canActivate: [authGuard],
     loadComponent: () =>
       import('./features/dashboard/dashboard.component').then((m) => m.DashboardComponent),
   },
   {
     path: RouteConstants.FORMS,
+    canActivate: [authGuard],
     loadComponent: () =>
       import('./features/forms/forms.component').then((m) => m.FormsComponent),
   },
   {
     path: RouteConstants.CONVOCATORIAS,
+    canActivate: [authGuard],
     loadComponent: () =>
       import('./features/convocatorias/convocatorias.component').then(
         (m) => m.ConvocatoriasComponent
@@ -77,11 +82,13 @@ export const routes: Routes = [
   },
   {
     path: RouteConstants.BILLING,
+    canActivate: [authGuard],
     loadComponent: () =>
       import('./features/billing/billing.component').then((m) => m.BillingComponent),
   },
   {
     path: RouteConstants.SETTINGS,
+    canActivate: [authGuard],
     loadComponent: () =>
       import('./features/tenants/tenant-settings/tenant-settings.component').then(
         (m) => m.TenantSettingsComponent
@@ -89,6 +96,7 @@ export const routes: Routes = [
   },
   {
     path: RouteConstants.USERS,
+    canActivate: [authGuard],
     loadComponent: () =>
       import('./features/users/users.component').then((m) => m.UsersComponent),
   },

@@ -14,25 +14,41 @@
   "auth": {
     "login": {
       "title": "Iniciar sesión",
+      "heading": "Bienvenido de nuevo",
+      "subheading": "Ingresa a tu cuenta de FormFlow",
       "email": "Correo electrónico",
       "password": "Contraseña",
       "tenant": "Identificador de empresa",
       "submit": "Ingresar",
       "forgot_password": "¿Olvidaste tu contraseña?",
       "no_account": "¿No tienes cuenta?",
-      "register_link": "Regístrate"
+      "register_link": "Regístrate",
+      "tenant_format": "Solo minúsculas, números y guiones (ej: mi-empresa)",
+      "email_invalid": "Ingresa un correo válido",
+      "error_invalid": "Credenciales inválidas o empresa no encontrada"
     },
     "register": {
       "title": "Crear cuenta",
+      "heading": "Crea tu cuenta",
+      "subheading": "Empieza gratis — sin tarjeta de crédito",
       "company_name": "Nombre de la empresa",
-      "slug": "Identificador URL de la empresa",
+      "slug": "Identificador de empresa",
+      "slug_hint": "Tu URL será",
+      "slug_format": "Solo minúsculas, números y guiones (ej: mi-empresa)",
       "email": "Correo electrónico",
       "password": "Contraseña",
+      "password_min": "Mínimo 8 caracteres",
+      "confirm_password": "Confirmar contraseña",
+      "password_mismatch": "Las contraseñas no coinciden",
       "first_name": "Nombre",
       "last_name": "Apellido",
       "submit": "Crear cuenta",
       "already_account": "¿Ya tienes cuenta?",
-      "login_link": "Inicia sesión"
+      "login_link": "Inicia sesión",
+      "error_conflict": "El identificador de empresa o correo ya está en uso",
+      "success_title": "¡Revisa tu correo!",
+      "success_message": "Enviamos un enlace de confirmación a {{email}}. Activa tu cuenta antes de iniciar sesión.",
+      "go_to_login": "Ir a iniciar sesión"
     },
     "forgot_password": {
       "title": "Recuperar contraseña",

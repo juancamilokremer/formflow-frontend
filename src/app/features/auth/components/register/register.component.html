@@ -1,1 +1,112 @@
-<p>Register</p>
+<div class="auth-wrapper">
+  <app-card class="auth-card">
+
+    @if (registered()) {
+
+      <app-success-card
+        [title]="'auth.register.success_title' | translate"
+        [message]="'auth.register.success_message' | translate: { email: registeredEmail }"
+      >
+        <a class="success-login-link" [routerLink]="['/', routeConstants.LOGIN]">
+          {{ 'auth.register.go_to_login' | translate }}
+        </a>
+      </app-success-card>
+
+    } @else {
+
+      <div class="card-header">
+        <div class="logo-icon">F</div>
+        <h2 class="card-title">{{ 'auth.register.heading' | translate }}</h2>
+        <p class="card-subtitle">{{ 'auth.register.subheading' | translate }}</p>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+
+        <app-input
+          [label]="'auth.register.company_name' | translate"
+          formControlName="companyName"
+          placeholder="Ej: Recursos Humanos S.A.S"
+          autocomplete="organization"
+          [errorMessage]="companyNameError"
+          (input)="onCompanyNameChange($any($event.target).value)"
+        />
+
+        <app-input
+          [label]="'auth.register.slug' | translate"
+          formControlName="slug"
+          placeholder="recursos-humanos"
+          autocomplete="off"
+          prefix="formflow.app/"
+          [hint]="slugHint"
+          [errorMessage]="slugError"
+          (input)="onSlugChange()"
+        />
+
+        <div class="name-row">
+          <app-input
+            [label]="'auth.register.first_name' | translate"
+            formControlName="firstName"
+            autocomplete="given-name"
+            [errorMessage]="firstNameError"
+          />
+          <app-input
+            [label]="'auth.register.last_name' | translate"
+            formControlName="lastName"
+            autocomplete="family-name"
+            [errorMessage]="lastNameError"
+          />
+        </div>
+
+        <app-input
+          [label]="'auth.register.email' | translate"
+          type="email"
+          formControlName="email"
+          placeholder="tu@empresa.com"
+          autocomplete="email"
+          [errorMessage]="emailError"
+        />
+
+        <app-input
+          [label]="'auth.register.password' | translate"
+          type="password"
+          [toggleable]="true"
+          formControlName="password"
+          placeholder="••••••••"
+          autocomplete="new-password"
+          [errorMessage]="passwordError"
+        />
+
+        <app-input
+          [label]="'auth.register.confirm_password' | translate"
+          type="password"
+          [toggleable]="true"
+          formControlName="confirmPassword"
+          placeholder="••••••••"
+          autocomplete="new-password"
+          [errorMessage]="confirmPasswordError"
+        />
+
+        @if (errorKey()) {
+          <p class="form-error">{{ errorKey()! | translate }}</p>
+        }
+
+        <app-button
+          type="submit"
+          [loading]="loading()"
+          [disabled]="form.invalid || loading()"
+          [fullWidth]="true"
+        >
+          {{ 'auth.register.submit' | translate }}
+        </app-button>
+
+      </form>
+
+      <p class="auth-footer">
+        {{ 'auth.register.already_account' | translate }}
+        <a [routerLink]="['/', routeConstants.LOGIN]">{{ 'auth.register.login_link' | translate }}</a>
+      </p>
+
+    }
+
+  </app-card>
+</div>

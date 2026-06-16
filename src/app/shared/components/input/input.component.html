@@ -1,0 +1,39 @@
+<div class="field">
+  @if (label()) {
+    <label class="field-label">{{ label() }}</label>
+  }
+
+  <div
+    class="field-control"
+    [class.field-control--prefix]="prefix()"
+    [class.field-control--suffix]="toggleable()"
+    [class.field-control--error]="errorMessage()"
+  >
+    @if (prefix()) {
+      <span class="field-prefix">{{ prefix() }}</span>
+    }
+
+    <input
+      class="field-input"
+      [type]="effectiveType()"
+      [placeholder]="placeholder()"
+      [value]="internalValue()"
+      [disabled]="isDisabled()"
+      [attr.autocomplete]="autocomplete()"
+      (input)="onInput($event)"
+      (blur)="onBlur()"
+    />
+
+    @if (toggleable()) {
+      <button type="button" class="field-toggle" (click)="togglePasswordVisibility()">
+        <app-icon [name]="showPassword() ? 'eye-off' : 'eye'" [size]="18" />
+      </button>
+    }
+  </div>
+
+  @if (errorMessage()) {
+    <span class="field-error">{{ errorMessage() }}</span>
+  } @else if (hint()) {
+    <span class="field-hint" [innerHTML]="hint()"></span>
+  }
+</div>
