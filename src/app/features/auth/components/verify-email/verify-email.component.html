@@ -1,1 +1,44 @@
-<p>Verify Email</p>
+<div class="auth-wrapper">
+  <app-card class="auth-card">
+
+    @if (verifying()) {
+
+      <div class="state-center">
+        <div class="logo-icon">F</div>
+        <p class="state-message">{{ 'auth.verify_email.verifying' | translate }}</p>
+      </div>
+
+    } @else if (verified()) {
+
+      <app-success-card
+        [title]="'auth.verify_email.title' | translate"
+        [message]="'auth.verify_email.success' | translate"
+      >
+        <a class="footer-link" [routerLink]="['/', routeConstants.LOGIN]">
+          {{ 'auth.forgot_password.back_to_login' | translate }}
+        </a>
+      </app-success-card>
+
+    } @else if (invalidToken()) {
+
+      <div class="state-center">
+        <div class="logo-icon error">!</div>
+        <h2 class="card-title">{{ 'auth.verify_email.title' | translate }}</h2>
+        <p class="token-error">{{ 'auth.verify_email.invalid_token' | translate }}</p>
+        <a class="footer-link" [routerLink]="['/', routeConstants.LOGIN]">
+          {{ 'auth.forgot_password.back_to_login' | translate }}
+        </a>
+      </div>
+
+    } @else {
+
+      <div class="state-center">
+        <div class="logo-icon">F</div>
+        <h2 class="card-title">{{ 'auth.verify_email.title' | translate }}</h2>
+        <p class="state-message">{{ 'auth.verify_email.no_token' | translate }}</p>
+      </div>
+
+    }
+
+  </app-card>
+</div>

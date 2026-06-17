@@ -8,16 +8,11 @@ import { InputComponent } from '../../../../shared/components/input/input.compon
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
 import { CardComponent } from '../../../../shared/components/card/card.component';
 import { SuccessCardComponent } from '../../../../shared/components/success-card/success-card.component';
+import { passwordsMatchValidator } from '../../../../shared/validators/passwords-match.validator';
 
 function slugValidator(control: AbstractControl): ValidationErrors | null {
   const valid = /^[a-z0-9]+(-[a-z0-9]+)*$/.test(control.value ?? '');
   return valid ? null : { slugFormat: true };
-}
-
-function passwordsMatchValidator(group: AbstractControl): ValidationErrors | null {
-  const password = group.get('password')?.value;
-  const confirmPassword = group.get('confirmPassword')?.value;
-  return password === confirmPassword ? null : { passwordsMismatch: true };
 }
 
 @Component({
@@ -56,7 +51,7 @@ export class RegisterComponent {
       password: ['', [Validators.required, Validators.minLength(8)]],
       confirmPassword: ['', [Validators.required]],
     },
-    { validators: passwordsMatchValidator }
+    { validators: passwordsMatchValidator('password', 'confirmPassword') }
   );
 
   protected get slugHint(): string {

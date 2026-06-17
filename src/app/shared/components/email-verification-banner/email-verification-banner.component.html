@@ -1,0 +1,24 @@
+<div class="banner">
+  <span class="banner-message">
+    {{ 'auth.email_banner.message' | translate: { email: userEmail } }}
+  </span>
+
+  <span class="banner-actions">
+    @if (resendSuccess()) {
+      <span class="resend-success">{{ 'auth.verify_email.resend_success' | translate }}</span>
+    }
+
+    @if (cooldown() > 0) {
+      <span class="cooldown">{{ 'auth.email_banner.resend_cooldown' | translate: { seconds: cooldown() } }}</span>
+    } @else {
+      <button
+        class="resend-btn"
+        type="button"
+        [disabled]="resendLoading()"
+        (click)="onResend()"
+      >
+        {{ resendLoading() ? ('common.loading' | translate) : ('auth.email_banner.resend' | translate) }}
+      </button>
+    }
+  </span>
+</div>

@@ -1,4 +1,4 @@
-import { Component, inject, signal, input, effect } from '@angular/core';
+import { Component, inject, signal, input, effect, computed } from '@angular/core';
 import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -39,6 +39,9 @@ export class LoginComponent {
 
   // Receives ?tenant= query param via withComponentInputBinding()
   readonly tenant = input('');
+  // Receives ?passwordReset=success from reset-password redirect
+  readonly passwordReset = input('');
+  protected readonly showPasswordResetSuccess = computed(() => this.passwordReset() === 'success');
 
   constructor() {
     effect(() => {

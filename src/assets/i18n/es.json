@@ -25,7 +25,8 @@
       "register_link": "Regístrate",
       "tenant_format": "Solo minúsculas, números y guiones (ej: mi-empresa)",
       "email_invalid": "Ingresa un correo válido",
-      "error_invalid": "Credenciales inválidas o empresa no encontrada"
+      "error_invalid": "Credenciales inválidas o empresa no encontrada",
+      "password_reset_success": "Contraseña actualizada correctamente. Puedes iniciar sesión ahora."
     },
     "register": {
       "title": "Crear cuenta",
@@ -52,28 +53,36 @@
     },
     "forgot_password": {
       "title": "Recuperar contraseña",
+      "subheading": "Ingresa tu empresa y correo y te enviaremos las instrucciones.",
       "email": "Correo electrónico",
       "submit": "Enviar instrucciones",
-      "success": "Si el correo existe, recibirás las instrucciones en breve.",
+      "success_title": "¡Revisa tu correo!",
+      "success": "Si el correo existe en nuestra plataforma, recibirás las instrucciones en breve.",
       "back_to_login": "Volver al inicio de sesión"
     },
     "reset_password": {
       "title": "Nueva contraseña",
+      "subheading": "Elige una contraseña segura para tu cuenta.",
       "new_password": "Nueva contraseña",
+      "confirm_password": "Confirmar contraseña",
       "submit": "Cambiar contraseña",
       "success": "Contraseña actualizada. Ahora puedes iniciar sesión.",
-      "invalid_token": "El enlace no es válido o ha expirado."
+      "invalid_token": "El enlace no es válido o ha expirado.",
+      "request_new_link": "Solicitar un nuevo enlace"
     },
     "verify_email": {
       "title": "Verificar correo",
+      "verifying": "Verificando tu correo...",
+      "no_token": "No se encontró un enlace de verificación válido.",
       "success": "Tu correo ha sido verificado correctamente.",
       "invalid_token": "El enlace de verificación no es válido o ha expirado.",
       "resend": "Reenviar correo de verificación",
       "resend_success": "Correo de verificación enviado."
     },
     "email_banner": {
-      "message": "Verifica tu correo electrónico para activar todas las funciones.",
-      "resend": "Reenviar"
+      "message": "Verifica tu correo {{email}} para activar todas las funciones.",
+      "resend": "Reenviar",
+      "resend_cooldown": "Reenviar en {{seconds}}s"
     }
   },
   "errors": {

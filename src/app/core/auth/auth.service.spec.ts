@@ -87,6 +87,57 @@ describe('AuthService', () => {
     });
   });
 
+  describe('forgotPassword', () => {
+    it('posts tenantSlug and email with X-Tenant-ID header', () => {
+      let completed = false;
+      service.forgotPassword({ tenantSlug: 'acme', email: 'a@b.com' }).subscribe(() => (completed = true));
+
+      const req = httpMock.expectOne(`${environment.apiUrl}/auth/forgot-password`);
+      expect(req.request.headers.get('X-Tenant-ID')).toBe('acme');
+      req.flush({ success: true, data: null });
+
+      expect(completed).toBe(true);
+    });
+  });
+
+  describe('resetPassword', () => {
+    it('posts token and newPassword', () => {
+      let completed = false;
+      service.resetPassword('tok123', 'NewPass1!').subscribe(() => (completed = true));
+
+      const req = httpMock.expectOne(`${environment.apiUrl}/auth/reset-password`);
+      expect(req.request.body).toEqual({ token: 'tok123', newPassword: 'NewPass1!' });
+      req.flush({ success: true, data: null });
+
+      expect(completed).toBe(true);
+    });
+  });
+
+  describe('verifyEmail', () => {
+    it('posts the token', () => {
+      let completed = false;
+      service.verifyEmail('tok123').subscribe(() => (completed = true));
+
+      const req = httpMock.expectOne(`${environment.apiUrl}/auth/verify-email`);
+      expect(req.request.body).toEqual({ token: 'tok123' });
+      req.flush({ success: true, data: null });
+
+      expect(completed).toBe(true);
+    });
+  });
+
+  describe('resendVerification', () => {
+    it('posts with no body', () => {
+      let completed = false;
+      service.resendVerification().subscribe(() => (completed = true));
+
+      const req = httpMock.expectOne(`${environment.apiUrl}/auth/resend-verification`);
+      req.flush({ success: true, data: null });
+
+      expect(completed).toBe(true);
+    });
+  });
+
   describe('logout', () => {
     it('clears tokens and resets currentUser', () => {
       tokenService.setTokens({ accessToken: 'acc', refreshToken: 'ref' }, 'acme');
