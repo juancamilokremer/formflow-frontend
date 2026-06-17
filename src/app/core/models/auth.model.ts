@@ -13,6 +13,11 @@ export interface RegisterRequest {
   lastName: string;
 }
 
+export interface ForgotPasswordRequest {
+  tenantSlug: string;
+  email: string;
+}
+
 export interface AuthTokens {
   accessToken: string;
   refreshToken: string;

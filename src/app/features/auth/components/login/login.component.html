@@ -1,6 +1,10 @@
 <div class="auth-wrapper">
   <app-card class="auth-card">
 
+    @if (showPasswordResetSuccess()) {
+      <p class="success-banner">{{ 'auth.login.password_reset_success' | translate }}</p>
+    }
+
     <div class="card-header">
       <div class="logo-icon">F</div>
       <h2 class="card-title">{{ 'auth.login.heading' | translate }}</h2>
@@ -37,7 +41,10 @@
       />
 
       <div class="forgot-row">
-        <a [routerLink]="['/', routeConstants.FORGOT_PASSWORD]">
+        <a
+          [routerLink]="['/', routeConstants.FORGOT_PASSWORD]"
+          [queryParams]="{ tenant: form.controls.tenantSlug.value }"
+        >
           {{ 'auth.login.forgot_password' | translate }}
         </a>
       </div>

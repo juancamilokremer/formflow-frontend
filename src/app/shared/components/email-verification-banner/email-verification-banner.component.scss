@@ -1,0 +1,51 @@
+:host { display: block; }
+
+.banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  background: #fffbeb;
+  border-bottom: 1px solid #fde68a;
+  font-size: 14px;
+  flex-wrap: wrap;
+}
+
+.banner-message {
+  flex: 1;
+  color: #92400e;
+}
+
+.banner-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  white-space: nowrap;
+}
+
+.resend-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ff-primary);
+  cursor: pointer;
+  text-decoration: underline;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
+}
+
+.resend-success {
+  font-size: 13px;
+  color: #065f46;
+  font-weight: 500;
+}
+
+.cooldown {
+  font-size: 13px;
+  color: #92400e;
+}

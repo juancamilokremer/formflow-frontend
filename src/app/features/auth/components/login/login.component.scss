@@ -65,3 +65,13 @@
   color: var(--ff-text-secondary);
   margin: 20px 0 0;
 }
+
+.success-banner {
+  background: var(--ff-success-bg, #ecfdf5);
+  color: var(--ff-success-text, #065f46);
+  border: 1px solid var(--ff-success-border, #a7f3d0);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 14px;
+  margin-bottom: 20px;
+}

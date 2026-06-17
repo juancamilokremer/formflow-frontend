@@ -11,6 +11,7 @@ import {
   LoginRequest,
   RegisterRequest,
   RegisterResponse,
+  ForgotPasswordRequest,
   AuthResponse,
   AuthUserSummary,
   AuthTenantSummary,
@@ -44,6 +45,39 @@ export class AuthService {
     return this.http
       .post<ApiResponse<RegisterResponse>>(`${environment.apiUrl}/auth/register`, request)
       .pipe(map((res) => res.data!));
+  }
+
+  forgotPassword(request: ForgotPasswordRequest): Observable<void> {
+    return this.http
+      .post<ApiResponse<void>>(`${environment.apiUrl}/auth/forgot-password`, request, {
+        headers: new HttpHeaders({ 'X-Tenant-ID': request.tenantSlug }),
+      })
+      .pipe(map(() => void 0));
+  }
+
+  resetPassword(token: string, newPassword: string): Observable<void> {
+    return this.http
+      .post<ApiResponse<void>>(`${environment.apiUrl}/auth/reset-password`, { token, newPassword })
+      .pipe(map(() => void 0));
+  }
+
+  verifyEmail(token: string): Observable<void> {
+    return this.http
+      .post<ApiResponse<void>>(`${environment.apiUrl}/auth/verify-email`, { token })
+      .pipe(map(() => void 0));
+  }
+
+  resendVerification(): Observable<void> {
+    return this.http
+      .post<ApiResponse<void>>(`${environment.apiUrl}/auth/resend-verification`, {})
+      .pipe(map(() => void 0));
+  }
+
+  markEmailVerified(): void {
+    const user = this.currentUser();
+    if (user) {
+      this.currentUser.set({ ...user, emailVerified: true });
+    }
   }
 
   logout(): void {
