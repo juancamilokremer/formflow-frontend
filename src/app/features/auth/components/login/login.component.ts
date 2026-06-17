@@ -1,4 +1,5 @@
 import { Component, inject, signal, input, effect, computed } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -30,6 +31,7 @@ export class LoginComponent {
   protected readonly routeConstants = RouteConstants;
   protected readonly loading = signal(false);
   protected readonly errorKey = signal<string | null>(null);
+  protected readonly emailNotVerified = signal(false);
 
   protected readonly form = this.fb.nonNullable.group({
     tenantSlug: ['', [Validators.required, Validators.pattern(/^[a-z0-9]+(-[a-z0-9]+)*$/)]],
@@ -74,11 +76,16 @@ export class LoginComponent {
     if (this.form.invalid || this.loading()) return;
     this.loading.set(true);
     this.errorKey.set(null);
+    this.emailNotVerified.set(false);
 
     this.authService.login(this.form.getRawValue()).subscribe({
       next: () => this.router.navigate([`/${RouteConstants.DASHBOARD}`]),
-      error: () => {
-        this.errorKey.set('auth.login.error_invalid');
+      error: (err: HttpErrorResponse) => {
+        if (err.status === 403) {
+          this.emailNotVerified.set(true);
+        } else {
+          this.errorKey.set('auth.login.error_invalid');
+        }
         this.loading.set(false);
       },
     });

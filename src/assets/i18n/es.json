@@ -26,6 +26,7 @@
       "tenant_format": "Solo minúsculas, números y guiones (ej: mi-empresa)",
       "email_invalid": "Ingresa un correo válido",
       "error_invalid": "Credenciales inválidas o empresa no encontrada",
+      "error_email_not_verified": "Debes verificar tu correo antes de iniciar sesión. Revisa tu bandeja de entrada.",
       "password_reset_success": "Contraseña actualizada correctamente. Puedes iniciar sesión ahora."
     },
     "register": {

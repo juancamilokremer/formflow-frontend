@@ -49,7 +49,9 @@
         </a>
       </div>
 
-      @if (errorKey()) {
+      @if (emailNotVerified()) {
+        <p class="form-error">{{ 'auth.login.error_email_not_verified' | translate }}</p>
+      } @else if (errorKey()) {
         <p class="form-error">{{ errorKey()! | translate }}</p>
       }
 
