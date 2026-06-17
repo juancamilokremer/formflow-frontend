@@ -17,6 +17,9 @@ import { IconComponent } from '../../icons/icon.component';
   ],
 })
 export class InputComponent implements ControlValueAccessor {
+  private static nextId = 0;
+  protected readonly inputId = `ff-input-${InputComponent.nextId++}`;
+
   readonly label = input('');
   readonly type = input('text');
   readonly placeholder = input('');
