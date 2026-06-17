@@ -1,0 +1,9 @@
+<div class="lang-switcher">
+  @for (lang of langs; track lang) {
+    <button
+      class="lang-btn"
+      [class.active]="lang === current"
+      (click)="switch(lang)"
+    >{{ lang.toUpperCase() }}</button>
+  }
+</div>
