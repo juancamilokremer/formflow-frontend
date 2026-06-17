@@ -73,6 +73,13 @@ export class AuthService {
       .pipe(map(() => void 0));
   }
 
+  markEmailVerified(): void {
+    const user = this.currentUser();
+    if (user) {
+      this.currentUser.set({ ...user, emailVerified: true });
+    }
+  }
+
   logout(): void {
     this.tokenService.clearTokens();
     this.currentUser.set(null);

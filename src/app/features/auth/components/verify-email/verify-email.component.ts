@@ -20,6 +20,7 @@ export class VerifyEmailComponent {
   protected readonly verifying = signal(false);
   protected readonly verified = signal(false);
   protected readonly invalidToken = signal(false);
+  protected readonly isAuthenticated = this.authService.isAuthenticated;
 
   // Receives ?token= query param via withComponentInputBinding()
   readonly token = input('');
@@ -33,6 +34,7 @@ export class VerifyEmailComponent {
         next: () => {
           this.verifying.set(false);
           this.verified.set(true);
+          this.authService.markEmailVerified();
         },
         error: () => {
           this.verifying.set(false);

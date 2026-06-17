@@ -77,7 +77,8 @@
       "success": "Tu correo ha sido verificado correctamente.",
       "invalid_token": "El enlace de verificación no es válido o ha expirado.",
       "resend": "Reenviar correo de verificación",
-      "resend_success": "Correo de verificación enviado."
+      "resend_success": "Correo de verificación enviado.",
+      "go_to_dashboard": "Ir al panel"
     },
     "email_banner": {
       "message": "Verifica tu correo {{email}} para activar todas las funciones.",

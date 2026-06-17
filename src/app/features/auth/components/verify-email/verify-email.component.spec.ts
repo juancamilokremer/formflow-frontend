@@ -14,6 +14,7 @@ describe('VerifyEmailComponent', () => {
 
   const mockAuthService = {
     verifyEmail: () => verifyResult,
+    markEmailVerified: () => {},
     currentUser: signal(null),
     isAuthenticated: signal(false),
     initialize: () => of(undefined),

@@ -44,13 +44,6 @@ export const routes: Routes = [
             (m) => m.ResetPasswordComponent
           ),
       },
-      {
-        path: RouteConstants.VERIFY_EMAIL,
-        loadComponent: () =>
-          import('./features/auth/components/verify-email/verify-email.component').then(
-            (m) => m.VerifyEmailComponent
-          ),
-      },
     ],
   },
   {
@@ -99,6 +92,13 @@ export const routes: Routes = [
     canActivate: [authGuard],
     loadComponent: () =>
       import('./features/users/users.component').then((m) => m.UsersComponent),
+  },
+  {
+    path: RouteConstants.VERIFY_EMAIL,
+    loadComponent: () =>
+      import('./features/auth/components/verify-email/verify-email.component').then(
+        (m) => m.VerifyEmailComponent
+      ),
   },
   {
     path: RouteConstants.TERMS,
