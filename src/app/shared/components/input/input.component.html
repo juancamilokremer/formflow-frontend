@@ -1,6 +1,6 @@
 <div class="field">
   @if (label()) {
-    <label class="field-label">{{ label() }}</label>
+    <label [for]="inputId" class="field-label">{{ label() }}</label>
   }
 
   <div
@@ -15,6 +15,7 @@
 
     <input
       class="field-input"
+      [id]="inputId"
       [type]="effectiveType()"
       [placeholder]="placeholder()"
       [value]="internalValue()"
