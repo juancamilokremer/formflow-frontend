@@ -113,8 +113,21 @@
     "create_btn": "Nuevo formulario",
     "search_placeholder": "Buscar por nombre...",
     "stats": {
-      "total": "Total",
-      "sections": "Secciones"
+      "total": "Formularios",
+      "total_responses": "Total respuestas",
+      "active": "Activos",
+      "draft": "Borradores"
+    },
+    "status": {
+      "draft": "Borrador",
+      "active": "Activo",
+      "archived": "Archivado"
+    },
+    "filter": {
+      "all": "Todos los estados",
+      "active": "Activos",
+      "draft": "Borradores",
+      "archived": "Archivados"
     },
     "type": {
       "candidates": "Candidatos",
@@ -125,14 +138,15 @@
       "registration_desc": "Recopila información sin puntuación"
     },
     "table": {
-      "name": "Nombre",
-      "type": "Tipo",
-      "sections": "Secciones",
-      "updated": "Actualizado",
+      "name": "Formulario",
+      "status": "Estado",
+      "responses": "Respuestas",
+      "last_response": "Última resp.",
       "created": "Creado"
     },
     "actions": {
       "edit": "Editar",
+      "results": "Ver resultados",
       "confirm_delete": "¿Eliminar este formulario?",
       "delete_yes": "Sí, eliminar"
     },

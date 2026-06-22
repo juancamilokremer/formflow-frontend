@@ -14,8 +14,11 @@ const mockForms: Form[] = [
     name: 'Evaluación 2026',
     description: null,
     type: 'CANDIDATES',
+    status: 'ACTIVE',
     version: 1,
     sectionCount: 3,
+    responseCount: 10,
+    lastResponseAt: '2026-06-20T12:00:00Z',
     createdAt: '2026-06-01T00:00:00Z',
     updatedAt: '2026-06-10T00:00:00Z',
   },
@@ -24,8 +27,11 @@ const mockForms: Form[] = [
     name: 'Clima Laboral',
     description: null,
     type: 'DIAGNOSTIC',
+    status: 'DRAFT',
     version: 2,
     sectionCount: 2,
+    responseCount: 0,
+    lastResponseAt: null,
     createdAt: '2026-06-02T00:00:00Z',
     updatedAt: '2026-06-11T00:00:00Z',
   },
@@ -67,7 +73,22 @@ describe('FormsComponent', () => {
     expect(component['loadError']()).toBe(true);
   });
 
-  it('filteredForms() should return all forms when query is empty', () => {
+  it('totalResponses() should sum responseCount across all forms', () => {
+    const { component } = setup();
+    expect(component['totalResponses']()).toBe(10);
+  });
+
+  it('activeCount() should count forms with status ACTIVE', () => {
+    const { component } = setup();
+    expect(component['activeCount']()).toBe(1);
+  });
+
+  it('draftCount() should count forms with status DRAFT', () => {
+    const { component } = setup();
+    expect(component['draftCount']()).toBe(1);
+  });
+
+  it('filteredForms() should return all forms when query is empty and filter is ALL', () => {
     const { component } = setup();
     expect(component['filteredForms']()).toEqual(mockForms);
   });
@@ -77,6 +98,20 @@ describe('FormsComponent', () => {
     component['searchQuery'].set('clima');
     expect(component['filteredForms']()).toHaveLength(1);
     expect(component['filteredForms']()[0].id).toBe('f2');
+  });
+
+  it('filteredForms() should filter by status', () => {
+    const { component } = setup();
+    component['statusFilter'].set('DRAFT');
+    expect(component['filteredForms']()).toHaveLength(1);
+    expect(component['filteredForms']()[0].id).toBe('f2');
+  });
+
+  it('filteredForms() should apply both name and status filters', () => {
+    const { component } = setup();
+    component['statusFilter'].set('ACTIVE');
+    component['searchQuery'].set('clima');
+    expect(component['filteredForms']()).toHaveLength(0);
   });
 
   it('filteredForms() should return empty when no match', () => {
@@ -167,5 +202,16 @@ describe('FormsComponent', () => {
     const { component } = setup();
     const result = component['formatDate']('2026-06-01T00:00:00Z');
     expect(result).toMatch(/2026/);
+  });
+
+  it('formatRelative() should return "—" for null', () => {
+    const { component } = setup();
+    expect(component['formatRelative'](null)).toBe('—');
+  });
+
+  it('formatRelative() should return hours ago for recent dates', () => {
+    const { component } = setup();
+    const twoHoursAgo = new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString();
+    expect(component['formatRelative'](twoHoursAgo)).toMatch(/hace 2h/);
   });
 });

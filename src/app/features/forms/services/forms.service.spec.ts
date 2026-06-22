@@ -9,8 +9,11 @@ const mockForm: Form = {
   name: 'Test Form',
   description: null,
   type: 'CANDIDATES',
+  status: 'DRAFT',
   version: 1,
   sectionCount: 2,
+  responseCount: 0,
+  lastResponseAt: null,
   createdAt: '2026-06-01T00:00:00Z',
   updatedAt: '2026-06-01T00:00:00Z',
 };

@@ -118,6 +118,9 @@
     font-weight: 700;
     color: var(--ff-text-primary);
     line-height: 1;
+
+    &--active { color: #15803D; }
+    &--draft  { color: #854D0E; }
   }
 }
 
@@ -208,27 +211,42 @@
     color: var(--ff-text-muted);
   }
 
-  &__type-badge {
+  &__status-badge {
     display: inline-flex;
     align-items: center;
     padding: 3px 10px;
     border-radius: 99px;
     font-size: 12px;
-    font-weight: 500;
+    font-weight: 600;
 
-    &--candidates {
-      background: #EEF2FF;
-      color: #4338CA;
+    &--active {
+      background: #DCFCE7;
+      color: #15803D;
     }
 
-    &--diagnostic {
-      background: #F0FDF4;
-      color: #166534;
+    &--draft {
+      background: #FEF9C3;
+      color: #854D0E;
     }
 
-    &--registration {
-      background: #FFF7ED;
-      color: #9A3412;
+    &--archived {
+      background: #F1F5F9;
+      color: #64748B;
+    }
+  }
+
+  &__status-filter {
+    padding: 7px 12px;
+    border: 1px solid var(--ff-border);
+    border-radius: var(--ff-radius-md);
+    font-size: 13px;
+    color: var(--ff-text-primary);
+    background: var(--ff-white);
+    outline: none;
+    cursor: pointer;
+
+    &:focus {
+      border-color: var(--ff-primary);
     }
   }
 

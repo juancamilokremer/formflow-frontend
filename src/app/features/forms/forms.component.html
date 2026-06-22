@@ -12,15 +12,23 @@
     </app-button>
   </div>
 
-  <!-- Stat card -->
+  <!-- Stat cards -->
   <div class="forms-page__stats">
     <div class="stat-card">
       <span class="stat-card__label">{{ 'forms.stats.total' | translate }}</span>
       <span class="stat-card__value">{{ forms().length }}</span>
     </div>
     <div class="stat-card">
-      <span class="stat-card__label">{{ 'forms.stats.sections' | translate }}</span>
-      <span class="stat-card__value">{{ forms().length === 0 ? '—' : forms().reduce((acc, f) => acc + f.sectionCount, 0) }}</span>
+      <span class="stat-card__label">{{ 'forms.stats.total_responses' | translate }}</span>
+      <span class="stat-card__value">{{ totalResponses() }}</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-card__label">{{ 'forms.stats.active' | translate }}</span>
+      <span class="stat-card__value stat-card__value--active">{{ activeCount() }}</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-card__label">{{ 'forms.stats.draft' | translate }}</span>
+      <span class="stat-card__value stat-card__value--draft">{{ draftCount() }}</span>
     </div>
   </div>
 
@@ -68,6 +76,11 @@
             (input)="onSearch($event)"
           />
         </div>
+        <select class="forms-table__status-filter" (change)="onStatusFilter($event)">
+          @for (opt of statusFilterOptions; track opt.value) {
+            <option [value]="opt.value">{{ opt.labelKey | translate }}</option>
+          }
+        </select>
       </div>
 
       <!-- No results -->
@@ -83,9 +96,9 @@
           <thead>
             <tr>
               <th>{{ 'forms.table.name' | translate }}</th>
-              <th>{{ 'forms.table.type' | translate }}</th>
-              <th>{{ 'forms.table.sections' | translate }}</th>
-              <th>{{ 'forms.table.updated' | translate }}</th>
+              <th>{{ 'forms.table.status' | translate }}</th>
+              <th>{{ 'forms.table.responses' | translate }}</th>
+              <th>{{ 'forms.table.last_response' | translate }}</th>
               <th></th>
             </tr>
           </thead>
@@ -97,12 +110,12 @@
                   <span class="forms-table__date">{{ 'forms.table.created' | translate }} {{ formatDate(form.createdAt) }}</span>
                 </td>
                 <td>
-                  <span class="forms-table__type-badge forms-table__type-badge--{{ form.type | lowercase }}">
-                    {{ 'forms.type.' + (form.type | lowercase) | translate }}
+                  <span class="forms-table__status-badge forms-table__status-badge--{{ form.status | lowercase }}">
+                    ● {{ 'forms.status.' + (form.status | lowercase) | translate }}
                   </span>
                 </td>
-                <td class="forms-table__cell-center">{{ form.sectionCount }}</td>
-                <td class="forms-table__cell-muted">{{ formatDate(form.updatedAt) }}</td>
+                <td class="forms-table__cell-center">{{ form.responseCount }}</td>
+                <td class="forms-table__cell-muted">{{ formatRelative(form.lastResponseAt) }}</td>
                 <td class="forms-table__cell-actions">
                   @if (pendingDeleteId() === form.id) {
                     <span class="forms-table__confirm-label">{{ 'forms.actions.confirm_delete' | translate }}</span>
@@ -113,8 +126,12 @@
                       {{ 'common.cancel' | translate }}
                     </app-button>
                   } @else {
+                    @if (form.responseCount > 0) {
+                      <app-button variant="secondary" (click)="viewResults(form.id)">
+                        {{ 'forms.actions.results' | translate }}
+                      </app-button>
+                    }
                     <app-button variant="secondary" (click)="editForm(form.id)">
-                      <app-icon name="edit-2" [size]="14" />
                       {{ 'forms.actions.edit' | translate }}
                     </app-button>
                     <app-button variant="ghost" [danger]="true" (click)="confirmDelete(form.id)">
