@@ -1,0 +1,52 @@
+<div class="header">
+  <div class="header__left">
+    <app-button
+      class="header__menu-btn"
+      variant="ghost"
+      [iconOnly]="true"
+      [type]="'button'"
+      [appTooltip]="'shell.header.open_menu' | translate"
+      (click)="menuToggled.emit()"
+      [attr.aria-label]="'shell.header.open_menu' | translate"
+    >
+      <app-icon name="menu" [size]="20" />
+    </app-button>
+
+    @if (titleKey()) {
+      <h1 class="header__title">{{ titleKey()! | translate }}</h1>
+    }
+  </div>
+
+  <div class="header__right">
+    <div class="header__user-menu">
+      <button
+        class="header__avatar"
+        type="button"
+        (click)="toggleUserMenu()"
+        [attr.aria-label]="'shell.header.user_menu' | translate"
+        [attr.aria-expanded]="userMenuOpen()"
+      >
+        <span class="header__avatar-initials">{{ userInitials }}</span>
+        <app-icon name="chevron-down" [size]="14" />
+      </button>
+
+      @if (userMenuOpen()) {
+        <div class="header__dropdown">
+          <div class="header__dropdown-user">
+            <span class="header__dropdown-name">{{ authService.currentUser()?.firstName }} {{ authService.currentUser()?.lastName }}</span>
+            <span class="header__dropdown-email">{{ authService.currentUser()?.email }}</span>
+          </div>
+          <hr class="header__dropdown-divider" />
+          <button class="header__dropdown-item header__dropdown-item--danger" type="button" (click)="logout()">
+            <app-icon name="log-out" [size]="16" />
+            {{ 'shell.header.logout' | translate }}
+          </button>
+        </div>
+      }
+    </div>
+  </div>
+</div>
+
+@if (!authService.currentUser()?.emailVerified) {
+  <app-email-verification-banner />
+}

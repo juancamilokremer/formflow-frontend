@@ -1,0 +1,139 @@
+.header {
+  height: 60px;
+  min-height: 60px;
+  padding: 0 20px;
+  background-color: var(--ff-white);
+  border-bottom: 1px solid var(--ff-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+
+  &__left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+  }
+
+  &__menu-btn {
+    display: none;
+
+    @media (max-width: 1023px) {
+      display: flex;
+    }
+  }
+
+  &__title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--ff-text-primary);
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  &__user-menu {
+    position: relative;
+  }
+
+  &__avatar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 10px 5px 6px;
+    background-color: var(--ff-primary-light);
+    border: 1px solid transparent;
+    border-radius: 20px;
+    cursor: pointer;
+    color: var(--ff-primary);
+    line-height: 0;
+    transition: border-color 0.15s;
+
+    &:hover {
+      border-color: var(--ff-primary);
+    }
+  }
+
+  &__avatar-initials {
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  &__dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    min-width: 220px;
+    background-color: var(--ff-white);
+    border: 1px solid var(--ff-border);
+    border-radius: var(--ff-radius-lg);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    z-index: 20;
+  }
+
+  &__dropdown-user {
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  &__dropdown-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ff-text-primary);
+  }
+
+  &__dropdown-email {
+    font-size: 12px;
+    color: var(--ff-text-muted);
+  }
+
+  &__dropdown-divider {
+    margin: 0;
+    border: none;
+    border-top: 1px solid var(--ff-border);
+  }
+
+  &__dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 10px 16px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--ff-text-secondary);
+    text-align: left;
+    transition: background-color 0.15s, color 0.15s;
+
+    &:hover {
+      background-color: var(--ff-bg);
+      color: var(--ff-text-primary);
+    }
+
+    &--danger {
+      color: var(--ff-error-text);
+
+      &:hover {
+        background-color: #FEF2F2;
+        color: var(--ff-error-text);
+      }
+    }
+  }
+}

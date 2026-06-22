@@ -23,6 +23,12 @@
     width: 100%;
   }
 
+  &.btn--icon {
+    padding: 8px;
+    border-radius: var(--ff-radius-sm);
+    line-height: 0;
+  }
+
   &.btn--primary {
     background: var(--ff-primary);
     color: #fff;
@@ -43,6 +49,15 @@
     color: var(--ff-primary);
 
     &:hover:not(:disabled) { background: var(--ff-primary-light); }
+  }
+
+  &.btn--ghost.btn--danger {
+    color: var(--ff-error-text);
+
+    &:hover:not(:disabled) {
+      background: #FEF2F2;
+      color: var(--ff-error-text);
+    }
   }
 }
 

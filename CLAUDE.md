@@ -178,8 +178,8 @@ Ningún string visible al usuario hardcodeado — todo en `es.json` con `| trans
 ## Issues por milestone
 | Milestone | Issues |
 |-----------|--------|
-| M1 | #9 ✅ #10 #11 #18 #19 |
-| M2 | #1 #2 #3 #4 |
+| M1 ✅ | #9 ✅ #10 ✅ #11 ✅ #18 ✅ #19 ✅ |
+| M2 🔄 | #1 ⏳ #2 ⏳ #3 ⏳ #4 ⏳ |
 | M3 | #12 #13 #14 #15 #16 #20 |
 | M4 | #5 #6 |
 | M5 | #7 #8 #21 #22 #23 |
