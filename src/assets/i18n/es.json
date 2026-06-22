@@ -94,7 +94,8 @@
       "convocatorias": "Convocatorias",
       "users": "Usuarios",
       "settings": "Configuración",
-      "billing": "Facturación"
+      "billing": "Facturación",
+      "form_builder": "Constructor de formulario"
     },
     "header": {
       "open_menu": "Abrir menú",
@@ -104,6 +105,52 @@
     "sidebar": {
       "plan_label": "Plan {{plan}}",
       "close_menu": "Cerrar menú"
+    }
+  },
+  "forms": {
+    "title": "Formularios",
+    "subtitle": "Crea y administra tus formularios de evaluación",
+    "create_btn": "Nuevo formulario",
+    "search_placeholder": "Buscar por nombre...",
+    "stats": {
+      "total": "Total",
+      "sections": "Secciones"
+    },
+    "type": {
+      "candidates": "Candidatos",
+      "candidates_desc": "Evalúa aspirantes con scoring automático por categoría",
+      "diagnostic": "Diagnóstico",
+      "diagnostic_desc": "Mide clima laboral o dimensiones con escala Likert",
+      "registration": "Registro",
+      "registration_desc": "Recopila información sin puntuación"
+    },
+    "table": {
+      "name": "Nombre",
+      "type": "Tipo",
+      "sections": "Secciones",
+      "updated": "Actualizado",
+      "created": "Creado"
+    },
+    "actions": {
+      "edit": "Editar",
+      "confirm_delete": "¿Eliminar este formulario?",
+      "delete_yes": "Sí, eliminar"
+    },
+    "dialog": {
+      "title": "Nuevo formulario",
+      "name_label": "Nombre del formulario",
+      "name_placeholder": "Ej: Evaluación de candidatos 2026",
+      "type_label": "Tipo de formulario",
+      "create_btn": "Crear formulario"
+    },
+    "empty": {
+      "title": "No tienes formularios aún",
+      "subtitle": "Crea tu primer formulario para empezar a recolectar respuestas",
+      "no_results_title": "Sin resultados",
+      "no_results_subtitle": "No hay formularios que coincidan con tu búsqueda"
+    },
+    "error": {
+      "load": "No se pudieron cargar los formularios. Intenta de nuevo."
     }
   },
   "errors": {

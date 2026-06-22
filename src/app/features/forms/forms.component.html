@@ -1,1 +1,196 @@
-<p>Forms</p>
+<div class="forms-page">
+
+  <!-- Header -->
+  <div class="forms-page__header">
+    <div>
+      <h1 class="forms-page__title">{{ 'forms.title' | translate }}</h1>
+      <p class="forms-page__subtitle">{{ 'forms.subtitle' | translate }}</p>
+    </div>
+    <app-button (click)="openDialog()">
+      <app-icon name="plus" [size]="16" />
+      {{ 'forms.create_btn' | translate }}
+    </app-button>
+  </div>
+
+  <!-- Stat card -->
+  <div class="forms-page__stats">
+    <div class="stat-card">
+      <span class="stat-card__label">{{ 'forms.stats.total' | translate }}</span>
+      <span class="stat-card__value">{{ forms().length }}</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-card__label">{{ 'forms.stats.sections' | translate }}</span>
+      <span class="stat-card__value">{{ forms().length === 0 ? '—' : forms().reduce((acc, f) => acc + f.sectionCount, 0) }}</span>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  @if (loading()) {
+    <div class="forms-page__loading">
+      <span class="forms-page__spinner"></span>
+      <span>{{ 'common.loading' | translate }}</span>
+    </div>
+  }
+
+  <!-- Error -->
+  @else if (loadError()) {
+    <div class="forms-page__error">
+      <app-icon name="alert-circle" [size]="20" />
+      {{ 'forms.error.load' | translate }}
+    </div>
+  }
+
+  <!-- Empty — no forms at all -->
+  @else if (forms().length === 0) {
+    <div class="forms-page__empty">
+      <app-icon name="file-plus" [size]="48" />
+      <p class="forms-page__empty-title">{{ 'forms.empty.title' | translate }}</p>
+      <p class="forms-page__empty-subtitle">{{ 'forms.empty.subtitle' | translate }}</p>
+      <app-button (click)="openDialog()">
+        <app-icon name="plus" [size]="16" />
+        {{ 'forms.create_btn' | translate }}
+      </app-button>
+    </div>
+  }
+
+  <!-- Table -->
+  @else {
+    <div class="forms-table">
+
+      <!-- Toolbar -->
+      <div class="forms-table__toolbar">
+        <div class="forms-table__search">
+          <app-icon name="search" [size]="16" />
+          <input
+            class="forms-table__search-input"
+            type="text"
+            [placeholder]="'forms.search_placeholder' | translate"
+            (input)="onSearch($event)"
+          />
+        </div>
+      </div>
+
+      <!-- No results -->
+      @if (filteredForms().length === 0) {
+        <div class="forms-page__empty forms-page__empty--inline">
+          <p class="forms-page__empty-title">{{ 'forms.empty.no_results_title' | translate }}</p>
+          <p class="forms-page__empty-subtitle">{{ 'forms.empty.no_results_subtitle' | translate }}</p>
+        </div>
+      }
+
+      @else {
+        <table class="forms-table__table">
+          <thead>
+            <tr>
+              <th>{{ 'forms.table.name' | translate }}</th>
+              <th>{{ 'forms.table.type' | translate }}</th>
+              <th>{{ 'forms.table.sections' | translate }}</th>
+              <th>{{ 'forms.table.updated' | translate }}</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (form of filteredForms(); track form.id) {
+              <tr [class.forms-table__row--deleting]="pendingDeleteId() === form.id">
+                <td class="forms-table__cell-name">
+                  <span class="forms-table__name">{{ form.name }}</span>
+                  <span class="forms-table__date">{{ 'forms.table.created' | translate }} {{ formatDate(form.createdAt) }}</span>
+                </td>
+                <td>
+                  <span class="forms-table__type-badge forms-table__type-badge--{{ form.type | lowercase }}">
+                    {{ 'forms.type.' + (form.type | lowercase) | translate }}
+                  </span>
+                </td>
+                <td class="forms-table__cell-center">{{ form.sectionCount }}</td>
+                <td class="forms-table__cell-muted">{{ formatDate(form.updatedAt) }}</td>
+                <td class="forms-table__cell-actions">
+                  @if (pendingDeleteId() === form.id) {
+                    <span class="forms-table__confirm-label">{{ 'forms.actions.confirm_delete' | translate }}</span>
+                    <app-button variant="ghost" [danger]="true" (click)="deleteForm(form.id)">
+                      {{ 'forms.actions.delete_yes' | translate }}
+                    </app-button>
+                    <app-button variant="secondary" (click)="cancelDelete()">
+                      {{ 'common.cancel' | translate }}
+                    </app-button>
+                  } @else {
+                    <app-button variant="secondary" (click)="editForm(form.id)">
+                      <app-icon name="edit-2" [size]="14" />
+                      {{ 'forms.actions.edit' | translate }}
+                    </app-button>
+                    <app-button variant="ghost" [danger]="true" (click)="confirmDelete(form.id)">
+                      <app-icon name="trash-2" [size]="14" />
+                    </app-button>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+    </div>
+  }
+
+</div>
+
+<!-- Create dialog -->
+@if (showDialog()) {
+  <div class="dialog-overlay" (click)="closeDialog()" (keydown.escape)="closeDialog()" role="dialog" aria-modal="true">
+    <div class="dialog" (click)="$event.stopPropagation()">
+
+      <div class="dialog__header">
+        <h2 class="dialog__title">{{ 'forms.dialog.title' | translate }}</h2>
+        <app-button variant="ghost" [iconOnly]="true" [type]="'button'" (click)="closeDialog()">
+          <app-icon name="x" [size]="18" />
+        </app-button>
+      </div>
+
+      <div class="dialog__body">
+        <div class="dialog__field">
+          <label class="dialog__label" for="form-name">{{ 'forms.dialog.name_label' | translate }}</label>
+          <input
+            id="form-name"
+            class="dialog__input"
+            type="text"
+            [placeholder]="'forms.dialog.name_placeholder' | translate"
+            [value]="newName()"
+            (input)="newName.set($any($event.target).value)"
+            (keydown.enter)="createForm()"
+            autocomplete="off"
+          />
+        </div>
+
+        <div class="dialog__field">
+          <label class="dialog__label">{{ 'forms.dialog.type_label' | translate }}</label>
+          <div class="dialog__type-options">
+            @for (opt of formTypeOptions; track opt.value) {
+              <button
+                class="dialog__type-option"
+                type="button"
+                [class.dialog__type-option--selected]="newType() === opt.value"
+                (click)="selectType(opt.value)"
+              >
+                <span class="dialog__type-name">{{ opt.labelKey | translate }}</span>
+                <span class="dialog__type-desc">{{ opt.descKey | translate }}</span>
+              </button>
+            }
+          </div>
+        </div>
+      </div>
+
+      <div class="dialog__footer">
+        <app-button variant="secondary" [type]="'button'" (click)="closeDialog()" [disabled]="creating()">
+          {{ 'common.cancel' | translate }}
+        </app-button>
+        <app-button
+          [type]="'button'"
+          [loading]="creating()"
+          [disabled]="!newName().trim()"
+          (click)="createForm()"
+        >
+          {{ 'forms.dialog.create_btn' | translate }}
+        </app-button>
+      </div>
+
+    </div>
+  </div>
+}

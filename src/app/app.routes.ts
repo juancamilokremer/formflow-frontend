@@ -65,6 +65,14 @@ export const routes: Routes = [
           import('./features/forms/forms.component').then((m) => m.FormsComponent),
       },
       {
+        path: `${RouteConstants.FORMS}/:id/${RouteConstants.FORM_BUILDER}`,
+        data: { titleKey: 'shell.nav.form_builder' },
+        loadComponent: () =>
+          import('./features/forms/components/form-builder/form-builder.component').then(
+            (m) => m.FormBuilderComponent,
+          ),
+      },
+      {
         path: RouteConstants.CONVOCATORIAS,
         data: { titleKey: 'shell.nav.convocatorias' },
         loadComponent: () =>
