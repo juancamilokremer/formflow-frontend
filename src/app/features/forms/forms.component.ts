@@ -20,7 +20,7 @@ const FORM_TYPE_OPTIONS: FormTypeOption[] = [
   { value: 'REGISTRATION', labelKey: 'forms.type.registration', descKey: 'forms.type.registration_desc' },
 ];
 
-const STATUS_FILTER_OPTIONS: Array<{ value: FormStatus | 'ALL'; labelKey: string }> = [
+const STATUS_FILTER_OPTIONS: { value: FormStatus | 'ALL'; labelKey: string }[] = [
   { value: 'ALL', labelKey: 'forms.filter.all' },
   { value: 'ACTIVE', labelKey: 'forms.filter.active' },
   { value: 'DRAFT', labelKey: 'forms.filter.draft' },

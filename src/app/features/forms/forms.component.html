@@ -152,7 +152,7 @@
 <!-- Create dialog -->
 @if (showDialog()) {
   <div class="dialog-overlay" (click)="closeDialog()" (keydown.escape)="closeDialog()" role="dialog" aria-modal="true">
-    <div class="dialog" (click)="$event.stopPropagation()">
+    <div class="dialog" tabindex="-1" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
 
       <div class="dialog__header">
         <h2 class="dialog__title">{{ 'forms.dialog.title' | translate }}</h2>
@@ -177,7 +177,7 @@
         </div>
 
         <div class="dialog__field">
-          <label class="dialog__label">{{ 'forms.dialog.type_label' | translate }}</label>
+          <span class="dialog__label">{{ 'forms.dialog.type_label' | translate }}</span>
           <div class="dialog__type-options">
             @for (opt of formTypeOptions; track opt.value) {
               <button
