@@ -42,40 +42,11 @@
     letter-spacing: -0.3px;
   }
 
-  &__icon-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
-    padding: 0;
-    background: none;
-    border: none;
-    border-radius: var(--ff-radius-sm);
-    cursor: pointer;
-    color: var(--ff-text-muted);
-    line-height: 0;
-    flex-shrink: 0;
-    transition: background-color 0.15s, color 0.15s;
-
-    &:hover {
-      background-color: var(--ff-bg);
-      color: var(--ff-text-primary);
-    }
-  }
-
   &__close {
     display: none;
 
     @media (max-width: 1023px) {
       display: flex;
-    }
-  }
-
-  &__logout {
-    &:hover {
-      color: var(--ff-error);
-      background-color: #FEF2F2;
     }
   }
 

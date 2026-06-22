@@ -12,4 +12,5 @@ export class ButtonComponent {
   readonly disabled = input(false);
   readonly fullWidth = input(false);
   readonly iconOnly = input(false);
+  readonly danger = input(false);
 }

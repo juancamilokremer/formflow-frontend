@@ -5,12 +5,14 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { filter, map, startWith } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { AuthService } from '../../../../core/auth/auth.service';
+import { ButtonComponent } from '../../../../shared/components/button/button.component';
 import { EmailVerificationBannerComponent } from '../../../../shared/components/email-verification-banner/email-verification-banner.component';
 import { IconComponent } from '../../../../shared/icons/icon.component';
+import { TooltipDirective } from '../../../../shared/directives/tooltip.directive';
 
 @Component({
   selector: 'app-header',
-  imports: [TranslatePipe, IconComponent, EmailVerificationBannerComponent],
+  imports: [TranslatePipe, IconComponent, EmailVerificationBannerComponent, ButtonComponent, TooltipDirective],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })

@@ -19,28 +19,6 @@
     min-width: 0;
   }
 
-  &__icon-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 36px;
-    height: 36px;
-    padding: 0;
-    background: none;
-    border: none;
-    border-radius: var(--ff-radius-sm);
-    cursor: pointer;
-    color: var(--ff-text-secondary);
-    line-height: 0;
-    transition: background-color 0.15s, color 0.15s;
-    flex-shrink: 0;
-
-    &:hover {
-      background-color: var(--ff-bg);
-      color: var(--ff-text-primary);
-    }
-  }
-
   &__menu-btn {
     display: none;
 

@@ -50,6 +50,15 @@
 
     &:hover:not(:disabled) { background: var(--ff-primary-light); }
   }
+
+  &.btn--ghost.btn--danger {
+    color: var(--ff-error-text);
+
+    &:hover:not(:disabled) {
+      background: #FEF2F2;
+      color: var(--ff-error-text);
+    }
+  }
 }
 
 /* Loading spinner */

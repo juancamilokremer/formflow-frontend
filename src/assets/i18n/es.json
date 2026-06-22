@@ -102,7 +102,8 @@
       "logout": "Cerrar sesión"
     },
     "sidebar": {
-      "plan_label": "Plan {{plan}}"
+      "plan_label": "Plan {{plan}}",
+      "close_menu": "Cerrar menú"
     }
   },
   "errors": {

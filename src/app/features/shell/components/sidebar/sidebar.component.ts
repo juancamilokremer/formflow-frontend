@@ -3,8 +3,10 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { AuthService } from '../../../../core/auth/auth.service';
 import { RouteConstants } from '../../../../core/constants/route.constants';
+import { ButtonComponent } from '../../../../shared/components/button/button.component';
 import { IconComponent } from '../../../../shared/icons/icon.component';
 import { IconName } from '../../../../shared/icons/icon.registry';
+import { TooltipDirective } from '../../../../shared/directives/tooltip.directive';
 
 interface NavItem {
   labelKey: string;
@@ -23,7 +25,7 @@ const NAV_ITEMS: NavItem[] = [
 
 @Component({
   selector: 'app-sidebar',
-  imports: [RouterLink, RouterLinkActive, TranslatePipe, IconComponent],
+  imports: [RouterLink, RouterLinkActive, TranslatePipe, IconComponent, ButtonComponent, TooltipDirective],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss',
 })

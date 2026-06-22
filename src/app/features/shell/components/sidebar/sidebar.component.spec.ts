@@ -1,6 +1,8 @@
-import { SidebarComponent } from './sidebar.component';
+import { signal } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
 import { AuthService } from '../../../../core/auth/auth.service';
 import { User, UserRole } from '../../../../core/models/user.model';
+import { SidebarComponent } from './sidebar.component';
 
 const mockUser: User = {
   id: '1',
@@ -14,32 +16,38 @@ const mockUser: User = {
   emailVerified: true,
 };
 
-function makeComponent(user: User | null = mockUser): SidebarComponent {
-  const component = new SidebarComponent();
-  const mockAuthService = { currentUser: () => user, logout: jasmine.createSpy('logout') } as unknown as AuthService;
-  Object.defineProperty(component, 'authService', { value: mockAuthService });
-  return component;
+function setup(user: User | null = mockUser) {
+  const mockLogout = vi.fn();
+  TestBed.configureTestingModule({
+    providers: [
+      { provide: AuthService, useValue: { currentUser: signal(user), logout: mockLogout } },
+    ],
+  });
+  const component = TestBed.runInInjectionContext(() => new SidebarComponent());
+  return { component, mockLogout };
 }
 
 describe('SidebarComponent', () => {
+  beforeEach(() => TestBed.resetTestingModule());
+
   it('should compute initials from first and last name', () => {
-    const component = makeComponent();
+    const { component } = setup();
     expect((component as any).userInitials).toBe('JK');
   });
 
   it('should return empty string when no user', () => {
-    const component = makeComponent(null);
+    const { component } = setup(null);
     expect((component as any).userInitials).toBe('');
   });
 
   it('should compute full name', () => {
-    const component = makeComponent();
+    const { component } = setup();
     expect((component as any).userFullName).toBe('Juan Kremer');
   });
 
   it('logout should delegate to authService', () => {
-    const component = makeComponent();
+    const { component, mockLogout } = setup();
     (component as any).logout();
-    expect((component as any).authService.logout).toHaveBeenCalled();
+    expect(mockLogout).toHaveBeenCalled();
   });
 });
