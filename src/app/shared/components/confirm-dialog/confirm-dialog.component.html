@@ -10,7 +10,7 @@
     <app-button variant="secondary" type="button" (click)="cancelled.emit()">
       {{ cancelLabel() | translate }}
     </app-button>
-    <app-button variant="danger" type="button" (click)="confirmed.emit()">
+    <app-button type="button" (click)="confirmed.emit()">
       {{ confirmLabel() | translate }}
     </app-button>
   </div>

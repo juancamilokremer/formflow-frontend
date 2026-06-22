@@ -7,7 +7,7 @@
   [class.btn--full]="fullWidth()"
   [class.btn--loading]="loading()"
   [class.btn--icon]="iconOnly()"
-  [class.btn--danger]="danger()"
+  [class.btn--danger]="variant() === 'danger' || danger()"
   [type]="type()"
   [disabled]="disabled() || loading()"
 >

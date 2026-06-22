@@ -29,7 +29,6 @@ function setup(formsResult: Form[] | 'error' = mockForms) {
   const mockGetAll = vi.fn().mockReturnValue(
     formsResult === 'error' ? throwError(() => new Error('fail')) : of(formsResult),
   );
-  const mockRemove = vi.fn();
   const mockNavigate = vi.fn();
 
   TestBed.configureTestingModule({
@@ -38,12 +37,12 @@ function setup(formsResult: Form[] | 'error' = mockForms) {
       provideHttpClientTesting(),
       { provide: Router, useValue: { events: EMPTY, navigate: mockNavigate } },
       { provide: ActivatedRoute, useValue: { firstChild: null, snapshot: { data: {} } } },
-      { provide: FormsService, useValue: { getAll: mockGetAll, remove: mockRemove } },
+      { provide: FormsService, useValue: { getAll: mockGetAll } },
     ],
   });
 
   const component = TestBed.runInInjectionContext(() => new FormsComponent());
-  return { component, mockNavigate, mockRemove };
+  return { component, mockNavigate };
 }
 
 describe('FormsComponent', () => {
@@ -85,25 +84,10 @@ describe('FormsComponent', () => {
     expect(mockNavigate).toHaveBeenCalled();
   });
 
-  it('confirmDelete() should set pendingDeleteId', () => {
+  it('onFormDeleted() should remove the form from the list', () => {
     const { component } = setup();
-    component['confirmDelete']('f1');
-    expect(component['pendingDeleteId']()).toBe('f1');
-  });
-
-  it('cancelDelete() should clear pendingDeleteId', () => {
-    const { component } = setup();
-    component['pendingDeleteId'].set('f1');
-    component['cancelDelete']();
-    expect(component['pendingDeleteId']()).toBeNull();
-  });
-
-  it('deleteForm() should remove form from list and clear pendingDeleteId', () => {
-    const { component, mockRemove } = setup();
-    mockRemove.mockReturnValue(of(undefined));
-    component['pendingDeleteId'].set('f1');
-    component['deleteForm']();
+    component['onFormDeleted']('f1');
     expect(component['forms']().find((f) => f.id === 'f1')).toBeUndefined();
-    expect(component['pendingDeleteId']()).toBeNull();
+    expect(component['forms']()).toHaveLength(1);
   });
 });

@@ -55,10 +55,18 @@
       <app-button variant="secondary" (click)="editRequested.emit($any(row).id)">
         {{ 'forms.actions.edit' | translate }}
       </app-button>
-      <app-button variant="ghost" [danger]="true" (click)="deleteRequested.emit($any(row).id)">
+      <app-button variant="ghost" [danger]="true" (click)="confirmDelete($any(row).id)">
         <app-icon name="trash-2" [size]="14" />
       </app-button>
     </div>
   </ng-template>
 
 </app-table>
+
+<app-confirm-dialog
+  [isOpen]="!!pendingDeleteId()"
+  [message]="'forms.actions.confirm_delete' | translate"
+  confirmLabel="forms.actions.delete_yes"
+  (confirmed)="deleteForm()"
+  (cancelled)="cancelDelete()"
+/>

@@ -1,4 +1,4 @@
-import { Component, computed, input, output, signal } from '@angular/core';
+import { Component, computed, inject, input, output, signal } from '@angular/core';
 import { LowerCasePipe } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
@@ -8,6 +8,8 @@ import { SelectComponent, SelectOption } from '../../../../shared/components/sel
 import { AppTableComponent, TableColumn } from '../../../../shared/components/table/table.component';
 import { TableCellDirective } from '../../../../shared/components/table/table-cell.directive';
 import { TableToolbarDirective } from '../../../../shared/components/table/table-toolbar.directive';
+import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
+import { FormsService } from '../../services/forms.service';
 import { Form } from '../../models/form.model';
 
 const STATUS_FILTER_OPTIONS: SelectOption[] = [
@@ -32,21 +34,25 @@ const TABLE_COLUMNS: TableColumn[] = [
     ButtonComponent, IconComponent,
     SearchInputComponent, SelectComponent,
     AppTableComponent, TableCellDirective, TableToolbarDirective,
+    ConfirmDialogComponent,
   ],
   templateUrl: './forms-list.component.html',
   styleUrl: './forms-list.component.scss',
 })
 export class FormsListComponent {
-  readonly forms    = input.required<Form[]>();
-  readonly loading  = input.required<boolean>();
+  private readonly formsService = inject(FormsService);
+
+  readonly forms     = input.required<Form[]>();
+  readonly loading   = input.required<boolean>();
   readonly loadError = input.required<boolean>();
 
   readonly editRequested        = output<string>();
   readonly viewResultsRequested = output<string>();
-  readonly deleteRequested      = output<string>();
+  readonly deleted              = output<string>();
 
-  protected readonly searchQuery  = signal('');
-  protected readonly statusFilter = signal<string>('ALL');
+  protected readonly searchQuery    = signal('');
+  protected readonly statusFilter   = signal<string>('ALL');
+  protected readonly pendingDeleteId = signal<string | null>(null);
 
   protected readonly statusFilterOptions = STATUS_FILTER_OPTIONS;
   protected readonly tableColumns        = TABLE_COLUMNS;
@@ -67,6 +73,25 @@ export class FormsListComponent {
 
   protected onStatusFilter(value: string): void {
     this.statusFilter.set(value);
+  }
+
+  protected confirmDelete(id: string): void {
+    this.pendingDeleteId.set(id);
+  }
+
+  protected cancelDelete(): void {
+    this.pendingDeleteId.set(null);
+  }
+
+  protected deleteForm(): void {
+    const id = this.pendingDeleteId();
+    if (!id) return;
+    this.formsService.remove(id).subscribe({
+      next: () => {
+        this.deleted.emit(id);
+        this.pendingDeleteId.set(null);
+      },
+    });
   }
 
   protected formatDate(iso: string): string {

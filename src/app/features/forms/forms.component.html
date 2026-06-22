@@ -35,7 +35,7 @@
       [loadError]="loadError()"
       (editRequested)="editForm($event)"
       (viewResultsRequested)="viewResults($event)"
-      (deleteRequested)="confirmDelete($event)"
+      (deleted)="onFormDeleted($event)"
     />
   }
 
@@ -45,12 +45,4 @@
   [isOpen]="showCreateDialog()"
   (created)="onFormCreated($event)"
   (cancelled)="showCreateDialog.set(false)"
-/>
-
-<app-confirm-dialog
-  [isOpen]="!!pendingDeleteId()"
-  [message]="'forms.actions.confirm_delete' | translate"
-  confirmLabel="forms.actions.delete_yes"
-  (confirmed)="deleteForm()"
-  (cancelled)="cancelDelete()"
 />

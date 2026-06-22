@@ -1,5 +1,10 @@
 import { TestBed } from '@angular/core/testing';
+import { of, throwError } from 'rxjs';
+import { vi } from 'vitest';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { FormsListComponent } from './forms-list.component';
+import { FormsService } from '../../services/forms.service';
 import { Form } from '../../models/form.model';
 
 const mockForms: Form[] = [
@@ -20,16 +25,18 @@ const mockForms: Form[] = [
 ];
 
 function setup() {
-  TestBed.configureTestingModule({});
-  const component = TestBed.runInInjectionContext(
-    () => new FormsListComponent(),
-  );
-  TestBed.runInInjectionContext(() => {
-    (component as any).forms = () => mockForms;
-    (component as any).loading = () => false;
-    (component as any).loadError = () => false;
+  const mockRemove = vi.fn();
+  TestBed.configureTestingModule({
+    providers: [
+      provideHttpClient(), provideHttpClientTesting(),
+      { provide: FormsService, useValue: { remove: mockRemove } },
+    ],
   });
-  return { component };
+  const component = TestBed.runInInjectionContext(() => new FormsListComponent());
+  (component as any).forms = () => mockForms;
+  (component as any).loading = () => false;
+  (component as any).loadError = () => false;
+  return { component, mockRemove };
 }
 
 describe('FormsListComponent', () => {
@@ -82,6 +89,37 @@ describe('FormsListComponent', () => {
     expect(component['statusFilter']()).toBe('ACTIVE');
   });
 
+  it('confirmDelete() should set pendingDeleteId', () => {
+    const { component } = setup();
+    component['confirmDelete']('f1');
+    expect(component['pendingDeleteId']()).toBe('f1');
+  });
+
+  it('cancelDelete() should clear pendingDeleteId', () => {
+    const { component } = setup();
+    component['pendingDeleteId'].set('f1');
+    component['cancelDelete']();
+    expect(component['pendingDeleteId']()).toBeNull();
+  });
+
+  it('deleteForm() should call service, emit deleted, and clear pendingDeleteId', () => {
+    const { component, mockRemove } = setup();
+    mockRemove.mockReturnValue(of(undefined));
+    const emitted: string[] = [];
+    component.deleted.subscribe((id) => emitted.push(id));
+    component['pendingDeleteId'].set('f1');
+    component['deleteForm']();
+    expect(mockRemove).toHaveBeenCalledWith('f1');
+    expect(emitted).toEqual(['f1']);
+    expect(component['pendingDeleteId']()).toBeNull();
+  });
+
+  it('deleteForm() should do nothing when pendingDeleteId is null', () => {
+    const { component, mockRemove } = setup();
+    component['deleteForm']();
+    expect(mockRemove).not.toHaveBeenCalled();
+  });
+
   it('formatDate() should return a string containing the year', () => {
     const { component } = setup();
     expect(component['formatDate']('2026-06-01T00:00:00Z')).toMatch(/2026/);
@@ -96,29 +134,5 @@ describe('FormsListComponent', () => {
     const { component } = setup();
     const twoHoursAgo = new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString();
     expect(component['formatRelative'](twoHoursAgo)).toMatch(/hace 2h/);
-  });
-
-  it('editRequested should emit id', () => {
-    const { component } = setup();
-    const emitted: string[] = [];
-    component.editRequested.subscribe((id) => emitted.push(id));
-    component.editRequested.emit('f1');
-    expect(emitted).toEqual(['f1']);
-  });
-
-  it('viewResultsRequested should emit id', () => {
-    const { component } = setup();
-    const emitted: string[] = [];
-    component.viewResultsRequested.subscribe((id) => emitted.push(id));
-    component.viewResultsRequested.emit('f1');
-    expect(emitted).toEqual(['f1']);
-  });
-
-  it('deleteRequested should emit id', () => {
-    const { component } = setup();
-    const emitted: string[] = [];
-    component.deleteRequested.subscribe((id) => emitted.push(id));
-    component.deleteRequested.emit('f1');
-    expect(emitted).toEqual(['f1']);
   });
 });
