@@ -58,6 +58,9 @@ body {
 /* Global resets */
 *, *::before, *::after { box-sizing: border-box; }
 a { color: var(--ff-primary); text-decoration: none; }
+
+/* Dialog footer slot: transparent to layout so buttons participate in the flex container */
+[dialog-footer] { display: contents; }
 a:hover { text-decoration: underline; }
 
 /* Tooltip */

@@ -1,3 +1,10 @@
-:host {
-  display: block;
+:host { display: block; }
+
+.forms-page {
+  &__stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 28px;
+  }
 }

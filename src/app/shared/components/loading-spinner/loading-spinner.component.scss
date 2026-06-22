@@ -1,0 +1,23 @@
+:host { display: block; }
+
+.loading-spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 48px 0;
+  color: var(--ff-text-secondary);
+  font-size: 14px;
+
+  &__ring {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--ff-border);
+    border-top-color: var(--ff-primary);
+    border-radius: 50%;
+    animation: ff-spin 0.7s linear infinite;
+    flex-shrink: 0;
+  }
+}
+
+@keyframes ff-spin { to { transform: rotate(360deg); } }

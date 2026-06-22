@@ -1,0 +1,17 @@
+<app-dialog
+  [title]="title() | translate"
+  [isOpen]="isOpen()"
+  maxWidth="440px"
+  (closed)="cancelled.emit()"
+>
+  <p class="confirm-dialog__message">{{ message() }}</p>
+
+  <div dialog-footer>
+    <app-button variant="secondary" type="button" (click)="cancelled.emit()">
+      {{ cancelLabel() | translate }}
+    </app-button>
+    <app-button type="button" (click)="confirmed.emit()">
+      {{ confirmLabel() | translate }}
+    </app-button>
+  </div>
+</app-dialog>

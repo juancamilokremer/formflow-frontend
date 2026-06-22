@@ -1,1 +1,48 @@
-<p>Forms</p>
+<div class="forms-page">
+
+  <app-page-header
+    [title]="'forms.title' | translate"
+    [subtitle]="'forms.subtitle' | translate"
+  >
+    <app-button (click)="showCreateDialog.set(true)">
+      <app-icon name="plus" [size]="16" />
+      {{ 'forms.create_btn' | translate }}
+    </app-button>
+  </app-page-header>
+
+  <div class="forms-page__stats">
+    <app-stat-card [label]="'forms.stats.total' | translate"           [value]="forms().length" />
+    <app-stat-card [label]="'forms.stats.total_responses' | translate"  [value]="totalResponses()" />
+    <app-stat-card [label]="'forms.stats.active' | translate"           [value]="activeCount()" color="success" />
+    <app-stat-card [label]="'forms.stats.draft' | translate"            [value]="draftCount()" color="warning" />
+  </div>
+
+  @if (!loading() && !loadError() && forms().length === 0) {
+    <app-empty-state
+      icon="file-plus"
+      [title]="'forms.empty.title' | translate"
+      [subtitle]="'forms.empty.subtitle' | translate"
+    >
+      <app-button (click)="showCreateDialog.set(true)">
+        <app-icon name="plus" [size]="16" />
+        {{ 'forms.create_btn' | translate }}
+      </app-button>
+    </app-empty-state>
+  } @else {
+    <app-forms-list
+      [forms]="forms()"
+      [loading]="loading()"
+      [loadError]="loadError()"
+      (editRequested)="editForm($event)"
+      (viewResultsRequested)="viewResults($event)"
+      (deleted)="onFormDeleted($event)"
+    />
+  }
+
+</div>
+
+<app-create-form-dialog
+  [isOpen]="showCreateDialog()"
+  (created)="onFormCreated($event)"
+  (cancelled)="showCreateDialog.set(false)"
+/>

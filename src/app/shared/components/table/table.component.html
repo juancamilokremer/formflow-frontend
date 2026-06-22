@@ -1,0 +1,58 @@
+<div class="ff-table">
+
+  @if (toolbarDirective()) {
+    <div class="ff-table__toolbar">
+      <ng-container [ngTemplateOutlet]="toolbarDirective()!.template" />
+    </div>
+  }
+
+  @if (loading()) {
+    <app-loading-spinner [message]="loadingMessage()" />
+  } @else if (loadError()) {
+    <app-empty-state
+      icon="alert-circle"
+      [title]="errorTitle()"
+      [subtitle]="errorSubtitle()"
+      [compact]="true"
+    />
+  } @else if (rows().length === 0) {
+    <app-empty-state
+      [icon]="emptyIcon()"
+      [title]="emptyTitle()"
+      [subtitle]="emptySubtitle()"
+      [compact]="true"
+    />
+  } @else {
+    <table class="ff-table__table">
+      <thead>
+        <tr>
+          @for (col of columns(); track col.key) {
+            <th
+              [style.width]="col.width"
+              [style.text-align]="col.align ?? 'left'"
+            >{{ col.header | translate }}</th>
+          }
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of rows(); track $index; let i = $index) {
+          <tr>
+            @for (col of columns(); track col.key) {
+              <td [style.text-align]="col.align ?? 'left'">
+                @if (getCellTemplate(col.key); as tpl) {
+                  <ng-container
+                    [ngTemplateOutlet]="tpl"
+                    [ngTemplateOutletContext]="{ $implicit: row, index: i }"
+                  />
+                } @else {
+                  {{ getCellValue(row, col.key) }}
+                }
+              </td>
+            }
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+
+</div>

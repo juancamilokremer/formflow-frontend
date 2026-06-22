@@ -1,0 +1,8 @@
+<div class="empty-state" [class.empty-state--compact]="compact()">
+  <app-icon [name]="icon()" [size]="compact() ? 32 : 48" />
+  <p class="empty-state__title">{{ title() }}</p>
+  @if (subtitle()) {
+    <p class="empty-state__subtitle">{{ subtitle() }}</p>
+  }
+  <ng-content />
+</div>

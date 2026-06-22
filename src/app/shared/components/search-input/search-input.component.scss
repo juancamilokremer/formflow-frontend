@@ -1,0 +1,28 @@
+:host { display: block; }
+
+.search-input {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border: 1px solid var(--ff-border);
+  border-radius: var(--ff-radius-md);
+  width: 260px;
+  color: var(--ff-text-muted);
+  background: var(--ff-white);
+
+  &:focus-within {
+    border-color: var(--ff-primary);
+  }
+
+  &__field {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 13px;
+    color: var(--ff-text-primary);
+    background: transparent;
+
+    &::placeholder { color: var(--ff-text-muted); }
+  }
+}

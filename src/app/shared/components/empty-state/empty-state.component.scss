@@ -1,0 +1,32 @@
+:host { display: block; }
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 64px 24px;
+  gap: 12px;
+  color: var(--ff-text-secondary);
+
+  app-icon { color: var(--ff-border); }
+
+  &__title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--ff-text-primary);
+    margin: 0;
+  }
+
+  &__subtitle {
+    font-size: 14px;
+    color: var(--ff-text-secondary);
+    margin: 0;
+    text-align: center;
+  }
+
+  &--compact {
+    padding: 40px 24px;
+
+    .empty-state__title { font-size: 14px; }
+  }
+}
