@@ -26,7 +26,8 @@
   }
 
   &__stats {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
     gap: 16px;
     margin-bottom: 28px;
   }
@@ -96,11 +97,10 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
-  padding: 16px 24px;
+  padding: 20px;
   background: var(--ff-white);
   border: 1px solid var(--ff-border);
   border-radius: var(--ff-radius-lg);
-  min-width: 140px;
 
   &__label {
     font-size: 12px;
@@ -139,15 +139,22 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid var(--ff-border);
+    border-radius: var(--ff-radius-md);
+    width: 260px;
     color: var(--ff-text-muted);
+
+    &:focus-within {
+      border-color: var(--ff-primary);
+    }
   }
 
   &__search-input {
     flex: 1;
     border: none;
     outline: none;
-    font-size: 14px;
+    font-size: 13px;
     color: var(--ff-text-primary);
     background: transparent;
 
@@ -174,8 +181,8 @@
     }
 
     td {
-      padding: 14px 20px;
-      border-bottom: 1px solid var(--ff-border);
+      padding: 16px 20px;
+      border-bottom: 1px solid #F8FAFC;
       vertical-align: middle;
     }
 
@@ -247,9 +254,10 @@
     }
   }
 
-  &__cell-center {
-    text-align: center;
-    color: var(--ff-text-secondary);
+  &__cell-responses {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ff-text-primary);
   }
 
   &__cell-muted {
@@ -262,6 +270,30 @@
     align-items: center;
     gap: 8px;
     justify-content: flex-end;
+  }
+
+  &__action-btn {
+    padding: 6px 14px;
+    border: 1px solid var(--ff-border);
+    border-radius: 6px;
+    color: var(--ff-text-secondary);
+    background: var(--ff-white);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+
+    &:hover {
+      background: var(--ff-bg);
+    }
+
+    &--primary {
+      border-color: var(--ff-primary);
+      color: var(--ff-primary);
+
+      &:hover {
+        background: var(--ff-primary-light);
+      }
+    }
   }
 
   &__confirm-label {

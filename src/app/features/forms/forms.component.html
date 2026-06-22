@@ -114,7 +114,7 @@
                     ● {{ 'forms.status.' + (form.status | lowercase) | translate }}
                   </span>
                 </td>
-                <td class="forms-table__cell-center">{{ form.responseCount }}</td>
+                <td class="forms-table__cell-responses">{{ form.responseCount }}</td>
                 <td class="forms-table__cell-muted">{{ formatRelative(form.lastResponseAt) }}</td>
                 <td class="forms-table__cell-actions">
                   @if (pendingDeleteId() === form.id) {
@@ -127,13 +127,13 @@
                     </app-button>
                   } @else {
                     @if (form.responseCount > 0) {
-                      <app-button variant="secondary" (click)="viewResults(form.id)">
+                      <button type="button" class="forms-table__action-btn forms-table__action-btn--primary" (click)="viewResults(form.id)">
                         {{ 'forms.actions.results' | translate }}
-                      </app-button>
+                      </button>
                     }
-                    <app-button variant="secondary" (click)="editForm(form.id)">
+                    <button type="button" class="forms-table__action-btn" (click)="editForm(form.id)">
                       {{ 'forms.actions.edit' | translate }}
-                    </app-button>
+                    </button>
                     <app-button variant="ghost" [danger]="true" (click)="confirmDelete(form.id)">
                       <app-icon name="trash-2" [size]="14" />
                     </app-button>
