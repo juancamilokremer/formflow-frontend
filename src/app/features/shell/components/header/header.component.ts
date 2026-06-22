@@ -67,6 +67,6 @@ export class HeaderComponent {
   private getDeepestTitleKey(): string {
     let route = this.activatedRoute;
     while (route.firstChild) route = route.firstChild;
-    return route.snapshot.data['titleKey'] ?? '';
+    return route.snapshot?.data?.['titleKey'] ?? '';
   }
 }
