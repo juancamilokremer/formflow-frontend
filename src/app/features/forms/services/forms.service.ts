@@ -8,7 +8,7 @@ import { Form, CreateFormRequest } from '../models/form.model';
 @Injectable({ providedIn: 'root' })
 export class FormsService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = `${environment.apiUrl}/api/v1/forms`;
+  private readonly apiUrl = `${environment.apiUrl}/forms`;
 
   getAll(): Observable<Form[]> {
     return this.http.get<ApiResponse<Form[]>>(this.apiUrl).pipe(
