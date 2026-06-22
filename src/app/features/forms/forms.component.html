@@ -4,161 +4,49 @@
     [title]="'forms.title' | translate"
     [subtitle]="'forms.subtitle' | translate"
   >
-    <app-button (click)="openDialog()">
+    <app-button (click)="showCreateDialog.set(true)">
       <app-icon name="plus" [size]="16" />
       {{ 'forms.create_btn' | translate }}
     </app-button>
   </app-page-header>
 
-  <!-- Stat cards -->
   <div class="forms-page__stats">
-    <app-stat-card [label]="'forms.stats.total' | translate"          [value]="forms().length" />
-    <app-stat-card [label]="'forms.stats.total_responses' | translate" [value]="totalResponses()" />
-    <app-stat-card [label]="'forms.stats.active' | translate"          [value]="activeCount()" color="success" />
-    <app-stat-card [label]="'forms.stats.draft' | translate"           [value]="draftCount()" color="warning" />
+    <app-stat-card [label]="'forms.stats.total' | translate"           [value]="forms().length" />
+    <app-stat-card [label]="'forms.stats.total_responses' | translate"  [value]="totalResponses()" />
+    <app-stat-card [label]="'forms.stats.active' | translate"           [value]="activeCount()" color="success" />
+    <app-stat-card [label]="'forms.stats.draft' | translate"            [value]="draftCount()" color="warning" />
   </div>
 
-  <!-- Full-page empty (cero formularios creados) -->
   @if (!loading() && !loadError() && forms().length === 0) {
     <app-empty-state
       icon="file-plus"
       [title]="'forms.empty.title' | translate"
       [subtitle]="'forms.empty.subtitle' | translate"
     >
-      <app-button (click)="openDialog()">
+      <app-button (click)="showCreateDialog.set(true)">
         <app-icon name="plus" [size]="16" />
         {{ 'forms.create_btn' | translate }}
       </app-button>
     </app-empty-state>
   } @else {
-    <!-- Tabla con búsqueda, filtro y estados internos -->
-    <app-table
-      [columns]="tableColumns"
-      [rows]="filteredForms()"
+    <app-forms-list
+      [forms]="forms()"
       [loading]="loading()"
       [loadError]="loadError()"
-      [loadingMessage]="'common.loading' | translate"
-      [errorTitle]="'forms.error.load' | translate"
-      emptyIcon="search-x"
-      [emptyTitle]="'forms.empty.no_results_title' | translate"
-      [emptySubtitle]="'forms.empty.no_results_subtitle' | translate"
-    >
-
-      <!-- Toolbar -->
-      <ng-template appTableToolbar>
-        <app-search-input
-          [placeholder]="'forms.search_placeholder' | translate"
-          (searched)="onSearch($event)"
-        />
-        <select class="forms-page__status-filter" (change)="onStatusFilter($event)">
-          @for (opt of statusFilterOptions; track opt.value) {
-            <option [value]="opt.value">{{ opt.labelKey | translate }}</option>
-          }
-        </select>
-      </ng-template>
-
-      <!-- Columna: nombre + fecha de creación -->
-      <ng-template appTableCell [column]="'name'" let-row>
-        <div class="forms-table__cell-name">
-          <span class="forms-table__name">{{ $any(row).name }}</span>
-          <span class="forms-table__date">
-            {{ 'forms.table.created' | translate }} {{ formatDate($any(row).createdAt) }}
-          </span>
-        </div>
-      </ng-template>
-
-      <!-- Columna: badge de estado -->
-      <ng-template appTableCell [column]="'status'" let-row>
-        <span class="forms-table__status-badge forms-table__status-badge--{{ $any(row).status | lowercase }}">
-          ● {{ 'forms.status.' + ($any(row).status | lowercase) | translate }}
-        </span>
-      </ng-template>
-
-      <!-- Columna: respuestas -->
-      <ng-template appTableCell [column]="'responseCount'" let-row>
-        <span class="forms-table__cell-responses">{{ $any(row).responseCount }}</span>
-      </ng-template>
-
-      <!-- Columna: última respuesta -->
-      <ng-template appTableCell [column]="'lastResponseAt'" let-row>
-        <span class="forms-table__cell-muted">{{ formatRelative($any(row).lastResponseAt) }}</span>
-      </ng-template>
-
-      <!-- Columna: acciones -->
-      <ng-template appTableCell [column]="'__actions'" let-row>
-        <div class="forms-table__cell-actions">
-          @if ($any(row).responseCount > 0) {
-            <app-button variant="outline-primary" (click)="viewResults($any(row).id)">
-              {{ 'forms.actions.results' | translate }}
-            </app-button>
-          }
-          <app-button variant="secondary" (click)="editForm($any(row).id)">
-            {{ 'forms.actions.edit' | translate }}
-          </app-button>
-          <app-button variant="ghost" [danger]="true" (click)="confirmDelete($any(row).id)">
-            <app-icon name="trash-2" [size]="14" />
-          </app-button>
-        </div>
-      </ng-template>
-
-    </app-table>
+      (editRequested)="editForm($event)"
+      (viewResultsRequested)="viewResults($event)"
+      (deleteRequested)="confirmDelete($event)"
+    />
   }
 
 </div>
 
-<!-- Dialog: crear formulario -->
-<app-dialog
-  [title]="'forms.dialog.title' | translate"
-  [isOpen]="showDialog()"
-  (closed)="closeDialog()"
->
-  <div class="dialog-field">
-    <label class="dialog-label" for="form-name">{{ 'forms.dialog.name_label' | translate }}</label>
-    <input
-      id="form-name"
-      class="dialog-input"
-      type="text"
-      [placeholder]="'forms.dialog.name_placeholder' | translate"
-      [value]="newName()"
-      (input)="newName.set($any($event.target).value)"
-      (keydown.enter)="createForm()"
-      autocomplete="off"
-    />
-  </div>
+<app-create-form-dialog
+  [isOpen]="showCreateDialog()"
+  (created)="onFormCreated($event)"
+  (cancelled)="showCreateDialog.set(false)"
+/>
 
-  <div class="dialog-field">
-    <span class="dialog-label">{{ 'forms.dialog.type_label' | translate }}</span>
-    <div class="dialog-type-options">
-      @for (opt of formTypeOptions; track opt.value) {
-        <button
-          class="dialog-type-option"
-          type="button"
-          [class.dialog-type-option--selected]="newType() === opt.value"
-          (click)="selectType(opt.value)"
-        >
-          <span class="dialog-type-name">{{ opt.labelKey | translate }}</span>
-          <span class="dialog-type-desc">{{ opt.descKey | translate }}</span>
-        </button>
-      }
-    </div>
-  </div>
-
-  <div dialog-footer class="dialog-card__footer">
-    <app-button variant="secondary" type="button" (click)="closeDialog()" [disabled]="creating()">
-      {{ 'common.cancel' | translate }}
-    </app-button>
-    <app-button
-      type="button"
-      [loading]="creating()"
-      [disabled]="!newName().trim()"
-      (click)="createForm()"
-    >
-      {{ 'forms.dialog.create_btn' | translate }}
-    </app-button>
-  </div>
-</app-dialog>
-
-<!-- Dialog: confirmar eliminación -->
 <app-confirm-dialog
   [isOpen]="!!pendingDeleteId()"
   [message]="'forms.actions.confirm_delete' | translate"

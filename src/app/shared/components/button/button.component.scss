@@ -61,7 +61,15 @@
     &:hover:not(:disabled) { background: var(--ff-primary-light); }
   }
 
+  &.btn--danger {
+    background: var(--ff-error);
+    color: #fff;
+
+    &:hover:not(:disabled) { background: var(--ff-error-text); }
+  }
+
   &.btn--ghost.btn--danger {
+    background: transparent;
     color: var(--ff-error-text);
 
     &:hover:not(:disabled) {

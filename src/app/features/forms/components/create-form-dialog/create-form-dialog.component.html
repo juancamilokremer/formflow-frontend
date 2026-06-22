@@ -1,0 +1,50 @@
+<app-dialog
+  [title]="'forms.dialog.title' | translate"
+  [isOpen]="isOpen()"
+  (closed)="cancel()"
+>
+  <div class="cfd__field">
+    <label class="cfd__label" for="cfd-name">{{ 'forms.dialog.name_label' | translate }}</label>
+    <input
+      id="cfd-name"
+      class="cfd__input"
+      type="text"
+      [placeholder]="'forms.dialog.name_placeholder' | translate"
+      [value]="name()"
+      (input)="name.set($any($event.target).value)"
+      (keydown.enter)="submit()"
+      autocomplete="off"
+    />
+  </div>
+
+  <div class="cfd__field">
+    <span class="cfd__label">{{ 'forms.dialog.type_label' | translate }}</span>
+    <div class="cfd__type-options">
+      @for (opt of formTypeOptions; track opt.value) {
+        <button
+          type="button"
+          class="cfd__type-option"
+          [class.cfd__type-option--selected]="type() === opt.value"
+          (click)="selectType(opt.value)"
+        >
+          <span class="cfd__type-name">{{ opt.labelKey | translate }}</span>
+          <span class="cfd__type-desc">{{ opt.descKey | translate }}</span>
+        </button>
+      }
+    </div>
+  </div>
+
+  <div dialog-footer>
+    <app-button variant="secondary" type="button" [disabled]="creating()" (click)="cancel()">
+      {{ 'common.cancel' | translate }}
+    </app-button>
+    <app-button
+      type="button"
+      [loading]="creating()"
+      [disabled]="!name().trim()"
+      (click)="submit()"
+    >
+      {{ 'forms.dialog.create_btn' | translate }}
+    </app-button>
+  </div>
+</app-dialog>

@@ -1,0 +1,64 @@
+<app-table
+  [columns]="tableColumns"
+  [rows]="filteredForms()"
+  [loading]="loading()"
+  [loadError]="loadError()"
+  [loadingMessage]="'common.loading' | translate"
+  [errorTitle]="'forms.error.load' | translate"
+  emptyIcon="search-x"
+  [emptyTitle]="'forms.empty.no_results_title' | translate"
+  [emptySubtitle]="'forms.empty.no_results_subtitle' | translate"
+>
+
+  <ng-template appTableToolbar>
+    <app-search-input
+      [placeholder]="'forms.search_placeholder' | translate"
+      (searched)="onSearch($event)"
+    />
+    <app-select
+      [options]="statusFilterOptions"
+      [value]="statusFilter()"
+      (changed)="onStatusFilter($event)"
+    />
+  </ng-template>
+
+  <ng-template appTableCell [column]="'name'" let-row>
+    <div class="fl__cell-name">
+      <span class="fl__name">{{ $any(row).name }}</span>
+      <span class="fl__date">
+        {{ 'forms.table.created' | translate }} {{ formatDate($any(row).createdAt) }}
+      </span>
+    </div>
+  </ng-template>
+
+  <ng-template appTableCell [column]="'status'" let-row>
+    <span class="fl__status-badge fl__status-badge--{{ $any(row).status | lowercase }}">
+      ● {{ 'forms.status.' + ($any(row).status | lowercase) | translate }}
+    </span>
+  </ng-template>
+
+  <ng-template appTableCell [column]="'responseCount'" let-row>
+    <span class="fl__cell-responses">{{ $any(row).responseCount }}</span>
+  </ng-template>
+
+  <ng-template appTableCell [column]="'lastResponseAt'" let-row>
+    <span class="fl__cell-muted">{{ formatRelative($any(row).lastResponseAt) }}</span>
+  </ng-template>
+
+  <ng-template appTableCell [column]="'__actions'" let-row>
+    <div class="fl__cell-actions">
+      @if ($any(row).responseCount > 0) {
+        <app-button variant="outline-primary" (click)="viewResultsRequested.emit($any(row).id)">
+          {{ 'forms.actions.results' | translate }}
+        </app-button>
+      }
+      <app-button variant="secondary" (click)="editRequested.emit($any(row).id)">
+        {{ 'forms.actions.edit' | translate }}
+      </app-button>
+      <app-button variant="ghost" [danger]="true" (click)="deleteRequested.emit($any(row).id)">
+        <app-icon name="trash-2" [size]="14" />
+      </app-button>
+    </div>
+  </ng-template>
+
+</app-table>

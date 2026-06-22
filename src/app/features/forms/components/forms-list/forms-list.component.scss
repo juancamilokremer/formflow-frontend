@@ -1,0 +1,50 @@
+:host { display: block; }
+
+.fl {
+  &__cell-name {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  &__name {
+    font-weight: 500;
+    color: var(--ff-text-primary);
+  }
+
+  &__date {
+    font-size: 12px;
+    color: var(--ff-text-muted);
+  }
+
+  &__status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 10px;
+    border-radius: 99px;
+    font-size: 12px;
+    font-weight: 600;
+
+    &--active   { background: #DCFCE7; color: #15803D; }
+    &--draft    { background: #FEF9C3; color: #854D0E; }
+    &--archived { background: #F1F5F9; color: #64748B; }
+  }
+
+  &__cell-responses {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ff-text-primary);
+  }
+
+  &__cell-muted {
+    color: var(--ff-text-secondary);
+    font-size: 13px;
+  }
+
+  &__cell-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: flex-end;
+  }
+}

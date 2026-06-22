@@ -1,0 +1,15 @@
+:host { display: block; }
+
+.ff-select {
+  padding: 7px 12px;
+  border: 1px solid var(--ff-border);
+  border-radius: var(--ff-radius-md);
+  font-size: 13px;
+  color: var(--ff-text-primary);
+  background: var(--ff-white);
+  outline: none;
+  cursor: pointer;
+  appearance: auto;
+
+  &:focus { border-color: var(--ff-primary); }
+}
