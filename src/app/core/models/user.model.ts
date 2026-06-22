@@ -1,6 +1,8 @@
 export interface User {
   id: string;
   tenantId: string;
+  tenantName: string;
+  tenantPlan: string;
   email: string;
   firstName: string;
   lastName: string;

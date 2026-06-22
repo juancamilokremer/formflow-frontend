@@ -87,6 +87,24 @@
       "resend_cooldown": "Reenviar en {{seconds}}s"
     }
   },
+  "shell": {
+    "nav": {
+      "dashboard": "Dashboard",
+      "forms": "Formularios",
+      "convocatorias": "Convocatorias",
+      "users": "Usuarios",
+      "settings": "Configuración",
+      "billing": "Facturación"
+    },
+    "header": {
+      "open_menu": "Abrir menú",
+      "user_menu": "Menú de usuario",
+      "logout": "Cerrar sesión"
+    },
+    "sidebar": {
+      "plan_label": "Plan {{plan}}"
+    }
+  },
   "errors": {
     "unauthorized": "No tienes permiso para realizar esta acción.",
     "not_found": "El recurso solicitado no existe.",

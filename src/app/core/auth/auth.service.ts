@@ -134,6 +134,8 @@ export class AuthService {
     return {
       id: user.id,
       tenantId: tenant.id,
+      tenantName: tenant.name,
+      tenantPlan: tenant.plan,
       email: user.email,
       firstName: parts[0] ?? '',
       lastName: parts.slice(1).join(' '),
