@@ -23,6 +23,12 @@
     width: 100%;
   }
 
+  &.btn--icon {
+    padding: 8px;
+    border-radius: var(--ff-radius-sm);
+    line-height: 0;
+  }
+
   &.btn--primary {
     background: var(--ff-primary);
     color: #fff;

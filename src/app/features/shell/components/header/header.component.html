@@ -1,12 +1,14 @@
 <div class="header">
   <div class="header__left">
-    <button
+    <app-button
       class="header__menu-btn"
+      variant="ghost"
+      [iconOnly]="true"
       (click)="menuToggled.emit()"
       [attr.aria-label]="'shell.header.open_menu' | translate"
     >
       <app-icon name="menu" [size]="20" />
-    </button>
+    </app-button>
 
     @if (titleKey()) {
       <h1 class="header__title">{{ titleKey()! | translate }}</h1>

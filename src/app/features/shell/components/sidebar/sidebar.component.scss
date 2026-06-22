@@ -44,23 +44,9 @@
 
   &__close {
     display: none;
-    padding: 4px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: var(--ff-text-secondary);
-    border-radius: var(--ff-radius-sm);
-    line-height: 0;
-
-    &:hover {
-      color: var(--ff-text-primary);
-      background-color: var(--ff-bg);
-    }
 
     @media (max-width: 1023px) {
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: block;
     }
   }
 
@@ -154,19 +140,4 @@
     letter-spacing: 0.5px;
   }
 
-  &__logout {
-    padding: 6px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: var(--ff-text-muted);
-    border-radius: var(--ff-radius-sm);
-    line-height: 0;
-    transition: color 0.15s, background-color 0.15s;
-
-    &:hover {
-      color: var(--ff-error);
-      background-color: #FEF2F2;
-    }
-  }
 }
