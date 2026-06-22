@@ -1,15 +1,14 @@
 <aside class="sidebar" [class.sidebar--open]="open()">
   <div class="sidebar__header">
     <span class="sidebar__logo">FormFlow</span>
-    <app-button
-      class="sidebar__close"
-      variant="ghost"
-      [iconOnly]="true"
+    <button
+      class="sidebar__icon-btn sidebar__close"
+      type="button"
       (click)="closeRequested.emit()"
-      [attr.aria-label]="'Cerrar menú'"
+      aria-label="Cerrar menú"
     >
       <app-icon name="x" [size]="20" />
-    </app-button>
+    </button>
   </div>
 
   <nav class="sidebar__nav" aria-label="Navegación principal">
@@ -36,13 +35,13 @@
         </span>
       </div>
     </div>
-    <app-button
-      variant="ghost"
-      [iconOnly]="true"
+    <button
+      class="sidebar__icon-btn sidebar__logout"
+      type="button"
       (click)="logout()"
       [attr.aria-label]="'shell.header.logout' | translate"
     >
       <app-icon name="log-out" [size]="18" />
-    </app-button>
+    </button>
   </div>
 </aside>

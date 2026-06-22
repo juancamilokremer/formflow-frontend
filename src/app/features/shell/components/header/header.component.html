@@ -1,14 +1,13 @@
 <div class="header">
   <div class="header__left">
-    <app-button
-      class="header__menu-btn"
-      variant="ghost"
-      [iconOnly]="true"
+    <button
+      class="header__icon-btn header__menu-btn"
+      type="button"
       (click)="menuToggled.emit()"
       [attr.aria-label]="'shell.header.open_menu' | translate"
     >
       <app-icon name="menu" [size]="20" />
-    </app-button>
+    </button>
 
     @if (titleKey()) {
       <h1 class="header__title">{{ titleKey()! | translate }}</h1>
@@ -19,11 +18,12 @@
     <div class="header__user-menu">
       <button
         class="header__avatar"
+        type="button"
         (click)="toggleUserMenu()"
         [attr.aria-label]="'shell.header.user_menu' | translate"
         [attr.aria-expanded]="userMenuOpen()"
       >
-        {{ userInitials }}
+        <span class="header__avatar-initials">{{ userInitials }}</span>
         <app-icon name="chevron-down" [size]="14" />
       </button>
 
@@ -34,7 +34,7 @@
             <span class="header__dropdown-email">{{ authService.currentUser()?.email }}</span>
           </div>
           <hr class="header__dropdown-divider" />
-          <button class="header__dropdown-item header__dropdown-item--danger" (click)="logout()">
+          <button class="header__dropdown-item header__dropdown-item--danger" type="button" (click)="logout()">
             <app-icon name="log-out" [size]="16" />
             {{ 'shell.header.logout' | translate }}
           </button>
