@@ -51,6 +51,16 @@
     &:hover:not(:disabled) { background: var(--ff-primary-light); }
   }
 
+  &.btn--outline-primary {
+    background: var(--ff-white);
+    color: var(--ff-primary);
+    border: 1px solid var(--ff-primary);
+    font-size: 12px;
+    padding: 6px 14px;
+
+    &:hover:not(:disabled) { background: var(--ff-primary-light); }
+  }
+
   &.btn--ghost.btn--danger {
     color: var(--ff-error-text);
 

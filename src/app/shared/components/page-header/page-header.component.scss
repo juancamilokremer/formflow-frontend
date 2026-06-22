@@ -1,0 +1,22 @@
+:host { display: block; }
+
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 28px;
+
+  &__title {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--ff-text-primary);
+    margin: 0 0 4px;
+  }
+
+  &__subtitle {
+    font-size: 14px;
+    color: var(--ff-text-secondary);
+    margin: 0;
+  }
+}

@@ -5,6 +5,15 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { formBuilderPath } from '../../core/constants/route.constants';
 import { ButtonComponent } from '../../shared/components/button/button.component';
 import { IconComponent } from '../../shared/icons/icon.component';
+import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
+import { StatCardComponent } from '../../shared/components/stat-card/stat-card.component';
+import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state.component';
+import { SearchInputComponent } from '../../shared/components/search-input/search-input.component';
+import { AppTableComponent, TableColumn } from '../../shared/components/table/table.component';
+import { TableCellDirective } from '../../shared/components/table/table-cell.directive';
+import { TableToolbarDirective } from '../../shared/components/table/table-toolbar.directive';
+import { DialogComponent } from '../../shared/components/dialog/dialog.component';
+import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/confirm-dialog.component';
 import { FormsService } from './services/forms.service';
 import { Form, FormStatus, FormType } from './models/form.model';
 
@@ -29,7 +38,13 @@ const STATUS_FILTER_OPTIONS: { value: FormStatus | 'ALL'; labelKey: string }[] =
 
 @Component({
   selector: 'app-forms',
-  imports: [TranslatePipe, LowerCasePipe, ButtonComponent, IconComponent],
+  imports: [
+    TranslatePipe, LowerCasePipe,
+    ButtonComponent, IconComponent,
+    PageHeaderComponent, StatCardComponent, EmptyStateComponent,
+    SearchInputComponent, AppTableComponent, TableCellDirective, TableToolbarDirective,
+    DialogComponent, ConfirmDialogComponent,
+  ],
   templateUrl: './forms.component.html',
   styleUrl: './forms.component.scss',
 })
@@ -53,6 +68,14 @@ export class FormsComponent {
   protected readonly formTypeOptions = FORM_TYPE_OPTIONS;
   protected readonly statusFilterOptions = STATUS_FILTER_OPTIONS;
 
+  protected readonly tableColumns: TableColumn[] = [
+    { key: 'name',           header: 'FORMULARIO' },
+    { key: 'status',         header: 'ESTADO' },
+    { key: 'responseCount',  header: 'RESPUESTAS', align: 'center' },
+    { key: 'lastResponseAt', header: 'ÚLTIMA RESP.' },
+    { key: '__actions',      header: '', align: 'right' },
+  ];
+
   protected readonly totalResponses = computed(() =>
     this.forms().reduce((acc, f) => acc + f.responseCount, 0),
   );
@@ -75,6 +98,10 @@ export class FormsComponent {
     );
   });
 
+  protected readonly pendingDeleteForm = computed(() =>
+    this.forms().find((f) => f.id === this.pendingDeleteId()) ?? null,
+  );
+
   constructor() {
     this.loadForms();
   }
@@ -92,8 +119,8 @@ export class FormsComponent {
     });
   }
 
-  protected onSearch(event: Event): void {
-    this.searchQuery.set((event.target as HTMLInputElement).value);
+  protected onSearch(query: string): void {
+    this.searchQuery.set(query);
   }
 
   protected onStatusFilter(event: Event): void {
@@ -144,7 +171,9 @@ export class FormsComponent {
     this.pendingDeleteId.set(null);
   }
 
-  protected deleteForm(id: string): void {
+  protected deleteForm(): void {
+    const id = this.pendingDeleteId();
+    if (!id) return;
     this.formsService.remove(id).subscribe({
       next: () => {
         this.forms.update((list) => list.filter((f) => f.id !== id));

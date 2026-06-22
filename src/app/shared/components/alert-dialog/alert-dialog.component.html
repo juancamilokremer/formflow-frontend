@@ -1,0 +1,24 @@
+<app-dialog
+  [title]="title()"
+  [isOpen]="isOpen()"
+  maxWidth="440px"
+  (closed)="closed.emit()"
+>
+  <div class="alert-dialog__body">
+    <div class="alert-dialog__icon alert-dialog__icon--{{ type() }}">
+      @switch (type()) {
+        @case ('success') { <app-icon name="check-circle" [size]="28" /> }
+        @case ('error')   { <app-icon name="alert-circle" [size]="28" /> }
+        @case ('warning') { <app-icon name="alert-triangle" [size]="28" /> }
+        @default          { <app-icon name="info" [size]="28" /> }
+      }
+    </div>
+    <p class="alert-dialog__message">{{ message() }}</p>
+  </div>
+
+  <div dialog-footer class="dialog-card__footer">
+    <app-button (click)="closed.emit()">
+      {{ actionLabel() | translate }}
+    </app-button>
+  </div>
+</app-dialog>

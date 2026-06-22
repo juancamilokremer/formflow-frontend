@@ -8,6 +8,9 @@
     "back": "Volver",
     "next": "Siguiente",
     "confirm": "Confirmar",
+    "confirm_title": "¿Confirmar acción?",
+    "accept": "Aceptar",
+    "close": "Cerrar",
     "error_generic": "Ocurrió un error inesperado. Por favor intenta de nuevo.",
     "required_field": "Este campo es obligatorio"
   },

@@ -1,0 +1,64 @@
+:host { display: block; }
+
+.ff-table {
+  background: var(--ff-white);
+  border: 1px solid var(--ff-border);
+  border-radius: var(--ff-radius-lg);
+  overflow: hidden;
+
+  &__toolbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--ff-border);
+  }
+
+  &__table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+
+    th {
+      padding: 10px 20px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--ff-text-secondary);
+      background: var(--ff-bg);
+      border-bottom: 1px solid var(--ff-border);
+    }
+
+    td {
+      padding: 16px 20px;
+      border-bottom: 1px solid #F8FAFC;
+      vertical-align: middle;
+    }
+
+    tbody tr:last-child td { border-bottom: none; }
+
+    tbody tr:hover { background: var(--ff-bg); }
+  }
+}
+
+/* Action buttons para celdas de acciones — usados por features via ng-template */
+.ff-btn-action {
+  padding: 6px 14px;
+  border: 1px solid var(--ff-border);
+  border-radius: 6px;
+  color: var(--ff-text-secondary);
+  background: var(--ff-white);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+
+  &:hover { background: var(--ff-bg); }
+
+  &--primary {
+    border-color: var(--ff-primary);
+    color: var(--ff-primary);
+
+    &:hover { background: var(--ff-primary-light); }
+  }
+}

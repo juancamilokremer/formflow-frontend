@@ -1,0 +1,30 @@
+@if (isOpen()) {
+  <div
+    class="dialog-overlay"
+    role="dialog"
+    aria-modal="true"
+    (click)="closed.emit()"
+    (keydown.escape)="closed.emit()"
+  >
+    <div
+      class="dialog-card"
+      [style.max-width]="maxWidth()"
+      tabindex="-1"
+      (click)="$event.stopPropagation()"
+      (keydown)="$event.stopPropagation()"
+    >
+      <div class="dialog-card__header">
+        <h2 class="dialog-card__title">{{ title() }}</h2>
+        <app-button variant="ghost" [iconOnly]="true" type="button" (click)="closed.emit()">
+          <app-icon name="x" [size]="18" />
+        </app-button>
+      </div>
+
+      <div class="dialog-card__body">
+        <ng-content />
+      </div>
+
+      <ng-content select="[dialog-footer]" />
+    </div>
+  </div>
+}

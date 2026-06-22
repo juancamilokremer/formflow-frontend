@@ -193,7 +193,7 @@ describe('FormsComponent', () => {
     const { component, mockRemove } = setup();
     mockRemove.mockReturnValue(of(undefined));
     component['pendingDeleteId'].set('f1');
-    component['deleteForm']('f1');
+    component['deleteForm']();
     expect(component['forms']().find((f) => f.id === 'f1')).toBeUndefined();
     expect(component['pendingDeleteId']()).toBeNull();
   });
