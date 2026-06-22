@@ -1,4 +1,5 @@
 import { Component, input, output } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 export interface SelectOption {
   value: string;
@@ -7,6 +8,7 @@ export interface SelectOption {
 
 @Component({
   selector: 'app-select',
+  imports: [TranslatePipe],
   templateUrl: './select.component.html',
   styleUrl: './select.component.scss',
 })

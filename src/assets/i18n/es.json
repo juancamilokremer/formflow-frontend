@@ -12,7 +12,11 @@
     "accept": "Aceptar",
     "close": "Cerrar",
     "error_generic": "Ocurrió un error inesperado. Por favor intenta de nuevo.",
-    "required_field": "Este campo es obligatorio"
+    "required_field": "Este campo es obligatorio",
+    "never": "—",
+    "ago_minutes": "hace {{n}} min",
+    "ago_hours": "hace {{n}}h",
+    "ago_days": "hace {{n}}d"
   },
   "auth": {
     "login": {

@@ -1,5 +1,6 @@
 import { Component, contentChild, contentChildren, input } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 import { TableCellDirective } from './table-cell.directive';
 import { TableToolbarDirective } from './table-toolbar.directive';
 import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
@@ -15,7 +16,7 @@ export interface TableColumn {
 
 @Component({
   selector: 'app-table',
-  imports: [NgTemplateOutlet, LoadingSpinnerComponent, EmptyStateComponent],
+  imports: [NgTemplateOutlet, TranslatePipe, LoadingSpinnerComponent, EmptyStateComponent],
   templateUrl: './table.component.html',
   styleUrl: './table.component.scss',
 })

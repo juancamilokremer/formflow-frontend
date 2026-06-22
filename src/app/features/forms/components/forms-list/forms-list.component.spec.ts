@@ -1,8 +1,9 @@
 import { TestBed } from '@angular/core/testing';
-import { of, throwError } from 'rxjs';
+import { of } from 'rxjs';
 import { vi } from 'vitest';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { TranslateService } from '@ngx-translate/core';
 import { FormsListComponent } from './forms-list.component';
 import { FormsService } from '../../services/forms.service';
 import { Form } from '../../models/form.model';
@@ -24,17 +25,30 @@ const mockForms: Form[] = [
   },
 ];
 
+const mockTranslate = {
+  instant: (key: string, params?: Record<string, unknown>) => {
+    const map: Record<string, string> = {
+      'common.never':       '—',
+      'common.ago_minutes': `hace ${params?.['n']} min`,
+      'common.ago_hours':   `hace ${params?.['n']}h`,
+      'common.ago_days':    `hace ${params?.['n']}d`,
+    };
+    return map[key] ?? key;
+  },
+};
+
 function setup() {
   const mockRemove = vi.fn();
   TestBed.configureTestingModule({
     providers: [
       provideHttpClient(), provideHttpClientTesting(),
-      { provide: FormsService, useValue: { remove: mockRemove } },
+      { provide: FormsService,    useValue: { remove: mockRemove } },
+      { provide: TranslateService, useValue: mockTranslate },
     ],
   });
   const component = TestBed.runInInjectionContext(() => new FormsListComponent());
-  (component as any).forms = () => mockForms;
-  (component as any).loading = () => false;
+  (component as any).forms     = () => mockForms;
+  (component as any).loading   = () => false;
   (component as any).loadError = () => false;
   return { component, mockRemove };
 }
