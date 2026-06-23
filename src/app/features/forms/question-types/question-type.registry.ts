@@ -97,7 +97,7 @@ export const QUESTION_TYPE_REGISTRY: QuestionTypeDefinition[] = [
     canvasComponent:     FileCanvasComponent,
     publicComponent:     QuestionPublicStubComponent,
     propertiesComponent: FilePropertiesComponent,
-    defaultConfig: () => ({}),
+    defaultConfig: () => ({ maxSizeMb: 5, allowedTypes: ['pdf', 'jpg', 'png'] }),
   },
 ];
 
