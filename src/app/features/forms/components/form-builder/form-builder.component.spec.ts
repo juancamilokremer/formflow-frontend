@@ -28,7 +28,7 @@ const MOCK_FORM: FormDetail = {
 function buildComponent(formResult: 'ok' | 'error' = 'ok') {
   const mockFormsService = {
     getById:       vi.fn().mockReturnValue(formResult === 'ok' ? of(MOCK_FORM) : throwError(() => new Error())),
-    updateName:    vi.fn().mockReturnValue(of(undefined)),
+    update:        vi.fn().mockReturnValue(of(undefined)),
     createSection: vi.fn().mockReturnValue(of({ id: 's2', title: 'Nueva sección', position: 2, questions: [] } satisfies FormSection)),
     updateSection: vi.fn().mockReturnValue(of({ ...MOCK_SECTION, title: 'Renombrada' } satisfies FormSection)),
     deleteSection: vi.fn().mockReturnValue(of(undefined)),
@@ -67,7 +67,7 @@ describe('FormBuilderComponent', () => {
   it('onNameChanged calls updateName and updates form signal', () => {
     const { component, mockFormsService } = buildComponent();
     (component as any).onNameChanged('Nuevo nombre');
-    expect(mockFormsService.updateName).toHaveBeenCalledWith('f1', 'Nuevo nombre');
+    expect(mockFormsService.update).toHaveBeenCalledWith('f1', 'Nuevo nombre', null, null);
     expect((component as any).form()!.name).toBe('Nuevo nombre');
   });
 

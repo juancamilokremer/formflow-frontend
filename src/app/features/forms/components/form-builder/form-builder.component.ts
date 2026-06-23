@@ -39,8 +39,8 @@ export class FormBuilderComponent implements OnInit {
   }
 
   protected onNameChanged(name: string): void {
-    const id = this.form()!.id;
-    this.formsService.updateName(id, name).subscribe({
+    const form = this.form()!;
+    this.formsService.update(form.id, name, form.description, form.timeLimitSeconds).subscribe({
       next: () => this.form.update((f) => (f ? { ...f, name } : f)),
     });
   }

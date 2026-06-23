@@ -31,8 +31,8 @@ export class FormsService {
     );
   }
 
-  updateName(id: string, name: string): Observable<void> {
-    return this.http.patch<void>(`${this.apiUrl}/${id}`, { name });
+  update(id: string, name: string, description: string | null, timeLimitSeconds: number | null): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/${id}`, { name, description, timeLimitSeconds });
   }
 
   remove(id: string): Observable<void> {

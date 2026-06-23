@@ -24,7 +24,7 @@ export class ShellComponent {
       map(() => {
         let route = this.activatedRoute;
         while (route.firstChild) route = route.firstChild;
-        return !!route.snapshot.data['fullscreen'];
+        return !!route.snapshot?.data?.['fullscreen'];
       }),
     ),
     { initialValue: false },
