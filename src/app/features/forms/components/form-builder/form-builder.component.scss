@@ -1,0 +1,32 @@
+:host { display: flex; flex-direction: column; height: 100%; }
+
+.fb {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+
+  &__body {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+    background: var(--ff-bg);
+  }
+
+  &__left  { width: 220px; flex-shrink: 0; overflow: hidden; }
+  &__right { width: 300px; flex-shrink: 0; overflow: hidden; }
+}
+
+.fb__loading,
+.fb__error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  height: 100%;
+  color: var(--ff-text-secondary);
+  font-size: 14px;
+}
+
+.fb__error { color: var(--ff-error-text); }

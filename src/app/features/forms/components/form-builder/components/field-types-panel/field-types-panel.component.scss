@@ -1,0 +1,69 @@
+:host { display: block; height: 100%; }
+
+.ftp {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--ff-white);
+  border-right: 1px solid var(--ff-border);
+  overflow-y: auto;
+
+  &__header {
+    padding: 14px 16px 10px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ff-text-secondary);
+    border-bottom: 1px solid var(--ff-border);
+    position: sticky;
+    top: 0;
+    background: var(--ff-white);
+    z-index: 1;
+  }
+
+  &__groups {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 12px 10px;
+  }
+
+  &__group { display: flex; flex-direction: column; gap: 4px; }
+
+  &__group-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--ff-text-muted);
+    padding: 8px 6px 2px;
+  }
+
+  &__chips { display: flex; flex-direction: column; gap: 2px; }
+
+  &__chip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 8px 10px;
+    border: none;
+    border-radius: var(--ff-radius-md);
+    background: transparent;
+    color: var(--ff-text-primary);
+    font-size: 13px;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.1s;
+
+    app-icon { color: var(--ff-text-secondary); flex-shrink: 0; }
+
+    &:hover {
+      background: var(--ff-bg);
+      app-icon { color: var(--ff-primary); }
+    }
+
+    &:active { background: var(--ff-primary-light); }
+  }
+}

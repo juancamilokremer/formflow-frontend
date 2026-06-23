@@ -1,0 +1,54 @@
+<div class="sc">
+  <div class="sc__header">
+    <app-icon class="sc__grip" name="grip-vertical" [size]="16" />
+
+    @if (isEditing()) {
+      <input
+        class="sc__title-input"
+        type="text"
+        [value]="editTitle()"
+        (blur)="onTitleBlur($event)"
+        (keydown)="onTitleKeydown($event)"
+        #titleInput
+      />
+    } @else {
+      <span class="sc__title" (dblclick)="startEdit()">{{ section().title }}</span>
+    }
+
+    <span class="sc__question-count">
+      {{ section().questions.length }}
+    </span>
+
+    <div class="sc__actions">
+      <button class="sc__action-btn" type="button" (click)="startEdit()" [title]="'common.edit' | translate">
+        <app-icon name="edit-2" [size]="14" />
+      </button>
+      <button class="sc__action-btn sc__action-btn--danger" type="button" (click)="confirmDelete()" [title]="'common.delete' | translate">
+        <app-icon name="trash-2" [size]="14" />
+      </button>
+    </div>
+  </div>
+
+  <div class="sc__body">
+    @if (section().questions.length === 0) {
+      <div class="sc__empty">
+        {{ 'builder.section_empty' | translate }}
+      </div>
+    } @else {
+      @for (q of section().questions; track q.id) {
+        <div class="sc__question-placeholder">
+          <span class="sc__question-title">{{ q.title }}</span>
+        </div>
+      }
+    }
+  </div>
+</div>
+
+<app-confirm-dialog
+  [isOpen]="showDeleteConfirm()"
+  [title]="'builder.section_delete_title' | translate"
+  [message]="'builder.section_delete_message' | translate"
+  [confirmLabel]="'common.delete' | translate"
+  (confirmed)="doDelete()"
+  (cancelled)="cancelDelete()"
+/>

@@ -1,0 +1,26 @@
+<div class="canvas">
+  <div class="canvas__scroll">
+    @if (form().sections.length === 0) {
+      <div class="canvas__empty">
+        <app-icon name="file-plus" [size]="40" />
+        <span class="canvas__empty-title">{{ 'builder.canvas_empty' | translate }}</span>
+        <span class="canvas__empty-sub">{{ 'builder.canvas_empty_subtitle' | translate }}</span>
+      </div>
+    }
+
+    @for (section of form().sections; track section.id) {
+      <app-section-card
+        [section]="section"
+        (sectionUpdated)="sectionUpdated.emit($event)"
+        (sectionDeleted)="sectionDeleted.emit($event)"
+      />
+    }
+
+    <div class="canvas__footer">
+      <app-button variant="secondary" (click)="onAddSection()">
+        <app-icon name="plus" [size]="15" />
+        {{ 'builder.add_section' | translate }}
+      </app-button>
+    </div>
+  </div>
+</div>

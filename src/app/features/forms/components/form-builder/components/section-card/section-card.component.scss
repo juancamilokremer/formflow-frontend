@@ -1,0 +1,122 @@
+:host { display: block; }
+
+.sc {
+  background: var(--ff-white);
+  border: 1px solid var(--ff-border);
+  border-radius: var(--ff-radius-lg);
+  overflow: hidden;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    background: var(--ff-bg);
+    border-bottom: 1px solid var(--ff-border);
+
+    &:hover .sc__grip { opacity: 1; }
+  }
+
+  &__grip {
+    color: var(--ff-text-muted);
+    cursor: grab;
+    opacity: 0.4;
+    transition: opacity 0.15s;
+    flex-shrink: 0;
+  }
+
+  &__title {
+    flex: 1;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ff-text-primary);
+    cursor: text;
+    user-select: none;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__title-input {
+    flex: 1;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ff-text-primary);
+    border: 1px solid var(--ff-primary);
+    border-radius: var(--ff-radius-sm);
+    padding: 2px 6px;
+    outline: none;
+    min-width: 0;
+    background: var(--ff-white);
+    box-shadow: 0 0 0 3px var(--ff-primary-light);
+  }
+
+  &__question-count {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--ff-text-muted);
+    background: var(--ff-border);
+    border-radius: 99px;
+    padding: 1px 7px;
+    flex-shrink: 0;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 2px;
+    flex-shrink: 0;
+  }
+
+  &__action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border: none;
+    border-radius: var(--ff-radius-sm);
+    background: transparent;
+    color: var(--ff-text-secondary);
+    cursor: pointer;
+    transition: background 0.1s, color 0.1s;
+
+    &:hover { background: var(--ff-border); color: var(--ff-text-primary); }
+
+    &--danger:hover { background: #FEF2F2; color: var(--ff-error-text); }
+  }
+
+  &__body { padding: 12px; }
+
+  &__empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 60px;
+    border: 2px dashed var(--ff-border);
+    border-radius: var(--ff-radius-md);
+    font-size: 12px;
+    color: var(--ff-text-muted);
+  }
+
+  &__question-placeholder {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    border: 1px solid var(--ff-border);
+    border-radius: var(--ff-radius-md);
+    margin-bottom: 6px;
+    font-size: 13px;
+    color: var(--ff-text-primary);
+    background: var(--ff-white);
+
+    &:last-child { margin-bottom: 0; }
+  }
+
+  &__question-title {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}

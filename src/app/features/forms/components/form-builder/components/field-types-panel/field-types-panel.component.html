@@ -1,0 +1,22 @@
+<div class="ftp">
+  <div class="ftp__header">
+    {{ 'builder.panel_title' | translate }}
+  </div>
+
+  <div class="ftp__groups">
+    @for (group of groups; track group.labelKey) {
+      <div class="ftp__group">
+        <span class="ftp__group-label">{{ group.labelKey | translate }}</span>
+
+        <div class="ftp__chips">
+          @for (entry of group.types; track entry.type) {
+            <button class="ftp__chip" type="button" [title]="entry.labelKey | translate">
+              <app-icon [name]="entry.icon" [size]="15" />
+              <span>{{ entry.labelKey | translate }}</span>
+            </button>
+          }
+        </div>
+      </div>
+    }
+  </div>
+</div>
