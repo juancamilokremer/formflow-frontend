@@ -1,0 +1,54 @@
+<div class="qp">
+  <div class="qp__field">
+    <label class="qp__label" for="qp-title">{{ 'builder.prop.title' | translate }}</label>
+    <input id="qp-title" class="qp__input" type="text" [value]="question().title" (blur)="onTitleBlur($event)" />
+  </div>
+
+  <div class="qp__field qp__field--row">
+    <label class="qp__label" for="qp-required">{{ 'builder.prop.required' | translate }}</label>
+    <input id="qp-required" type="checkbox" [checked]="question().required" (change)="onRequiredChange($event)" />
+  </div>
+
+  <div class="qp__field">
+    <label class="qp__label" for="qp-description">{{ 'builder.prop.description' | translate }}</label>
+    <textarea
+      id="qp-description"
+      class="qp__textarea"
+      rows="2"
+      [value]="question().description ?? ''"
+      (blur)="onDescriptionBlur($event)"
+    ></textarea>
+  </div>
+
+  <div class="qp__divider"></div>
+
+  <div class="qp__field">
+    <label class="qp__label" for="qp-scale-size">{{ 'builder.prop.scale_size' | translate }}</label>
+    <select id="qp-scale-size" class="qp__select" (change)="onScaleSizeChange($event)">
+      <option [value]="5" [selected]="scaleMax() === 5">1 — 5</option>
+      <option [value]="10" [selected]="scaleMax() === 10">1 — 10</option>
+    </select>
+  </div>
+
+  <div class="qp__field">
+    <label class="qp__label" for="qp-min-label">{{ 'builder.prop.min_label' | translate }}</label>
+    <input
+      id="qp-min-label"
+      class="qp__input"
+      type="text"
+      [value]="minLabel()"
+      (blur)="onMinLabelBlur($event)"
+    />
+  </div>
+
+  <div class="qp__field">
+    <label class="qp__label" for="qp-max-label">{{ 'builder.prop.max_label' | translate }}</label>
+    <input
+      id="qp-max-label"
+      class="qp__input"
+      type="text"
+      [value]="maxLabel()"
+      (blur)="onMaxLabelBlur($event)"
+    />
+  </div>
+</div>

@@ -1,0 +1,39 @@
+:host { display: block; }
+
+.qc {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  &__scale {
+    display: flex;
+    border: 0px solid var(--ff-border);
+    border-radius: var(--ff-radius-sm);
+    overflow: hidden;
+    gap: 8px;
+  }
+
+  &__scale-btn {
+    flex: 1;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--ff-border);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ff-text-secondary);
+    background: var(--ff-bg);
+    border-radius: 6px;
+    padding: 8px;
+
+    &:last-child { border-right: none; }
+  }
+
+  &__scale-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--ff-text-muted);
+  }
+}

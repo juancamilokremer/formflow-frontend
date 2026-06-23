@@ -1,0 +1,16 @@
+:host { display: block; }
+
+.qc {
+  &__input {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid var(--ff-border);
+    border-radius: var(--ff-radius-sm);
+    font-size: 13px;
+    color: var(--ff-text-muted);
+    background: var(--ff-bg);
+    cursor: not-allowed;
+    outline: none;
+    box-sizing: border-box;
+  }
+}

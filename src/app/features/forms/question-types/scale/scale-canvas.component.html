@@ -1,0 +1,14 @@
+<div class="qc">
+  <div class="qc__scale">
+    @for (tick of ticks(); track tick) {
+      <div class="qc__scale-btn">{{ tick }}</div>
+    }
+  </div>
+
+  @if (minLabel() || maxLabel()) {
+    <div class="qc__scale-labels">
+      <span>{{ minLabel() }}</span>
+      <span>{{ maxLabel() }}</span>
+    </div>
+  }
+</div>

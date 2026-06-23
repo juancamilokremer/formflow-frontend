@@ -18,18 +18,24 @@
 
     <div class="fb__body">
       <div class="fb__left">
-        <app-field-types-panel />
+        <app-field-types-panel (typeSelected)="onTypeSelected($event)" />
       </div>
 
       <app-builder-canvas
         [form]="form()!"
+        [selectedQuestionId]="selectedQuestionId()"
         (sectionAdded)="onSectionAdded($event)"
         (sectionUpdated)="onSectionUpdated($event)"
         (sectionDeleted)="onSectionDeleted($event)"
+        (questionSelected)="onQuestionSelected($event)"
+        (questionDeleted)="onQuestionDeleted($event)"
       />
 
       <div class="fb__right">
-        <app-properties-panel />
+        <app-properties-panel
+          [question]="selectedQuestion()"
+          (questionChanged)="onQuestionChanged($event)"
+        />
       </div>
     </div>
   </div>

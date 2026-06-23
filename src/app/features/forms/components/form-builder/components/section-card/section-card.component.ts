@@ -1,24 +1,47 @@
 import { Component, input, output, signal } from '@angular/core';
+import { NgComponentOutlet } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 import { IconComponent } from '../../../../../../shared/icons/icon.component';
 import { ConfirmDialogComponent } from '../../../../../../shared/components/confirm-dialog/confirm-dialog.component';
-import { FormSection } from '../../../../models/form.model';
+import { FormSection, QuestionType } from '../../../../models/form.model';
+import { getQuestionTypeDef } from '../../../../question-types/question-type.registry';
 
 @Component({
   selector: 'app-section-card',
-  imports: [TranslatePipe, IconComponent, ConfirmDialogComponent],
+  imports: [TranslatePipe, IconComponent, ConfirmDialogComponent, NgComponentOutlet],
   templateUrl: './section-card.component.html',
   styleUrl: './section-card.component.scss',
 })
 export class SectionCardComponent {
-  readonly section = input.required<FormSection>();
+  readonly section             = input.required<FormSection>();
+  readonly selectedQuestionId  = input<string | null>(null);
 
-  readonly sectionUpdated = output<{ id: string; title: string }>();
-  readonly sectionDeleted = output<string>();
+  readonly sectionUpdated   = output<{ id: string; title: string }>();
+  readonly sectionDeleted   = output<string>();
+  readonly questionSelected = output<string>();
+  readonly questionDeleted  = output<{ sectionId: string; questionId: string }>();
 
-  protected readonly isEditing       = signal(false);
-  protected readonly editTitle       = signal('');
+  protected readonly isEditing         = signal(false);
+  protected readonly editTitle         = signal('');
   protected readonly showDeleteConfirm = signal(false);
+
+  protected getCanvasDef(type: QuestionType) {
+    return getQuestionTypeDef(type);
+  }
+
+  protected getCanvasInputs(questionId: string): Record<string, unknown> {
+    const question = this.section().questions.find((q) => q.id === questionId)!;
+    return { question, selected: this.selectedQuestionId() === questionId };
+  }
+
+  protected onQuestionClick(id: string): void {
+    this.questionSelected.emit(id);
+  }
+
+  protected onDeleteQuestion(event: MouseEvent, questionId: string): void {
+    event.stopPropagation();
+    this.questionDeleted.emit({ sectionId: this.section().id, questionId });
+  }
 
   protected startEdit(): void {
     this.editTitle.set(this.section().title);

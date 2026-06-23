@@ -4,8 +4,9 @@ import { Observable, map } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ApiResponse } from '../../../core/models/api-response.model';
 import {
-  Form, FormDetail, FormSection,
+  Form, FormDetail, FormSection, FormQuestion,
   CreateFormRequest, CreateSectionRequest, UpdateSectionRequest,
+  AddQuestionRequest, UpdateQuestionRequest,
 } from '../models/form.model';
 
 @Injectable({ providedIn: 'root' })
@@ -53,5 +54,31 @@ export class FormsService {
 
   deleteSection(formId: string, sectionId: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${formId}/sections/${sectionId}`);
+  }
+
+  addQuestion(formId: string, sectionId: string, req: AddQuestionRequest): Observable<FormQuestion> {
+    return this.http
+      .post<ApiResponse<FormQuestion>>(`${this.apiUrl}/${formId}/sections/${sectionId}/questions`, req)
+      .pipe(map((r) => r.data!));
+  }
+
+  updateQuestion(
+    formId: string,
+    sectionId: string,
+    questionId: string,
+    req: UpdateQuestionRequest,
+  ): Observable<FormQuestion> {
+    return this.http
+      .put<ApiResponse<FormQuestion>>(
+        `${this.apiUrl}/${formId}/sections/${sectionId}/questions/${questionId}`,
+        req,
+      )
+      .pipe(map((r) => r.data!));
+  }
+
+  deleteQuestion(formId: string, sectionId: string, questionId: string): Observable<void> {
+    return this.http.delete<void>(
+      `${this.apiUrl}/${formId}/sections/${sectionId}/questions/${questionId}`,
+    );
   }
 }

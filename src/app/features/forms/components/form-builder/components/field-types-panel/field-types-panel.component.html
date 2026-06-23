@@ -10,7 +10,12 @@
 
         <div class="ftp__chips">
           @for (entry of group.types; track entry.type) {
-            <button class="ftp__chip" type="button" [title]="entry.labelKey | translate">
+            <button
+              class="ftp__chip"
+              type="button"
+              [title]="entry.labelKey | translate"
+              (click)="typeSelected.emit(entry.type)"
+            >
               <app-icon [name]="entry.icon" [size]="15" />
               <span>{{ entry.labelKey | translate }}</span>
             </button>

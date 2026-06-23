@@ -206,12 +206,32 @@
       "file": "Archivo",
       "matrix": "Matriz"
     },
+    "question_default_title": "Nueva pregunta",
+    "canvas_no_options": "Sin opciones — configura en el panel derecho",
+    "canvas_drop_file": "Haz clic o arrastra un archivo aquí",
+    "properties_title": "Propiedades del campo",
+    "required_chip": "Obligatorio",
+    "prop": {
+      "title": "Pregunta",
+      "required": "Obligatorio",
+      "description": "Descripción (opcional)",
+      "placeholder": "Texto de ayuda (placeholder)",
+      "options": "Opciones de respuesta",
+      "add_option": "+ Agregar opción",
+      "option_placeholder": "Escribe una opción...",
+      "scale_size": "Tamaño de escala",
+      "min_label": "Etiqueta mínimo",
+      "max_label": "Etiqueta máximo"
+    },
     "error": {
       "load": "No se pudo cargar el formulario. Intenta de nuevo.",
       "name_update": "No se pudo actualizar el nombre.",
       "section_create": "No se pudo crear la sección.",
       "section_update": "No se pudo actualizar la sección.",
-      "section_delete": "No se pudo eliminar la sección."
+      "section_delete": "No se pudo eliminar la sección.",
+      "question_create": "No se pudo agregar la pregunta.",
+      "question_update": "No se pudo guardar los cambios.",
+      "question_delete": "No se pudo eliminar la pregunta."
     }
   },
   "errors": {

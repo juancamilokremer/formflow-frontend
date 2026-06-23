@@ -12,11 +12,14 @@ import { FormDetail } from '../../../../models/form.model';
 export class BuilderCanvasComponent {
   private readonly translateSvc = inject(TranslateService);
 
-  readonly form = input.required<FormDetail>();
+  readonly form                = input.required<FormDetail>();
+  readonly selectedQuestionId  = input<string | null>(null);
 
-  readonly sectionAdded   = output<string>();
-  readonly sectionUpdated = output<{ id: string; title: string }>();
-  readonly sectionDeleted = output<string>();
+  readonly sectionAdded    = output<string>();
+  readonly sectionUpdated  = output<{ id: string; title: string }>();
+  readonly sectionDeleted  = output<string>();
+  readonly questionSelected = output<string>();
+  readonly questionDeleted  = output<{ sectionId: string; questionId: string }>();
 
   protected onAddSection(): void {
     this.sectionAdded.emit(this.translateSvc.instant('builder.section_default_name'));

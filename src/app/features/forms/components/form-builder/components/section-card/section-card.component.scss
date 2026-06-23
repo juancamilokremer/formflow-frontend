@@ -99,24 +99,86 @@
     color: var(--ff-text-muted);
   }
 
-  &__question-placeholder {
-    display: flex;
-    align-items: center;
-    padding: 8px 12px;
-    border: 1px solid var(--ff-border);
+  &__question {
+    border: 1.5px solid var(--ff-border);
     border-radius: var(--ff-radius-md);
     margin-bottom: 6px;
-    font-size: 13px;
-    color: var(--ff-text-primary);
     background: var(--ff-white);
+    cursor: pointer;
+    transition: border-color 0.15s, box-shadow 0.15s;
 
     &:last-child { margin-bottom: 0; }
+
+    &:hover { border-color: var(--ff-primary); }
+
+    &--selected {
+      border-color: var(--ff-primary);
+      box-shadow: 0 0 0 3px var(--ff-primary-light);
+    }
   }
 
-  &__question-title {
-    flex: 1;
+  &__q-header {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 10px;
+  }
+
+  &__q-grip {
+    color: var(--ff-text-muted);
+    opacity: 0.4;
+    flex-shrink: 0;
+  }
+
+  &__q-badge {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    color: var(--ff-primary);
+    background: var(--ff-primary-light);
+    border-radius: 99px;
+    padding: 2px 8px;
+    white-space: nowrap;
+    flex-shrink: 0;
+
+    &--required {
+      color: #92400e;
+      background: #fef3c7;
+    }
+  }
+
+  &__q-spacer { flex: 1; }
+
+  &__q-title {
+    padding: 0 30px 4px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ff-text-primary);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+
+  &__q-delete {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border: none;
+    background: transparent;
+    color: var(--ff-text-muted);
+    border-radius: var(--ff-radius-sm);
+    cursor: pointer;
+    flex-shrink: 0;
+    opacity: 0;
+    transition: opacity 0.1s, background 0.1s, color 0.1s;
+
+    .sc__question:hover & { opacity: 1; }
+    &:hover { background: #FEF2F2; color: var(--ff-error-text); }
+  }
+
+  &__q-preview {
+    padding: 0 30px 8px;
   }
 }

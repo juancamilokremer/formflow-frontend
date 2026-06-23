@@ -1,0 +1,12 @@
+<div class="qc">
+  @if (options().length > 0) {
+    @for (opt of options(); track opt.id) {
+      <label class="qc__option">
+        <input class="qc__checkbox" type="checkbox" disabled />
+        <span class="qc__option-label">{{ opt.label }}</span>
+      </label>
+    }
+  } @else {
+    <span class="qc__empty">{{ 'builder.canvas_no_options' | translate }}</span>
+  }
+</div>
