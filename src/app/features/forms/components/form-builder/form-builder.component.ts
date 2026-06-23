@@ -184,6 +184,7 @@ export class FormBuilderComponent implements OnInit {
       if (question) {
         const merged = { ...question, ...change };
         const req: UpdateQuestionRequest = {
+          type:             merged.type,
           title:            merged.title,
           required:         merged.required,
           description:      merged.description ?? null,

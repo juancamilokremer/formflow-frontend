@@ -70,6 +70,7 @@ export interface AddQuestionRequest {
 }
 
 export interface UpdateQuestionRequest {
+  type: QuestionType;
   title: string;
   required: boolean;
   description?: string | null;
