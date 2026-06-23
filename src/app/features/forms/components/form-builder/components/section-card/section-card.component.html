@@ -26,51 +26,64 @@
     </div>
   </div>
 
-  <div class="sc__body">
+  <div
+    class="sc__body"
+    cdkDropList
+    [id]="section().id"
+    [cdkDropListData]="section().questions"
+    [cdkDropListConnectedTo]="connectedListIds()"
+    (cdkDropListDropped)="onQuestionDrop($event)"
+  >
     @if (section().questions.length === 0) {
       <div class="sc__empty">
         {{ 'builder.section_empty' | translate }}
       </div>
-    } @else {
-      @for (q of section().questions; track q.id) {
-        <div
-          class="sc__question"
-          role="button"
-          tabindex="0"
-          [class.sc__question--selected]="selectedQuestionId() === q.id"
-          (click)="onQuestionClick(q.id)"
-          (keydown.enter)="onQuestionClick(q.id)"
-          (keydown.space)="onQuestionClick(q.id)"
-        >
-          <div class="sc__q-header">
-            <app-icon class="sc__q-grip" name="grip-vertical" [size]="13" />
-            <span class="sc__q-badge">{{ 'builder.type.' + q.type | translate }}</span>
-            @if (q.required) {
-              <span class="sc__q-badge sc__q-badge--required">{{ 'builder.required_chip' | translate }}</span>
-            }
-            <span class="sc__q-spacer"></span>
-            <button
-              class="sc__q-delete"
-              type="button"
-              (click)="onDeleteQuestion($event, q.id)"
-              [title]="'common.delete' | translate"
-            >
-              <app-icon name="trash-2" [size]="13" />
-            </button>
-          </div>
+    }
 
-          <div class="sc__q-title">{{ q.title }}</div>
-
-          @if (getCanvasDef(q.type)?.canvasComponent) {
-            <div class="sc__q-preview">
-              <ng-container
-                [ngComponentOutlet]="getCanvasDef(q.type)!.canvasComponent"
-                [ngComponentOutletInputs]="getCanvasInputs(q.id)"
-              />
-            </div>
+    @for (q of section().questions; track q.id) {
+      <div
+        cdkDrag
+        [cdkDragData]="q"
+        class="sc__question"
+        role="button"
+        tabindex="0"
+        [class.sc__question--selected]="selectedQuestionId() === q.id"
+        (click)="onQuestionClick(q.id)"
+        (keydown.enter)="onQuestionClick(q.id)"
+        (keydown.space)="onQuestionClick(q.id)"
+      >
+        <div class="sc__q-header">
+          <app-icon cdkDragHandle class="sc__q-grip" name="grip-vertical" [size]="13" />
+          <span class="sc__q-badge">{{ 'builder.type.' + q.type | translate }}</span>
+          @if (q.required) {
+            <span class="sc__q-badge sc__q-badge--required">{{ 'builder.required_chip' | translate }}</span>
           }
+          <span class="sc__q-spacer"></span>
+          <button
+            class="sc__q-delete"
+            type="button"
+            (click)="onDeleteQuestion($event, q.id)"
+            [title]="'common.delete' | translate"
+          >
+            <app-icon name="trash-2" [size]="13" />
+          </button>
         </div>
-      }
+
+        <div class="sc__q-title">{{ q.title }}</div>
+
+        @if (getCanvasDef(q.type)?.canvasComponent) {
+          <div class="sc__q-preview">
+            <ng-container
+              [ngComponentOutlet]="getCanvasDef(q.type)!.canvasComponent"
+              [ngComponentOutletInputs]="getCanvasInputs(q.id)"
+            />
+          </div>
+        }
+
+        <ng-template cdkDragPlaceholder>
+          <div class="sc__q-placeholder"></div>
+        </ng-template>
+      </div>
     }
   </div>
 </div>

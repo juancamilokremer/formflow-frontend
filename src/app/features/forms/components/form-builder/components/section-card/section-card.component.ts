@@ -1,25 +1,32 @@
 import { Component, input, output, signal } from '@angular/core';
 import { NgComponentOutlet } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
+import {
+  CdkDropList, CdkDrag, CdkDragHandle,
+  CdkDragDrop, moveItemInArray,
+} from '@angular/cdk/drag-drop';
 import { IconComponent } from '../../../../../../shared/icons/icon.component';
 import { ConfirmDialogComponent } from '../../../../../../shared/components/confirm-dialog/confirm-dialog.component';
-import { FormSection, QuestionType } from '../../../../models/form.model';
+import { FormSection, FormQuestion, QuestionType, QuestionMovedEvent } from '../../../../models/form.model';
 import { getQuestionTypeDef } from '../../../../question-types/question-type.registry';
 
 @Component({
   selector: 'app-section-card',
-  imports: [TranslatePipe, IconComponent, ConfirmDialogComponent, NgComponentOutlet],
+  imports: [TranslatePipe, IconComponent, ConfirmDialogComponent, NgComponentOutlet,
+            CdkDropList, CdkDrag, CdkDragHandle],
   templateUrl: './section-card.component.html',
   styleUrl: './section-card.component.scss',
 })
 export class SectionCardComponent {
   readonly section             = input.required<FormSection>();
   readonly selectedQuestionId  = input<string | null>(null);
+  readonly connectedListIds    = input<string[]>([]);
 
   readonly sectionUpdated   = output<{ id: string; title: string }>();
   readonly sectionDeleted   = output<string>();
   readonly questionSelected = output<string>();
   readonly questionDeleted  = output<{ sectionId: string; questionId: string }>();
+  readonly questionMoved    = output<QuestionMovedEvent>();
 
   protected readonly isEditing         = signal(false);
   protected readonly editTitle         = signal('');
@@ -41,6 +48,31 @@ export class SectionCardComponent {
   protected onDeleteQuestion(event: MouseEvent, questionId: string): void {
     event.stopPropagation();
     this.questionDeleted.emit({ sectionId: this.section().id, questionId });
+  }
+
+  protected onQuestionDrop(event: CdkDragDrop<FormQuestion[]>): void {
+    const question: FormQuestion = event.item.data;
+
+    if (event.previousContainer === event.container) {
+      const orderedToIds = this.section().questions.map((q) => q.id);
+      moveItemInArray(orderedToIds, event.previousIndex, event.currentIndex);
+      this.questionMoved.emit({
+        questionId:    question.id,
+        fromSectionId: this.section().id,
+        toSectionId:   this.section().id,
+        orderedToIds,
+      });
+    } else {
+      const fromSectionId = event.previousContainer.id;
+      const orderedToIds  = this.section().questions.map((q) => q.id);
+      orderedToIds.splice(event.currentIndex, 0, question.id);
+      this.questionMoved.emit({
+        questionId: question.id,
+        fromSectionId,
+        toSectionId: this.section().id,
+        orderedToIds,
+      });
+    }
   }
 
   protected startEdit(): void {

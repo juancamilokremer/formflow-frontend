@@ -81,4 +81,15 @@ export class FormsService {
       `${this.apiUrl}/${formId}/sections/${sectionId}/questions/${questionId}`,
     );
   }
+
+  reorderSections(formId: string, orderedSectionIds: string[]): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/${formId}/sections/reorder`, { orderedSectionIds });
+  }
+
+  reorderQuestions(formId: string, sectionId: string, orderedQuestionIds: string[]): Observable<void> {
+    return this.http.put<void>(
+      `${this.apiUrl}/${formId}/sections/${sectionId}/questions/reorder`,
+      { orderedQuestionIds },
+    );
+  }
 }

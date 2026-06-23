@@ -13,7 +13,9 @@
     padding: 10px 14px;
     background: var(--ff-bg);
     border-bottom: 1px solid var(--ff-border);
+    cursor: grab;
 
+    &:active { cursor: grabbing; }
     &:hover .sc__grip { opacity: 1; }
   }
 
@@ -128,6 +130,9 @@
     color: var(--ff-text-muted);
     opacity: 0.4;
     flex-shrink: 0;
+    cursor: grab;
+
+    &:active { cursor: grabbing; }
   }
 
   &__q-badge {
@@ -181,4 +186,23 @@
   &__q-preview {
     padding: 0 30px 8px;
   }
+
+  &__q-placeholder {
+    height: 52px;
+    border: 2px dashed var(--ff-primary);
+    border-radius: var(--ff-radius-md);
+    background: var(--ff-primary-light);
+    margin-bottom: 6px;
+  }
+
 }
+
+.cdk-drag-preview {
+  border: 1.5px solid var(--ff-primary);
+  border-radius: var(--ff-radius-md);
+  background: var(--ff-white);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  opacity: 0.95;
+}
+
+.cdk-drag-animating { transition: transform 200ms ease; }
