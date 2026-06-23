@@ -1,4 +1,13 @@
-@if (loading()) {
+@if (isMobile()) {
+  <div class="fb__mobile-block">
+    <app-icon name="monitor" [size]="48" />
+    <span class="fb__mobile-block-title">{{ 'builder.mobile_block_title' | translate }}</span>
+    <span class="fb__mobile-block-sub">{{ 'builder.mobile_block_subtitle' | translate }}</span>
+    <button class="fb__mobile-block-btn" type="button" (click)="goToForms()">
+      {{ 'builder.mobile_block_action' | translate }}
+    </button>
+  </div>
+} @else if (loading()) {
   <div class="fb__loading">
     <app-icon name="file-text" [size]="32" />
     <span>{{ 'common.loading' | translate }}</span>

@@ -30,3 +30,43 @@
 }
 
 .fb__error { color: var(--ff-error-text); }
+
+.fb__mobile-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  height: 100%;
+  padding: 32px 24px;
+  text-align: center;
+  color: var(--ff-text-secondary);
+
+  &-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--ff-text-primary);
+  }
+
+  &-sub {
+    font-size: 14px;
+    color: var(--ff-text-muted);
+    max-width: 280px;
+    line-height: 1.5;
+  }
+
+  &-btn {
+    margin-top: 8px;
+    padding: 10px 24px;
+    border: none;
+    border-radius: var(--ff-radius-md);
+    background: var(--ff-primary);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 0.15s;
+
+    &:hover { opacity: 0.88; }
+  }
+}

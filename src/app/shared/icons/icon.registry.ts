@@ -31,7 +31,8 @@ export type IconName =
   | 'calendar'
   | 'paperclip'
   | 'grid'
-  | 'grip-vertical';
+  | 'grip-vertical'
+  | 'monitor';
 
 /**
  * Inner SVG markup (paths/shapes only, no <svg> wrapper) per icon name.
@@ -72,4 +73,5 @@ export const ICON_PATHS: Record<IconName, string> = {
   paperclip: `<path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/>`,
   grid: `<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>`,
   'grip-vertical': `<circle cx="9" cy="12" r="1"/><circle cx="9" cy="5" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="19" r="1"/>`,
+  'monitor': `<rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>`,
 };

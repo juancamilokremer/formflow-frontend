@@ -223,6 +223,9 @@
       "min_label": "Etiqueta mínimo",
       "max_label": "Etiqueta máximo"
     },
+    "mobile_block_title": "Pantalla muy pequeña",
+    "mobile_block_subtitle": "El constructor de formularios requiere una pantalla más grande. Accede desde un computador o tablet.",
+    "mobile_block_action": "Volver a mis formularios",
     "error": {
       "load": "No se pudo cargar el formulario. Intenta de nuevo.",
       "name_update": "No se pudo actualizar el nombre.",

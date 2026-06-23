@@ -1,5 +1,8 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { map } from 'rxjs';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { IconComponent } from '../../../../shared/icons/icon.component';
 import { FormsService } from '../../services/forms.service';
@@ -27,9 +30,20 @@ import { PropertiesPanelComponent } from './components/properties-panel/properti
   styleUrl: './form-builder.component.scss',
 })
 export class FormBuilderComponent implements OnInit {
-  private readonly route        = inject(ActivatedRoute);
-  private readonly formsService = inject(FormsService);
-  private readonly translateSvc = inject(TranslateService);
+  private readonly route             = inject(ActivatedRoute);
+  private readonly router            = inject(Router);
+  private readonly formsService      = inject(FormsService);
+  private readonly translateSvc      = inject(TranslateService);
+  private readonly breakpointObserver = inject(BreakpointObserver);
+
+  protected readonly isMobile = toSignal(
+    this.breakpointObserver.observe('(max-width: 767px)').pipe(map((s) => s.matches)),
+    { initialValue: false },
+  );
+
+  protected goToForms(): void {
+    this.router.navigate(['/forms']);
+  }
 
   protected readonly loading   = signal(true);
   protected readonly loadError = signal(false);
