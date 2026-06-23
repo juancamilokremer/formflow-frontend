@@ -78,3 +78,10 @@ export interface UpdateQuestionRequest {
   timeLimitSeconds?: number | null;
   config?: Record<string, unknown>;
 }
+
+export interface QuestionMovedEvent {
+  questionId: string;
+  fromSectionId: string;
+  toSectionId: string;
+  orderedToIds: string[];
+}

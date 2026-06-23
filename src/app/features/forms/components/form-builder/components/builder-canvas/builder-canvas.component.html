@@ -7,16 +7,31 @@
       </div>
     }
 
-    @for (section of form().sections; track section.id) {
-      <app-section-card
-        [section]="section"
-        [selectedQuestionId]="selectedQuestionId()"
-        (sectionUpdated)="sectionUpdated.emit($event)"
-        (sectionDeleted)="sectionDeleted.emit($event)"
-        (questionSelected)="questionSelected.emit($event)"
-        (questionDeleted)="questionDeleted.emit($event)"
-      />
-    }
+    <div
+      cdkDropList
+      [cdkDropListData]="form().sections"
+      (cdkDropListDropped)="onSectionDrop($event)"
+      class="canvas__sections"
+    >
+      @for (section of form().sections; track section.id) {
+        <app-section-card
+          cdkDrag
+          [cdkDragData]="section"
+          [section]="section"
+          [selectedQuestionId]="selectedQuestionId()"
+          [connectedListIds]="questionListIds()"
+          (sectionUpdated)="sectionUpdated.emit($event)"
+          (sectionDeleted)="sectionDeleted.emit($event)"
+          (questionSelected)="questionSelected.emit($event)"
+          (questionDeleted)="questionDeleted.emit($event)"
+          (questionMoved)="questionMoved.emit($event)"
+        >
+          <ng-template cdkDragPlaceholder>
+            <div class="canvas__section-placeholder"></div>
+          </ng-template>
+        </app-section-card>
+      }
+    </div>
 
     <button class="canvas__add-section" type="button" (click)="onAddSection()">
       + {{ 'builder.add_section' | translate }}

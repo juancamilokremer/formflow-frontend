@@ -38,6 +38,19 @@
     color: var(--ff-text-muted);
   }
 
+  &__sections {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  &__section-placeholder {
+    height: 80px;
+    border: 2px dashed var(--ff-primary);
+    border-radius: var(--ff-radius-lg);
+    background: var(--ff-primary-light);
+  }
+
   &__add-section {
     width: 100%;
     padding: 14px;
