@@ -35,8 +35,12 @@
       @for (q of section().questions; track q.id) {
         <div
           class="sc__question"
+          role="button"
+          tabindex="0"
           [class.sc__question--selected]="selectedQuestionId() === q.id"
           (click)="onQuestionClick(q.id)"
+          (keydown.enter)="onQuestionClick(q.id)"
+          (keydown.space)="onQuestionClick(q.id)"
         >
           <div class="sc__q-header">
             <app-icon class="sc__q-grip" name="grip-vertical" [size]="13" />
@@ -56,7 +60,7 @@
             <div class="sc__q-preview">
               <ng-container
                 [ngComponentOutlet]="getCanvasDef(q.type)!.canvasComponent"
-                [ngComponentOutletInputs]="getCanvasInputs(q.id, q.type)"
+                [ngComponentOutletInputs]="getCanvasInputs(q.id)"
               />
             </div>
           }

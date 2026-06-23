@@ -1,17 +1,18 @@
 <div class="qp">
   <div class="qp__field">
-    <label class="qp__label">{{ 'builder.prop.title' | translate }}</label>
-    <input class="qp__input" type="text" [value]="question().title" (blur)="onTitleBlur($event)" />
+    <label class="qp__label" for="qp-title">{{ 'builder.prop.title' | translate }}</label>
+    <input id="qp-title" class="qp__input" type="text" [value]="question().title" (blur)="onTitleBlur($event)" />
   </div>
 
   <div class="qp__field qp__field--row">
-    <label class="qp__label">{{ 'builder.prop.required' | translate }}</label>
-    <input type="checkbox" [checked]="question().required" (change)="onRequiredChange($event)" />
+    <label class="qp__label" for="qp-required">{{ 'builder.prop.required' | translate }}</label>
+    <input id="qp-required" type="checkbox" [checked]="question().required" (change)="onRequiredChange($event)" />
   </div>
 
   <div class="qp__field">
-    <label class="qp__label">{{ 'builder.prop.description' | translate }}</label>
+    <label class="qp__label" for="qp-description">{{ 'builder.prop.description' | translate }}</label>
     <textarea
+      id="qp-description"
       class="qp__textarea"
       rows="2"
       [value]="question().description ?? ''"
@@ -22,8 +23,8 @@
   <div class="qp__divider"></div>
 
   <div class="qp__field">
-    <label class="qp__label">{{ 'builder.prop.options' | translate }}</label>
-    <div class="qp__options">
+    <label class="qp__label" for="qp-options">{{ 'builder.prop.options' | translate }}</label>
+    <div id="qp-options" class="qp__options">
       @for (opt of localOptions(); track opt.id) {
         <div class="qp__option-row">
           <input

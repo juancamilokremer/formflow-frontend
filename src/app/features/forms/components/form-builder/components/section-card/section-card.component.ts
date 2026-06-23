@@ -29,7 +29,7 @@ export class SectionCardComponent {
     return getQuestionTypeDef(type);
   }
 
-  protected getCanvasInputs(questionId: string, type: QuestionType): Record<string, unknown> {
+  protected getCanvasInputs(questionId: string): Record<string, unknown> {
     const question = this.section().questions.find((q) => q.id === questionId)!;
     return { question, selected: this.selectedQuestionId() === questionId };
   }
