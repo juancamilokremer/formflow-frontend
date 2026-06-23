@@ -1,0 +1,10 @@
+<div class="ssb">
+  <span class="ssb__icon">⚖️</span>
+  <span class="ssb__count">
+    {{ 'builder.summary.questions_count' | translate: { n: stats().count } }}
+  </span>
+  <span class="ssb__sep">·</span>
+  <span class="ssb__total">
+    {{ 'builder.summary.max_total' | translate }}: <strong>{{ stats().total }} pts</strong>
+  </span>
+</div>

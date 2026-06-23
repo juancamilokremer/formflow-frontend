@@ -1,0 +1,29 @@
+:host { display: block; flex-shrink: 0; }
+
+.ssb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 24px;
+  background: #1e1b4b;
+  color: #c7d2fe;
+  font-size: 13px;
+
+  &__icon { flex-shrink: 0; }
+
+  &__count { color: #e0e7ff; }
+
+  &__sep {
+    color: #4c4680;
+    flex-shrink: 0;
+  }
+
+  &__total {
+    color: #a5b4fc;
+
+    strong {
+      color: #fff;
+      font-weight: 600;
+    }
+  }
+}

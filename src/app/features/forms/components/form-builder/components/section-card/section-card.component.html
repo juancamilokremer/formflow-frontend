@@ -16,6 +16,10 @@
 
     <span class="sc__question-count">{{ section().questions.length }}</span>
 
+    @if (showScoring() && hasScoredQuestions()) {
+      <span class="sc__scoring-badge">⚖️ {{ 'builder.scoring_badge' | translate }}</span>
+    }
+
     <div class="sc__actions">
       <button class="sc__action-btn" type="button" (click)="startEdit()" [title]="'common.edit' | translate">
         <app-icon name="edit-2" [size]="14" />

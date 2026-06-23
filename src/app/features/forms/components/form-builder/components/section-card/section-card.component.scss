@@ -64,6 +64,17 @@
     flex-shrink: 0;
   }
 
+  &__scoring-badge {
+    font-size: 10px;
+    font-weight: 600;
+    color: #065f46;
+    background: #d1fae5;
+    border-radius: 99px;
+    padding: 2px 8px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
   &__actions {
     display: flex;
     gap: 2px;

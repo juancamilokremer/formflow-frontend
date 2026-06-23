@@ -1,7 +1,7 @@
 import { Component, ComponentRef, OnDestroy, ViewChild, ViewContainerRef, computed, effect, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { IconComponent } from '../../../../../../shared/icons/icon.component';
-import { FormQuestion, QuestionType } from '../../../../models/form.model';
+import { FormQuestion, FormType, QuestionType } from '../../../../models/form.model';
 import { getQuestionTypeDef } from '../../../../question-types/question-type.registry';
 import { PropertiesQuestionComponent } from '../../../../question-types/question-type.interfaces';
 
@@ -13,6 +13,7 @@ import { PropertiesQuestionComponent } from '../../../../question-types/question
 })
 export class PropertiesPanelComponent implements OnDestroy {
   readonly question        = input<FormQuestion | null>(null);
+  readonly formType        = input<FormType | undefined>(undefined);
   readonly questionChanged = output<Partial<FormQuestion>>();
 
   protected readonly hasQuestion = computed(() => {
@@ -34,12 +35,13 @@ export class PropertiesPanelComponent implements OnDestroy {
 
   constructor() {
     effect(() => {
-      const q = this.question();
-      this.updateDynamicComponent(q);
+      const q        = this.question();
+      const formType = this.formType();
+      this.updateDynamicComponent(q, formType);
     });
   }
 
-  private updateDynamicComponent(q: FormQuestion | null): void {
+  private updateDynamicComponent(q: FormQuestion | null, formType: FormType | undefined): void {
     if (!this.outlet) return;
 
     const def = q ? getQuestionTypeDef(q.type) : undefined;
@@ -59,6 +61,7 @@ export class PropertiesPanelComponent implements OnDestroy {
     }
 
     this.compRef?.setInput('question', q);
+    this.compRef?.setInput('formType', formType);
   }
 
   private destroyDynamicComponent(): void {

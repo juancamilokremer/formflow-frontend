@@ -5,11 +5,25 @@
   flex-direction: column;
   gap: 6px;
 
+  &__score-banner {
+    font-size: 11px;
+    color: var(--ff-text-muted);
+    background: var(--ff-bg);
+    border: 1px solid var(--ff-border);
+    border-radius: var(--ff-radius-sm);
+    padding: 3px 8px;
+    margin-bottom: 2px;
+
+    strong { color: var(--ff-primary); }
+  }
+
   &__option {
     display: flex;
     align-items: center;
     gap: 8px;
     cursor: not-allowed;
+
+    &--scoring { cursor: default; }
   }
 
   &__radio,
@@ -21,8 +35,34 @@
   }
 
   &__option-label {
+    flex: 1;
     font-size: 13px;
     color: var(--ff-text-secondary);
+  }
+
+  &__score-input {
+    width: 52px;
+    padding: 3px 6px;
+    border: 1px solid var(--ff-border);
+    border-radius: var(--ff-radius-sm);
+    font-size: 12px;
+    color: var(--ff-text-primary);
+    background: var(--ff-white);
+    text-align: right;
+    cursor: text;
+    outline: none;
+    transition: border-color 0.15s;
+
+    &:focus { border-color: var(--ff-primary); }
+
+    &::-webkit-inner-spin-button,
+    &::-webkit-outer-spin-button { opacity: 1; }
+  }
+
+  &__score-unit {
+    font-size: 11px;
+    color: var(--ff-text-muted);
+    flex-shrink: 0;
   }
 
   &__empty {

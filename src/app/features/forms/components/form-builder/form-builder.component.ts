@@ -8,7 +8,7 @@ import { IconComponent } from '../../../../shared/icons/icon.component';
 import { FormsService } from '../../services/forms.service';
 import {
   FormDetail, FormQuestion, QuestionType,
-  AddQuestionRequest, UpdateQuestionRequest, QuestionMovedEvent,
+  AddQuestionRequest, UpdateQuestionRequest, QuestionMovedEvent, CanvasQuestionChangedEvent,
 } from '../../models/form.model';
 import { getQuestionTypeDef } from '../../question-types/question-type.registry';
 import { BuilderTopbarComponent } from './components/builder-topbar/builder-topbar.component';
@@ -284,33 +284,55 @@ export class FormBuilderComponent implements OnInit {
     for (const section of f.sections) {
       const question = section.questions.find((q) => q.id === questionId);
       if (question) {
-        const merged = { ...question, ...change };
-        const req: UpdateQuestionRequest = {
-          type:             merged.type,
-          title:            merged.title,
-          required:         merged.required,
-          description:      merged.description ?? null,
-          categoryId:       merged.categoryId  ?? null,
-          config:           merged.config,
-        };
-
-        this.formsService.updateQuestion(f.id, section.id, questionId, req).subscribe({
-          next: (updated) =>
-            this.form.update((f) =>
-              f
-                ? {
-                    ...f,
-                    sections: f.sections.map((s) =>
-                      s.id === section.id
-                        ? { ...s, questions: s.questions.map((q) => q.id === questionId ? updated : q) }
-                        : s,
-                    ),
-                  }
-                : f,
-            ),
-        });
+        this.saveQuestionChange(f.id, section.id, questionId, question, change);
         break;
       }
     }
+  }
+
+  protected onCanvasQuestionChanged(event: CanvasQuestionChangedEvent): void {
+    const f = this.form();
+    if (!f) return;
+
+    const section = f.sections.find((s) => s.id === event.sectionId);
+    if (!section) return;
+    const question = section.questions.find((q) => q.id === event.questionId);
+    if (!question) return;
+
+    this.saveQuestionChange(f.id, event.sectionId, event.questionId, question, event.change);
+  }
+
+  private saveQuestionChange(
+    formId: string,
+    sectionId: string,
+    questionId: string,
+    question: FormQuestion,
+    change: Partial<FormQuestion>,
+  ): void {
+    const merged = { ...question, ...change };
+    const req: UpdateQuestionRequest = {
+      type:        merged.type,
+      title:       merged.title,
+      required:    merged.required,
+      description: merged.description ?? null,
+      categoryId:  merged.categoryId  ?? null,
+      config:      merged.config,
+    };
+
+    this.formsService.updateQuestion(formId, sectionId, questionId, req).subscribe({
+      next: (updated) =>
+        this.form.update((f) =>
+          f
+            ? {
+                ...f,
+                sections: f.sections.map((s) =>
+                  s.id === sectionId
+                    ? { ...s, questions: s.questions.map((q) => q.id === questionId ? updated : q) }
+                    : s,
+                ),
+              }
+            : f,
+        ),
+    });
   }
 }

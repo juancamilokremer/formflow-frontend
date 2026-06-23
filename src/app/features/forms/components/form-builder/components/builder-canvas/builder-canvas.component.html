@@ -20,11 +20,13 @@
           [section]="section"
           [selectedQuestionId]="selectedQuestionId()"
           [connectedListIds]="questionListIds()"
+          [formType]="formType()"
           (sectionUpdated)="sectionUpdated.emit($event)"
           (sectionDeleted)="sectionDeleted.emit($event)"
           (questionSelected)="questionSelected.emit($event)"
           (questionDeleted)="questionDeleted.emit($event)"
           (questionMoved)="questionMoved.emit($event)"
+          (questionChanged)="questionChanged.emit($event)"
         >
           <ng-template cdkDragPlaceholder>
             <div class="canvas__section-placeholder"></div>
@@ -37,4 +39,8 @@
       + {{ 'builder.add_section' | translate }}
     </button>
   </div>
+
+  @if (showScoreSummary()) {
+    <app-score-summary-bar [form]="form()" />
+  }
 </div>

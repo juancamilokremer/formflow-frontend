@@ -85,3 +85,9 @@ export interface QuestionMovedEvent {
   toSectionId: string;
   orderedToIds: string[];
 }
+
+export interface CanvasQuestionChangedEvent {
+  questionId: string;
+  sectionId: string;
+  change: Partial<FormQuestion>;
+}

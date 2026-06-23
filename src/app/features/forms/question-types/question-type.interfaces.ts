@@ -1,9 +1,10 @@
 import { InputSignal, OutputEmitterRef } from '@angular/core';
-import { FormQuestion } from '../models/form.model';
+import { FormQuestion, FormType } from '../models/form.model';
 
 export interface CanvasQuestionComponent {
   readonly question: InputSignal<FormQuestion>;
   readonly selected: InputSignal<boolean>;
+  readonly questionChanged?: OutputEmitterRef<Partial<FormQuestion>>;
 }
 
 export interface PublicQuestionComponent {
@@ -14,4 +15,5 @@ export interface PublicQuestionComponent {
 export interface PropertiesQuestionComponent {
   readonly question: InputSignal<FormQuestion>;
   readonly changed: OutputEmitterRef<Partial<FormQuestion>>;
+  readonly formType?: InputSignal<FormType | undefined>;
 }
