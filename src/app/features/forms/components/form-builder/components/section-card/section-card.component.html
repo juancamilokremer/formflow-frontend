@@ -45,7 +45,10 @@
           <div class="sc__q-header">
             <app-icon class="sc__q-grip" name="grip-vertical" [size]="13" />
             <span class="sc__q-badge">{{ 'builder.type.' + q.type | translate }}</span>
-            <span class="sc__q-title">{{ q.title }}</span>
+            @if (q.required) {
+              <span class="sc__q-badge sc__q-badge--required">{{ 'builder.required_chip' | translate }}</span>
+            }
+            <span class="sc__q-spacer"></span>
             <button
               class="sc__q-delete"
               type="button"
@@ -55,6 +58,8 @@
               <app-icon name="trash-2" [size]="13" />
             </button>
           </div>
+
+          <div class="sc__q-title">{{ q.title }}</div>
 
           @if (getCanvasDef(q.type)?.canvasComponent) {
             <div class="sc__q-preview">

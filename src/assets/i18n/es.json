@@ -209,7 +209,8 @@
     "question_default_title": "Nueva pregunta",
     "canvas_no_options": "Sin opciones — configura en el panel derecho",
     "canvas_drop_file": "Haz clic o arrastra un archivo aquí",
-    "properties_title": "Propiedades",
+    "properties_title": "Propiedades del campo",
+    "required_chip": "Obligatorio",
     "prop": {
       "title": "Pregunta",
       "required": "Obligatorio",

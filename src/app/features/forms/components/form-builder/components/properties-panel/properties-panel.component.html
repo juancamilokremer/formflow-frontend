@@ -1,5 +1,10 @@
 <div class="pp">
-  <div class="pp__header">{{ 'builder.properties_title' | translate }}</div>
+  <div class="pp__header">
+    <span class="pp__header-title">{{ 'builder.properties_title' | translate }}</span>
+    @if (questionTypeLabelKey()) {
+      <span class="pp__type-chip">{{ questionTypeLabelKey()! | translate }}</span>
+    }
+  </div>
 
   <ng-container #outlet />
 

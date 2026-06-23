@@ -20,6 +20,12 @@ export class PropertiesPanelComponent implements OnDestroy {
     return !!(q && getQuestionTypeDef(q.type));
   });
 
+  protected readonly questionTypeLabelKey = computed(() => {
+    const q = this.question();
+    if (!q) return null;
+    return getQuestionTypeDef(q.type)?.labelKey ?? null;
+  });
+
   @ViewChild('outlet', { read: ViewContainerRef })
   private outlet!: ViewContainerRef;
 

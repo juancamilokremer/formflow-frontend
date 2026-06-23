@@ -7,22 +7,25 @@
 
   &__scale {
     display: flex;
-    gap: 4px;
-    flex-wrap: wrap;
+    border: 1px solid var(--ff-border);
+    border-radius: var(--ff-radius-sm);
+    overflow: hidden;
   }
 
   &__scale-btn {
-    min-width: 34px;
+    flex: 1;
     height: 34px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid var(--ff-border);
-    border-radius: var(--ff-radius-sm);
+    border: none;
+    border-right: 1px solid var(--ff-border);
     font-size: 13px;
     font-weight: 500;
     color: var(--ff-text-secondary);
     background: var(--ff-bg);
+
+    &:last-child { border-right: none; }
   }
 
   &__scale-labels {

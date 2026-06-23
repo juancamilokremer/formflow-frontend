@@ -9,17 +9,34 @@
   overflow-y: auto;
 
   &__header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     padding: 14px 16px 10px;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--ff-text-secondary);
     border-bottom: 1px solid var(--ff-border);
     position: sticky;
     top: 0;
     background: var(--ff-white);
     z-index: 1;
+  }
+
+  &__header-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ff-text-secondary);
+  }
+
+  &__type-chip {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--ff-primary);
+    background: var(--ff-primary-light);
+    border-radius: 99px;
+    padding: 2px 8px;
+    white-space: nowrap;
   }
 
   &__empty {
