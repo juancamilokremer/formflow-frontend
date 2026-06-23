@@ -2,7 +2,6 @@
   <div class="canvas__scroll">
     @if (form().sections.length === 0) {
       <div class="canvas__empty">
-        <app-icon name="file-plus" [size]="40" />
         <span class="canvas__empty-title">{{ 'builder.canvas_empty' | translate }}</span>
         <span class="canvas__empty-sub">{{ 'builder.canvas_empty_subtitle' | translate }}</span>
       </div>
@@ -16,11 +15,8 @@
       />
     }
 
-    <div class="canvas__footer">
-      <app-button variant="secondary" (click)="onAddSection()">
-        <app-icon name="plus" [size]="15" />
-        {{ 'builder.add_section' | translate }}
-      </app-button>
-    </div>
+    <button class="canvas__add-section" type="button" (click)="onAddSection()">
+      + {{ 'builder.add_section' | translate }}
+    </button>
   </div>
 </div>
