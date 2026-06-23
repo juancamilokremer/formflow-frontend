@@ -7,9 +7,10 @@
 
   &__scale {
     display: flex;
-    border: 1px solid var(--ff-border);
+    border: 0px solid var(--ff-border);
     border-radius: var(--ff-radius-sm);
     overflow: hidden;
+    gap: 8px;
   }
 
   &__scale-btn {
@@ -18,12 +19,13 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    border: none;
-    border-right: 1px solid var(--ff-border);
+    border: 1px solid var(--ff-border);
     font-size: 13px;
     font-weight: 500;
     color: var(--ff-text-secondary);
     background: var(--ff-bg);
+    border-radius: 6px;
+    padding: 8px;
 
     &:last-child { border-right: none; }
   }
