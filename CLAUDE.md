@@ -179,11 +179,36 @@ Ningún string visible al usuario hardcodeado — todo en `es.json` con `| trans
 | Milestone | Issues |
 |-----------|--------|
 | M1 ✅ | #9 ✅ #10 ✅ #11 ✅ #18 ✅ #19 ✅ |
-| M2 🔄 | #1 ⏳ #2 ⏳ #3 ⏳ #4 ⏳ |
+| M2 🔄 | #1 cerrado → sub-issues: #32 ✅ #33 ✅ #34 ✅ #35 ✅ #36 ⏳ #39 ⏳ · originales: #2 ⏳ #3 ⏳ #4 ⏳ |
 | M3 | #12 #13 #14 #15 #16 #20 |
 | M4 | #5 #6 |
 | M5 | #7 #8 #21 #22 #23 |
 | M6 | #17 |
+
+## Orden pendiente M2 (jun 2026)
+1. **#39** — Bloquear builder en móvil (< 768px) — simple, `BreakpointObserver`
+2. **#36** — Scoring por opción en single/scale + resumen de puntaje máximo en canvas
+3. **#2**  — Tipos avanzados (matrix, nps) + `OptionListEditor` con reorden drag
+4. **#3**  — UI de lógica condicional (drawer, reglas AND/OR, preview texto natural)
+5. **#4**  — Preview en tiempo real (motor de condiciones + 8 answer components reutilizados en M3 #12)
+
+## Patrones establecidos en M2
+
+### QuestionTypeRegistry
+Cada tipo registra 3 componentes + metadata en `question-types/question-type.registry.ts`.
+Agregar un tipo nuevo = 1 entrada en `QUESTION_TYPE_REGISTRY` + 3 archivos (canvas, properties, public).
+Los tipos se almacenan en **minúsculas** en BD y en el registry (`'text'`, `'single'`, etc.).
+
+### Tests (Vitest, NO Jasmine)
+- Correr: `npx ng test --watch=false`
+- Outputs: suscribir a `component.output` antes de llamar el método, verificar `emitted`
+- Componentes con `input()`/`output()` requieren `TestBed.createComponent()` (injection context)
+
+### CDK DragDrop
+- Secciones: `cdkDrag` en `<app-section-card>` (sin handle — todo el header arrastra), `cursor: grab` en `.sc__header`
+- Preguntas: `cdkDrag` en el div de la pregunta, `cdkDragHandle` en `.sc__q-grip` (mismo template ✅)
+- Cross-section: `cdkDropListConnectedTo` con IDs de secciones; el move hace `addQuestion` + `deleteQuestion`
+- El ID del drop list de preguntas = `section.id` (UUID de la sección)
 
 ## Links
 - Issues: https://github.com/juancamilokremer/formflow-frontend/issues
