@@ -1,9 +1,10 @@
 import { TestBed } from '@angular/core/testing';
 import { provideTranslateService } from '@ngx-translate/core';
+import { FormQuestion } from '../../models/form.model';
 import { MultiplePropertiesComponent } from './multiple-properties.component';
 
-const MOCK_Q = {
-  id: '1', type: 'multiple' as const, title: 'Q', description: null,
+const MOCK_Q: FormQuestion = {
+  id: '1', type: 'multiple', title: 'Q', description: null,
   position: 0, required: false, categoryId: null,
   config: { options: [{ id: 'a', label: 'A' }, { id: 'b', label: 'B' }] },
 };
@@ -25,13 +26,14 @@ describe('MultiplePropertiesComponent', () => {
   it('creates', () => expect(component).toBeTruthy());
 
   it('loads 2 options from config', () => {
-    expect((component as any).localOptions()).toHaveSize(2);
+    expect((component as any).localOptions()).toHaveLength(2);
   });
 
   it('removes an option and emits', () => {
-    const spy = spyOn(component.changed, 'emit');
+    let emitted: Partial<FormQuestion> | undefined;
+    component.changed.subscribe((v) => (emitted = v));
     (component as any).removeOption('a');
-    expect((component as any).localOptions()).toHaveSize(1);
-    expect(spy).toHaveBeenCalled();
+    expect((component as any).localOptions()).toHaveLength(1);
+    expect(emitted).toBeDefined();
   });
 });

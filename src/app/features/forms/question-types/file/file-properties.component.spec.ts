@@ -1,9 +1,10 @@
 import { TestBed } from '@angular/core/testing';
 import { provideTranslateService } from '@ngx-translate/core';
+import { FormQuestion } from '../../models/form.model';
 import { FilePropertiesComponent } from './file-properties.component';
 
-const MOCK_Q = {
-  id: '1', type: 'file' as const, title: 'Q', description: null,
+const MOCK_Q: FormQuestion = {
+  id: '1', type: 'file', title: 'Q', description: null,
   position: 0, required: false, categoryId: null, config: {},
 };
 
@@ -23,8 +24,9 @@ describe('FilePropertiesComponent', () => {
   it('creates', () => expect(component).toBeTruthy());
 
   it('emits required toggle', () => {
-    const spy = spyOn(component.changed, 'emit');
+    let emitted: Partial<FormQuestion> | undefined;
+    component.changed.subscribe((v) => (emitted = v));
     (component as any).onRequiredChange({ target: { checked: true } } as unknown as Event);
-    expect(spy).toHaveBeenCalledWith({ required: true });
+    expect(emitted).toEqual({ required: true });
   });
 });
