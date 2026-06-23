@@ -1,11 +1,4 @@
 <div class="qc">
-  @if (scoringType() !== 'none') {
-    <div class="qc__score-banner">
-      {{ 'builder.canvas_max_score' | translate }}: <strong>10 pts</strong>
-      <span class="qc__score-banner-hint">{{ 'builder.canvas_auto_scores' | translate }}</span>
-    </div>
-  }
-
   <div class="qc__scale">
     @for (tick of ticks(); track tick; let i = $index) {
       <div class="qc__scale-tick">
@@ -21,6 +14,16 @@
     <div class="qc__scale-labels">
       <span>{{ minLabel() }}</span>
       <span>{{ maxLabel() }}</span>
+    </div>
+  }
+
+  @if (scoringType() !== 'none') {
+    <div class="qc__score-banner">
+      <span>{{ 'builder.canvas_max_score' | translate }}</span>
+      <div class="qc__score-banner-right">
+        <strong>10 pts</strong>
+        <span class="qc__score-banner-hint">{{ 'builder.canvas_auto_scores' | translate }}</span>
+      </div>
     </div>
   }
 </div>

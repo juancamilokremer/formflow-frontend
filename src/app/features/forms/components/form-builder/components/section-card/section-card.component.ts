@@ -48,12 +48,9 @@ export class SectionCardComponent {
     return t === 'CANDIDATES' || t === 'DIAGNOSTIC';
   });
 
-  protected readonly hasScoredQuestions = computed(() =>
-    this.section().questions.some(
-      (q) => (q.config['scoringType'] as string | undefined) &&
-              (q.config['scoringType'] as string) !== 'none',
-    ),
-  );
+  protected getScoringType(question: FormQuestion): string {
+    return (question.config['scoringType'] as string) ?? 'none';
+  }
 
   constructor() {
     this.canvasEditSvc.change$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((evt) => {
