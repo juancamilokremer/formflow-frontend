@@ -9,15 +9,12 @@
         [value]="editTitle()"
         (blur)="onTitleBlur($event)"
         (keydown)="onTitleKeydown($event)"
-        #titleInput
       />
     } @else {
       <span class="sc__title" (dblclick)="startEdit()">{{ section().title }}</span>
     }
 
-    <span class="sc__question-count">
-      {{ section().questions.length }}
-    </span>
+    <span class="sc__question-count">{{ section().questions.length }}</span>
 
     <div class="sc__actions">
       <button class="sc__action-btn" type="button" (click)="startEdit()" [title]="'common.edit' | translate">
@@ -36,8 +33,33 @@
       </div>
     } @else {
       @for (q of section().questions; track q.id) {
-        <div class="sc__question-placeholder">
-          <span class="sc__question-title">{{ q.title }}</span>
+        <div
+          class="sc__question"
+          [class.sc__question--selected]="selectedQuestionId() === q.id"
+          (click)="onQuestionClick(q.id)"
+        >
+          <div class="sc__q-header">
+            <app-icon class="sc__q-grip" name="grip-vertical" [size]="13" />
+            <span class="sc__q-badge">{{ 'builder.type.' + q.type | translate }}</span>
+            <span class="sc__q-title">{{ q.title }}</span>
+            <button
+              class="sc__q-delete"
+              type="button"
+              (click)="onDeleteQuestion($event, q.id)"
+              [title]="'common.delete' | translate"
+            >
+              <app-icon name="trash-2" [size]="13" />
+            </button>
+          </div>
+
+          @if (getCanvasDef(q.type)?.canvasComponent) {
+            <div class="sc__q-preview">
+              <ng-container
+                [ngComponentOutlet]="getCanvasDef(q.type)!.canvasComponent"
+                [ngComponentOutletInputs]="getCanvasInputs(q.id, q.type)"
+              />
+            </div>
+          }
         </div>
       }
     }

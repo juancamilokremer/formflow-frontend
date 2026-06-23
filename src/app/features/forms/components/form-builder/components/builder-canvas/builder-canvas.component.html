@@ -10,8 +10,11 @@
     @for (section of form().sections; track section.id) {
       <app-section-card
         [section]="section"
+        [selectedQuestionId]="selectedQuestionId()"
         (sectionUpdated)="sectionUpdated.emit($event)"
         (sectionDeleted)="sectionDeleted.emit($event)"
+        (questionSelected)="questionSelected.emit($event)"
+        (questionDeleted)="questionDeleted.emit($event)"
       />
     }
 

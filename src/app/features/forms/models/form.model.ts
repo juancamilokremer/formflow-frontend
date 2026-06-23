@@ -16,10 +16,17 @@ export interface Form {
   updatedAt: string;
 }
 
+export interface QuestionOption {
+  id: string;
+  label: string;
+  score?: number;
+}
+
 export interface FormQuestion {
   id: string;
   type: QuestionType;
   title: string;
+  description: string | null;
   position: number;
   required: boolean;
   categoryId: string | null;
@@ -50,4 +57,23 @@ export interface CreateSectionRequest {
 
 export interface UpdateSectionRequest {
   title: string;
+}
+
+export interface AddQuestionRequest {
+  type: QuestionType;
+  title: string;
+  required?: boolean;
+  description?: string;
+  categoryId?: string;
+  timeLimitSeconds?: number;
+  config?: Record<string, unknown>;
+}
+
+export interface UpdateQuestionRequest {
+  title: string;
+  required: boolean;
+  description?: string | null;
+  categoryId?: string | null;
+  timeLimitSeconds?: number | null;
+  config?: Record<string, unknown>;
 }

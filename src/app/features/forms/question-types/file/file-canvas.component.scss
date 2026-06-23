@@ -1,0 +1,16 @@
+:host { display: block; }
+
+.qc {
+  &__dropzone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 16px;
+    border: 2px dashed var(--ff-border);
+    border-radius: var(--ff-radius-md);
+    color: var(--ff-text-muted);
+    font-size: 13px;
+    cursor: not-allowed;
+  }
+}

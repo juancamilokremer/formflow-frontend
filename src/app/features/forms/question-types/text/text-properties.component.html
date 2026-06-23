@@ -1,0 +1,33 @@
+<div class="qp">
+  <div class="qp__field">
+    <label class="qp__label">{{ 'builder.prop.title' | translate }}</label>
+    <input class="qp__input" type="text" [value]="question().title" (blur)="onTitleBlur($event)" />
+  </div>
+
+  <div class="qp__field qp__field--row">
+    <label class="qp__label">{{ 'builder.prop.required' | translate }}</label>
+    <input type="checkbox" [checked]="question().required" (change)="onRequiredChange($event)" />
+  </div>
+
+  <div class="qp__field">
+    <label class="qp__label">{{ 'builder.prop.description' | translate }}</label>
+    <textarea
+      class="qp__textarea"
+      rows="2"
+      [value]="question().description ?? ''"
+      (blur)="onDescriptionBlur($event)"
+    ></textarea>
+  </div>
+
+  <div class="qp__divider"></div>
+
+  <div class="qp__field">
+    <label class="qp__label">{{ 'builder.prop.placeholder' | translate }}</label>
+    <input
+      class="qp__input"
+      type="text"
+      [value]="$any(question().config['placeholder']) ?? ''"
+      (blur)="onPlaceholderBlur($event)"
+    />
+  </div>
+</div>
