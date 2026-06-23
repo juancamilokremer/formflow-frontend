@@ -3,6 +3,13 @@
   height: 100%;
 }
 
+.shell--fullscreen {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--ff-bg);
+}
+
 .shell {
   display: flex;
   height: 100%;

@@ -1,0 +1,36 @@
+@if (loading()) {
+  <div class="fb__loading">
+    <app-icon name="file-text" [size]="32" />
+    <span>{{ 'common.loading' | translate }}</span>
+  </div>
+} @else if (loadError()) {
+  <div class="fb__error">
+    <app-icon name="alert-circle" [size]="32" />
+    <span>{{ 'builder.error.load' | translate }}</span>
+  </div>
+} @else if (form()) {
+  <div class="fb">
+    <app-builder-topbar
+      [form]="form()!"
+      (nameChanged)="onNameChanged($event)"
+      (publishClicked)="onPublishClicked()"
+    />
+
+    <div class="fb__body">
+      <div class="fb__left">
+        <app-field-types-panel />
+      </div>
+
+      <app-builder-canvas
+        [form]="form()!"
+        (sectionAdded)="onSectionAdded($event)"
+        (sectionUpdated)="onSectionUpdated($event)"
+        (sectionDeleted)="onSectionDeleted($event)"
+      />
+
+      <div class="fb__right">
+        <app-properties-panel />
+      </div>
+    </div>
+  </div>
+}

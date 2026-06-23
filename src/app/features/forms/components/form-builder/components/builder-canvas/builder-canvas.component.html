@@ -1,0 +1,22 @@
+<div class="canvas">
+  <div class="canvas__scroll">
+    @if (form().sections.length === 0) {
+      <div class="canvas__empty">
+        <span class="canvas__empty-title">{{ 'builder.canvas_empty' | translate }}</span>
+        <span class="canvas__empty-sub">{{ 'builder.canvas_empty_subtitle' | translate }}</span>
+      </div>
+    }
+
+    @for (section of form().sections; track section.id) {
+      <app-section-card
+        [section]="section"
+        (sectionUpdated)="sectionUpdated.emit($event)"
+        (sectionDeleted)="sectionDeleted.emit($event)"
+      />
+    }
+
+    <button class="canvas__add-section" type="button" (click)="onAddSection()">
+      + {{ 'builder.add_section' | translate }}
+    </button>
+  </div>
+</div>

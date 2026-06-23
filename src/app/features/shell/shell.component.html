@@ -1,14 +1,20 @@
-<div class="shell">
-  @if (sidebarOpen()) {
-    <div class="shell__overlay" (click)="closeSidebar()" aria-hidden="true"></div>
-  }
-
-  <app-sidebar [open]="sidebarOpen()" (closeRequested)="closeSidebar()" />
-
-  <div class="shell__body">
-    <app-header (menuToggled)="toggleSidebar()" />
-    <main class="shell__main">
-      <router-outlet />
-    </main>
+@if (fullscreen()) {
+  <div class="shell--fullscreen">
+    <router-outlet />
   </div>
-</div>
+} @else {
+  <div class="shell">
+    @if (sidebarOpen()) {
+      <div class="shell__overlay" (click)="closeSidebar()" aria-hidden="true"></div>
+    }
+
+    <app-sidebar [open]="sidebarOpen()" (closeRequested)="closeSidebar()" />
+
+    <div class="shell__body">
+      <app-header (menuToggled)="toggleSidebar()" />
+      <main class="shell__main">
+        <router-outlet />
+      </main>
+    </div>
+  </div>
+}

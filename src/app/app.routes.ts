@@ -66,7 +66,7 @@ export const routes: Routes = [
       },
       {
         path: `${RouteConstants.FORMS}/:id/${RouteConstants.FORM_BUILDER}`,
-        data: { titleKey: 'shell.nav.form_builder' },
+        data: { titleKey: 'shell.nav.form_builder', fullscreen: true },
         loadComponent: () =>
           import('./features/forms/components/form-builder/form-builder.component').then(
             (m) => m.FormBuilderComponent,

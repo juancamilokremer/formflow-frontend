@@ -1,0 +1,31 @@
+<div class="topbar">
+  <a class="topbar__back" [routerLink]="formsRoute">
+    ← {{ 'builder.back' | translate }}
+  </a>
+
+  <div class="topbar__divider"></div>
+
+  <input
+    class="topbar__name"
+    type="text"
+    [value]="form().name"
+    (blur)="onNameBlur($event)"
+    (keydown)="onNameKeydown($event)"
+    [attr.aria-label]="'builder.form_name' | translate"
+  />
+
+  @if (form().status) {
+    <span class="topbar__status topbar__status--{{ form().status | lowercase }}">
+      {{ 'forms.status.' + (form().status | lowercase) | translate }}
+    </span>
+  }
+
+  <div class="topbar__actions">
+    <app-button variant="secondary">
+      {{ 'builder.preview' | translate }}
+    </app-button>
+    <app-button (click)="publishClicked.emit()">
+      {{ 'builder.publish' | translate }}
+    </app-button>
+  </div>
+</div>

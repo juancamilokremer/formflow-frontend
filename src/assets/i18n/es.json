@@ -174,6 +174,46 @@
       "load": "No se pudieron cargar los formularios. Intenta de nuevo."
     }
   },
+  "builder": {
+    "back": "Volver a formularios",
+    "preview": "Vista previa",
+    "publish": "Publicar",
+    "form_name": "Nombre del formulario",
+    "add_section": "Agregar sección",
+    "section_default_name": "Nueva sección",
+    "section_placeholder": "Nombre de la sección",
+    "section_delete_title": "¿Eliminar sección?",
+    "section_delete_message": "Se eliminarán todas las preguntas de esta sección. Esta acción no se puede deshacer.",
+    "canvas_empty": "Empieza agregando una sección",
+    "canvas_empty_subtitle": "Haz clic en \"Agregar sección\" para comenzar",
+    "section_empty": "Arrastra campos aquí",
+    "properties_empty": "Selecciona un campo para editarlo",
+    "properties_empty_subtitle": "Haz clic en cualquier pregunta del canvas",
+    "panel_title": "Tipos de campo",
+    "group": {
+      "text": "Texto",
+      "selection": "Selección",
+      "scales": "Escalas",
+      "advanced": "Avanzado"
+    },
+    "type": {
+      "text": "Texto libre",
+      "single": "Opción única",
+      "multiple": "Múltiple opción",
+      "scale": "Escala",
+      "nps": "NPS",
+      "date": "Fecha",
+      "file": "Archivo",
+      "matrix": "Matriz"
+    },
+    "error": {
+      "load": "No se pudo cargar el formulario. Intenta de nuevo.",
+      "name_update": "No se pudo actualizar el nombre.",
+      "section_create": "No se pudo crear la sección.",
+      "section_update": "No se pudo actualizar la sección.",
+      "section_delete": "No se pudo eliminar la sección."
+    }
+  },
   "errors": {
     "unauthorized": "No tienes permiso para realizar esta acción.",
     "not_found": "El recurso solicitado no existe.",

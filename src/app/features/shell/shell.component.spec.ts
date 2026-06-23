@@ -1,10 +1,24 @@
 import { ShellComponent } from './shell.component';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
+import { provideTranslateService } from '@ngx-translate/core';
 
 describe('ShellComponent', () => {
+  let fixture: ComponentFixture<ShellComponent>;
   let component: ShellComponent;
 
-  beforeEach(() => {
-    component = new ShellComponent();
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [ShellComponent],
+      providers: [
+        provideRouter([]),
+        provideTranslateService({ lang: 'es' }),
+      ],
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(ShellComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
   it('should start with sidebar closed', () => {
