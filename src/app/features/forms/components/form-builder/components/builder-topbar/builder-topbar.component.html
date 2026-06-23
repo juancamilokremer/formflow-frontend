@@ -14,9 +14,11 @@
     [attr.aria-label]="'builder.form_name' | translate"
   />
 
-  <span class="topbar__status topbar__status--{{ form().status | lowercase }}">
-    {{ 'forms.status.' + (form().status | lowercase) | translate }}
-  </span>
+  @if (form().status) {
+    <span class="topbar__status topbar__status--{{ form().status | lowercase }}">
+      {{ 'forms.status.' + (form().status | lowercase) | translate }}
+    </span>
+  }
 
   <div class="topbar__actions">
     <app-button variant="secondary">
