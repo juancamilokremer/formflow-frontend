@@ -32,7 +32,8 @@ export type IconName =
   | 'paperclip'
   | 'grid'
   | 'grip-vertical'
-  | 'monitor';
+  | 'monitor'
+  | 'scale';
 
 /**
  * Inner SVG markup (paths/shapes only, no <svg> wrapper) per icon name.
@@ -74,4 +75,5 @@ export const ICON_PATHS: Record<IconName, string> = {
   grid: `<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>`,
   'grip-vertical': `<circle cx="9" cy="12" r="1"/><circle cx="9" cy="5" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="19" r="1"/>`,
   'monitor': `<rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>`,
+  'scale': `<line x1="12" y1="3" x2="12" y2="21"/><polyline points="17 8 12 3 7 8"/><line x1="3" y1="12" x2="7.5" y2="3"/><path d="M3 12h9"/><line x1="21" y1="12" x2="16.5" y2="3"/><path d="M21 12h-9"/><path d="M3 21h18"/>`,
 };

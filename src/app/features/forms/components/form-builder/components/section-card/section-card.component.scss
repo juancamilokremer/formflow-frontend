@@ -152,6 +152,9 @@
     }
 
     &--scoring {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
       color: #c2410c;
       background: #fff7ed;
     }

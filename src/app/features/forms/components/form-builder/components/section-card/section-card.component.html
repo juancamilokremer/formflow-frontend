@@ -60,7 +60,8 @@
           }
           @if (showScoring() && getScoringType(q) !== 'none') {
             <span class="sc__q-badge sc__q-badge--scoring">
-              ⚖️ {{ getScoringType(q) === 'auto' ? ('builder.scoring_badge_auto' | translate) : ('builder.scoring_badge' | translate) }}
+              <app-icon name="scale" [size]="10" />
+              {{ getScoringType(q) === 'auto' ? ('builder.scoring_badge_auto' | translate) : ('builder.scoring_badge' | translate) }}
             </span>
           }
           <span class="sc__q-spacer"></span>
