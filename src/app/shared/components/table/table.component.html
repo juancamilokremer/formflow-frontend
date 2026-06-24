@@ -23,36 +23,38 @@
       [compact]="true"
     />
   } @else {
-    <table class="ff-table__table">
-      <thead>
-        <tr>
-          @for (col of columns(); track col.key) {
-            <th
-              [style.width]="col.width"
-              [style.text-align]="col.align ?? 'left'"
-            >{{ col.header | translate }}</th>
-          }
-        </tr>
-      </thead>
-      <tbody>
-        @for (row of rows(); track $index; let i = $index) {
+    <div class="ff-table__scroll-wrap">
+      <table class="ff-table__table">
+        <thead>
           <tr>
             @for (col of columns(); track col.key) {
-              <td [style.text-align]="col.align ?? 'left'">
-                @if (getCellTemplate(col.key); as tpl) {
-                  <ng-container
-                    [ngTemplateOutlet]="tpl"
-                    [ngTemplateOutletContext]="{ $implicit: row, index: i }"
-                  />
-                } @else {
-                  {{ getCellValue(row, col.key) }}
-                }
-              </td>
+              <th
+                [style.width]="col.width"
+                [style.text-align]="col.align ?? 'left'"
+              >{{ col.header | translate }}</th>
             }
           </tr>
-        }
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          @for (row of rows(); track $index; let i = $index) {
+            <tr>
+              @for (col of columns(); track col.key) {
+                <td [style.text-align]="col.align ?? 'left'">
+                  @if (getCellTemplate(col.key); as tpl) {
+                    <ng-container
+                      [ngTemplateOutlet]="tpl"
+                      [ngTemplateOutletContext]="{ $implicit: row, index: i }"
+                    />
+                  } @else {
+                    {{ getCellValue(row, col.key) }}
+                  }
+                </td>
+              }
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
   }
 
 </div>
