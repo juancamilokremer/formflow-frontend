@@ -12,6 +12,12 @@
     gap: 12px;
     padding: 14px 20px;
     border-bottom: 1px solid var(--ff-border);
+    flex-wrap: wrap;
+  }
+
+  &__scroll-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   &__table {
