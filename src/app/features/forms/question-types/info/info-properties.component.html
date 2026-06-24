@@ -1,0 +1,27 @@
+<div class="qp">
+  <div class="qp__field">
+    <label class="qp__label" for="qp-title">{{ 'builder.prop.title' | translate }}</label>
+    <input
+      id="qp-title"
+      class="qp__input"
+      type="text"
+      [value]="question().title"
+      [placeholder]="'builder.prop.info_title_placeholder' | translate"
+      (blur)="onTitleBlur($event)"
+    />
+  </div>
+
+  <div class="qp__divider"></div>
+
+  <div class="qp__field">
+    <label class="qp__label" for="qp-content">{{ 'builder.prop.info_content' | translate }}</label>
+    <textarea
+      id="qp-content"
+      class="qp__textarea"
+      rows="5"
+      [value]="$any(question().config['content']) ?? ''"
+      [placeholder]="'builder.prop.info_content_placeholder' | translate"
+      (blur)="onContentBlur($event)"
+    ></textarea>
+  </div>
+</div>

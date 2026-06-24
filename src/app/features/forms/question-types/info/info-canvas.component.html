@@ -1,0 +1,13 @@
+<div class="ic">
+  <app-icon class="ic__icon" name="info" [size]="16" />
+  <div class="ic__body">
+    @if (question().title) {
+      <p class="ic__title">{{ question().title }}</p>
+    }
+    @if (content()) {
+      <p class="ic__content">{{ content() }}</p>
+    } @else {
+      <p class="ic__placeholder">{{ 'builder.prop.info_content_placeholder' | translate }}</p>
+    }
+  </div>
+</div>

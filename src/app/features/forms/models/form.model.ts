@@ -1,6 +1,6 @@
 export type FormType   = 'CANDIDATES' | 'DIAGNOSTIC' | 'REGISTRATION';
 export type FormStatus = 'DRAFT' | 'ACTIVE' | 'ARCHIVED';
-export type QuestionType = 'text' | 'single' | 'multiple' | 'scale' | 'date' | 'file' | 'matrix' | 'nps';
+export type QuestionType = 'text' | 'single' | 'multiple' | 'scale' | 'date' | 'file' | 'matrix' | 'nps' | 'info';
 
 export interface Form {
   id: string;
