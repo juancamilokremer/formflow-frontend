@@ -4,12 +4,12 @@ import { FormQuestion, FormType } from '../../models/form.model';
 import { PropertiesQuestionComponent } from '../question-type.interfaces';
 
 @Component({
-  selector: 'app-file-properties',
+  selector: 'app-nps-properties',
   imports: [TranslatePipe],
-  templateUrl: './file-properties.component.html',
-  styleUrl: './file-properties.component.scss',
+  templateUrl: './nps-properties.component.html',
+  styleUrl: './nps-properties.component.scss',
 })
-export class FilePropertiesComponent implements PropertiesQuestionComponent {
+export class NpsPropertiesComponent implements PropertiesQuestionComponent {
   readonly question  = input.required<FormQuestion>();
   readonly changed   = output<Partial<FormQuestion>>();
   readonly formType  = input<FormType | undefined>(undefined);
@@ -26,5 +26,15 @@ export class FilePropertiesComponent implements PropertiesQuestionComponent {
   protected onDescriptionBlur(event: FocusEvent): void {
     const description = (event.target as HTMLTextAreaElement).value.trim() || null;
     if (description !== this.question().description) this.changed.emit({ description });
+  }
+
+  protected onMinLabelBlur(event: FocusEvent): void {
+    const minLabel = (event.target as HTMLInputElement).value.trim();
+    this.changed.emit({ config: { ...this.question().config, minLabel } });
+  }
+
+  protected onMaxLabelBlur(event: FocusEvent): void {
+    const maxLabel = (event.target as HTMLInputElement).value.trim();
+    this.changed.emit({ config: { ...this.question().config, maxLabel } });
   }
 }

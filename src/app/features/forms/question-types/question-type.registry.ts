@@ -12,6 +12,12 @@ import { QuestionPublicStubComponent } from './shared/question-public-stub.compo
 import { TextCanvasComponent }      from './text/text-canvas.component';
 import { TextPropertiesComponent }  from './text/text-properties.component';
 
+import { NpsCanvasComponent }      from './nps/nps-canvas.component';
+import { NpsPropertiesComponent }  from './nps/nps-properties.component';
+
+import { MatrixCanvasComponent }      from './matrix/matrix-canvas.component';
+import { MatrixPropertiesComponent }  from './matrix/matrix-properties.component';
+
 import { SingleCanvasComponent }      from './single/single-canvas.component';
 import { SinglePropertiesComponent }  from './single/single-properties.component';
 
@@ -98,6 +104,26 @@ export const QUESTION_TYPE_REGISTRY: QuestionTypeDefinition[] = [
     publicComponent:     QuestionPublicStubComponent,
     propertiesComponent: FilePropertiesComponent,
     defaultConfig: () => ({ maxSizeMb: 5, allowedTypes: ['pdf', 'jpg', 'png'] }),
+  },
+  {
+    type: 'nps',
+    labelKey: 'builder.type.nps',
+    icon: 'bar-chart-2',
+    groupKey: 'builder.group.scales',
+    canvasComponent:     NpsCanvasComponent,
+    publicComponent:     QuestionPublicStubComponent,
+    propertiesComponent: NpsPropertiesComponent,
+    defaultConfig: () => ({ minLabel: '', maxLabel: '' }),
+  },
+  {
+    type: 'matrix',
+    labelKey: 'builder.type.matrix',
+    icon: 'grid',
+    groupKey: 'builder.group.advanced',
+    canvasComponent:     MatrixCanvasComponent,
+    publicComponent:     QuestionPublicStubComponent,
+    propertiesComponent: MatrixPropertiesComponent,
+    defaultConfig: () => ({ rows: [], columns: [], scoringType: 'none' }),
   },
 ];
 

@@ -13,11 +13,13 @@
             <button
               class="ftp__chip"
               type="button"
-              [title]="entry.labelKey | translate"
               (click)="typeSelected.emit(entry.type)"
             >
-              <app-icon [name]="entry.icon" [size]="15" />
-              <span>{{ entry.labelKey | translate }}</span>
+              <div class="ftp__chip-row">
+                <app-icon [name]="entry.icon" [size]="15" />
+                <span class="ftp__chip-label">{{ entry.labelKey | translate }}</span>
+              </div>
+              <span class="ftp__chip-desc">{{ entry.descriptionKey | translate }}</span>
             </button>
           }
         </div>

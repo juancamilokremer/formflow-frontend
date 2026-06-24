@@ -44,15 +44,14 @@
 
   &__chip {
     display: flex;
-    align-items: center;
-    gap: 8px;
+    flex-direction: column;
+    gap: 0;
     width: 100%;
-    padding: 8px 10px;
+    padding: 7px 10px;
     border: none;
     border-radius: var(--ff-radius-md);
     background: transparent;
     color: var(--ff-text-primary);
-    font-size: 13px;
     cursor: pointer;
     text-align: left;
     transition: background 0.1s;
@@ -64,6 +63,29 @@
       app-icon { color: var(--ff-primary); }
     }
 
+    &:hover &-desc { max-height: 30px; opacity: 1; }
+
     &:active { background: var(--ff-primary-light); }
+  }
+
+  &__chip-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__chip-label {
+    font-size: 13px;
+  }
+
+  &__chip-desc {
+    font-size: 10px;
+    color: var(--ff-text-muted);
+    padding-left: 23px;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.15s ease, opacity 0.15s ease;
+    line-height: 1.4;
   }
 }

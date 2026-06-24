@@ -1,0 +1,42 @@
+<div class="ole__list" cdkDropList (cdkDropListDropped)="onDrop($event)">
+  @for (option of localOptions(); track option.id) {
+    <div class="ole__row" cdkDrag>
+      <button class="ole__grip" cdkDragHandle type="button" aria-label="Reordenar">
+        <app-icon name="grip-vertical" [size]="14" />
+      </button>
+
+      <input
+        class="ole__input"
+        type="text"
+        [value]="option.label"
+        [placeholder]="'builder.prop.option_placeholder' | translate"
+        (blur)="onLabelBlur(option.id, $event)"
+        (keydown.enter)="$any($event.target).blur()"
+      />
+
+      @if (showScoring()) {
+        <input
+          class="ole__score"
+          type="number"
+          min="0"
+          [value]="option.score ?? 0"
+          (click)="$event.stopPropagation()"
+          (blur)="onScoreBlur(option.id, $event)"
+        />
+      }
+
+      <button
+        class="ole__delete"
+        type="button"
+        (click)="removeOption(option.id)"
+        [attr.aria-label]="'common.delete' | translate"
+      >
+        <app-icon name="x" [size]="13" />
+      </button>
+    </div>
+  }
+</div>
+
+<button class="ole__add" type="button" (click)="addOption()">
+  {{ 'builder.prop.add_option' | translate }}
+</button>

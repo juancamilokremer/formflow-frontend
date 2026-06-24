@@ -1,0 +1,22 @@
+<div class="nps">
+  <div class="nps__header">
+    <span class="nps__type">NPS</span>
+    <span class="nps__info-wrap">
+      <app-icon class="nps__info-icon" name="info" [size]="13" />
+      <span class="nps__tooltip">{{ 'builder.canvas_nps_hint' | translate }}</span>
+    </span>
+  </div>
+
+  <div class="nps__scale">
+    @for (score of scores; track score) {
+      <button class="nps-btn" [class]="'nps-btn ' + zoneClass(score)" type="button" disabled>
+        {{ score }}
+      </button>
+    }
+  </div>
+
+  <div class="nps__labels">
+    <span class="nps__label">{{ minLabel() || ('builder.prop.nps_min_placeholder' | translate) }}</span>
+    <span class="nps__label">{{ maxLabel() || ('builder.prop.nps_max_placeholder' | translate) }}</span>
+  </div>
+</div>

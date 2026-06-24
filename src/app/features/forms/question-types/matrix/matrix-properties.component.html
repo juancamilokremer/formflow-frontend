@@ -23,11 +23,22 @@
   <div class="qp__divider"></div>
 
   <div class="qp__field">
-    <span class="qp__label">{{ 'builder.prop.options' | translate }}</span>
+    <span class="qp__label">{{ 'builder.prop.matrix_rows' | translate }}</span>
     <app-option-list-editor
-      [options]="currentOptions()"
+      [options]="currentRows()"
+      [showScoring]="false"
+      (optionsChanged)="onRowsChanged($event)"
+    />
+  </div>
+
+  <div class="qp__divider"></div>
+
+  <div class="qp__field">
+    <span class="qp__label">{{ 'builder.prop.matrix_columns' | translate }}</span>
+    <app-option-list-editor
+      [options]="currentColumns()"
       [showScoring]="showScoring() && scoringType() === 'manual'"
-      (optionsChanged)="onOptionsChanged($event)"
+      (optionsChanged)="onColumnsChanged($event)"
     />
   </div>
 
