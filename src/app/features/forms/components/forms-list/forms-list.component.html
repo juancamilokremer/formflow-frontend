@@ -33,7 +33,7 @@
 
   <ng-template appTableCell [column]="'status'" let-row>
     <span class="fl__status-badge fl__status-badge--{{ $any(row).status | lowercase }}">
-      ● {{ 'forms.status.' + ($any(row).status | lowercase) | translate }}
+      {{ 'forms.status.' + ($any(row).status | lowercase) | translate }}
     </span>
   </ng-template>
 

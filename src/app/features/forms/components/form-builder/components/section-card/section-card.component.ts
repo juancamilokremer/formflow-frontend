@@ -1,4 +1,5 @@
-import { Component, input, output, signal } from '@angular/core';
+import { Component, DestroyRef, computed, inject, input, output, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgComponentOutlet } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 import {
@@ -7,8 +8,12 @@ import {
 } from '@angular/cdk/drag-drop';
 import { IconComponent } from '../../../../../../shared/icons/icon.component';
 import { ConfirmDialogComponent } from '../../../../../../shared/components/confirm-dialog/confirm-dialog.component';
-import { FormSection, FormQuestion, QuestionType, QuestionMovedEvent } from '../../../../models/form.model';
+import {
+  FormSection, FormQuestion, FormType, QuestionType,
+  QuestionMovedEvent, CanvasQuestionChangedEvent,
+} from '../../../../models/form.model';
 import { getQuestionTypeDef } from '../../../../question-types/question-type.registry';
+import { CanvasEditService } from '../../../../services/canvas-edit.service';
 
 @Component({
   selector: 'app-section-card',
@@ -16,21 +21,46 @@ import { getQuestionTypeDef } from '../../../../question-types/question-type.reg
             CdkDropList, CdkDrag, CdkDragHandle],
   templateUrl: './section-card.component.html',
   styleUrl: './section-card.component.scss',
+  providers: [CanvasEditService],
 })
 export class SectionCardComponent {
+  private readonly canvasEditSvc = inject(CanvasEditService);
+  private readonly destroyRef    = inject(DestroyRef);
+
   readonly section             = input.required<FormSection>();
   readonly selectedQuestionId  = input<string | null>(null);
   readonly connectedListIds    = input<string[]>([]);
+  readonly formType            = input<FormType | undefined>(undefined);
 
-  readonly sectionUpdated   = output<{ id: string; title: string }>();
-  readonly sectionDeleted   = output<string>();
-  readonly questionSelected = output<string>();
-  readonly questionDeleted  = output<{ sectionId: string; questionId: string }>();
-  readonly questionMoved    = output<QuestionMovedEvent>();
+  readonly sectionUpdated    = output<{ id: string; title: string }>();
+  readonly sectionDeleted    = output<string>();
+  readonly questionSelected  = output<string>();
+  readonly questionDeleted   = output<{ sectionId: string; questionId: string }>();
+  readonly questionMoved     = output<QuestionMovedEvent>();
+  readonly questionChanged   = output<CanvasQuestionChangedEvent>();
 
   protected readonly isEditing         = signal(false);
   protected readonly editTitle         = signal('');
   protected readonly showDeleteConfirm = signal(false);
+
+  protected readonly showScoring = computed(() => {
+    const t = this.formType();
+    return t === 'CANDIDATES' || t === 'DIAGNOSTIC';
+  });
+
+  protected getScoringType(question: FormQuestion): string {
+    return (question.config['scoringType'] as string) ?? 'none';
+  }
+
+  constructor() {
+    this.canvasEditSvc.change$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((evt) => {
+      this.questionChanged.emit({
+        questionId: evt.questionId,
+        sectionId:  this.section().id,
+        change:     evt.change,
+      });
+    });
+  }
 
   protected getCanvasDef(type: QuestionType) {
     return getQuestionTypeDef(type);

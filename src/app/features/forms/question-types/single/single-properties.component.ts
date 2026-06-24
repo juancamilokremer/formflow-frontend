@@ -1,6 +1,6 @@
-import { Component, effect, input, output, signal } from '@angular/core';
+import { Component, computed, effect, input, output, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { FormQuestion, QuestionOption } from '../../models/form.model';
+import { FormQuestion, FormType, QuestionOption } from '../../models/form.model';
 import { PropertiesQuestionComponent } from '../question-type.interfaces';
 
 @Component({
@@ -12,13 +12,22 @@ import { PropertiesQuestionComponent } from '../question-type.interfaces';
 export class SinglePropertiesComponent implements PropertiesQuestionComponent {
   readonly question = input.required<FormQuestion>();
   readonly changed  = output<Partial<FormQuestion>>();
+  readonly formType = input<FormType | undefined>(undefined);
 
   protected readonly localOptions = signal<QuestionOption[]>([]);
+  protected readonly scoringType  = signal<string>('none');
+
+  protected readonly showScoring = computed(() => {
+    const t = this.formType();
+    return t === 'CANDIDATES' || t === 'DIAGNOSTIC';
+  });
 
   constructor() {
     effect(() => {
-      const opts = (this.question().config['options'] as QuestionOption[]) ?? [];
+      const cfg = this.question().config;
+      const opts = (cfg['options'] as QuestionOption[]) ?? [];
       this.localOptions.set(opts.map((o) => ({ ...o })));
+      this.scoringType.set((cfg['scoringType'] as string) ?? 'none');
     });
   }
 
@@ -53,6 +62,12 @@ export class SinglePropertiesComponent implements PropertiesQuestionComponent {
   protected removeOption(id: string): void {
     this.localOptions.update((opts) => opts.filter((o) => o.id !== id));
     this.emitOptions();
+  }
+
+  protected onScoringTypeChange(event: Event): void {
+    const scoringType = (event.target as HTMLSelectElement).value as 'manual' | 'none';
+    this.scoringType.set(scoringType);
+    this.changed.emit({ config: { ...this.question().config, scoringType } });
   }
 
   private emitOptions(): void {

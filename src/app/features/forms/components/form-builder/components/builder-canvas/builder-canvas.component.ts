@@ -2,7 +2,10 @@ import { Component, computed, inject, input, output } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { CdkDropList, CdkDrag, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { SectionCardComponent } from '../section-card/section-card.component';
-import { FormDetail, FormSection, QuestionMovedEvent } from '../../../../models/form.model';
+import {
+  FormDetail, FormSection, FormType,
+  QuestionMovedEvent, CanvasQuestionChangedEvent,
+} from '../../../../models/form.model';
 
 @Component({
   selector: 'app-builder-canvas',
@@ -15,6 +18,7 @@ export class BuilderCanvasComponent {
 
   readonly form                = input.required<FormDetail>();
   readonly selectedQuestionId  = input<string | null>(null);
+  readonly formType            = input<FormType | undefined>(undefined);
 
   readonly sectionAdded      = output<string>();
   readonly sectionUpdated    = output<{ id: string; title: string }>();
@@ -23,6 +27,7 @@ export class BuilderCanvasComponent {
   readonly questionSelected  = output<string>();
   readonly questionDeleted   = output<{ sectionId: string; questionId: string }>();
   readonly questionMoved     = output<QuestionMovedEvent>();
+  readonly questionChanged   = output<CanvasQuestionChangedEvent>();
 
   protected readonly questionListIds = computed(() =>
     this.form().sections.map((s) => s.id),

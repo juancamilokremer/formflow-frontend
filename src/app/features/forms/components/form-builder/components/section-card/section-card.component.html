@@ -58,6 +58,12 @@
           @if (q.required) {
             <span class="sc__q-badge sc__q-badge--required">{{ 'builder.required_chip' | translate }}</span>
           }
+          @if (showScoring() && getScoringType(q) !== 'none') {
+            <span class="sc__q-badge sc__q-badge--scoring">
+              <app-icon name="scale" [size]="10" />
+              {{ getScoringType(q) === 'auto' ? ('builder.scoring_badge_auto' | translate) : ('builder.scoring_badge' | translate) }}
+            </span>
+          }
           <span class="sc__q-spacer"></span>
           <button
             class="sc__q-delete"

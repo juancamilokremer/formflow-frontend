@@ -211,6 +211,10 @@
     "canvas_drop_file": "Haz clic o arrastra un archivo aquí",
     "properties_title": "Propiedades del campo",
     "required_chip": "Obligatorio",
+    "scoring_badge": "Con pesos",
+    "scoring_badge_auto": "Pesos auto",
+    "canvas_max_score": "Puntaje máximo",
+    "canvas_auto_scores": "Pesos automáticos",
     "prop": {
       "title": "Pregunta",
       "required": "Obligatorio",
@@ -221,7 +225,16 @@
       "option_placeholder": "Escribe una opción...",
       "scale_size": "Tamaño de escala",
       "min_label": "Etiqueta mínimo",
-      "max_label": "Etiqueta máximo"
+      "max_label": "Etiqueta máximo",
+      "scoring_type": "Sistema de puntaje",
+      "scoring_none": "Sin puntaje",
+      "scoring_manual": "Puntaje por opción",
+      "scoring_auto": "Automático (Likert)",
+      "scoring_auto_info": "Puntaje lineal: 1→2pts, 2→4pts, ... 5→10pts"
+    },
+    "summary": {
+      "questions_count": "{{n}} preguntas con puntaje",
+      "max_total": "Puntaje máximo total"
     },
     "mobile_block_title": "Pantalla muy pequeña",
     "mobile_block_subtitle": "El constructor de formularios requiere una pantalla más grande. Accede desde un computador o tablet.",

@@ -10,6 +10,9 @@
   height: 52px;
 
   &__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
     padding: 6px 10px;
     border: 1px solid var(--ff-border);
     border-radius: var(--ff-radius-md);

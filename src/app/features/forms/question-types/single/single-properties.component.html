@@ -42,4 +42,16 @@
       </button>
     </div>
   </div>
+
+  @if (showScoring()) {
+    <div class="qp__divider"></div>
+
+    <div class="qp__field">
+      <label class="qp__label" for="qp-scoring-type">{{ 'builder.prop.scoring_type' | translate }}</label>
+      <select id="qp-scoring-type" class="qp__select" (change)="onScoringTypeChange($event)">
+        <option value="none" [selected]="scoringType() === 'none'">{{ 'builder.prop.scoring_none' | translate }}</option>
+        <option value="manual" [selected]="scoringType() === 'manual'">{{ 'builder.prop.scoring_manual' | translate }}</option>
+      </select>
+    </div>
+  }
 </div>

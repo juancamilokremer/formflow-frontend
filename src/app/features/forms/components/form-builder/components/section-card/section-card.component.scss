@@ -150,6 +150,14 @@
       color: #92400e;
       background: #fef3c7;
     }
+
+    &--scoring {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      color: #c2410c;
+      background: #fff7ed;
+    }
   }
 
   &__q-spacer { flex: 1; }
