@@ -1,6 +1,6 @@
 import { Component, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { FormQuestion } from '../../models/form.model';
+import { FormQuestion, FormType } from '../../models/form.model';
 import { PropertiesQuestionComponent } from '../question-type.interfaces';
 
 @Component({
@@ -10,8 +10,9 @@ import { PropertiesQuestionComponent } from '../question-type.interfaces';
   styleUrl: './nps-properties.component.scss',
 })
 export class NpsPropertiesComponent implements PropertiesQuestionComponent {
-  readonly question = input.required<FormQuestion>();
-  readonly changed  = output<Partial<FormQuestion>>();
+  readonly question  = input.required<FormQuestion>();
+  readonly changed   = output<Partial<FormQuestion>>();
+  readonly formType  = input<FormType | undefined>(undefined);
 
   protected onTitleBlur(event: FocusEvent): void {
     const title = (event.target as HTMLInputElement).value.trim();
