@@ -1,0 +1,16 @@
+<div class="nps">
+  <div class="nps__scale">
+    @for (score of scores; track score) {
+      <button class="nps-btn" [class]="'nps-btn ' + zoneClass(score)" type="button" disabled>
+        {{ score }}
+      </button>
+    }
+  </div>
+
+  @if (minLabel() || maxLabel()) {
+    <div class="nps__labels">
+      <span class="nps__label">{{ minLabel() }}</span>
+      <span class="nps__label">{{ maxLabel() }}</span>
+    </div>
+  }
+</div>

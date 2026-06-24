@@ -1,10 +1,29 @@
 <div class="qc">
   @if (options().length > 0) {
     @for (opt of options(); track opt.id) {
-      <label class="qc__option">
+      <label class="qc__option" [class.qc__option--scoring]="scoringType() !== 'none'">
         <input class="qc__checkbox" type="checkbox" disabled />
         <span class="qc__option-label">{{ opt.label }}</span>
+        @if (scoringType() !== 'none') {
+          <div class="qc__score-group">
+            <span class="qc__score-label">Pts:</span>
+            <input
+              class="qc__score-input"
+              type="number"
+              min="0"
+              [value]="opt.score ?? 0"
+              (click)="$event.stopPropagation()"
+              (blur)="onScoreBlur(opt.id, $event)"
+            />
+          </div>
+        }
       </label>
+    }
+    @if (scoringType() !== 'none') {
+      <div class="qc__score-banner">
+        <span>{{ 'builder.canvas_max_score' | translate }}</span>
+        <strong>{{ maxScore() }} pts</strong>
+      </div>
     }
   } @else {
     <span class="qc__empty">{{ 'builder.canvas_no_options' | translate }}</span>

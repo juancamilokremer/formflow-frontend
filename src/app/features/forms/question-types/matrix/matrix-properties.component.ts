@@ -5,12 +5,12 @@ import { PropertiesQuestionComponent } from '../question-type.interfaces';
 import { OptionListEditorComponent } from '../shared/option-list-editor/option-list-editor.component';
 
 @Component({
-  selector: 'app-single-properties',
+  selector: 'app-matrix-properties',
   imports: [TranslatePipe, OptionListEditorComponent],
-  templateUrl: './single-properties.component.html',
-  styleUrl: './single-properties.component.scss',
+  templateUrl: './matrix-properties.component.html',
+  styleUrl: './matrix-properties.component.scss',
 })
-export class SinglePropertiesComponent implements PropertiesQuestionComponent {
+export class MatrixPropertiesComponent implements PropertiesQuestionComponent {
   readonly question = input.required<FormQuestion>();
   readonly changed  = output<Partial<FormQuestion>>();
   readonly formType = input<FormType | undefined>(undefined);
@@ -22,8 +22,12 @@ export class SinglePropertiesComponent implements PropertiesQuestionComponent {
     return type === 'CANDIDATES' || type === 'DIAGNOSTIC';
   });
 
-  protected readonly currentOptions = computed<QuestionOption[]>(() =>
-    (this.question().config['options'] as QuestionOption[]) ?? [],
+  protected readonly currentRows = computed<QuestionOption[]>(() =>
+    (this.question().config['rows'] as QuestionOption[]) ?? [],
+  );
+
+  protected readonly currentColumns = computed<QuestionOption[]>(() =>
+    (this.question().config['columns'] as QuestionOption[]) ?? [],
   );
 
   constructor() {
@@ -46,8 +50,12 @@ export class SinglePropertiesComponent implements PropertiesQuestionComponent {
     if (description !== this.question().description) this.changed.emit({ description });
   }
 
-  protected onOptionsChanged(options: QuestionOption[]): void {
-    this.changed.emit({ config: { ...this.question().config, options } });
+  protected onRowsChanged(rows: QuestionOption[]): void {
+    this.changed.emit({ config: { ...this.question().config, rows } });
+  }
+
+  protected onColumnsChanged(columns: QuestionOption[]): void {
+    this.changed.emit({ config: { ...this.question().config, columns } });
   }
 
   protected onScoringTypeChange(event: Event): void {

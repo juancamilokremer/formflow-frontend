@@ -23,23 +23,26 @@
   <div class="qp__divider"></div>
 
   <div class="qp__field">
-    <label class="qp__label">{{ 'builder.prop.options' | translate }}</label>
-    <app-option-list-editor
-      [options]="currentOptions()"
-      [showScoring]="showScoring() && scoringType() === 'manual'"
-      (optionsChanged)="onOptionsChanged($event)"
+    <label class="qp__label" for="qp-min-label">{{ 'builder.prop.nps_min_label' | translate }}</label>
+    <input
+      id="qp-min-label"
+      class="qp__input"
+      type="text"
+      [value]="question().config['minLabel'] ?? ''"
+      [placeholder]="'builder.prop.nps_min_placeholder' | translate"
+      (blur)="onMinLabelBlur($event)"
     />
   </div>
 
-  @if (showScoring()) {
-    <div class="qp__divider"></div>
-
-    <div class="qp__field">
-      <label class="qp__label" for="qp-scoring-type">{{ 'builder.prop.scoring_type' | translate }}</label>
-      <select id="qp-scoring-type" class="qp__select" (change)="onScoringTypeChange($event)">
-        <option value="none"   [selected]="scoringType() === 'none'">{{ 'builder.prop.scoring_none' | translate }}</option>
-        <option value="manual" [selected]="scoringType() === 'manual'">{{ 'builder.prop.scoring_manual' | translate }}</option>
-      </select>
-    </div>
-  }
+  <div class="qp__field">
+    <label class="qp__label" for="qp-max-label">{{ 'builder.prop.nps_max_label' | translate }}</label>
+    <input
+      id="qp-max-label"
+      class="qp__input"
+      type="text"
+      [value]="question().config['maxLabel'] ?? ''"
+      [placeholder]="'builder.prop.nps_max_placeholder' | translate"
+      (blur)="onMaxLabelBlur($event)"
+    />
+  </div>
 </div>

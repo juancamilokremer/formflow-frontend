@@ -1,0 +1,28 @@
+<div class="mc">
+  @if (rows().length > 0 && columns().length > 0) {
+    <table class="mc__table">
+      <thead>
+        <tr>
+          <th class="mc__th mc__th--empty"></th>
+          @for (col of columns(); track col.id) {
+            <th class="mc__th">{{ col.label }}</th>
+          }
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of rows(); track row.id) {
+          <tr class="mc__row">
+            <td class="mc__td mc__td--label">{{ row.label }}</td>
+            @for (col of columns(); track col.id) {
+              <td class="mc__td mc__td--cell">
+                <input type="radio" disabled />
+              </td>
+            }
+          </tr>
+        }
+      </tbody>
+    </table>
+  } @else {
+    <span class="mc__empty">{{ 'builder.canvas_matrix_empty' | translate }}</span>
+  }
+</div>

@@ -1,0 +1,113 @@
+:host { display: block; }
+
+.ole {
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  &__row {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--ff-white);
+    border-radius: var(--ff-radius-sm);
+
+    &.cdk-drag-placeholder {
+      opacity: 0;
+    }
+
+    &.cdk-drag-animating {
+      transition: transform 200ms ease;
+    }
+  }
+
+  &__grip {
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: transparent;
+    color: var(--ff-text-muted);
+    cursor: grab;
+    flex-shrink: 0;
+    padding: 0;
+    border-radius: var(--ff-radius-sm);
+
+    &:hover { color: var(--ff-text-secondary); }
+    &:active { cursor: grabbing; }
+  }
+
+  &__input {
+    flex: 1;
+    padding: 6px 8px;
+    border: 1px solid var(--ff-border);
+    border-radius: var(--ff-radius-sm);
+    font-size: 13px;
+    color: var(--ff-text-primary);
+    background: var(--ff-white);
+    outline: none;
+    font-family: inherit;
+    transition: border-color 0.15s;
+    min-width: 0;
+
+    &:focus { border-color: var(--ff-primary); }
+  }
+
+  &__score {
+    width: 52px;
+    padding: 6px 6px;
+    border: 1px solid var(--ff-border);
+    border-radius: var(--ff-radius-sm);
+    font-size: 12px;
+    color: var(--ff-text-primary);
+    background: var(--ff-white);
+    outline: none;
+    text-align: center;
+    flex-shrink: 0;
+    font-family: inherit;
+    transition: border-color 0.15s;
+
+    &:focus { border-color: var(--ff-primary); }
+    &::-webkit-inner-spin-button,
+    &::-webkit-outer-spin-button { -webkit-appearance: none; }
+  }
+
+  &__delete {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: transparent;
+    color: var(--ff-text-muted);
+    cursor: pointer;
+    border-radius: var(--ff-radius-sm);
+    flex-shrink: 0;
+    padding: 0;
+
+    &:hover { background: #FEF2F2; color: var(--ff-error-text); }
+  }
+
+  &__add {
+    font-size: 12px;
+    color: var(--ff-primary);
+    background: none;
+    border: none;
+    padding: 4px 0;
+    margin-top: 2px;
+    cursor: pointer;
+    text-align: left;
+    font-family: inherit;
+
+    &:hover { text-decoration: underline; }
+  }
+}
+
+.cdk-drop-list-dragging .ole__row:not(.cdk-drag-placeholder) {
+  transition: transform 200ms ease;
+}

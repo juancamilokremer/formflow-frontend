@@ -23,24 +23,12 @@
   <div class="qp__divider"></div>
 
   <div class="qp__field">
-    <label class="qp__label" for="qp-options">{{ 'builder.prop.options' | translate }}</label>
-    <div id="qp-options" class="qp__options">
-      @for (opt of localOptions(); track opt.id) {
-        <div class="qp__option-row">
-          <input
-            class="qp__option-input"
-            type="text"
-            [value]="opt.label"
-            [placeholder]="'builder.prop.option_placeholder' | translate"
-            (blur)="onOptionLabelBlur(opt.id, $event)"
-          />
-          <button class="qp__option-delete" type="button" (click)="removeOption(opt.id)">×</button>
-        </div>
-      }
-      <button class="qp__add-option" type="button" (click)="addOption()">
-        {{ 'builder.prop.add_option' | translate }}
-      </button>
-    </div>
+    <label class="qp__label">{{ 'builder.prop.options' | translate }}</label>
+    <app-option-list-editor
+      [options]="currentOptions()"
+      [showScoring]="showScoring() && scoringType() === 'manual'"
+      (optionsChanged)="onOptionsChanged($event)"
+    />
   </div>
 
   @if (showScoring()) {
@@ -49,7 +37,7 @@
     <div class="qp__field">
       <label class="qp__label" for="qp-scoring-type">{{ 'builder.prop.scoring_type' | translate }}</label>
       <select id="qp-scoring-type" class="qp__select" (change)="onScoringTypeChange($event)">
-        <option value="none" [selected]="scoringType() === 'none'">{{ 'builder.prop.scoring_none' | translate }}</option>
+        <option value="none"   [selected]="scoringType() === 'none'">{{ 'builder.prop.scoring_none' | translate }}</option>
         <option value="manual" [selected]="scoringType() === 'manual'">{{ 'builder.prop.scoring_manual' | translate }}</option>
       </select>
     </div>

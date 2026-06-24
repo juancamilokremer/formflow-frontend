@@ -215,6 +215,7 @@
     "scoring_badge_auto": "Pesos auto",
     "canvas_max_score": "Puntaje máximo",
     "canvas_auto_scores": "Pesos automáticos",
+    "canvas_matrix_empty": "Configura filas y columnas en el panel derecho",
     "prop": {
       "title": "Pregunta",
       "required": "Obligatorio",
@@ -230,7 +231,13 @@
       "scoring_none": "Sin puntaje",
       "scoring_manual": "Puntaje por opción",
       "scoring_auto": "Automático (Likert)",
-      "scoring_auto_info": "Puntaje lineal: 1→2pts, 2→4pts, ... 5→10pts"
+      "scoring_auto_info": "Puntaje lineal: 1→2pts, 2→4pts, ... 5→10pts",
+      "nps_min_label": "Etiqueta mínimo",
+      "nps_min_placeholder": "Ej: Nada probable",
+      "nps_max_label": "Etiqueta máximo",
+      "nps_max_placeholder": "Ej: Muy probable",
+      "matrix_rows": "Filas",
+      "matrix_columns": "Columnas"
     },
     "summary": {
       "questions_count": "{{n}} preguntas con puntaje",
