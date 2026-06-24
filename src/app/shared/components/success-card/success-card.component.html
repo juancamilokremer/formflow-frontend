@@ -1,5 +1,7 @@
 <div class="success-card">
-  <div class="success-icon">✓</div>
+  <div class="success-icon">
+    <app-icon name="check" [size]="22" />
+  </div>
   <h2 class="success-title">{{ title() }}</h2>
   <p class="success-message">{{ message() }}</p>
   <ng-content />

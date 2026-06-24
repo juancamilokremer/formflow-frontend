@@ -3,12 +3,13 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { RouterLink } from '@angular/router';
 import { LowerCasePipe } from '@angular/common';
 import { ButtonComponent } from '../../../../../../shared/components/button/button.component';
+import { IconComponent } from '../../../../../../shared/icons/icon.component';
 import { RouteConstants } from '../../../../../../core/constants/route.constants';
 import { FormDetail } from '../../../../models/form.model';
 
 @Component({
   selector: 'app-builder-topbar',
-  imports: [TranslatePipe, LowerCasePipe, RouterLink, ButtonComponent],
+  imports: [TranslatePipe, LowerCasePipe, RouterLink, ButtonComponent, IconComponent],
   templateUrl: './builder-topbar.component.html',
   styleUrl: './builder-topbar.component.scss',
 })
