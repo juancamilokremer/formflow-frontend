@@ -7,7 +7,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { IconComponent } from '../../../../shared/icons/icon.component';
 import { FormsService } from '../../services/forms.service';
 import {
-  FormDetail, FormQuestion, QuestionType,
+  FormDetail, FormSection, FormQuestion, QuestionType,
   AddQuestionRequest, UpdateQuestionRequest, QuestionMovedEvent, CanvasQuestionChangedEvent,
 } from '../../models/form.model';
 import { getQuestionTypeDef } from '../../question-types/question-type.registry';
@@ -30,14 +30,14 @@ import { PropertiesPanelComponent } from './components/properties-panel/properti
   styleUrl: './form-builder.component.scss',
 })
 export class FormBuilderComponent implements OnInit {
-  private readonly route             = inject(ActivatedRoute);
-  private readonly router            = inject(Router);
-  private readonly formsService      = inject(FormsService);
-  private readonly translateSvc      = inject(TranslateService);
+  private readonly route              = inject(ActivatedRoute);
+  private readonly router             = inject(Router);
+  private readonly formsService       = inject(FormsService);
+  private readonly translateSvc       = inject(TranslateService);
   private readonly breakpointObserver = inject(BreakpointObserver);
 
   protected readonly isMobile = toSignal(
-    this.breakpointObserver.observe('(max-width: 767px)').pipe(map((s) => s.matches)),
+    this.breakpointObserver.observe('(max-width: 767px)').pipe(map((state) => state.matches)),
     { initialValue: false },
   );
 
@@ -53,32 +53,36 @@ export class FormBuilderComponent implements OnInit {
   protected readonly activeSectionId    = signal<string | null>(null);
 
   protected readonly selectedQuestion = computed<FormQuestion | null>(() => {
-    const id = this.selectedQuestionId();
-    const f  = this.form();
-    if (!id || !f) return null;
-    for (const section of f.sections) {
-      const q = section.questions.find((q) => q.id === id);
-      if (q) return q;
+    const questionId  = this.selectedQuestionId();
+    const currentForm = this.form();
+    if (!questionId || !currentForm) return null;
+    for (const section of currentForm.sections) {
+      const question = section.questions.find((question) => question.id === questionId);
+      if (question) return question;
     }
     return null;
   });
 
   ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id')!;
-    this.formsService.getById(id).subscribe({
-      next: (f) => {
-        this.form.set(f);
-        this.activeSectionId.set(f.sections[0]?.id ?? null);
+    const formId = this.route.snapshot.paramMap.get('id')!;
+    this.formsService.getById(formId).subscribe({
+      next: (form) => {
+        this.form.set(form);
+        this.activeSectionId.set(form.sections[0]?.id ?? null);
         this.loading.set(false);
       },
       error: () => { this.loadError.set(true); this.loading.set(false); },
     });
   }
 
+  // ---------------------------------------------------------------------------
+  // Form-level handlers
+  // ---------------------------------------------------------------------------
+
   protected onNameChanged(name: string): void {
-    const form = this.form()!;
-    this.formsService.update(form.id, name, form.description, form.timeLimitSeconds).subscribe({
-      next: () => this.form.update((f) => (f ? { ...f, name } : f)),
+    const currentForm = this.form()!;
+    this.formsService.update(currentForm.id, name, currentForm.description, currentForm.timeLimitSeconds).subscribe({
+      next: () => this.form.update((current) => (current ? { ...current, name } : current)),
     });
   }
 
@@ -86,68 +90,81 @@ export class FormBuilderComponent implements OnInit {
     // stub — implemented in a future issue
   }
 
+  // ---------------------------------------------------------------------------
+  // Section handlers
+  // ---------------------------------------------------------------------------
+
   protected onSectionAdded(title: string): void {
-    const id = this.form()!.id;
-    this.formsService.createSection(id, { title }).subscribe({
+    const formId = this.form()!.id;
+    this.formsService.createSection(formId, { title }).subscribe({
       next: (section) => {
-        this.form.update((f) => (f ? { ...f, sections: [...f.sections, section] } : f));
+        this.form.update((current) =>
+          current ? { ...current, sections: [...current.sections, section] } : current,
+        );
         this.activeSectionId.set(section.id);
       },
     });
   }
 
   protected onSectionUpdated(update: { id: string; title: string }): void {
-    const id = this.form()!.id;
-    this.formsService.updateSection(id, update.id, { title: update.title }).subscribe({
-      next: () =>
-        this.form.update((f) =>
-          f
-            ? { ...f, sections: f.sections.map((s) => s.id === update.id ? { ...s, title: update.title } : s) }
-            : f,
-        ),
+    const formId = this.form()!.id;
+    this.formsService.updateSection(formId, update.id, { title: update.title }).subscribe({
+      next: () => this.mapSection(update.id, (section) => ({ ...section, title: update.title })),
     });
   }
 
   protected onSectionDeleted(sectionId: string): void {
-    const id = this.form()!.id;
-    this.formsService.deleteSection(id, sectionId).subscribe({
+    const formId = this.form()!.id;
+    this.formsService.deleteSection(formId, sectionId).subscribe({
       next: () => {
         if (this.activeSectionId() === sectionId) {
-          const remaining = this.form()!.sections.filter((s) => s.id !== sectionId);
+          const remaining = this.form()!.sections.filter((section) => section.id !== sectionId);
           this.activeSectionId.set(remaining[0]?.id ?? null);
         }
-        this.form.update((f) => f ? { ...f, sections: f.sections.filter((s) => s.id !== sectionId) } : f);
+        this.form.update((current) =>
+          current
+            ? { ...current, sections: current.sections.filter((section) => section.id !== sectionId) }
+            : current,
+        );
       },
     });
   }
 
-  protected onTypeSelected(type: QuestionType): void {
-    const f = this.form();
-    if (!f) return;
+  protected onSectionsReordered(orderedIds: string[]): void {
+    const currentForm = this.form()!;
+    this.form.update((current) =>
+      current
+        ? { ...current, sections: orderedIds.map((sectionId) => current.sections.find((section) => section.id === sectionId)!) }
+        : current,
+    );
+    this.formsService.reorderSections(currentForm.id, orderedIds).subscribe();
+  }
 
-    const sectionId = this.activeSectionId() ?? f.sections[0]?.id;
+  // ---------------------------------------------------------------------------
+  // Question handlers
+  // ---------------------------------------------------------------------------
+
+  protected onTypeSelected(type: QuestionType): void {
+    const currentForm = this.form();
+    if (!currentForm) return;
+
+    const sectionId = this.activeSectionId() ?? currentForm.sections[0]?.id;
     if (!sectionId) return;
 
     const def   = getQuestionTypeDef(type);
     const title = this.translateSvc.instant('builder.question_default_title');
 
-    this.formsService.addQuestion(f.id, sectionId, {
+    this.formsService.addQuestion(currentForm.id, sectionId, {
       type,
       title,
       required: false,
       config: def?.defaultConfig() ?? {},
     }).subscribe({
       next: (question) => {
-        this.form.update((f) =>
-          f
-            ? {
-                ...f,
-                sections: f.sections.map((s) =>
-                  s.id === sectionId ? { ...s, questions: [...s.questions, question] } : s,
-                ),
-              }
-            : f,
-        );
+        this.mapSection(sectionId, (section) => ({
+          ...section,
+          questions: [...section.questions, question],
+        }));
         this.selectedQuestionId.set(question.id);
         this.activeSectionId.set(sectionId);
       },
@@ -156,10 +173,10 @@ export class FormBuilderComponent implements OnInit {
 
   protected onQuestionSelected(questionId: string): void {
     this.selectedQuestionId.set(questionId);
-    const f = this.form();
-    if (!f) return;
-    for (const section of f.sections) {
-      if (section.questions.some((q) => q.id === questionId)) {
+    const currentForm = this.form();
+    if (!currentForm) return;
+    for (const section of currentForm.sections) {
+      if (section.questions.some((question) => question.id === questionId)) {
         this.activeSectionId.set(section.id);
         break;
       }
@@ -167,139 +184,134 @@ export class FormBuilderComponent implements OnInit {
   }
 
   protected onQuestionDeleted(event: { sectionId: string; questionId: string }): void {
-    const f = this.form();
-    if (!f) return;
+    const currentForm = this.form();
+    if (!currentForm) return;
 
-    this.formsService.deleteQuestion(f.id, event.sectionId, event.questionId).subscribe({
+    this.formsService.deleteQuestion(currentForm.id, event.sectionId, event.questionId).subscribe({
       next: () => {
         if (this.selectedQuestionId() === event.questionId) {
           this.selectedQuestionId.set(null);
         }
-        this.form.update((f) =>
-          f
-            ? {
-                ...f,
-                sections: f.sections.map((s) =>
-                  s.id === event.sectionId
-                    ? { ...s, questions: s.questions.filter((q) => q.id !== event.questionId) }
-                    : s,
-                ),
-              }
-            : f,
-        );
+        this.mapSection(event.sectionId, (section) => ({
+          ...section,
+          questions: section.questions.filter((question) => question.id !== event.questionId),
+        }));
       },
     });
   }
 
-  protected onSectionsReordered(orderedIds: string[]): void {
-    const f = this.form()!;
-    this.form.update((f) =>
-      f ? { ...f, sections: orderedIds.map((id) => f.sections.find((s) => s.id === id)!) } : f,
-    );
-    this.formsService.reorderSections(f.id, orderedIds).subscribe();
-  }
-
   protected onQuestionMoved(event: QuestionMovedEvent): void {
-    const f = this.form()!;
+    const currentForm = this.form()!;
 
     if (event.fromSectionId === event.toSectionId) {
-      this.form.update((f) =>
-        f
-          ? {
-              ...f,
-              sections: f.sections.map((s) =>
-                s.id === event.fromSectionId
-                  ? { ...s, questions: event.orderedToIds.map((id) => s.questions.find((q) => q.id === id)!) }
-                  : s,
-              ),
-            }
-          : f,
-      );
-      this.formsService.reorderQuestions(f.id, event.fromSectionId, event.orderedToIds).subscribe();
+      this.mapSection(event.fromSectionId, (section) => ({
+        ...section,
+        questions: event.orderedToIds.map((questionId) =>
+          section.questions.find((question) => question.id === questionId)!,
+        ),
+      }));
+      this.formsService.reorderQuestions(currentForm.id, event.fromSectionId, event.orderedToIds).subscribe();
     } else {
-      const movedQ = f.sections
-        .find((s) => s.id === event.fromSectionId)!
-        .questions.find((q) => q.id === event.questionId)!;
+      const movedQuestion = currentForm.sections
+        .find((section) => section.id === event.fromSectionId)!
+        .questions.find((question) => question.id === event.questionId)!;
 
-      this.form.update((f) =>
-        f
+      this.form.update((current) =>
+        current
           ? {
-              ...f,
-              sections: f.sections.map((s) => {
-                if (s.id === event.fromSectionId) {
-                  return { ...s, questions: s.questions.filter((q) => q.id !== event.questionId) };
+              ...current,
+              sections: current.sections.map((section) => {
+                if (section.id === event.fromSectionId) {
+                  return { ...section, questions: section.questions.filter((question) => question.id !== event.questionId) };
                 }
-                if (s.id === event.toSectionId) {
+                if (section.id === event.toSectionId) {
                   return {
-                    ...s,
-                    questions: event.orderedToIds.map((id) =>
-                      id === event.questionId ? movedQ : s.questions.find((q) => q.id === id)!,
+                    ...section,
+                    questions: event.orderedToIds.map((questionId) =>
+                      questionId === event.questionId
+                        ? movedQuestion
+                        : section.questions.find((question) => question.id === questionId)!,
                     ),
                   };
                 }
-                return s;
+                return section;
               }),
             }
-          : f,
+          : current,
       );
 
       if (this.selectedQuestionId() === event.questionId) {
         this.selectedQuestionId.set(null);
       }
 
-      const req: AddQuestionRequest = {
-        type:        movedQ.type,
-        title:       movedQ.title,
-        required:    movedQ.required,
-        description: movedQ.description ?? undefined,
-        categoryId:  movedQ.categoryId  ?? undefined,
-        config:      movedQ.config,
+      const addRequest: AddQuestionRequest = {
+        type:        movedQuestion.type,
+        title:       movedQuestion.title,
+        required:    movedQuestion.required,
+        description: movedQuestion.description ?? undefined,
+        categoryId:  movedQuestion.categoryId  ?? undefined,
+        config:      movedQuestion.config,
       };
 
-      this.formsService.addQuestion(f.id, event.toSectionId, req).subscribe({
-        next: (newQ) => {
-          this.form.update((f) =>
-            f
-              ? {
-                  ...f,
-                  sections: f.sections.map((s) =>
-                    s.id === event.toSectionId
-                      ? { ...s, questions: s.questions.map((q) => q.id === event.questionId ? newQ : q) }
-                      : s,
-                  ),
-                }
-              : f,
-          );
-          this.formsService.deleteQuestion(f.id, event.fromSectionId, event.questionId).subscribe();
+      this.formsService.addQuestion(currentForm.id, event.toSectionId, addRequest).subscribe({
+        next: (newQuestion) => {
+          this.replaceQuestion(event.toSectionId, event.questionId, newQuestion);
+          this.formsService.deleteQuestion(currentForm.id, event.fromSectionId, event.questionId).subscribe();
         },
       });
     }
   }
 
   protected onQuestionChanged(change: Partial<FormQuestion>): void {
-    const f          = this.form();
-    const questionId = this.selectedQuestionId();
-    if (!f || !questionId) return;
+    const currentForm = this.form();
+    const questionId  = this.selectedQuestionId();
+    if (!currentForm || !questionId) return;
 
-    for (const section of f.sections) {
-      const question = section.questions.find((q) => q.id === questionId);
+    for (const section of currentForm.sections) {
+      const question = section.questions.find((question) => question.id === questionId);
       if (question) {
-        this.saveQuestionChange(f.id, section.id, questionId, question, change);
+        this.saveQuestionChange(currentForm.id, section.id, questionId, question, change);
         break;
       }
     }
   }
 
   protected onCanvasQuestionChanged(event: CanvasQuestionChangedEvent): void {
-    const f = this.form();
-    if (!f) return;
+    const currentForm = this.form();
+    if (!currentForm) return;
 
-    const section = f.sections.find((s) => s.id === event.sectionId);
+    const section  = currentForm.sections.find((section) => section.id === event.sectionId);
     if (!section) return;
-    const question = section.questions.find((q) => q.id === event.questionId);
+    const question = section.questions.find((question) => question.id === event.questionId);
     if (!question) return;
 
-    this.saveQuestionChange(f.id, event.sectionId, event.questionId, question, event.change);
+    this.saveQuestionChange(currentForm.id, event.sectionId, event.questionId, question, event.change);
+  }
+
+  // ---------------------------------------------------------------------------
+  // Private helpers
+  // ---------------------------------------------------------------------------
+
+  private mapSection(sectionId: string, transform: (section: FormSection) => FormSection): void {
+    this.form.update((current) =>
+      current
+        ? {
+            ...current,
+            sections: current.sections.map((section) =>
+              section.id === sectionId ? transform(section) : section,
+            ),
+          }
+        : current,
+    );
+  }
+
+  private replaceQuestion(sectionId: string, questionId: string, updated: FormQuestion): void {
+    this.mapSection(sectionId, (section) => ({
+      ...section,
+      questions: section.questions.map((question) =>
+        question.id === questionId ? updated : question,
+      ),
+    }));
   }
 
   private saveQuestionChange(
@@ -309,8 +321,8 @@ export class FormBuilderComponent implements OnInit {
     question: FormQuestion,
     change: Partial<FormQuestion>,
   ): void {
-    const merged = { ...question, ...change };
-    const req: UpdateQuestionRequest = {
+    const merged  = { ...question, ...change };
+    const request: UpdateQuestionRequest = {
       type:        merged.type,
       title:       merged.title,
       required:    merged.required,
@@ -319,20 +331,8 @@ export class FormBuilderComponent implements OnInit {
       config:      merged.config,
     };
 
-    this.formsService.updateQuestion(formId, sectionId, questionId, req).subscribe({
-      next: (updated) =>
-        this.form.update((f) =>
-          f
-            ? {
-                ...f,
-                sections: f.sections.map((s) =>
-                  s.id === sectionId
-                    ? { ...s, questions: s.questions.map((q) => q.id === questionId ? updated : q) }
-                    : s,
-                ),
-              }
-            : f,
-        ),
+    this.formsService.updateQuestion(formId, sectionId, questionId, request).subscribe({
+      next: (updatedQuestion) => this.replaceQuestion(sectionId, questionId, updatedQuestion),
     });
   }
 }
