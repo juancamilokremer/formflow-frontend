@@ -1,10 +1,12 @@
 import { Component, computed, input } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
+import { IconComponent } from '../../../../shared/icons/icon.component';
 import { FormQuestion } from '../../models/form.model';
 import { CanvasQuestionComponent } from '../question-type.interfaces';
 
 @Component({
   selector: 'app-nps-canvas',
-  imports: [],
+  imports: [TranslatePipe, IconComponent],
   templateUrl: './nps-canvas.component.html',
   styleUrl: './nps-canvas.component.scss',
 })

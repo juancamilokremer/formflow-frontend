@@ -5,16 +5,68 @@
   flex-direction: column;
   gap: 6px;
 
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  &__type {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--ff-text-muted);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  &__info-wrap {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    color: var(--ff-text-muted);
+    cursor: default;
+
+    &:hover .nps__tooltip {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
+
+  &__tooltip {
+    position: absolute;
+    left: calc(100% + 6px);
+    top: 50%;
+    transform: translateY(-50%);
+    background: #1e293b;
+    color: #f8fafc;
+    font-size: 11px;
+    white-space: nowrap;
+    padding: 4px 8px;
+    border-radius: 4px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s;
+    z-index: 10;
+
+    &::before {
+      content: '';
+      position: absolute;
+      right: 100%;
+      top: 50%;
+      transform: translateY(-50%);
+      border: 4px solid transparent;
+      border-right-color: #1e293b;
+    }
+  }
+
   &__scale {
     display: flex;
     gap: 4px;
-    flex-wrap: wrap;
   }
 
   &__labels {
     display: flex;
     justify-content: space-between;
-    margin-top: 2px;
   }
 
   &__label {
@@ -25,7 +77,8 @@
 }
 
 .nps-btn {
-  width: 32px;
+  flex: 1;
+  min-width: 0;
   height: 32px;
   border: 1px solid transparent;
   border-radius: var(--ff-radius-sm);
@@ -35,7 +88,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
 
   &--detractor {
     background: #fee2e2;

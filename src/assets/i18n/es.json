@@ -216,6 +216,7 @@
     "canvas_max_score": "Puntaje máximo",
     "canvas_auto_scores": "Pesos automáticos",
     "canvas_matrix_empty": "Configura filas y columnas en el panel derecho",
+    "canvas_nps_hint": "Net Promoter Score — escala del 0 al 10",
     "prop": {
       "title": "Pregunta",
       "required": "Obligatorio",
@@ -242,6 +243,16 @@
     "summary": {
       "questions_count": "{{n}} preguntas con puntaje",
       "max_total": "Puntaje máximo total"
+    },
+    "type_desc": {
+      "text":     "Respuesta abierta de texto libre",
+      "single":   "Selección de una sola opción",
+      "multiple": "Selección de múltiples opciones",
+      "scale":    "Escala numérica con etiquetas de extremo",
+      "nps":      "Net Promoter Score — escala del 0 al 10",
+      "date":     "Selector de fecha",
+      "file":     "Subida de archivos (PDF, imágenes, etc.)",
+      "matrix":   "Tabla de filas y columnas, una selección por fila"
     },
     "mobile_block_title": "Pantalla muy pequeña",
     "mobile_block_subtitle": "El constructor de formularios requiere una pantalla más grande. Accede desde un computador o tablet.",

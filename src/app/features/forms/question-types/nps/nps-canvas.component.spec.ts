@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { provideTranslateService } from '@ngx-translate/core';
 import { FormQuestion } from '../../models/form.model';
 import { NpsCanvasComponent } from './nps-canvas.component';
 
@@ -12,7 +13,10 @@ describe('NpsCanvasComponent', () => {
   let component: NpsCanvasComponent;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({ imports: [NpsCanvasComponent] }).compileComponents();
+    await TestBed.configureTestingModule({
+      imports: [NpsCanvasComponent],
+      providers: [provideTranslateService({ lang: 'es' })],
+    }).compileComponents();
     const fixture = TestBed.createComponent(NpsCanvasComponent);
     fixture.componentRef.setInput('question', MOCK_Q);
     component = fixture.componentInstance;

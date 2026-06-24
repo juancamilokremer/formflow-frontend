@@ -4,6 +4,7 @@ import { QuestionType } from '../models/form.model';
 export interface FieldTypeEntry {
   type: QuestionType;
   labelKey: string;
+  descriptionKey: string;
   icon: IconName;
 }
 
@@ -16,29 +17,29 @@ export const FIELD_TYPE_GROUPS: FieldTypeGroup[] = [
   {
     labelKey: 'builder.group.text',
     types: [
-      { type: 'text', labelKey: 'builder.type.text', icon: 'type' },
+      { type: 'text', labelKey: 'builder.type.text', descriptionKey: 'builder.type_desc.text', icon: 'type' },
     ],
   },
   {
     labelKey: 'builder.group.selection',
     types: [
-      { type: 'single',   labelKey: 'builder.type.single',   icon: 'list' },
-      { type: 'multiple', labelKey: 'builder.type.multiple', icon: 'check-square' },
+      { type: 'single',   labelKey: 'builder.type.single',   descriptionKey: 'builder.type_desc.single',   icon: 'list' },
+      { type: 'multiple', labelKey: 'builder.type.multiple', descriptionKey: 'builder.type_desc.multiple', icon: 'check-square' },
     ],
   },
   {
     labelKey: 'builder.group.scales',
     types: [
-      { type: 'scale', labelKey: 'builder.type.scale', icon: 'sliders' },
-      { type: 'nps',   labelKey: 'builder.type.nps',   icon: 'bar-chart-2' },
+      { type: 'scale', labelKey: 'builder.type.scale', descriptionKey: 'builder.type_desc.scale', icon: 'sliders' },
+      { type: 'nps',   labelKey: 'builder.type.nps',   descriptionKey: 'builder.type_desc.nps',   icon: 'bar-chart-2' },
     ],
   },
   {
     labelKey: 'builder.group.advanced',
     types: [
-      { type: 'date',   labelKey: 'builder.type.date',   icon: 'calendar' },
-      { type: 'file',   labelKey: 'builder.type.file',   icon: 'paperclip' },
-      { type: 'matrix', labelKey: 'builder.type.matrix', icon: 'grid' },
+      { type: 'date',   labelKey: 'builder.type.date',   descriptionKey: 'builder.type_desc.date',   icon: 'calendar' },
+      { type: 'file',   labelKey: 'builder.type.file',   descriptionKey: 'builder.type_desc.file',   icon: 'paperclip' },
+      { type: 'matrix', labelKey: 'builder.type.matrix', descriptionKey: 'builder.type_desc.matrix', icon: 'grid' },
     ],
   },
 ];
