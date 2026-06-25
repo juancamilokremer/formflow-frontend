@@ -88,7 +88,7 @@ export class ConditionalLogicDrawerComponent {
         this.conditions.set(
           config.conditions.map((c: Condition, i: number) => ({
             id:         String(i),
-            questionId: c.questionId,
+            questionId: c.sourceQuestionId,
             operator:   c.operator,
             value:      c.value ?? '',
           })),
@@ -164,9 +164,9 @@ export class ConditionalLogicDrawerComponent {
     this.saved.emit({
       logicOperator: this.logicOperator(),
       conditions: conds.map((c) => ({
-        questionId: c.questionId,
-        operator:   c.operator as ConditionOperator,
-        value:      operatorNeedsValue(c.operator as ConditionOperator) ? (c.value || null) : null,
+        sourceQuestionId: c.questionId,
+        operator:         c.operator as ConditionOperator,
+        value:            operatorNeedsValue(c.operator as ConditionOperator) ? (c.value || null) : null,
       })),
     });
   }

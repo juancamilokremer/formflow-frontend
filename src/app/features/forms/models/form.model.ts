@@ -10,9 +10,9 @@ export type ConditionOperator =
   | 'IS_EMPTY' | 'IS_NOT_EMPTY';
 
 export interface Condition {
-  questionId: string;
-  operator:   ConditionOperator;
-  value:      string | null;
+  sourceQuestionId: string;
+  operator:         ConditionOperator;
+  value:            string | null;
 }
 
 export interface ConditionalLogicConfig {
