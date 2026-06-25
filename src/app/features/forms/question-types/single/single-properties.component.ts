@@ -1,7 +1,7 @@
-import { Component, computed, effect, input, output, signal } from '@angular/core';
+import { Component, computed, effect, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { FormQuestion, FormType, QuestionOption } from '../../models/form.model';
-import { PropertiesQuestionComponent } from '../question-type.interfaces';
+import { QuestionOption } from '../../models/form.model';
+import { BasePropertiesComponent } from '../base-properties.component';
 import { OptionListEditorComponent } from '../shared/option-list-editor/option-list-editor.component';
 
 @Component({
@@ -10,11 +10,7 @@ import { OptionListEditorComponent } from '../shared/option-list-editor/option-l
   templateUrl: './single-properties.component.html',
   styleUrl: './single-properties.component.scss',
 })
-export class SinglePropertiesComponent implements PropertiesQuestionComponent {
-  readonly question = input.required<FormQuestion>();
-  readonly changed  = output<Partial<FormQuestion>>();
-  readonly formType = input<FormType | undefined>(undefined);
-
+export class SinglePropertiesComponent extends BasePropertiesComponent {
   protected readonly scoringType = signal<string>('none');
 
   protected readonly showScoring = computed(() => {
@@ -27,23 +23,10 @@ export class SinglePropertiesComponent implements PropertiesQuestionComponent {
   );
 
   constructor() {
+    super();
     effect(() => {
       this.scoringType.set((this.question().config['scoringType'] as string) ?? 'none');
     });
-  }
-
-  protected onTitleBlur(event: FocusEvent): void {
-    const title = (event.target as HTMLInputElement).value.trim();
-    if (title && title !== this.question().title) this.changed.emit({ title });
-  }
-
-  protected onRequiredChange(event: Event): void {
-    this.changed.emit({ required: (event.target as HTMLInputElement).checked });
-  }
-
-  protected onDescriptionBlur(event: FocusEvent): void {
-    const description = (event.target as HTMLTextAreaElement).value.trim() || null;
-    if (description !== this.question().description) this.changed.emit({ description });
   }
 
   protected onOptionsChanged(options: QuestionOption[]): void {

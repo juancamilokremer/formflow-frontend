@@ -1,7 +1,6 @@
-import { Component, input, output } from '@angular/core';
+import { Component } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { FormQuestion, FormType } from '../../models/form.model';
-import { PropertiesQuestionComponent } from '../question-type.interfaces';
+import { BasePropertiesComponent } from '../base-properties.component';
 
 @Component({
   selector: 'app-text-properties',
@@ -9,30 +8,7 @@ import { PropertiesQuestionComponent } from '../question-type.interfaces';
   templateUrl: './text-properties.component.html',
   styleUrl: './text-properties.component.scss',
 })
-export class TextPropertiesComponent implements PropertiesQuestionComponent {
-  readonly question  = input.required<FormQuestion>();
-  readonly changed   = output<Partial<FormQuestion>>();
-  readonly formType  = input<FormType | undefined>(undefined);
-
-  protected onTitleBlur(event: FocusEvent): void {
-    const title = (event.target as HTMLInputElement).value.trim();
-    if (title && title !== this.question().title) {
-      this.changed.emit({ title });
-    }
-  }
-
-  protected onRequiredChange(event: Event): void {
-    const required = (event.target as HTMLInputElement).checked;
-    this.changed.emit({ required });
-  }
-
-  protected onDescriptionBlur(event: FocusEvent): void {
-    const description = (event.target as HTMLTextAreaElement).value.trim() || null;
-    if (description !== this.question().description) {
-      this.changed.emit({ description });
-    }
-  }
-
+export class TextPropertiesComponent extends BasePropertiesComponent {
   protected onPlaceholderBlur(event: FocusEvent): void {
     const placeholder = (event.target as HTMLInputElement).value;
     const current = (this.question().config['placeholder'] as string) ?? '';

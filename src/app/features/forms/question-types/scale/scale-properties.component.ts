@@ -1,7 +1,6 @@
-import { Component, computed, effect, input, output, signal } from '@angular/core';
+import { Component, computed, effect, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { FormQuestion, FormType } from '../../models/form.model';
-import { PropertiesQuestionComponent } from '../question-type.interfaces';
+import { BasePropertiesComponent } from '../base-properties.component';
 
 @Component({
   selector: 'app-scale-properties',
@@ -9,14 +8,10 @@ import { PropertiesQuestionComponent } from '../question-type.interfaces';
   templateUrl: './scale-properties.component.html',
   styleUrl: './scale-properties.component.scss',
 })
-export class ScalePropertiesComponent implements PropertiesQuestionComponent {
-  readonly question = input.required<FormQuestion>();
-  readonly changed  = output<Partial<FormQuestion>>();
-  readonly formType = input<FormType | undefined>(undefined);
-
-  protected readonly scaleMax   = signal(5);
-  protected readonly minLabel   = signal('');
-  protected readonly maxLabel   = signal('');
+export class ScalePropertiesComponent extends BasePropertiesComponent {
+  protected readonly scaleMax    = signal(5);
+  protected readonly minLabel    = signal('');
+  protected readonly maxLabel    = signal('');
   protected readonly scoringType = signal<string>('none');
 
   protected readonly showScoring = computed(() => {
@@ -25,6 +20,7 @@ export class ScalePropertiesComponent implements PropertiesQuestionComponent {
   });
 
   constructor() {
+    super();
     effect(() => {
       const cfg = this.question().config;
       this.scaleMax.set((cfg['max'] as number) ?? 5);
@@ -32,20 +28,6 @@ export class ScalePropertiesComponent implements PropertiesQuestionComponent {
       this.maxLabel.set((cfg['maxLabel'] as string) ?? '');
       this.scoringType.set((cfg['scoringType'] as string) ?? 'none');
     });
-  }
-
-  protected onTitleBlur(event: FocusEvent): void {
-    const title = (event.target as HTMLInputElement).value.trim();
-    if (title && title !== this.question().title) this.changed.emit({ title });
-  }
-
-  protected onRequiredChange(event: Event): void {
-    this.changed.emit({ required: (event.target as HTMLInputElement).checked });
-  }
-
-  protected onDescriptionBlur(event: FocusEvent): void {
-    const description = (event.target as HTMLTextAreaElement).value.trim() || null;
-    if (description !== this.question().description) this.changed.emit({ description });
   }
 
   protected onScaleSizeChange(event: Event): void {

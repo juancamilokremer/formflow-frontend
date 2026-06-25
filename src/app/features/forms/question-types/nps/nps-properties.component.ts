@@ -1,7 +1,6 @@
-import { Component, input, output } from '@angular/core';
+import { Component } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { FormQuestion, FormType } from '../../models/form.model';
-import { PropertiesQuestionComponent } from '../question-type.interfaces';
+import { BasePropertiesComponent } from '../base-properties.component';
 
 @Component({
   selector: 'app-nps-properties',
@@ -9,25 +8,7 @@ import { PropertiesQuestionComponent } from '../question-type.interfaces';
   templateUrl: './nps-properties.component.html',
   styleUrl: './nps-properties.component.scss',
 })
-export class NpsPropertiesComponent implements PropertiesQuestionComponent {
-  readonly question  = input.required<FormQuestion>();
-  readonly changed   = output<Partial<FormQuestion>>();
-  readonly formType  = input<FormType | undefined>(undefined);
-
-  protected onTitleBlur(event: FocusEvent): void {
-    const title = (event.target as HTMLInputElement).value.trim();
-    if (title && title !== this.question().title) this.changed.emit({ title });
-  }
-
-  protected onRequiredChange(event: Event): void {
-    this.changed.emit({ required: (event.target as HTMLInputElement).checked });
-  }
-
-  protected onDescriptionBlur(event: FocusEvent): void {
-    const description = (event.target as HTMLTextAreaElement).value.trim() || null;
-    if (description !== this.question().description) this.changed.emit({ description });
-  }
-
+export class NpsPropertiesComponent extends BasePropertiesComponent {
   protected onMinLabelBlur(event: FocusEvent): void {
     const minLabel = (event.target as HTMLInputElement).value.trim();
     this.changed.emit({ config: { ...this.question().config, minLabel } });

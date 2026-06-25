@@ -1,0 +1,112 @@
+@mixin base {
+  .qp {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+
+    &__field {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+
+      &--row {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+      }
+    }
+
+    &__label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--ff-text-secondary);
+    }
+
+    &__input,
+    &__textarea,
+    &__select {
+      width: 100%;
+      padding: 7px 9px;
+      border: 1px solid var(--ff-border);
+      border-radius: var(--ff-radius-sm);
+      font-size: 13px;
+      color: var(--ff-text-primary);
+      background: var(--ff-white);
+      outline: none;
+      box-sizing: border-box;
+      font-family: inherit;
+      resize: vertical;
+      transition: border-color 0.15s;
+
+      &:focus { border-color: var(--ff-primary); }
+    }
+
+    &__divider {
+      height: 1px;
+      background: var(--ff-border);
+      margin: 0 -16px;
+    }
+  }
+}
+
+@mixin options {
+  .qp {
+    &__options {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    &__option-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    &__option-input {
+      flex: 1;
+      padding: 6px 8px;
+      border: 1px solid var(--ff-border);
+      border-radius: var(--ff-radius-sm);
+      font-size: 13px;
+      color: var(--ff-text-primary);
+      background: var(--ff-white);
+      outline: none;
+      transition: border-color 0.15s;
+
+      &:focus { border-color: var(--ff-primary); }
+    }
+
+    &__option-delete {
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      background: transparent;
+      color: var(--ff-text-muted);
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: var(--ff-radius-sm);
+      flex-shrink: 0;
+
+      &:hover { background: #FEF2F2; color: var(--ff-error-text); }
+    }
+
+    &__add-option {
+      font-size: 12px;
+      color: var(--ff-primary);
+      background: none;
+      border: none;
+      padding: 4px 0;
+      cursor: pointer;
+      text-align: left;
+
+      &:hover { text-decoration: underline; }
+    }
+  }
+}
