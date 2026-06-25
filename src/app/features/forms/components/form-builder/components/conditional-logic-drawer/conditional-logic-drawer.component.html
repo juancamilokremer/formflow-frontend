@@ -39,24 +39,22 @@
 
           <select
             class="cld__select"
-            [value]="cond.questionId"
             (change)="onQuestionSelected(cond.id, $any($event.target).value)"
           >
-            <option value="">{{ 'logic.select_question' | translate }}</option>
+            <option value="" [selected]="!cond.questionId">{{ 'logic.select_question' | translate }}</option>
             @for (q of previousQuestions(); track q.id) {
-              <option [value]="q.id">{{ q.title }}</option>
+              <option [value]="q.id" [selected]="q.id === cond.questionId">{{ q.title }}</option>
             }
           </select>
 
           @if (cond.questionId) {
             <select
               class="cld__select"
-              [value]="cond.operator"
               (change)="onOperatorSelected(cond.id, $any($event.target).value)"
             >
-              <option value="">{{ 'logic.select_operator' | translate }}</option>
+              <option value="" [selected]="!cond.operator">{{ 'logic.select_operator' | translate }}</option>
               @for (op of getOperatorsForQuestion(cond.questionId); track op) {
-                <option [value]="op">{{ operatorLabelKeys[op] | translate }}</option>
+                <option [value]="op" [selected]="op === cond.operator">{{ operatorLabelKeys[op] | translate }}</option>
               }
             </select>
           }
@@ -66,12 +64,11 @@
               @case ('options') {
                 <select
                   class="cld__select"
-                  [value]="cond.value"
                   (change)="onValueChanged(cond.id, $any($event.target).value)"
                 >
-                  <option value="">{{ 'logic.select_value' | translate }}</option>
+                  <option value="" [selected]="!cond.value">{{ 'logic.select_value' | translate }}</option>
                   @for (opt of getOptionsForQuestion(cond.questionId); track opt.id) {
-                    <option [value]="opt.label">{{ opt.label }}</option>
+                    <option [value]="opt.label" [selected]="opt.label === cond.value">{{ opt.label }}</option>
                   }
                 </select>
               }
