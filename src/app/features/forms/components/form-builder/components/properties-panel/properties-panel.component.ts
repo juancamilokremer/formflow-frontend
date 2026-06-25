@@ -1,4 +1,4 @@
-import { Component, ComponentRef, OnDestroy, ViewChild, ViewContainerRef, computed, effect, input, output } from '@angular/core';
+import { AfterViewInit, Component, ComponentRef, OnDestroy, ViewChild, ViewContainerRef, computed, effect, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { IconComponent } from '../../../../../../shared/icons/icon.component';
 import { FormQuestion, FormType, QuestionType } from '../../../../models/form.model';
@@ -11,7 +11,7 @@ import { PropertiesQuestionComponent } from '../../../../question-types/question
   templateUrl: './properties-panel.component.html',
   styleUrl: './properties-panel.component.scss',
 })
-export class PropertiesPanelComponent implements OnDestroy {
+export class PropertiesPanelComponent implements AfterViewInit, OnDestroy {
   readonly question               = input<FormQuestion | null>(null);
   readonly formType               = input<FormType | undefined>(undefined);
   readonly questionChanged        = output<Partial<FormQuestion>>();
@@ -44,6 +44,10 @@ export class PropertiesPanelComponent implements OnDestroy {
       const formType = this.formType();
       this.updateDynamicComponent(q, formType);
     });
+  }
+
+  ngAfterViewInit(): void {
+    this.updateDynamicComponent(this.question(), this.formType());
   }
 
   private updateDynamicComponent(q: FormQuestion | null, formType: FormType | undefined): void {
