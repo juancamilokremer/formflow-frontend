@@ -18,6 +18,7 @@ export const FIELD_TYPE_GROUPS: FieldTypeGroup[] = [
     labelKey: 'builder.group.text',
     types: [
       { type: 'text', labelKey: 'builder.type.text', descriptionKey: 'builder.type_desc.text', icon: 'type' },
+      { type: 'info', labelKey: 'builder.type.info', descriptionKey: 'builder.type_desc.info', icon: 'info' },
     ],
   },
   {

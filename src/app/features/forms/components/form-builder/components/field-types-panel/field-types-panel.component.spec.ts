@@ -5,8 +5,8 @@ describe('FieldTypesPanelComponent', () => {
     expect(FIELD_TYPE_GROUPS.length).toBeGreaterThan(0);
   });
 
-  it('has 8 total question types across all groups', () => {
+  it('has 9 total question types across all groups', () => {
     const total = FIELD_TYPE_GROUPS.reduce((sum, g) => sum + g.types.length, 0);
-    expect(total).toBe(8);
+    expect(total).toBe(9);
   });
 });

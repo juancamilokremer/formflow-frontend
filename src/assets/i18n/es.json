@@ -197,6 +197,7 @@
       "advanced": "Avanzado"
     },
     "type": {
+      "info": "Texto informativo",
       "text": "Texto libre",
       "single": "Opción única",
       "multiple": "Múltiple opción",
@@ -238,13 +239,17 @@
       "nps_max_label": "Etiqueta máximo",
       "nps_max_placeholder": "Ej: Muy probable",
       "matrix_rows": "Filas",
-      "matrix_columns": "Columnas"
+      "matrix_columns": "Columnas",
+      "info_content": "Contenido",
+      "info_title_placeholder": "Título del bloque (opcional)",
+      "info_content_placeholder": "Escribe aquí el texto o instrucciones..."
     },
     "summary": {
       "questions_count": "{{n}} preguntas con puntaje",
       "max_total": "Puntaje máximo total"
     },
     "type_desc": {
+      "info":     "Bloque estático de texto o instrucciones",
       "text":     "Respuesta abierta de texto libre",
       "single":   "Selección de una sola opción",
       "multiple": "Selección de múltiples opciones",

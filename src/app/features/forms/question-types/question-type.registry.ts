@@ -9,6 +9,10 @@ import {
 
 import { QuestionPublicStubComponent } from './shared/question-public-stub.component';
 
+import { InfoCanvasComponent }      from './info/info-canvas.component';
+import { InfoPropertiesComponent }  from './info/info-properties.component';
+import { InfoPublicComponent }      from './info/info-public.component';
+
 import { TextCanvasComponent }      from './text/text-canvas.component';
 import { TextPropertiesComponent }  from './text/text-properties.component';
 
@@ -45,6 +49,16 @@ export interface QuestionTypeDefinition {
 }
 
 export const QUESTION_TYPE_REGISTRY: QuestionTypeDefinition[] = [
+  {
+    type: 'info',
+    labelKey: 'builder.type.info',
+    icon: 'info',
+    groupKey: 'builder.group.text',
+    canvasComponent:     InfoCanvasComponent,
+    publicComponent:     InfoPublicComponent,
+    propertiesComponent: InfoPropertiesComponent,
+    defaultConfig: () => ({ content: '' }),
+  },
   {
     type: 'text',
     labelKey: 'builder.type.text',
