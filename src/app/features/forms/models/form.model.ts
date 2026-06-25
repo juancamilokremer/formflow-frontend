@@ -2,6 +2,24 @@ export type FormType   = 'CANDIDATES' | 'DIAGNOSTIC' | 'REGISTRATION';
 export type FormStatus = 'DRAFT' | 'ACTIVE' | 'ARCHIVED';
 export type QuestionType = 'text' | 'single' | 'multiple' | 'scale' | 'date' | 'file' | 'matrix' | 'nps' | 'info';
 
+export type LogicOperator    = 'AND' | 'OR';
+export type ConditionOperator =
+  | 'EQUALS' | 'NOT_EQUALS'
+  | 'CONTAINS' | 'NOT_CONTAINS'
+  | 'GREATER_THAN' | 'LESS_THAN'
+  | 'IS_EMPTY' | 'IS_NOT_EMPTY';
+
+export interface Condition {
+  questionId: string;
+  operator:   ConditionOperator;
+  value:      string | null;
+}
+
+export interface ConditionalLogicConfig {
+  logicOperator: LogicOperator;
+  conditions:    Condition[];
+}
+
 export interface Form {
   id: string;
   name: string;
@@ -31,6 +49,7 @@ export interface FormQuestion {
   required: boolean;
   categoryId: string | null;
   config: Record<string, unknown>;
+  conditionalLogic?: ConditionalLogicConfig | null;
 }
 
 export interface FormSection {
@@ -77,6 +96,7 @@ export interface UpdateQuestionRequest {
   categoryId?: string | null;
   timeLimitSeconds?: number | null;
   config?: Record<string, unknown>;
+  conditionalLogic?: ConditionalLogicConfig | null;
 }
 
 export interface QuestionMovedEvent {

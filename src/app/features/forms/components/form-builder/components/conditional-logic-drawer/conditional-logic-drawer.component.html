@@ -1,0 +1,135 @@
+<div class="cld">
+  <div class="cld__header">
+    <div class="cld__header-left">
+      <app-icon name="sliders" [size]="13" />
+      <span class="cld__header-title">{{ 'logic.title' | translate }}</span>
+    </div>
+    <button class="cld__close" type="button" (click)="closed.emit()">
+      <app-icon name="x" [size]="14" />
+    </button>
+  </div>
+
+  @if (!previousQuestions().length) {
+    <div class="cld__empty">
+      <app-icon name="info" [size]="28" />
+      <span>{{ 'logic.no_previous_questions' | translate }}</span>
+    </div>
+  } @else {
+    <div class="cld__body">
+
+      @if (conditions().length > 1) {
+        <div class="cld__operator-row">
+          <span>{{ 'logic.show_when' | translate }}</span>
+          <select class="cld__operator-select" [value]="logicOperator()" (change)="onLogicOperatorChange($event)">
+            <option value="AND">{{ 'logic.all_conditions' | translate }}</option>
+            <option value="OR">{{ 'logic.any_condition' | translate }}</option>
+          </select>
+          <span>{{ 'logic.conditions_met' | translate }}</span>
+        </div>
+      }
+
+      @for (cond of conditions(); track cond.id; let i = $index) {
+        <div class="cld__condition">
+          <div class="cld__condition-header">
+            <span class="cld__condition-label">{{ 'logic.condition' | translate }} {{ i + 1 }}</span>
+            <button class="cld__remove" type="button" (click)="removeCondition(cond.id)">
+              <app-icon name="x" [size]="12" />
+            </button>
+          </div>
+
+          <select
+            class="cld__select"
+            [value]="cond.questionId"
+            (change)="onQuestionSelected(cond.id, $any($event.target).value)"
+          >
+            <option value="">{{ 'logic.select_question' | translate }}</option>
+            @for (q of previousQuestions(); track q.id) {
+              <option [value]="q.id">{{ q.title }}</option>
+            }
+          </select>
+
+          @if (cond.questionId) {
+            <select
+              class="cld__select"
+              [value]="cond.operator"
+              (change)="onOperatorSelected(cond.id, $any($event.target).value)"
+            >
+              <option value="">{{ 'logic.select_operator' | translate }}</option>
+              @for (op of getOperatorsForQuestion(cond.questionId); track op) {
+                <option [value]="op">{{ operatorLabelKeys[op] | translate }}</option>
+              }
+            </select>
+          }
+
+          @if (cond.operator) {
+            @switch (getValueInputType(cond.questionId, cond.operator)) {
+              @case ('options') {
+                <select
+                  class="cld__select"
+                  [value]="cond.value"
+                  (change)="onValueChanged(cond.id, $any($event.target).value)"
+                >
+                  <option value="">{{ 'logic.select_value' | translate }}</option>
+                  @for (opt of getOptionsForQuestion(cond.questionId); track opt.id) {
+                    <option [value]="opt.label">{{ opt.label }}</option>
+                  }
+                </select>
+              }
+              @case ('number') {
+                <input
+                  class="cld__input"
+                  type="number"
+                  [value]="cond.value"
+                  [placeholder]="'logic.enter_number' | translate"
+                  (change)="onValueChanged(cond.id, $any($event.target).value)"
+                />
+              }
+              @case ('text') {
+                <input
+                  class="cld__input"
+                  type="text"
+                  [value]="cond.value"
+                  [placeholder]="'logic.enter_value' | translate"
+                  (blur)="onValueChanged(cond.id, $any($event.target).value)"
+                />
+              }
+            }
+          }
+        </div>
+
+        @if (!$last) {
+          <div class="cld__connector">
+            {{ (logicOperator() === 'AND' ? 'logic.and_connector' : 'logic.or_connector') | translate }}
+          </div>
+        }
+      }
+
+      <button class="cld__add-btn" type="button" (click)="addCondition()">
+        <app-icon name="plus" [size]="13" />
+        {{ 'logic.add_condition' | translate }}
+      </button>
+
+      @if (naturalLanguageText()) {
+        <div class="cld__preview">
+          <app-icon name="eye" [size]="13" />
+          <span>{{ naturalLanguageText() }}</span>
+        </div>
+      }
+
+    </div>
+  }
+
+  <div class="cld__footer">
+    <button class="cld__cancel" type="button" (click)="closed.emit()">
+      {{ 'common.cancel' | translate }}
+    </button>
+    <button
+      class="cld__save"
+      type="button"
+      [disabled]="!isValid()"
+      (click)="onSave()"
+    >
+      {{ 'common.save' | translate }}
+    </button>
+  </div>
+</div>

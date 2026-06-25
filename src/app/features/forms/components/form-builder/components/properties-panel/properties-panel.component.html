@@ -6,13 +6,27 @@
     }
   </div>
 
-  <ng-container #outlet />
+  <div class="pp__scrollable">
+    <ng-container #outlet />
 
-  @if (!hasQuestion()) {
-    <div class="pp__empty">
-      <app-icon name="info" [size]="28" />
-      <span class="pp__empty-title">{{ 'builder.properties_empty' | translate }}</span>
-      <span class="pp__empty-sub">{{ 'builder.properties_empty_subtitle' | translate }}</span>
+    @if (!hasQuestion()) {
+      <div class="pp__empty">
+        <app-icon name="info" [size]="28" />
+        <span class="pp__empty-title">{{ 'builder.properties_empty' | translate }}</span>
+        <span class="pp__empty-sub">{{ 'builder.properties_empty_subtitle' | translate }}</span>
+      </div>
+    }
+  </div>
+
+  @if (hasQuestion()) {
+    <div class="pp__logic-footer">
+      <button class="pp__logic-btn" type="button" (click)="conditionalLogicClicked.emit()">
+        <app-icon name="sliders" [size]="13" />
+        <span>{{ 'logic.button_label' | translate }}</span>
+        @if (conditionCount() > 0) {
+          <span class="pp__logic-count">{{ conditionCount() }}</span>
+        }
+      </button>
     </div>
   }
 </div>

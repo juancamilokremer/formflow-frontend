@@ -273,6 +273,35 @@
       "question_delete": "No se pudo eliminar la pregunta."
     }
   },
+  "logic": {
+    "title": "Lógica condicional",
+    "button_label": "Lógica condicional",
+    "no_previous_questions": "No hay preguntas anteriores. Agrega más preguntas antes de esta para configurar condiciones.",
+    "show_when": "Mostrar esta pregunta si",
+    "all_conditions": "TODAS las condiciones",
+    "any_condition": "ALGUNA condición",
+    "conditions_met": "se cumplen",
+    "condition": "Condición",
+    "select_question": "Selecciona una pregunta...",
+    "select_operator": "Selecciona una condición...",
+    "select_value": "Selecciona un valor...",
+    "enter_value": "Escribe un valor...",
+    "enter_number": "Ingresa un número...",
+    "add_condition": "Agregar condición",
+    "and_connector": "Y",
+    "or_connector": "O",
+    "preview_show_if": "Mostrar si",
+    "op": {
+      "equals": "es igual a",
+      "not_equals": "no es igual a",
+      "contains": "contiene",
+      "not_contains": "no contiene",
+      "greater_than": "es mayor que",
+      "less_than": "es menor que",
+      "is_empty": "está vacío",
+      "is_not_empty": "no está vacío"
+    }
+  },
   "errors": {
     "unauthorized": "No tienes permiso para realizar esta acción.",
     "not_found": "El recurso solicitado no existe.",

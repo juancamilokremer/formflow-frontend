@@ -12,9 +12,10 @@ import { PropertiesQuestionComponent } from '../../../../question-types/question
   styleUrl: './properties-panel.component.scss',
 })
 export class PropertiesPanelComponent implements OnDestroy {
-  readonly question        = input<FormQuestion | null>(null);
-  readonly formType        = input<FormType | undefined>(undefined);
-  readonly questionChanged = output<Partial<FormQuestion>>();
+  readonly question               = input<FormQuestion | null>(null);
+  readonly formType               = input<FormType | undefined>(undefined);
+  readonly questionChanged        = output<Partial<FormQuestion>>();
+  readonly conditionalLogicClicked = output<void>();
 
   protected readonly hasQuestion = computed(() => {
     const q = this.question();
@@ -26,6 +27,10 @@ export class PropertiesPanelComponent implements OnDestroy {
     if (!q) return null;
     return getQuestionTypeDef(q.type)?.labelKey ?? null;
   });
+
+  protected readonly conditionCount = computed(() =>
+    this.question()?.conditionalLogic?.conditions?.length ?? 0,
+  );
 
   @ViewChild('outlet', { read: ViewContainerRef })
   private outlet!: ViewContainerRef;
