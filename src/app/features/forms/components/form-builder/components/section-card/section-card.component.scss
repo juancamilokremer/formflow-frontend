@@ -5,6 +5,16 @@
   border: 1px solid var(--ff-border);
   border-radius: var(--ff-radius-lg);
   overflow: hidden;
+  transition: border-color 0.15s;
+
+  &--active {
+    border-color: var(--ff-primary);
+
+    .sc__header {
+      background: var(--ff-primary-light);
+      border-bottom-color: var(--ff-primary);
+    }
+  }
 
   &__header {
     display: flex;

@@ -259,6 +259,7 @@
       "file":     "Subida de archivos (PDF, imágenes, etc.)",
       "matrix":   "Tabla de filas y columnas, una selección por fila"
     },
+    "move_to_section": "Mover a",
     "mobile_block_title": "Pantalla muy pequeña",
     "mobile_block_subtitle": "El constructor de formularios requiere una pantalla más grande. Accede desde un computador o tablet.",
     "mobile_block_action": "Volver a mis formularios",

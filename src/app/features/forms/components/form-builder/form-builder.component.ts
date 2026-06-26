@@ -267,6 +267,51 @@ export class FormBuilderComponent implements OnInit {
     }
   }
 
+  protected onMoveQuestionToSection(toSectionId: string): void {
+    const currentForm   = this.form();
+    const questionId    = this.selectedQuestionId();
+    const fromSectionId = this.activeSectionId();
+    if (!currentForm || !questionId || !fromSectionId || fromSectionId === toSectionId) return;
+
+    const fromSection = currentForm.sections.find((s) => s.id === fromSectionId);
+    const question    = fromSection?.questions.find((q) => q.id === questionId);
+    if (!question) return;
+
+    const toSection    = currentForm.sections.find((s) => s.id === toSectionId)!;
+    const orderedToIds = [...toSection.questions.map((q) => q.id), questionId];
+
+    this.form.update((current) =>
+      current ? {
+        ...current,
+        sections: current.sections.map((s) => {
+          if (s.id === fromSectionId) return { ...s, questions: s.questions.filter((q) => q.id !== questionId) };
+          if (s.id === toSectionId)   return { ...s, questions: [...s.questions, question] };
+          return s;
+        }),
+      } : current,
+    );
+    this.selectedQuestionId.set(null);
+
+    this.formsService.addQuestion(currentForm.id, toSectionId, {
+      type:        question.type,
+      title:       question.title,
+      required:    question.required,
+      description: question.description  ?? undefined,
+      categoryId:  question.categoryId   ?? undefined,
+      config:      question.config,
+    }).subscribe({
+      next: (newQuestion) => {
+        this.replaceQuestion(toSectionId, questionId, newQuestion);
+        this.activeSectionId.set(toSectionId);
+        this.selectedQuestionId.set(newQuestion.id);
+        this.formsService.deleteQuestion(currentForm.id, fromSectionId, questionId).subscribe();
+        this.formsService.reorderQuestions(currentForm.id, toSectionId,
+          orderedToIds.map((id) => (id === questionId ? newQuestion.id : id)),
+        ).subscribe();
+      },
+    });
+  }
+
   protected onConditionalLogicSaved(config: ConditionalLogicConfig | null): void {
     this.onQuestionChanged({ conditionalLogic: config });
     this.drawerOpen.set(false);

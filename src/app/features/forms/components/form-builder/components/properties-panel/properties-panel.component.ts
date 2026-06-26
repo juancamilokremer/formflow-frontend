@@ -1,7 +1,7 @@
 import { Component, ComponentRef, OnDestroy, ViewContainerRef, computed, effect, input, output, viewChild } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { IconComponent } from '../../../../../../shared/icons/icon.component';
-import { FormQuestion, FormType, QuestionType } from '../../../../models/form.model';
+import { FormQuestion, FormSection, FormType, QuestionType } from '../../../../models/form.model';
 import { getQuestionTypeDef } from '../../../../question-types/question-type.registry';
 import { PropertiesQuestionComponent } from '../../../../question-types/question-type.interfaces';
 
@@ -14,8 +14,11 @@ import { PropertiesQuestionComponent } from '../../../../question-types/question
 export class PropertiesPanelComponent implements OnDestroy {
   readonly question                = input<FormQuestion | null>(null);
   readonly formType                = input<FormType | undefined>(undefined);
+  readonly formSections            = input<FormSection[]>([]);
+  readonly currentSectionId        = input<string | null>(null);
   readonly questionChanged         = output<Partial<FormQuestion>>();
   readonly conditionalLogicClicked = output<void>();
+  readonly sectionChanged          = output<string>();
 
   protected readonly hasQuestion = computed(() => {
     const q = this.question();

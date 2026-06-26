@@ -1,4 +1,4 @@
-<div class="sc">
+<div class="sc" [class.sc--active]="isActive()" (click)="sectionActivated.emit(section().id)">
   <div class="sc__header">
     <app-icon class="sc__grip" name="grip-vertical" [size]="16" />
 
