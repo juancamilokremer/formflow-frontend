@@ -259,6 +259,7 @@
       "file":     "Subida de archivos (PDF, imágenes, etc.)",
       "matrix":   "Tabla de filas y columnas, una selección por fila"
     },
+    "move_to_section": "Mover a",
     "mobile_block_title": "Pantalla muy pequeña",
     "mobile_block_subtitle": "El constructor de formularios requiere una pantalla más grande. Accede desde un computador o tablet.",
     "mobile_block_action": "Volver a mis formularios",
@@ -271,6 +272,36 @@
       "question_create": "No se pudo agregar la pregunta.",
       "question_update": "No se pudo guardar los cambios.",
       "question_delete": "No se pudo eliminar la pregunta."
+    }
+  },
+  "logic": {
+    "title": "Lógica condicional",
+    "button_label": "Lógica condicional",
+    "chip_label": "Condicional",
+    "no_previous_questions": "No hay preguntas anteriores. Agrega más preguntas antes de esta para configurar condiciones.",
+    "show_when": "Mostrar esta pregunta si",
+    "all_conditions": "TODAS las condiciones",
+    "any_condition": "ALGUNA condición",
+    "conditions_met": "se cumplen",
+    "condition": "Condición",
+    "select_question": "Selecciona una pregunta...",
+    "select_operator": "Selecciona una condición...",
+    "select_value": "Selecciona un valor...",
+    "enter_value": "Escribe un valor...",
+    "enter_number": "Ingresa un número...",
+    "add_condition": "Agregar condición",
+    "and_connector": "Y",
+    "or_connector": "O",
+    "preview_show_if": "Mostrar si",
+    "op": {
+      "equals": "es igual a",
+      "not_equals": "no es igual a",
+      "contains": "contiene",
+      "not_contains": "no contiene",
+      "greater_than": "es mayor que",
+      "less_than": "es menor que",
+      "is_empty": "está vacío",
+      "is_not_empty": "no está vacío"
     }
   },
   "errors": {

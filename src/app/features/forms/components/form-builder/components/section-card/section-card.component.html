@@ -1,5 +1,10 @@
-<div class="sc">
-  <div class="sc__header">
+<div class="sc" [class.sc--active]="isActive()">
+  <div
+    class="sc__header"
+    tabindex="0"
+    (click)="sectionActivated.emit(section().id)"
+    (keydown.enter)="sectionActivated.emit(section().id)"
+  >
     <app-icon class="sc__grip" name="grip-vertical" [size]="16" />
 
     @if (isEditing()) {
@@ -62,6 +67,12 @@
             <span class="sc__q-badge sc__q-badge--scoring">
               <app-icon name="scale" [size]="10" />
               {{ getScoringType(q) === 'auto' ? ('builder.scoring_badge_auto' | translate) : ('builder.scoring_badge' | translate) }}
+            </span>
+          }
+          @if (q.conditionalLogic?.conditions?.length) {
+            <span class="sc__q-badge sc__q-badge--logic">
+              <app-icon name="sliders" [size]="10" />
+              {{ 'logic.chip_label' | translate }}
             </span>
           }
           <span class="sc__q-spacer"></span>

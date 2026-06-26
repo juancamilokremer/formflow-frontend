@@ -179,18 +179,15 @@ Ningún string visible al usuario hardcodeado — todo en `es.json` con `| trans
 | Milestone | Issues |
 |-----------|--------|
 | M1 ✅ | #9 ✅ #10 ✅ #11 ✅ #18 ✅ #19 ✅ |
-| M2 🔄 | #1 cerrado → sub-issues: #32 ✅ #33 ✅ #34 ✅ #35 ✅ #36 ⏳ #39 ⏳ · originales: #2 ⏳ #3 ⏳ #4 ⏳ |
+| M2 🔄 | sub-issues: #32 ✅ #33 ✅ #34 ✅ #35 ✅ #36 ✅ #39 ✅ · originales: #2 ✅ #3 ⏳ #4 ⏳ · extras: #43 ✅ #46 ✅ #47 ✅ |
 | M3 | #12 #13 #14 #15 #16 #20 |
 | M4 | #5 #6 |
 | M5 | #7 #8 #21 #22 #23 |
 | M6 | #17 |
 
-## Orden pendiente M2 (jun 2026)
-1. **#39** — Bloquear builder en móvil (< 768px) — simple, `BreakpointObserver`
-2. **#36** — Scoring por opción en single/scale + resumen de puntaje máximo en canvas
-3. **#2**  — Tipos avanzados (matrix, nps) + `OptionListEditor` con reorden drag
-4. **#3**  — UI de lógica condicional (drawer, reglas AND/OR, preview texto natural)
-5. **#4**  — Preview en tiempo real (motor de condiciones + 8 answer components reutilizados en M3 #12)
+## Pendiente M2 (jun 2026)
+1. **#3**  — UI de lógica condicional (drawer, reglas AND/OR, preview texto natural)
+2. **#4**  — Preview en tiempo real (motor de condiciones + 8 answer components reutilizados en M3 #12)
 
 ## Patrones establecidos en M2
 
@@ -198,6 +195,13 @@ Ningún string visible al usuario hardcodeado — todo en `es.json` con `| trans
 Cada tipo registra 3 componentes + metadata en `question-types/question-type.registry.ts`.
 Agregar un tipo nuevo = 1 entrada en `QUESTION_TYPE_REGISTRY` + 3 archivos (canvas, properties, public).
 Los tipos se almacenan en **minúsculas** en BD y en el registry (`'text'`, `'single'`, etc.).
+
+### Componentes de propiedades (properties)
+Todos extienden `BasePropertiesComponent` (`question-types/base-properties.component.ts`, `@Directive()`).
+- Inputs heredados: `question`, `changed`, `formType`
+- Métodos heredados: `onTitleBlur`, `onRequiredChange`, `onDescriptionBlur`
+- Estilos compartidos en `question-types/shared/_properties-shared.scss`: mixins `base()` (layout + inputs) y `options()` (filas de opciones).
+- Cada properties SCSS hace `@use '../shared/properties-shared' as p; @include p.base();` — si se omite el `@use`, el build falla de inmediato.
 
 ### Tests (Vitest, NO Jasmine)
 - Correr: `npx ng test --watch=false`

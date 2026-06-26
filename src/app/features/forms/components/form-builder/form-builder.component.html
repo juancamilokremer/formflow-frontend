@@ -33,11 +33,13 @@
       <app-builder-canvas
         [form]="form()!"
         [selectedQuestionId]="selectedQuestionId()"
+        [activeSectionId]="activeSectionId()"
         [formType]="form()!.type"
         (sectionAdded)="onSectionAdded($event)"
         (sectionUpdated)="onSectionUpdated($event)"
         (sectionDeleted)="onSectionDeleted($event)"
         (sectionsReordered)="onSectionsReordered($event)"
+        (sectionActivated)="activeSectionId.set($event)"
         (questionSelected)="onQuestionSelected($event)"
         (questionDeleted)="onQuestionDeleted($event)"
         (questionMoved)="onQuestionMoved($event)"
@@ -45,11 +47,24 @@
       />
 
       <div class="fb__right">
-        <app-properties-panel
-          [question]="selectedQuestion()"
-          [formType]="form()!.type"
-          (questionChanged)="onQuestionChanged($event)"
-        />
+        @if (drawerOpen()) {
+          <app-conditional-logic-drawer
+            [question]="selectedQuestion()"
+            [formSections]="form()!.sections"
+            (saved)="onConditionalLogicSaved($event)"
+            (closed)="drawerOpen.set(false)"
+          />
+        } @else {
+          <app-properties-panel
+            [question]="selectedQuestion()"
+            [formType]="form()!.type"
+            [formSections]="form()!.sections"
+            [currentSectionId]="activeSectionId()"
+            (questionChanged)="onQuestionChanged($event)"
+            (conditionalLogicClicked)="drawerOpen.set(true)"
+            (sectionChanged)="onMoveQuestionToSection($event)"
+          />
+        }
       </div>
     </div>
   </div>

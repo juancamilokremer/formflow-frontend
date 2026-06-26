@@ -9,12 +9,14 @@ import { FormsService } from '../../services/forms.service';
 import {
   FormDetail, FormSection, FormQuestion, QuestionType,
   AddQuestionRequest, UpdateQuestionRequest, QuestionMovedEvent, CanvasQuestionChangedEvent,
+  ConditionalLogicConfig,
 } from '../../models/form.model';
 import { getQuestionTypeDef } from '../../question-types/question-type.registry';
 import { BuilderTopbarComponent } from './components/builder-topbar/builder-topbar.component';
 import { FieldTypesPanelComponent } from './components/field-types-panel/field-types-panel.component';
 import { BuilderCanvasComponent } from './components/builder-canvas/builder-canvas.component';
 import { PropertiesPanelComponent } from './components/properties-panel/properties-panel.component';
+import { ConditionalLogicDrawerComponent } from './components/conditional-logic-drawer/conditional-logic-drawer.component';
 
 @Component({
   selector: 'app-form-builder',
@@ -25,6 +27,7 @@ import { PropertiesPanelComponent } from './components/properties-panel/properti
     FieldTypesPanelComponent,
     BuilderCanvasComponent,
     PropertiesPanelComponent,
+    ConditionalLogicDrawerComponent,
   ],
   templateUrl: './form-builder.component.html',
   styleUrl: './form-builder.component.scss',
@@ -51,6 +54,7 @@ export class FormBuilderComponent implements OnInit {
 
   protected readonly selectedQuestionId = signal<string | null>(null);
   protected readonly activeSectionId    = signal<string | null>(null);
+  protected readonly drawerOpen         = signal(false);
 
   protected readonly selectedQuestion = computed<FormQuestion | null>(() => {
     const questionId  = this.selectedQuestionId();
@@ -172,6 +176,7 @@ export class FormBuilderComponent implements OnInit {
   }
 
   protected onQuestionSelected(questionId: string): void {
+    this.drawerOpen.set(false);
     this.selectedQuestionId.set(questionId);
     const currentForm = this.form();
     if (!currentForm) return;
@@ -262,6 +267,56 @@ export class FormBuilderComponent implements OnInit {
     }
   }
 
+  protected onMoveQuestionToSection(toSectionId: string): void {
+    const currentForm   = this.form();
+    const questionId    = this.selectedQuestionId();
+    const fromSectionId = this.activeSectionId();
+    if (!currentForm || !questionId || !fromSectionId || fromSectionId === toSectionId) return;
+
+    const fromSection = currentForm.sections.find((s) => s.id === fromSectionId);
+    const question    = fromSection?.questions.find((q) => q.id === questionId);
+    if (!question) return;
+
+    const toSection    = currentForm.sections.find((s) => s.id === toSectionId)!;
+    const orderedToIds = [...toSection.questions.map((q) => q.id), questionId];
+
+    this.form.update((current) =>
+      current ? {
+        ...current,
+        sections: current.sections.map((s) => {
+          if (s.id === fromSectionId) return { ...s, questions: s.questions.filter((q) => q.id !== questionId) };
+          if (s.id === toSectionId)   return { ...s, questions: [...s.questions, question] };
+          return s;
+        }),
+      } : current,
+    );
+    this.selectedQuestionId.set(null);
+
+    this.formsService.addQuestion(currentForm.id, toSectionId, {
+      type:        question.type,
+      title:       question.title,
+      required:    question.required,
+      description: question.description  ?? undefined,
+      categoryId:  question.categoryId   ?? undefined,
+      config:      question.config,
+    }).subscribe({
+      next: (newQuestion) => {
+        this.replaceQuestion(toSectionId, questionId, newQuestion);
+        this.activeSectionId.set(toSectionId);
+        this.selectedQuestionId.set(newQuestion.id);
+        this.formsService.deleteQuestion(currentForm.id, fromSectionId, questionId).subscribe();
+        this.formsService.reorderQuestions(currentForm.id, toSectionId,
+          orderedToIds.map((id) => (id === questionId ? newQuestion.id : id)),
+        ).subscribe();
+      },
+    });
+  }
+
+  protected onConditionalLogicSaved(config: ConditionalLogicConfig | null): void {
+    this.onQuestionChanged({ conditionalLogic: config });
+    this.drawerOpen.set(false);
+  }
+
   protected onQuestionChanged(change: Partial<FormQuestion>): void {
     const currentForm = this.form();
     const questionId  = this.selectedQuestionId();
@@ -323,12 +378,13 @@ export class FormBuilderComponent implements OnInit {
   ): void {
     const merged  = { ...question, ...change };
     const request: UpdateQuestionRequest = {
-      type:        merged.type,
-      title:       merged.title,
-      required:    merged.required,
-      description: merged.description ?? null,
-      categoryId:  merged.categoryId  ?? null,
-      config:      merged.config,
+      type:             merged.type,
+      title:            merged.title,
+      required:         merged.required,
+      description:      merged.description      ?? null,
+      categoryId:       merged.categoryId       ?? null,
+      config:           merged.config,
+      conditionalLogic: merged.conditionalLogic ?? null,
     };
 
     this.formsService.updateQuestion(formId, sectionId, questionId, request).subscribe({

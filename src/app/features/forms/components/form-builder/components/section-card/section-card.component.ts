@@ -29,11 +29,13 @@ export class SectionCardComponent {
 
   readonly section             = input.required<FormSection>();
   readonly selectedQuestionId  = input<string | null>(null);
+  readonly isActive            = input(false);
   readonly connectedListIds    = input<string[]>([]);
   readonly formType            = input<FormType | undefined>(undefined);
 
   readonly sectionUpdated    = output<{ id: string; title: string }>();
   readonly sectionDeleted    = output<string>();
+  readonly sectionActivated  = output<string>();
   readonly questionSelected  = output<string>();
   readonly questionDeleted   = output<{ sectionId: string; questionId: string }>();
   readonly questionMoved     = output<QuestionMovedEvent>();
