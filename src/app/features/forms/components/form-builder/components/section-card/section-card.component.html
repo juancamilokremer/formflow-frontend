@@ -1,5 +1,10 @@
-<div class="sc" [class.sc--active]="isActive()" (click)="sectionActivated.emit(section().id)">
-  <div class="sc__header">
+<div class="sc" [class.sc--active]="isActive()">
+  <div
+    class="sc__header"
+    tabindex="0"
+    (click)="sectionActivated.emit(section().id)"
+    (keydown.enter)="sectionActivated.emit(section().id)"
+  >
     <app-icon class="sc__grip" name="grip-vertical" [size]="16" />
 
     @if (isEditing()) {
