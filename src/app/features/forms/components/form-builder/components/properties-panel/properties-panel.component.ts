@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ComponentRef, OnDestroy, ViewChild, ViewContainerRef, computed, effect, input, output } from '@angular/core';
+import { Component, ComponentRef, OnDestroy, ViewContainerRef, computed, effect, input, output, viewChild } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { IconComponent } from '../../../../../../shared/icons/icon.component';
 import { FormQuestion, FormType, QuestionType } from '../../../../models/form.model';
@@ -11,10 +11,10 @@ import { PropertiesQuestionComponent } from '../../../../question-types/question
   templateUrl: './properties-panel.component.html',
   styleUrl: './properties-panel.component.scss',
 })
-export class PropertiesPanelComponent implements AfterViewInit, OnDestroy {
-  readonly question               = input<FormQuestion | null>(null);
-  readonly formType               = input<FormType | undefined>(undefined);
-  readonly questionChanged        = output<Partial<FormQuestion>>();
+export class PropertiesPanelComponent implements OnDestroy {
+  readonly question                = input<FormQuestion | null>(null);
+  readonly formType                = input<FormType | undefined>(undefined);
+  readonly questionChanged         = output<Partial<FormQuestion>>();
   readonly conditionalLogicClicked = output<void>();
 
   protected readonly hasQuestion = computed(() => {
@@ -32,38 +32,32 @@ export class PropertiesPanelComponent implements AfterViewInit, OnDestroy {
     this.question()?.conditionalLogic?.conditions?.length ?? 0,
   );
 
-  @ViewChild('outlet', { read: ViewContainerRef })
-  private outlet!: ViewContainerRef;
+  private readonly outlet = viewChild.required('outlet', { read: ViewContainerRef });
 
   private compRef?: ComponentRef<PropertiesQuestionComponent>;
   private currentType?: QuestionType;
 
   constructor() {
     effect(() => {
+      const outlet   = this.outlet();
       const q        = this.question();
       const formType = this.formType();
-      this.updateDynamicComponent(q, formType);
+      this.updateDynamicComponent(outlet, q, formType);
     });
   }
 
-  ngAfterViewInit(): void {
-    this.updateDynamicComponent(this.question(), this.formType());
-  }
-
-  private updateDynamicComponent(q: FormQuestion | null, formType: FormType | undefined): void {
-    if (!this.outlet) return;
-
+  private updateDynamicComponent(outlet: ViewContainerRef, q: FormQuestion | null, formType: FormType | undefined): void {
     const def = q ? getQuestionTypeDef(q.type) : undefined;
 
     if (!def) {
-      this.destroyDynamicComponent();
+      this.destroyDynamicComponent(outlet);
       return;
     }
 
     if (this.currentType !== q!.type) {
-      this.destroyDynamicComponent();
+      this.destroyDynamicComponent(outlet);
       this.currentType = q!.type;
-      this.compRef = this.outlet.createComponent(def.propertiesComponent);
+      this.compRef = outlet.createComponent(def.propertiesComponent);
       this.compRef.instance.changed.subscribe((change) =>
         this.questionChanged.emit(change),
       );
@@ -73,11 +67,11 @@ export class PropertiesPanelComponent implements AfterViewInit, OnDestroy {
     this.compRef?.setInput('formType', formType);
   }
 
-  private destroyDynamicComponent(): void {
+  private destroyDynamicComponent(outlet?: ViewContainerRef): void {
     this.compRef?.destroy();
     this.compRef = undefined;
     this.currentType = undefined;
-    this.outlet?.clear();
+    (outlet ?? this.outlet()).clear();
   }
 
   ngOnDestroy(): void {
