@@ -276,6 +276,7 @@
   "logic": {
     "title": "Lógica condicional",
     "button_label": "Lógica condicional",
+    "chip_label": "Condicional",
     "no_previous_questions": "No hay preguntas anteriores. Agrega más preguntas antes de esta para configurar condiciones.",
     "show_when": "Mostrar esta pregunta si",
     "all_conditions": "TODAS las condiciones",

@@ -158,6 +158,14 @@
       color: #c2410c;
       background: #fff7ed;
     }
+
+    &--logic {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      color: #6d28d9;
+      background: #ede9fe;
+    }
   }
 
   &__q-spacer { flex: 1; }

@@ -64,6 +64,12 @@
               {{ getScoringType(q) === 'auto' ? ('builder.scoring_badge_auto' | translate) : ('builder.scoring_badge' | translate) }}
             </span>
           }
+          @if (q.conditionalLogic?.conditions?.length) {
+            <span class="sc__q-badge sc__q-badge--logic">
+              <app-icon name="sliders" [size]="10" />
+              {{ 'logic.chip_label' | translate }}
+            </span>
+          }
           <span class="sc__q-spacer"></span>
           <button
             class="sc__q-delete"
