@@ -179,15 +179,14 @@ Ningún string visible al usuario hardcodeado — todo en `es.json` con `| trans
 | Milestone | Issues |
 |-----------|--------|
 | M1 ✅ | #9 ✅ #10 ✅ #11 ✅ #18 ✅ #19 ✅ |
-| M2 🔄 | sub-issues: #32 ✅ #33 ✅ #34 ✅ #35 ✅ #36 ✅ #39 ✅ · originales: #2 ✅ #3 ⏳ #4 ⏳ · extras: #43 ✅ #46 ✅ #47 ✅ |
+| M2 🔄 | sub-issues: #32 ✅ #33 ✅ #34 ✅ #35 ✅ #36 ✅ #39 ✅ · originales: #2 ✅ #3 ✅ #4 ⏳ · extras: #43 ✅ #46 ✅ #47 ✅ |
 | M3 | #12 #13 #14 #15 #16 #20 |
 | M4 | #5 #6 |
 | M5 | #7 #8 #21 #22 #23 |
 | M6 | #17 |
 
 ## Pendiente M2 (jun 2026)
-1. **#3**  — UI de lógica condicional (drawer, reglas AND/OR, preview texto natural)
-2. **#4**  — Preview en tiempo real (motor de condiciones + 8 answer components reutilizados en M3 #12)
+1. **#4**  — Preview en tiempo real (motor de condiciones + 8 answer components reutilizados en M3 #12)
 
 ## Patrones establecidos en M2
 
