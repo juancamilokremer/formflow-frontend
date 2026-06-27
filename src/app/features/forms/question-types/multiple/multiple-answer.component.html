@@ -10,7 +10,7 @@
       (keydown.enter)="toggle(opt.label)"
       (keydown.space)="toggle(opt.label)"
     >
-      <input type="checkbox" [checked]="isChecked(opt.label)" tabindex="-1" (click)="$event.stopPropagation()" />
+      <input type="checkbox" [checked]="isChecked(opt.label)" tabindex="-1" />
       <span class="qa__option-label">{{ opt.label }}</span>
     </div>
   }

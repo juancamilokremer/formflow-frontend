@@ -10,7 +10,7 @@
       (keydown.enter)="select(opt.label)"
       (keydown.space)="select(opt.label)"
     >
-      <input type="radio" [checked]="selected() === opt.label" tabindex="-1" (click)="$event.stopPropagation()" />
+      <input type="radio" [checked]="selected() === opt.label" tabindex="-1" />
       <span class="qa__option-label">{{ opt.label }}</span>
     </div>
   }

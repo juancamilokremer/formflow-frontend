@@ -47,7 +47,7 @@
       }
 
       input[type='radio'],
-      input[type='checkbox'] { accent-color: var(--ff-primary); flex-shrink: 0; }
+      input[type='checkbox'] { accent-color: var(--ff-primary); flex-shrink: 0; pointer-events: none; }
     }
 
     &__option-label { font-size: 14px; }
