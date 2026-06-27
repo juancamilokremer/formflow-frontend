@@ -59,11 +59,12 @@
     &__scale {
       display: flex;
       gap: 6px;
-      flex-wrap: wrap;
+      width: 100%;
     }
 
     &__scale-btn {
-      min-width: 44px;
+      flex: 1;
+      min-width: 0;
       height: 44px;
       display: flex;
       align-items: center;
