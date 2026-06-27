@@ -27,4 +27,10 @@ export class NpsAnswerComponent implements PublicQuestionComponent {
     this.selected.set(value);
     this.answered.emit(value);
   }
+
+  protected zoneClass(score: number): string {
+    if (score <= 6) return 'qa__scale-btn--detractor';
+    if (score <= 8) return 'qa__scale-btn--passive';
+    return 'qa__scale-btn--promoter';
+  }
 }

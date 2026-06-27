@@ -86,6 +86,14 @@
         color: #fff;
         font-weight: 600;
       }
+
+      &--detractor { background: #fee2e2; border-color: #fca5a5; color: #b91c1c; }
+      &--passive   { background: #fef9c3; border-color: #fde047; color: #a16207; }
+      &--promoter  { background: #dcfce7; border-color: #86efac; color: #15803d; }
+
+      &--detractor#{&}--selected { background: #b91c1c; border-color: #b91c1c; color: #fff; }
+      &--passive#{&}--selected   { background: #a16207; border-color: #a16207; color: #fff; }
+      &--promoter#{&}--selected  { background: #15803d; border-color: #15803d; color: #fff; }
     }
 
     &__scale-labels {

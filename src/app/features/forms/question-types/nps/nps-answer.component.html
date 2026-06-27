@@ -4,6 +4,7 @@
       <button
         type="button"
         class="qa__scale-btn"
+        [class]="zoneClass(tick)"
         [class.qa__scale-btn--selected]="selected() === tick"
         (click)="select(tick)"
       >{{ tick }}</button>
