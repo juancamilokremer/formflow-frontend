@@ -73,6 +73,14 @@ export const routes: Routes = [
           ),
       },
       {
+        path: `${RouteConstants.FORMS}/:id/${RouteConstants.FORM_PREVIEW}`,
+        data: { titleKey: 'preview.title', fullscreen: true },
+        loadComponent: () =>
+          import('./features/forms/components/form-preview/form-preview.component').then(
+            (m) => m.FormPreviewComponent,
+          ),
+      },
+      {
         path: RouteConstants.CONVOCATORIAS,
         data: { titleKey: 'shell.nav.convocatorias' },
         loadComponent: () =>

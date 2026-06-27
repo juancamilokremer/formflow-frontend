@@ -1,0 +1,34 @@
+<div class="qa">
+  @if (rows().length && columns().length) {
+    <div class="qa__matrix-wrapper">
+      <table class="qa__matrix">
+        <thead>
+          <tr>
+            <th class="qa__matrix-th qa__matrix-th--row"></th>
+            @for (col of columns(); track col.id) {
+              <th class="qa__matrix-th">{{ col.label }}</th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of rows(); track row.id) {
+            <tr class="qa__matrix-tr" [class.qa__matrix-tr--answered]="selections()[row.id]">
+              <td class="qa__matrix-td qa__matrix-td--label">{{ row.label }}</td>
+              @for (col of columns(); track col.id) {
+                <td class="qa__matrix-td qa__matrix-td--cell">
+                  <button
+                    type="button"
+                    class="qa__matrix-radio"
+                    [class.qa__matrix-radio--selected]="isSelected(row.id, col.label)"
+                    [attr.aria-label]="row.label + ' — ' + col.label"
+                    (click)="select(row.id, col.label)"
+                  ></button>
+                </td>
+              }
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

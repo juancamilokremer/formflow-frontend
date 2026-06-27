@@ -1,0 +1,11 @@
+@use '../shared/answer-shared' as qa;
+@include qa.base();
+@include qa.scale();
+
+.qa__scale--nps {
+  gap: 4px;
+
+  .qa__scale-btn {
+    font-size: 13px;
+  }
+}

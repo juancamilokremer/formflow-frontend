@@ -1,0 +1,32 @@
+@use '../shared/answer-shared' as qa;
+@include qa.base();
+
+.qa {
+  &__file-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 16px;
+    border: 1.5px dashed var(--ff-border);
+    border-radius: var(--ff-radius-md);
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--ff-text-secondary);
+    transition: border-color 0.15s, background 0.15s;
+
+    &:hover {
+      border-color: var(--ff-primary);
+      background: var(--ff-primary-light);
+      color: var(--ff-primary);
+    }
+  }
+
+  &__file-input { display: none; }
+
+  &__file-hint {
+    font-size: 11px;
+    color: var(--ff-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+}

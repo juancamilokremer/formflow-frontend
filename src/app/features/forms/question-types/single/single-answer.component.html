@@ -1,0 +1,17 @@
+<div class="qa">
+  @for (opt of options(); track opt.id) {
+    <div
+      class="qa__option"
+      [class.qa__option--selected]="selected() === opt.label"
+      tabindex="0"
+      role="radio"
+      [attr.aria-checked]="selected() === opt.label"
+      (click)="select(opt.label)"
+      (keydown.enter)="select(opt.label)"
+      (keydown.space)="select(opt.label)"
+    >
+      <input type="radio" [checked]="selected() === opt.label" tabindex="-1" />
+      <span class="qa__option-label">{{ opt.label }}</span>
+    </div>
+  }
+</div>

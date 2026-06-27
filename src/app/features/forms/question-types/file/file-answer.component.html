@@ -1,0 +1,15 @@
+<div class="qa">
+  <label class="qa__file-label">
+    <app-icon name="paperclip" [size]="16" />
+    <span>{{ 'preview.choose_file' | translate }}</span>
+    <input
+      class="qa__file-input"
+      type="file"
+      [accept]="accept()"
+      (change)="onFileChange($event)"
+    />
+  </label>
+  @if (allowedTypes().length) {
+    <span class="qa__file-hint">{{ allowedTypes().join(', ') }}</span>
+  }
+</div>

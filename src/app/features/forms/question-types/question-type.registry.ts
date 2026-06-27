@@ -7,35 +7,41 @@ import {
   PropertiesQuestionComponent,
 } from './question-type.interfaces';
 
-import { QuestionPublicStubComponent } from './shared/question-public-stub.component';
-
 import { InfoCanvasComponent }      from './info/info-canvas.component';
 import { InfoPropertiesComponent }  from './info/info-properties.component';
 import { InfoPublicComponent }      from './info/info-public.component';
 
 import { TextCanvasComponent }      from './text/text-canvas.component';
 import { TextPropertiesComponent }  from './text/text-properties.component';
+import { TextAnswerComponent }      from './text/text-answer.component';
 
 import { NpsCanvasComponent }      from './nps/nps-canvas.component';
 import { NpsPropertiesComponent }  from './nps/nps-properties.component';
+import { NpsAnswerComponent }      from './nps/nps-answer.component';
 
 import { MatrixCanvasComponent }      from './matrix/matrix-canvas.component';
 import { MatrixPropertiesComponent }  from './matrix/matrix-properties.component';
+import { MatrixAnswerComponent }      from './matrix/matrix-answer.component';
 
 import { SingleCanvasComponent }      from './single/single-canvas.component';
 import { SinglePropertiesComponent }  from './single/single-properties.component';
+import { SingleAnswerComponent }      from './single/single-answer.component';
 
 import { MultipleCanvasComponent }      from './multiple/multiple-canvas.component';
 import { MultiplePropertiesComponent }  from './multiple/multiple-properties.component';
+import { MultipleAnswerComponent }      from './multiple/multiple-answer.component';
 
 import { ScaleCanvasComponent }      from './scale/scale-canvas.component';
 import { ScalePropertiesComponent }  from './scale/scale-properties.component';
+import { ScaleAnswerComponent }      from './scale/scale-answer.component';
 
 import { DateCanvasComponent }      from './date/date-canvas.component';
 import { DatePropertiesComponent }  from './date/date-properties.component';
+import { DateAnswerComponent }      from './date/date-answer.component';
 
 import { FileCanvasComponent }      from './file/file-canvas.component';
 import { FilePropertiesComponent }  from './file/file-properties.component';
+import { FileAnswerComponent }      from './file/file-answer.component';
 
 export interface QuestionTypeDefinition {
   type:                QuestionType;
@@ -65,7 +71,7 @@ export const QUESTION_TYPE_REGISTRY: QuestionTypeDefinition[] = [
     icon: 'type',
     groupKey: 'builder.group.text',
     canvasComponent:     TextCanvasComponent,
-    publicComponent:     QuestionPublicStubComponent,
+    publicComponent:     TextAnswerComponent,
     propertiesComponent: TextPropertiesComponent,
     defaultConfig: () => ({ placeholder: '' }),
   },
@@ -75,7 +81,7 @@ export const QUESTION_TYPE_REGISTRY: QuestionTypeDefinition[] = [
     icon: 'list',
     groupKey: 'builder.group.selection',
     canvasComponent:     SingleCanvasComponent,
-    publicComponent:     QuestionPublicStubComponent,
+    publicComponent:     SingleAnswerComponent,
     propertiesComponent: SinglePropertiesComponent,
     defaultConfig: () => ({ options: [], scoringType: 'none' }),
   },
@@ -85,7 +91,7 @@ export const QUESTION_TYPE_REGISTRY: QuestionTypeDefinition[] = [
     icon: 'check-square',
     groupKey: 'builder.group.selection',
     canvasComponent:     MultipleCanvasComponent,
-    publicComponent:     QuestionPublicStubComponent,
+    publicComponent:     MultipleAnswerComponent,
     propertiesComponent: MultiplePropertiesComponent,
     defaultConfig: () => ({ options: [], scoringType: 'none' }),
   },
@@ -95,7 +101,7 @@ export const QUESTION_TYPE_REGISTRY: QuestionTypeDefinition[] = [
     icon: 'sliders',
     groupKey: 'builder.group.scales',
     canvasComponent:     ScaleCanvasComponent,
-    publicComponent:     QuestionPublicStubComponent,
+    publicComponent:     ScaleAnswerComponent,
     propertiesComponent: ScalePropertiesComponent,
     defaultConfig: () => ({ min: 1, max: 5, minLabel: '', maxLabel: '', scoringType: 'none' }),
   },
@@ -105,7 +111,7 @@ export const QUESTION_TYPE_REGISTRY: QuestionTypeDefinition[] = [
     icon: 'calendar',
     groupKey: 'builder.group.advanced',
     canvasComponent:     DateCanvasComponent,
-    publicComponent:     QuestionPublicStubComponent,
+    publicComponent:     DateAnswerComponent,
     propertiesComponent: DatePropertiesComponent,
     defaultConfig: () => ({}),
   },
@@ -115,7 +121,7 @@ export const QUESTION_TYPE_REGISTRY: QuestionTypeDefinition[] = [
     icon: 'paperclip',
     groupKey: 'builder.group.advanced',
     canvasComponent:     FileCanvasComponent,
-    publicComponent:     QuestionPublicStubComponent,
+    publicComponent:     FileAnswerComponent,
     propertiesComponent: FilePropertiesComponent,
     defaultConfig: () => ({ maxSizeMb: 5, allowedTypes: ['pdf', 'jpg', 'png'] }),
   },
@@ -125,7 +131,7 @@ export const QUESTION_TYPE_REGISTRY: QuestionTypeDefinition[] = [
     icon: 'bar-chart-2',
     groupKey: 'builder.group.scales',
     canvasComponent:     NpsCanvasComponent,
-    publicComponent:     QuestionPublicStubComponent,
+    publicComponent:     NpsAnswerComponent,
     propertiesComponent: NpsPropertiesComponent,
     defaultConfig: () => ({ minLabel: '', maxLabel: '' }),
   },
@@ -135,7 +141,7 @@ export const QUESTION_TYPE_REGISTRY: QuestionTypeDefinition[] = [
     icon: 'grid',
     groupKey: 'builder.group.advanced',
     canvasComponent:     MatrixCanvasComponent,
-    publicComponent:     QuestionPublicStubComponent,
+    publicComponent:     MatrixAnswerComponent,
     propertiesComponent: MatrixPropertiesComponent,
     defaultConfig: () => ({ rows: [], columns: [], scoringType: 'none' }),
   },
