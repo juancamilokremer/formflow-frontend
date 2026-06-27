@@ -38,20 +38,6 @@
     &:hover { background: #334155; color: #f8fafc; }
   }
 
-  &__progress-bar {
-    height: 3px;
-    background: var(--ff-border);
-    position: sticky;
-    top: 41px;
-    z-index: 99;
-  }
-
-  &__progress-fill {
-    height: 100%;
-    background: var(--ff-primary);
-    transition: width 0.3s ease;
-  }
-
   &__body {
     flex: 1;
     display: flex;
@@ -71,10 +57,45 @@
     box-shadow: 0 1px 4px rgba(0,0,0,.06);
   }
 
-  &__section-meta {
+  &__progress {
     margin-bottom: 24px;
     padding-bottom: 20px;
     border-bottom: 1px solid var(--ff-border);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &__progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+  }
+
+  &__progress-label { color: var(--ff-text-muted); }
+
+  &__progress-count {
+    color: var(--ff-primary);
+    font-weight: 600;
+  }
+
+  &__progress-track {
+    height: 4px;
+    background: var(--ff-border);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+
+  &__progress-fill {
+    height: 100%;
+    background: var(--ff-primary);
+    border-radius: 99px;
+    transition: width 0.3s ease;
+  }
+
+  &__section-meta {
+    margin-bottom: 24px;
   }
 
   &__section-counter {

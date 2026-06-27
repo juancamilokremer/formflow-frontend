@@ -18,10 +18,6 @@
       <p>{{ 'preview.error_load' | translate }}</p>
     </div>
   } @else if (form()) {
-    <div class="fp__progress-bar">
-      <div class="fp__progress-fill" [style.width.%]="progress()"></div>
-    </div>
-
     <div class="fp__body">
       <div class="fp__card">
         @if (sections().length > 1) {
@@ -30,6 +26,20 @@
               {{ 'preview.section_of' | translate : { current: currentSectionIndex() + 1, total: sections().length } }}
             </span>
             <h2 class="fp__section-title">{{ currentSection()?.title }}</h2>
+          </div>
+        }
+
+        @if (totalAnswerable() > 0) {
+          <div class="fp__progress">
+            <div class="fp__progress-header">
+              <span class="fp__progress-label">{{ 'preview.progress' | translate }}</span>
+              <span class="fp__progress-count">
+                {{ 'preview.progress_counter' | translate : { answered: answeredCount(), total: totalAnswerable() } }}
+              </span>
+            </div>
+            <div class="fp__progress-track">
+              <div class="fp__progress-fill" [style.width.%]="progress()"></div>
+            </div>
           </div>
         }
 

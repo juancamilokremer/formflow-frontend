@@ -314,7 +314,9 @@
     "section_of": "Sección {{current}} de {{total}}",
     "no_visible_questions": "No hay preguntas visibles en esta sección.",
     "error_load": "No se pudo cargar el formulario. Intenta de nuevo.",
-    "choose_file": "Seleccionar archivo"
+    "choose_file": "Seleccionar archivo",
+    "progress": "Progreso",
+    "progress_counter": "{{answered}} de {{total}} preguntas"
   },
   "errors": {
     "unauthorized": "No tienes permiso para realizar esta acción.",
