@@ -27,5 +27,5 @@ export function formBuilderPath(formId: string): string[] {
 }
 
 export function formPreviewPath(formId: string): string[] {
-  return [RouteConstants.FORMS, formId, RouteConstants.FORM_PREVIEW];
+  return ['/', RouteConstants.FORMS, formId, RouteConstants.FORM_PREVIEW];
 }
