@@ -21,7 +21,7 @@
   }
 
   <div class="topbar__actions">
-    <app-button variant="secondary">
+    <app-button variant="secondary" [routerLink]="previewRoute()">
       {{ 'builder.preview' | translate }}
     </app-button>
     <app-button (click)="publishClicked.emit()">

@@ -1,0 +1,88 @@
+<div class="fp">
+  <div class="fp__banner">
+    <app-icon name="eye" [size]="14" />
+    <span>{{ 'preview.banner' | translate }}</span>
+    <button class="fp__banner-exit" type="button" (click)="goBack()">
+      <app-icon name="x" [size]="14" />
+      {{ 'preview.exit' | translate }}
+    </button>
+  </div>
+
+  @if (loading()) {
+    <div class="fp__loading">
+      <span class="fp__spinner"></span>
+    </div>
+  } @else if (error()) {
+    <div class="fp__error">
+      <app-icon name="alert-circle" [size]="24" />
+      <p>{{ 'preview.error_load' | translate }}</p>
+    </div>
+  } @else if (form()) {
+    <div class="fp__progress-bar">
+      <div class="fp__progress-fill" [style.width.%]="progress()"></div>
+    </div>
+
+    <div class="fp__body">
+      <div class="fp__card">
+        @if (sections().length > 1) {
+          <div class="fp__section-meta">
+            <span class="fp__section-counter">
+              {{ 'preview.section_of' | translate : { current: currentSectionIndex() + 1, total: sections().length } }}
+            </span>
+            <h2 class="fp__section-title">{{ currentSection()?.title }}</h2>
+          </div>
+        }
+
+        <div class="fp__questions">
+          @for (q of visibleQuestions(); track q.id) {
+            <div class="fp__question">
+              @if (q.type !== 'info') {
+                <div class="fp__q-header">
+                  <p class="fp__q-title">
+                    {{ q.title }}
+                    @if (q.required) { <span class="fp__q-required" aria-hidden="true">*</span> }
+                  </p>
+                  @if (q.description) {
+                    <p class="fp__q-desc">{{ q.description }}</p>
+                  }
+                </div>
+              }
+              <app-public-question-outlet [question]="q" (answered)="onAnswered(q.id, $event)" />
+            </div>
+          }
+
+          @if (visibleQuestions().length === 0) {
+            <p class="fp__empty">{{ 'preview.no_visible_questions' | translate }}</p>
+          }
+        </div>
+      </div>
+
+      <div class="fp__nav">
+        <button
+          class="fp__nav-btn fp__nav-btn--prev"
+          type="button"
+          [disabled]="isFirstSection()"
+          (click)="prevSection()"
+        >
+          <app-icon name="arrow-left" [size]="14" />
+          {{ 'preview.prev_section' | translate }}
+        </button>
+
+        @if (isLastSection()) {
+          <button class="fp__nav-btn fp__nav-btn--submit" type="button" disabled>
+            {{ 'preview.submit_disabled' | translate }}
+          </button>
+        } @else {
+          <button
+            class="fp__nav-btn fp__nav-btn--next"
+            type="button"
+            (click)="nextSection()"
+          >
+            {{ 'preview.next_section' | translate }}
+            <app-icon name="arrow-right" [size]="14" />
+          </button>
+        }
+      </div>
+    </div>
+  }
+</div>

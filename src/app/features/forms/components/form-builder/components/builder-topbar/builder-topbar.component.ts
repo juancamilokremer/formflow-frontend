@@ -4,7 +4,7 @@ import { RouterLink } from '@angular/router';
 import { LowerCasePipe } from '@angular/common';
 import { ButtonComponent } from '../../../../../../shared/components/button/button.component';
 import { IconComponent } from '../../../../../../shared/icons/icon.component';
-import { RouteConstants } from '../../../../../../core/constants/route.constants';
+import { RouteConstants, formPreviewPath } from '../../../../../../core/constants/route.constants';
 import { FormDetail } from '../../../../models/form.model';
 
 @Component({
@@ -20,6 +20,10 @@ export class BuilderTopbarComponent {
   readonly publishClicked = output<void>();
 
   protected readonly formsRoute = `/${RouteConstants.FORMS}`;
+
+  protected previewRoute(): string[] {
+    return formPreviewPath(this.form().id);
+  }
 
   protected onNameBlur(event: FocusEvent): void {
     const name = (event.target as HTMLInputElement).value.trim();

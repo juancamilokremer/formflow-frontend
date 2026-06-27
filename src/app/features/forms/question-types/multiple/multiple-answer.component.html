@@ -1,0 +1,17 @@
+<div class="qa">
+  @for (opt of options(); track opt.id) {
+    <div
+      class="qa__option"
+      [class.qa__option--selected]="isChecked(opt.label)"
+      tabindex="0"
+      role="checkbox"
+      [attr.aria-checked]="isChecked(opt.label)"
+      (click)="toggle(opt.label)"
+      (keydown.enter)="toggle(opt.label)"
+      (keydown.space)="toggle(opt.label)"
+    >
+      <input type="checkbox" [checked]="isChecked(opt.label)" tabindex="-1" (click)="$event.stopPropagation()" />
+      <span class="qa__option-label">{{ opt.label }}</span>
+    </div>
+  }
+</div>

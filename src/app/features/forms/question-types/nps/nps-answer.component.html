@@ -1,0 +1,18 @@
+<div class="qa">
+  <div class="qa__scale qa__scale--nps">
+    @for (tick of ticks; track tick) {
+      <button
+        type="button"
+        class="qa__scale-btn"
+        [class.qa__scale-btn--selected]="selected() === tick"
+        (click)="select(tick)"
+      >{{ tick }}</button>
+    }
+  </div>
+  @if (minLabel() || maxLabel()) {
+    <div class="qa__scale-labels">
+      <span>{{ minLabel() }}</span>
+      <span>{{ maxLabel() }}</span>
+    </div>
+  }
+</div>

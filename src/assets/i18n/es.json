@@ -304,6 +304,18 @@
       "is_not_empty": "no está vacío"
     }
   },
+  "preview": {
+    "title": "Vista previa",
+    "banner": "Vista previa — las respuestas no se guardarán",
+    "exit": "Salir",
+    "prev_section": "Anterior",
+    "next_section": "Siguiente",
+    "submit_disabled": "Enviar (solo vista previa)",
+    "section_of": "Sección {{current}} de {{total}}",
+    "no_visible_questions": "No hay preguntas visibles en esta sección.",
+    "error_load": "No se pudo cargar el formulario. Intenta de nuevo.",
+    "choose_file": "Seleccionar archivo"
+  },
   "errors": {
     "unauthorized": "No tienes permiso para realizar esta acción.",
     "not_found": "El recurso solicitado no existe.",
