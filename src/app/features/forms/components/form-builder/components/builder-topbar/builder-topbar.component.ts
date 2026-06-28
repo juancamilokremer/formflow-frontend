@@ -1,10 +1,10 @@
-import { Component, input, output } from '@angular/core';
+import { Component, inject, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { LowerCasePipe } from '@angular/common';
 import { ButtonComponent } from '../../../../../../shared/components/button/button.component';
 import { IconComponent } from '../../../../../../shared/icons/icon.component';
-import { RouteConstants } from '../../../../../../core/constants/route.constants';
+import { RouteConstants, formPreviewPath } from '../../../../../../core/constants/route.constants';
 import { FormDetail } from '../../../../models/form.model';
 
 @Component({
@@ -14,12 +14,18 @@ import { FormDetail } from '../../../../models/form.model';
   styleUrl: './builder-topbar.component.scss',
 })
 export class BuilderTopbarComponent {
+  private readonly router = inject(Router);
+
   readonly form = input.required<FormDetail>();
 
   readonly nameChanged = output<string>();
   readonly publishClicked = output<void>();
 
   protected readonly formsRoute = `/${RouteConstants.FORMS}`;
+
+  protected onPreviewClick(): void {
+    this.router.navigate(formPreviewPath(this.form().id));
+  }
 
   protected onNameBlur(event: FocusEvent): void {
     const name = (event.target as HTMLInputElement).value.trim();

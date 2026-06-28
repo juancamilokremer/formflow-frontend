@@ -15,6 +15,7 @@ export const RouteConstants = {
   PRIVACY: 'privacy',
   PUBLIC_FORM_PREFIX: 'r',
   FORM_BUILDER: 'edit',
+  FORM_PREVIEW: 'preview',
 } as const;
 
 export function publicFormPath(convId: string, token: string): string {
@@ -23,4 +24,8 @@ export function publicFormPath(convId: string, token: string): string {
 
 export function formBuilderPath(formId: string): string[] {
   return [RouteConstants.FORMS, formId, RouteConstants.FORM_BUILDER];
+}
+
+export function formPreviewPath(formId: string): string[] {
+  return ['/', RouteConstants.FORMS, formId, RouteConstants.FORM_PREVIEW];
 }

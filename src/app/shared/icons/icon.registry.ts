@@ -35,6 +35,7 @@ export type IconName =
   | 'monitor'
   | 'scale'
   | 'arrow-left'
+  | 'arrow-right'
   | 'layers';
 
 /**
@@ -79,5 +80,6 @@ export const ICON_PATHS: Record<IconName, string> = {
   'monitor': `<rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>`,
   'scale': `<line x1="12" y1="3" x2="12" y2="21"/><polyline points="17 8 12 3 7 8"/><line x1="3" y1="12" x2="7.5" y2="3"/><path d="M3 12h9"/><line x1="21" y1="12" x2="16.5" y2="3"/><path d="M21 12h-9"/><path d="M3 21h18"/>`,
   'arrow-left': `<line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>`,
+  'arrow-right': `<line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>`,
   'layers': `<polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/>`,
 };
