@@ -2,6 +2,8 @@ import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { IconComponent } from '../../../shared/icons/icon.component';
+import { ButtonComponent } from '../../../shared/components/button/button.component';
+import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner/loading-spinner.component';
 import { PublicQuestionOutletComponent } from '../../forms/components/form-preview/components/public-question-outlet/public-question-outlet.component';
 import { ConditionEngineService } from '../../forms/services/condition-engine.service';
 import { PublicResponseService } from '../services/public-response.service';
@@ -11,7 +13,7 @@ type ResponderView = 'loading' | 'form' | 'confirmation' | 'not_found' | 'error'
 
 @Component({
   selector: 'app-form-responder',
-  imports: [TranslatePipe, IconComponent, PublicQuestionOutletComponent],
+  imports: [TranslatePipe, IconComponent, ButtonComponent, LoadingSpinnerComponent, PublicQuestionOutletComponent],
   templateUrl: './form-responder.component.html',
   styleUrl: './form-responder.component.scss',
 })

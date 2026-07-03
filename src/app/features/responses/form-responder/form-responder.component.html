@@ -1,8 +1,8 @@
 <div class="fr" [style.--ff-primary]="primaryColor()">
 
   @if (view() === 'loading') {
-    <div class="fr__loading" role="status" [attr.aria-label]="'responder.loading' | translate">
-      <span class="fr__spinner"></span>
+    <div class="fr__loading">
+      <app-loading-spinner [message]="'responder.loading' | translate" />
     </div>
   }
 
@@ -118,39 +118,28 @@
       </div>
 
       <div class="fr__nav">
-        <button
-          class="fr__nav-btn fr__nav-btn--prev"
-          type="button"
+        <app-button
+          variant="secondary"
           [disabled]="isFirstSection()"
           (click)="prevSection()"
         >
           <app-icon name="arrow-left" [size]="14" />
           {{ 'responder.prev' | translate }}
-        </button>
+        </app-button>
 
         @if (isLastSection()) {
-          <button
-            class="fr__nav-btn fr__nav-btn--submit"
-            type="button"
-            [disabled]="submitting()"
+          <app-button
+            variant="primary"
+            [loading]="submitting()"
             (click)="submit()"
           >
-            @if (submitting()) {
-              <span class="fr__spinner fr__spinner--sm"></span>
-              {{ 'responder.submitting' | translate }}
-            } @else {
-              {{ 'responder.submit' | translate }}
-            }
-          </button>
+            {{ 'responder.submit' | translate }}
+          </app-button>
         } @else {
-          <button
-            class="fr__nav-btn fr__nav-btn--next"
-            type="button"
-            (click)="nextSection()"
-          >
+          <app-button variant="primary" (click)="nextSection()">
             {{ 'responder.next' | translate }}
             <app-icon name="arrow-right" [size]="14" />
-          </button>
+          </app-button>
         }
       </div>
     </div>
