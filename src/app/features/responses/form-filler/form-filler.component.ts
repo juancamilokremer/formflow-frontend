@@ -1,43 +1,48 @@
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, DestroyRef, computed, inject, input, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Observable } from 'rxjs';
 import { TranslatePipe } from '@ngx-translate/core';
 import { IconComponent } from '../../../shared/icons/icon.component';
 import { ButtonComponent } from '../../../shared/components/button/button.component';
-import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner/loading-spinner.component';
 import { PublicQuestionOutletComponent } from '../../forms/components/form-preview/components/public-question-outlet/public-question-outlet.component';
 import { ConditionEngineService } from '../../forms/services/condition-engine.service';
-import { PublicResponseService } from '../services/public-response.service';
-import { AnswerPayload, PublicForm, PublicQuestion, PublicSection, SubmitPublicResponsePayload } from '../models/public-form.model';
+import {
+  AnswerPayload,
+  PublicForm,
+  PublicQuestion,
+  PublicSection,
+  SubmitPublicResponsePayload,
+  SubmitPublicResponseResult,
+} from '../models/public-form.model';
 
-type ResponderView = 'loading' | 'form' | 'confirmation' | 'not_found' | 'error' | 'already_responded' | 'closed';
+type FillerView = 'form' | 'confirmation';
 
 @Component({
-  selector: 'app-form-responder',
-  imports: [TranslatePipe, IconComponent, ButtonComponent, LoadingSpinnerComponent, PublicQuestionOutletComponent],
-  templateUrl: './form-responder.component.html',
-  styleUrl: './form-responder.component.scss',
+  selector: 'app-form-filler',
+  imports: [TranslatePipe, IconComponent, ButtonComponent, PublicQuestionOutletComponent],
+  templateUrl: './form-filler.component.html',
+  styleUrl: './form-filler.component.scss',
 })
-export class FormResponderComponent implements OnInit {
-  private readonly route      = inject(ActivatedRoute);
-  private readonly svc        = inject(PublicResponseService);
+export class FormFillerComponent {
   private readonly condEngine = inject(ConditionEngineService);
+  private readonly destroyRef = inject(DestroyRef);
 
-  protected readonly view             = signal<ResponderView>('loading');
-  protected readonly form             = signal<PublicForm | null>(null);
-  protected readonly submitting       = signal(false);
-  protected readonly submitError      = signal(false);
-  protected readonly candidateName    = signal<string | null>(null);
-  protected readonly convocatoriaName = signal<string | null>(null);
-  protected readonly isCandidateMode  = signal(false);
+  readonly form             = input.required<PublicForm>();
+  readonly submitFn         = input.required<(payload: SubmitPublicResponsePayload) => Observable<SubmitPublicResponseResult>>();
+  readonly candidateName    = input<string | null>(null);
+  readonly convocatoriaName = input<string | null>(null);
+
+  protected readonly view        = signal<FillerView>('form');
+  protected readonly submitting  = signal(false);
+  protected readonly submitError = signal(false);
 
   protected readonly currentSectionIndex = signal(0);
   protected readonly answers             = signal<Map<string, unknown>>(new Map());
   protected readonly invalidIds          = signal<Set<string>>(new Set());
 
-  private startedAt      = new Date().toISOString();
-  private candidateToken: string | null = null;
+  private readonly startedAt = new Date().toISOString();
 
-  protected readonly sections = computed<PublicSection[]>(() => this.form()?.sections ?? []);
+  protected readonly sections = computed<PublicSection[]>(() => this.form().sections);
 
   protected readonly currentSection = computed<PublicSection | null>(
     () => this.sections()[this.currentSectionIndex()] ?? null,
@@ -77,36 +82,8 @@ export class FormResponderComponent implements OnInit {
   );
 
   protected readonly primaryColor = computed(
-    () => this.form()?.tenantPrimaryColor ?? null,
+    () => this.form().tenantPrimaryColor ?? null,
   );
-
-  ngOnInit(): void {
-    const token = this.route.snapshot.paramMap.get('token');
-    if (token) {
-      this.isCandidateMode.set(true);
-      this.candidateToken = token;
-      this.svc.getCandidateForm(token).subscribe({
-        next: (data) => {
-          this.candidateName.set(data.candidateName);
-          this.convocatoriaName.set(data.convocatoriaName);
-          this.form.set(data.form);
-          this.view.set(data.alreadyResponded ? 'already_responded' : 'form');
-        },
-        error: (e) => this.view.set(e?.status === 404 ? 'not_found' : 'closed'),
-      });
-      return;
-    }
-
-    const formId = this.route.snapshot.paramMap.get('formId');
-    if (!formId) {
-      this.view.set('not_found');
-      return;
-    }
-    this.svc.getForm(formId).subscribe({
-      next:  (f) => { this.form.set(f); this.view.set('form'); },
-      error: (e) => this.view.set(e?.status === 404 ? 'not_found' : 'error'),
-    });
-  }
 
   protected onAnswered(questionId: string, value: unknown): void {
     const next = new Map(this.answers());
@@ -114,9 +91,9 @@ export class FormResponderComponent implements OnInit {
     this.answers.set(next);
 
     if (this.invalidIds().has(questionId)) {
-      const next = new Set(this.invalidIds());
-      next.delete(questionId);
-      this.invalidIds.set(next);
+      const ids = new Set(this.invalidIds());
+      ids.delete(questionId);
+      this.invalidIds.set(ids);
     }
   }
 
@@ -135,27 +112,27 @@ export class FormResponderComponent implements OnInit {
   protected submit(): void {
     if (!this.validateCurrentSection()) return;
 
+    const payload = this.buildPayload();
+    this.submitting.set(true);
+    this.submitError.set(false);
+
+    this.submitFn()(payload)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next:  () => this.view.set('confirmation'),
+        error: () => {
+          this.submitting.set(false);
+          this.submitError.set(true);
+        },
+      });
+  }
+
+  private buildPayload(): SubmitPublicResponsePayload {
     const answers: AnswerPayload[] = [];
     for (const [questionId, value] of this.answers()) {
       answers.push({ questionId, value });
     }
-
-    const payload: SubmitPublicResponsePayload = { answers, startedAt: this.startedAt };
-
-    this.submitting.set(true);
-    this.submitError.set(false);
-
-    const submit$ = this.isCandidateMode() && this.candidateToken
-      ? this.svc.submitCandidateResponse(this.candidateToken, payload)
-      : this.svc.submitResponse(this.form()!.formId, payload);
-
-    submit$.subscribe({
-      next:  () => this.view.set('confirmation'),
-      error: () => {
-        this.submitting.set(false);
-        this.submitError.set(true);
-      },
-    });
+    return { answers, startedAt: this.startedAt };
   }
 
   private validateCurrentSection(): boolean {

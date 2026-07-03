@@ -113,15 +113,15 @@ export const routes: Routes = [
   {
     path: `${RouteConstants.FORMS}/:formId/${RouteConstants.FORM_RESPOND}`,
     loadComponent: () =>
-      import('./features/responses/form-responder/form-responder.component').then(
-        (m) => m.FormResponderComponent,
+      import('./features/responses/pages/anonymous-form-page/anonymous-form-page.component').then(
+        (m) => m.AnonymousFormPageComponent,
       ),
   },
   {
     path: `${RouteConstants.PUBLIC_FORM_PREFIX}/:convId/:token`,
     loadComponent: () =>
-      import('./features/responses/form-responder/form-responder.component').then(
-        (m) => m.FormResponderComponent,
+      import('./features/responses/pages/candidate-form-page/candidate-form-page.component').then(
+        (m) => m.CandidateFormPageComponent,
       ),
   },
   {
