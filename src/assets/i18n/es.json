@@ -318,6 +318,29 @@
     "progress": "Progreso",
     "progress_counter": "{{answered}} de {{total}} preguntas"
   },
+  "responder": {
+    "loading": "Cargando formulario...",
+    "not_found": {
+      "title": "Formulario no disponible",
+      "message": "Este formulario no existe o ya no está disponible."
+    },
+    "section_of": "Sección {{current}} de {{total}}",
+    "progress": "Progreso",
+    "progress_counter": "{{answered}} de {{total}} preguntas",
+    "prev": "Anterior",
+    "next": "Siguiente",
+    "submit": "Enviar respuesta",
+    "submitting": "Enviando...",
+    "error_required": "Esta pregunta es obligatoria",
+    "submit_error": "Hubo un error al enviar tu respuesta. Por favor intenta de nuevo.",
+    "no_visible_questions": "No hay preguntas visibles en esta sección.",
+    "powered_by": "Creado con FormFlow",
+    "confirmation": {
+      "title": "¡Respuesta enviada!",
+      "message": "Tu respuesta en \"{{formName}}\" fue registrada correctamente.",
+      "by": "Enviado a {{tenantName}}"
+    }
+  },
   "errors": {
     "unauthorized": "No tienes permiso para realizar esta acción.",
     "not_found": "El recurso solicitado no existe.",

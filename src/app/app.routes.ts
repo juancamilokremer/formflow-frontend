@@ -111,6 +111,13 @@ export const routes: Routes = [
     ],
   },
   {
+    path: `${RouteConstants.FORMS}/:formId/${RouteConstants.FORM_RESPOND}`,
+    loadComponent: () =>
+      import('./features/responses/form-responder/form-responder.component').then(
+        (m) => m.FormResponderComponent,
+      ),
+  },
+  {
     path: `${RouteConstants.PUBLIC_FORM_PREFIX}/:convId/:token`,
     loadComponent: () =>
       import('./features/responses/public-form/public-form.component').then(
