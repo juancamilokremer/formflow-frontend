@@ -7,9 +7,9 @@ import { LoadingSpinnerComponent } from '../../../shared/components/loading-spin
 import { PublicQuestionOutletComponent } from '../../forms/components/form-preview/components/public-question-outlet/public-question-outlet.component';
 import { ConditionEngineService } from '../../forms/services/condition-engine.service';
 import { PublicResponseService } from '../services/public-response.service';
-import { AnswerPayload, PublicForm, PublicQuestion, PublicSection } from '../models/public-form.model';
+import { AnswerPayload, PublicForm, PublicQuestion, PublicSection, SubmitPublicResponsePayload } from '../models/public-form.model';
 
-type ResponderView = 'loading' | 'form' | 'confirmation' | 'not_found' | 'error';
+type ResponderView = 'loading' | 'form' | 'confirmation' | 'not_found' | 'error' | 'already_responded' | 'closed';
 
 @Component({
   selector: 'app-form-responder',
@@ -22,16 +22,20 @@ export class FormResponderComponent implements OnInit {
   private readonly svc        = inject(PublicResponseService);
   private readonly condEngine = inject(ConditionEngineService);
 
-  protected readonly view        = signal<ResponderView>('loading');
-  protected readonly form        = signal<PublicForm | null>(null);
-  protected readonly submitting  = signal(false);
-  protected readonly submitError = signal(false);
+  protected readonly view             = signal<ResponderView>('loading');
+  protected readonly form             = signal<PublicForm | null>(null);
+  protected readonly submitting       = signal(false);
+  protected readonly submitError      = signal(false);
+  protected readonly candidateName    = signal<string | null>(null);
+  protected readonly convocatoriaName = signal<string | null>(null);
+  protected readonly isCandidateMode  = signal(false);
 
   protected readonly currentSectionIndex = signal(0);
   protected readonly answers             = signal<Map<string, unknown>>(new Map());
   protected readonly invalidIds          = signal<Set<string>>(new Set());
 
-  private startedAt = new Date().toISOString();
+  private startedAt      = new Date().toISOString();
+  private candidateToken: string | null = null;
 
   protected readonly sections = computed<PublicSection[]>(() => this.form()?.sections ?? []);
 
@@ -77,6 +81,22 @@ export class FormResponderComponent implements OnInit {
   );
 
   ngOnInit(): void {
+    const token = this.route.snapshot.paramMap.get('token');
+    if (token) {
+      this.isCandidateMode.set(true);
+      this.candidateToken = token;
+      this.svc.getCandidateForm(token).subscribe({
+        next: (data) => {
+          this.candidateName.set(data.candidateName);
+          this.convocatoriaName.set(data.convocatoriaName);
+          this.form.set(data.form);
+          this.view.set(data.alreadyResponded ? 'already_responded' : 'form');
+        },
+        error: (e) => this.view.set(e?.status === 404 ? 'not_found' : 'closed'),
+      });
+      return;
+    }
+
     const formId = this.route.snapshot.paramMap.get('formId');
     if (!formId) {
       this.view.set('not_found');
@@ -115,16 +135,21 @@ export class FormResponderComponent implements OnInit {
   protected submit(): void {
     if (!this.validateCurrentSection()) return;
 
-    const f = this.form()!;
     const answers: AnswerPayload[] = [];
     for (const [questionId, value] of this.answers()) {
       answers.push({ questionId, value });
     }
 
+    const payload: SubmitPublicResponsePayload = { answers, startedAt: this.startedAt };
+
     this.submitting.set(true);
     this.submitError.set(false);
 
-    this.svc.submitResponse(f.formId, { answers, startedAt: this.startedAt }).subscribe({
+    const submit$ = this.isCandidateMode() && this.candidateToken
+      ? this.svc.submitCandidateResponse(this.candidateToken, payload)
+      : this.svc.submitResponse(this.form()!.formId, payload);
+
+    submit$.subscribe({
       next:  () => this.view.set('confirmation'),
       error: () => {
         this.submitting.set(false);

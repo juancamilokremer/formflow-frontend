@@ -5,7 +5,7 @@ import { provideTranslateService } from '@ngx-translate/core';
 import { FormResponderComponent } from './form-responder.component';
 import { PublicResponseService } from '../services/public-response.service';
 import { ConditionEngineService } from '../../forms/services/condition-engine.service';
-import { PublicForm } from '../models/public-form.model';
+import { PublicCandidateForm, PublicForm } from '../models/public-form.model';
 import { FormQuestion } from '../../forms/models/form.model';
 
 const mockQuestion: FormQuestion = {
@@ -33,10 +33,28 @@ const mockForm: PublicForm = {
   ],
 };
 
+const mockCandidateData: PublicCandidateForm = {
+  candidateName:    'María García',
+  convocatoriaName: 'Analista RRHH',
+  endDate:          null,
+  alreadyResponded: false,
+  form:             mockForm,
+};
+
+function anonymousRoute(formId: string | null) {
+  return { snapshot: { paramMap: { get: (key: string) => key === 'formId' ? formId : null } } };
+}
+
+function candidateRoute(token: string) {
+  return { snapshot: { paramMap: { get: (key: string) => key === 'token' ? token : null } } };
+}
+
 function buildProviders(formId: string | null, formOverride?: Partial<PublicForm>, submitResult = of({ respondentToken: 'tok-abc' })) {
   const publicResponseSvc = {
-    getForm:        vi.fn().mockReturnValue(of({ ...mockForm, ...formOverride })),
-    submitResponse: vi.fn().mockReturnValue(submitResult),
+    getForm:                 vi.fn().mockReturnValue(of({ ...mockForm, ...formOverride })),
+    submitResponse:          vi.fn().mockReturnValue(submitResult),
+    getCandidateForm:        vi.fn(),
+    submitCandidateResponse: vi.fn(),
   };
   const condEngine = { isVisible: vi.fn().mockReturnValue(true) };
 
@@ -45,7 +63,7 @@ function buildProviders(formId: string | null, formOverride?: Partial<PublicForm
       provideTranslateService({ lang: 'es' }),
       { provide: PublicResponseService,  useValue: publicResponseSvc },
       { provide: ConditionEngineService, useValue: condEngine },
-      { provide: ActivatedRoute, useValue: { snapshot: { paramMap: { get: () => formId } } } },
+      { provide: ActivatedRoute,         useValue: anonymousRoute(formId) },
     ],
     publicResponseSvc,
     condEngine,
@@ -68,7 +86,7 @@ async function createComponent(formId: string | null, formOverride?: Partial<Pub
 describe('FormResponderComponent', () => {
   afterEach(() => TestBed.resetTestingModule());
 
-  describe('ngOnInit', () => {
+  describe('ngOnInit — anonymous mode', () => {
     it('loads form and sets view to form', async () => {
       const { component } = await createComponent('form-123');
       component.ngOnInit();
@@ -78,8 +96,10 @@ describe('FormResponderComponent', () => {
 
     it('sets view to not_found on 404', async () => {
       const svc = {
-        getForm:        vi.fn().mockReturnValue(throwError(() => ({ status: 404 }))),
-        submitResponse: vi.fn(),
+        getForm:                 vi.fn().mockReturnValue(throwError(() => ({ status: 404 }))),
+        submitResponse:          vi.fn(),
+        getCandidateForm:        vi.fn(),
+        submitCandidateResponse: vi.fn(),
       };
       await TestBed.configureTestingModule({
         imports:   [FormResponderComponent],
@@ -87,7 +107,7 @@ describe('FormResponderComponent', () => {
           provideTranslateService({ lang: 'es' }),
           { provide: PublicResponseService,  useValue: svc },
           { provide: ConditionEngineService, useValue: { isVisible: vi.fn().mockReturnValue(true) } },
-          { provide: ActivatedRoute, useValue: { snapshot: { paramMap: { get: () => 'bad-id' } } } },
+          { provide: ActivatedRoute,         useValue: anonymousRoute('bad-id') },
         ],
       }).compileComponents();
       const component = TestBed.createComponent(FormResponderComponent).componentInstance;
@@ -99,6 +119,79 @@ describe('FormResponderComponent', () => {
       const { component } = await createComponent(null);
       component.ngOnInit();
       expect(component['view']()).toBe('not_found');
+    });
+  });
+
+  describe('ngOnInit — candidate mode', () => {
+    async function createCandidateComponent(overrides: Partial<PublicCandidateForm> = {}, submitResult = of({ respondentToken: 'tok-abc' })) {
+      const publicResponseSvc = {
+        getForm:                 vi.fn(),
+        submitResponse:          vi.fn(),
+        getCandidateForm:        vi.fn().mockReturnValue(of({ ...mockCandidateData, ...overrides })),
+        submitCandidateResponse: vi.fn().mockReturnValue(submitResult),
+      };
+
+      await TestBed.configureTestingModule({
+        imports:   [FormResponderComponent],
+        providers: [
+          provideTranslateService({ lang: 'es' }),
+          { provide: PublicResponseService,  useValue: publicResponseSvc },
+          { provide: ConditionEngineService, useValue: { isVisible: vi.fn().mockReturnValue(true) } },
+          { provide: ActivatedRoute,         useValue: candidateRoute('cand-token-1') },
+        ],
+      }).compileComponents();
+
+      const component = TestBed.createComponent(FormResponderComponent).componentInstance;
+      return { component, publicResponseSvc };
+    }
+
+    it('loads form and sets candidateName', async () => {
+      const { component } = await createCandidateComponent();
+      component.ngOnInit();
+      expect(component['view']()).toBe('form');
+      expect(component['candidateName']()).toBe('María García');
+      expect(component['isCandidateMode']()).toBe(true);
+    });
+
+    it('sets already_responded view when candidate already responded', async () => {
+      const { component } = await createCandidateComponent({ alreadyResponded: true });
+      component.ngOnInit();
+      expect(component['view']()).toBe('already_responded');
+      expect(component['convocatoriaName']()).toBe('Analista RRHH');
+    });
+
+    it('sets closed view on 409', async () => {
+      const svc = {
+        getForm:                 vi.fn(),
+        submitResponse:          vi.fn(),
+        getCandidateForm:        vi.fn().mockReturnValue(throwError(() => ({ status: 409 }))),
+        submitCandidateResponse: vi.fn(),
+      };
+      await TestBed.configureTestingModule({
+        imports:   [FormResponderComponent],
+        providers: [
+          provideTranslateService({ lang: 'es' }),
+          { provide: PublicResponseService,  useValue: svc },
+          { provide: ConditionEngineService, useValue: { isVisible: vi.fn().mockReturnValue(true) } },
+          { provide: ActivatedRoute,         useValue: candidateRoute('cand-token-1') },
+        ],
+      }).compileComponents();
+      const component = TestBed.createComponent(FormResponderComponent).componentInstance;
+      component.ngOnInit();
+      expect(component['view']()).toBe('closed');
+    });
+
+    it('calls submitCandidateResponse on submit', async () => {
+      const { component, publicResponseSvc } = await createCandidateComponent();
+      component.ngOnInit();
+      component['onAnswered']('q1', 'respuesta');
+      component['submit']();
+      expect(publicResponseSvc.submitCandidateResponse).toHaveBeenCalledWith(
+        'cand-token-1',
+        expect.objectContaining({ answers: [{ questionId: 'q1', value: 'respuesta' }] }),
+      );
+      expect(publicResponseSvc.submitResponse).not.toHaveBeenCalled();
+      expect(component['view']()).toBe('confirmation');
     });
   });
 
@@ -159,8 +252,10 @@ describe('FormResponderComponent', () => {
 
     it('sets submitError on failure', async () => {
       const svc = {
-        getForm:        vi.fn().mockReturnValue(of(mockForm)),
-        submitResponse: vi.fn().mockReturnValue(throwError(() => new Error('fail'))),
+        getForm:                 vi.fn().mockReturnValue(of(mockForm)),
+        submitResponse:          vi.fn().mockReturnValue(throwError(() => new Error('fail'))),
+        getCandidateForm:        vi.fn(),
+        submitCandidateResponse: vi.fn(),
       };
       await TestBed.configureTestingModule({
         imports:   [FormResponderComponent],
@@ -168,7 +263,7 @@ describe('FormResponderComponent', () => {
           provideTranslateService({ lang: 'es' }),
           { provide: PublicResponseService,  useValue: svc },
           { provide: ConditionEngineService, useValue: { isVisible: vi.fn().mockReturnValue(true) } },
-          { provide: ActivatedRoute, useValue: { snapshot: { paramMap: { get: () => 'form-123' } } } },
+          { provide: ActivatedRoute,         useValue: anonymousRoute('form-123') },
         ],
       }).compileComponents();
       const component = TestBed.createComponent(FormResponderComponent).componentInstance;

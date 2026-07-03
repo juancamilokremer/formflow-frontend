@@ -120,8 +120,8 @@ export const routes: Routes = [
   {
     path: `${RouteConstants.PUBLIC_FORM_PREFIX}/:convId/:token`,
     loadComponent: () =>
-      import('./features/responses/public-form/public-form.component').then(
-        (m) => m.PublicFormComponent,
+      import('./features/responses/form-responder/form-responder.component').then(
+        (m) => m.FormResponderComponent,
       ),
   },
   {

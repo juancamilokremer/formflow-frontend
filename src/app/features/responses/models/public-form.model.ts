@@ -35,3 +35,11 @@ export interface SubmitPublicResponsePayload {
 export interface SubmitPublicResponseResult {
   respondentToken: string;
 }
+
+export interface PublicCandidateForm {
+  candidateName: string;
+  convocatoriaName: string;
+  endDate: string | null;
+  alreadyResponded: boolean;
+  form: PublicForm;
+}

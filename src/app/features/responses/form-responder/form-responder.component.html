@@ -6,17 +6,29 @@
     </div>
   }
 
-  @if (view() === 'not_found' || view() === 'error') {
+  @if (view() === 'not_found' || view() === 'error' || view() === 'closed') {
     <div class="fr__state-page">
       <div class="fr__state-card">
         <app-icon name="alert-circle" [size]="40" class="fr__state-icon fr__state-icon--error" />
-        <h1 class="fr__state-title">{{ 'responder.not_found.title' | translate }}</h1>
-        <p class="fr__state-message">{{ 'responder.not_found.message' | translate }}</p>
+        <h1 class="fr__state-title">
+          @if (view() === 'closed') {
+            {{ 'responder.candidate.closed.title' | translate }}
+          } @else {
+            {{ 'responder.not_found.title' | translate }}
+          }
+        </h1>
+        <p class="fr__state-message">
+          @if (view() === 'closed') {
+            {{ 'responder.candidate.closed.message' | translate }}
+          } @else {
+            {{ 'responder.not_found.message' | translate }}
+          }
+        </p>
       </div>
     </div>
   }
 
-  @if (view() === 'form' || view() === 'confirmation') {
+  @if (view() === 'form' || view() === 'confirmation' || view() === 'already_responded') {
     <header class="fr__header" [class.fr__header--branded]="form()?.tenantPrimaryColor">
       @if (form()?.tenantLogoUrl) {
         <img
@@ -28,7 +40,26 @@
       } @else {
         <span class="fr__tenant-name">{{ form()?.tenantName }}</span>
       }
+      @if (isCandidateMode() && candidateName()) {
+        <span class="fr__candidate-name">
+          {{ 'responder.candidate.greeting' | translate : { candidateName: candidateName() } }}
+        </span>
+      }
     </header>
+  }
+
+  @if (view() === 'already_responded') {
+    <div class="fr__body">
+      <div class="fr__card fr__card--confirmation">
+        <div class="fr__confirm-icon">
+          <app-icon name="check-circle" [size]="48" />
+        </div>
+        <h1 class="fr__confirm-title">{{ 'responder.candidate.already_responded.title' | translate }}</h1>
+        <p class="fr__confirm-message">
+          {{ 'responder.candidate.already_responded.message' | translate : { convocatoriaName: convocatoriaName() } }}
+        </p>
+      </div>
+    </div>
   }
 
   @if (view() === 'confirmation') {
@@ -42,7 +73,11 @@
           {{ 'responder.confirmation.message' | translate : { formName: form()?.name } }}
         </p>
         <p class="fr__confirm-by">
-          {{ 'responder.confirmation.by' | translate : { tenantName: form()?.tenantName } }}
+          @if (isCandidateMode() && convocatoriaName()) {
+            {{ 'responder.candidate.confirmation_by' | translate : { convocatoriaName: convocatoriaName() } }}
+          } @else {
+            {{ 'responder.confirmation.by' | translate : { tenantName: form()?.tenantName } }}
+          }
         </p>
       </div>
     </div>

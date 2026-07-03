@@ -339,6 +339,18 @@
       "title": "¡Respuesta enviada!",
       "message": "Tu respuesta en \"{{formName}}\" fue registrada correctamente.",
       "by": "Enviado a {{tenantName}}"
+    },
+    "candidate": {
+      "greeting": "Hola, {{candidateName}}",
+      "confirmation_by": "Respondido para: {{convocatoriaName}}",
+      "already_responded": {
+        "title": "Ya respondiste",
+        "message": "Tu respuesta para la convocatoria \"{{convocatoriaName}}\" ya fue registrada. No es necesaria ninguna acción adicional."
+      },
+      "closed": {
+        "title": "Convocatoria cerrada",
+        "message": "Esta convocatoria ya no acepta respuestas."
+      }
     }
   },
   "errors": {

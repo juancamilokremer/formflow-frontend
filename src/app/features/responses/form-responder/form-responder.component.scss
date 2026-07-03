@@ -17,8 +17,16 @@
       background: var(--ff-primary);
       border-bottom-color: transparent;
 
-      .fr__tenant-name { color: #fff; }
+      .fr__tenant-name     { color: #fff; }
+      .fr__candidate-name  { color: rgba(255, 255, 255, 0.85); }
     }
+  }
+
+  &__candidate-name {
+    margin-left: auto;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ff-text-secondary);
   }
 
   &__logo {
