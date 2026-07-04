@@ -1,0 +1,132 @@
+<div class="ff" [style.--ff-primary]="primaryColor()">
+
+  <header class="ff__header" [class.ff__header--branded]="form().tenantPrimaryColor">
+    @if (form().tenantLogoUrl) {
+      <img class="ff__logo" [src]="form().tenantLogoUrl" [alt]="form().tenantName" height="32" />
+    } @else {
+      <span class="ff__tenant-name">{{ form().tenantName }}</span>
+    }
+    @if (candidateName()) {
+      <span class="ff__candidate-name">
+        {{ 'responder.candidate.greeting' | translate : { candidateName: candidateName() } }}
+      </span>
+    }
+  </header>
+
+  @switch (view()) {
+
+    @case ('confirmation') {
+      <div class="ff__body">
+        <div class="ff__card ff__card--confirmation">
+          <div class="ff__confirm-icon">
+            <app-icon name="check-circle" [size]="48" />
+          </div>
+          <h1 class="ff__confirm-title">{{ 'responder.confirmation.title' | translate }}</h1>
+          <p class="ff__confirm-message">
+            {{ 'responder.confirmation.message' | translate : { formName: form().name } }}
+          </p>
+          <p class="ff__confirm-by">
+            @if (convocatoriaName()) {
+              {{ 'responder.candidate.confirmation_by' | translate : { convocatoriaName: convocatoriaName() } }}
+            } @else {
+              {{ 'responder.confirmation.by' | translate : { tenantName: form().tenantName } }}
+            }
+          </p>
+        </div>
+      </div>
+    }
+
+    @case ('form') {
+      <div class="ff__body">
+        <div class="ff__card">
+
+          @if (sections().length > 1) {
+            <div class="ff__section-meta">
+              <span class="ff__section-counter">
+                {{ 'responder.section_of' | translate : { current: currentSectionIndex() + 1, total: sections().length } }}
+              </span>
+              <h2 class="ff__section-title">{{ currentSection()?.title }}</h2>
+              @if (currentSection()?.description) {
+                <p class="ff__section-desc">{{ currentSection()?.description }}</p>
+              }
+            </div>
+          } @else if (currentSection()?.description) {
+            <p class="ff__section-desc">{{ currentSection()?.description }}</p>
+          }
+
+          @if (totalAnswerable() > 0) {
+            <div class="ff__progress">
+              <div class="ff__progress-header">
+                <span class="ff__progress-label">{{ 'responder.progress' | translate }}</span>
+                <span class="ff__progress-count">
+                  {{ 'responder.progress_counter' | translate : { answered: answeredCount(), total: totalAnswerable() } }}
+                </span>
+              </div>
+              <div class="ff__progress-track" role="progressbar" [attr.aria-valuenow]="progress()" aria-valuemin="0" aria-valuemax="100">
+                <div class="ff__progress-fill" [style.width.%]="progress()"></div>
+              </div>
+            </div>
+          }
+
+          <div class="ff__questions">
+            @for (q of visibleQuestions(); track q.id) {
+              <div class="ff__question" [class.ff__question--invalid]="isInvalid(q.id)">
+                @if (q.type !== 'info') {
+                  <div class="ff__q-header">
+                    <p class="ff__q-title">
+                      {{ q.title }}
+                      @if (q.required) { <span class="ff__q-required" aria-hidden="true">*</span> }
+                    </p>
+                    @if (q.description) {
+                      <p class="ff__q-desc">{{ q.description }}</p>
+                    }
+                  </div>
+                }
+                <app-public-question-outlet [question]="q" (answered)="onAnswered(q.id, $event)" />
+                @if (isInvalid(q.id)) {
+                  <p class="ff__q-error" role="alert">
+                    <app-icon name="alert-circle" [size]="14" />
+                    {{ 'responder.error_required' | translate }}
+                  </p>
+                }
+              </div>
+            } @empty {
+              <p class="ff__empty">{{ 'responder.no_visible_questions' | translate }}</p>
+            }
+          </div>
+
+          @if (submitError()) {
+            <div class="ff__submit-error" role="alert">
+              <app-icon name="alert-circle" [size]="16" />
+              {{ 'responder.submit_error' | translate }}
+            </div>
+          }
+        </div>
+
+        <div class="ff__nav">
+          <app-button variant="secondary" [disabled]="isFirstSection()" (click)="prevSection()">
+            <app-icon name="arrow-left" [size]="14" />
+            {{ 'responder.prev' | translate }}
+          </app-button>
+
+          @if (isLastSection()) {
+            <app-button variant="primary" [loading]="submitting()" (click)="submit()">
+              {{ 'responder.submit' | translate }}
+            </app-button>
+          } @else {
+            <app-button variant="primary" (click)="nextSection()">
+              {{ 'responder.next' | translate }}
+              <app-icon name="arrow-right" [size]="14" />
+            </app-button>
+          }
+        </div>
+      </div>
+    }
+
+  }
+
+  <footer class="ff__footer">
+    <span>{{ 'responder.powered_by' | translate }}</span>
+  </footer>
+
+</div>

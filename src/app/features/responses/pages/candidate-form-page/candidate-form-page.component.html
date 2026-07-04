@@ -1,0 +1,54 @@
+@switch (view()) {
+
+  @case ('loading') {
+    <div class="cfp cfp--center">
+      <app-loading-spinner [message]="'responder.loading' | translate" />
+    </div>
+  }
+
+  @case ('not_found') {
+    <div class="cfp">
+      <div class="cfp__state-page">
+        <div class="cfp__state-card">
+          <app-icon name="alert-circle" [size]="40" class="cfp__state-icon" />
+          <h1 class="cfp__state-title">{{ 'responder.not_found.title' | translate }}</h1>
+          <p class="cfp__state-message">{{ 'responder.not_found.message' | translate }}</p>
+        </div>
+      </div>
+    </div>
+  }
+
+  @case ('closed') {
+    <div class="cfp">
+      <div class="cfp__state-page">
+        <div class="cfp__state-card">
+          <app-icon name="alert-circle" [size]="40" class="cfp__state-icon" />
+          <h1 class="cfp__state-title">{{ 'responder.candidate.closed.title' | translate }}</h1>
+          <p class="cfp__state-message">{{ 'responder.candidate.closed.message' | translate }}</p>
+        </div>
+      </div>
+    </div>
+  }
+
+  @case ('already_responded') {
+    <div class="cfp cfp--center">
+      <div class="cfp__state-card">
+        <app-icon name="check-circle" [size]="48" class="cfp__check-icon" />
+        <h1 class="cfp__state-title">{{ 'responder.candidate.already_responded.title' | translate }}</h1>
+        <p class="cfp__state-message">
+          {{ 'responder.candidate.already_responded.message' | translate : { convocatoriaName: convocatoriaName() } }}
+        </p>
+      </div>
+    </div>
+  }
+
+  @case ('ready') {
+    <app-form-filler
+      [form]="form()!"
+      [submitFn]="doSubmit"
+      [candidateName]="candidateName()"
+      [convocatoriaName]="convocatoriaName()"
+    />
+  }
+
+}

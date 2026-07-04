@@ -4,6 +4,7 @@ import { Observable, map } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ApiResponse } from '../../../core/models/api-response.model';
 import {
+  PublicCandidateForm,
   PublicForm,
   SubmitPublicResponsePayload,
   SubmitPublicResponseResult,
@@ -27,6 +28,24 @@ export class PublicResponseService {
     return this.http
       .post<ApiResponse<SubmitPublicResponseResult>>(
         `${this.apiUrl}/forms/${formId}/responses`,
+        payload,
+      )
+      .pipe(map((r) => r.data!));
+  }
+
+  getCandidateForm(token: string): Observable<PublicCandidateForm> {
+    return this.http
+      .get<ApiResponse<PublicCandidateForm>>(`${this.apiUrl}/candidates/${token}`)
+      .pipe(map((r) => r.data!));
+  }
+
+  submitCandidateResponse(
+    token: string,
+    payload: SubmitPublicResponsePayload,
+  ): Observable<SubmitPublicResponseResult> {
+    return this.http
+      .post<ApiResponse<SubmitPublicResponseResult>>(
+        `${this.apiUrl}/candidates/${token}/responses`,
         payload,
       )
       .pipe(map((r) => r.data!));

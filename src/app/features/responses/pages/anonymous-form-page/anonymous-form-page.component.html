@@ -1,0 +1,25 @@
+@switch (view()) {
+
+  @case ('loading') {
+    <div class="afp afp--center">
+      <app-loading-spinner [message]="'responder.loading' | translate" />
+    </div>
+  }
+
+  @case ('ready') {
+    <app-form-filler [form]="form()!" [submitFn]="doSubmit" />
+  }
+
+  @default {
+    <div class="afp">
+      <div class="afp__state-page">
+        <div class="afp__state-card">
+          <app-icon name="alert-circle" [size]="40" class="afp__state-icon" />
+          <h1 class="afp__state-title">{{ 'responder.not_found.title' | translate }}</h1>
+          <p class="afp__state-message">{{ 'responder.not_found.message' | translate }}</p>
+        </div>
+      </div>
+    </div>
+  }
+
+}

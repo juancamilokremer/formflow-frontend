@@ -1,0 +1,51 @@
+.cfp {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--ff-bg-secondary);
+
+  &--center {
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__state-page {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 16px;
+  }
+
+  &__state-card {
+    max-width: 480px;
+    width: 100%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    background: #fff;
+    border: 1px solid var(--ff-border);
+    border-radius: var(--ff-radius-lg);
+    padding: 48px 32px;
+  }
+
+  &__state-icon { color: var(--ff-danger, #ef4444); }
+
+  &__check-icon { color: #22c55e; }
+
+  &__state-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--ff-text-primary);
+    margin: 0;
+  }
+
+  &__state-message {
+    font-size: 15px;
+    color: var(--ff-text-secondary);
+    line-height: 1.5;
+    margin: 0;
+  }
+}
