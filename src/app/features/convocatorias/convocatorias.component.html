@@ -1,1 +1,80 @@
-<p>Convocatorias</p>
+<div class="conv">
+
+  <div class="conv__header">
+    <app-page-header
+      title="{{ 'convocatorias.title' | translate }}"
+      subtitle="{{ 'convocatorias.subtitle' | translate }}" />
+    <app-button (click)="navigateToNew()">
+      + {{ 'convocatorias.new_button' | translate }}
+    </app-button>
+  </div>
+
+  @switch (view()) {
+
+    @case ('loading') {
+      <div class="conv__center">
+        <app-loading-spinner />
+      </div>
+    }
+
+    @case ('error') {
+      <div class="conv__center">
+        <app-empty-state
+          icon="alert-circle"
+          title="{{ 'convocatorias.error.load' | translate }}" />
+      </div>
+    }
+
+    @default {
+      <div class="conv__stats">
+        <app-stat-card
+          label="{{ 'convocatorias.stats.active' | translate }}"
+          [value]="activeCount()"
+          color="success" />
+        <app-stat-card
+          label="{{ 'convocatorias.stats.draft' | translate }}"
+          [value]="draftCount()"
+          color="warning" />
+        <app-stat-card
+          label="{{ 'convocatorias.stats.total_candidates' | translate }}"
+          [value]="totalCandidates()" />
+        <app-stat-card
+          label="{{ 'convocatorias.stats.responded' | translate }}"
+          [value]="totalResponded()"
+          color="info" />
+      </div>
+
+      <app-status-filter
+        [selected]="statusFilter()"
+        (changed)="onFilterChanged($event)" />
+
+      <div class="conv__list">
+        @for (conv of filtered(); track conv.id) {
+          <app-convocatoria-card
+            [convocatoria]="conv"
+            (viewDetail)="navigateToDetail($event)"
+            (close)="requestClose($event)"
+            (delete)="requestDelete($event)" />
+        } @empty {
+          <app-empty-state
+            icon="inbox"
+            title="{{ 'convocatorias.empty.title' | translate }}"
+            subtitle="{{ 'convocatorias.empty.subtitle' | translate }}" />
+        }
+      </div>
+    }
+
+  }
+
+</div>
+
+<app-confirm-dialog
+  [isOpen]="pendingAction() !== null"
+  [title]="pendingAction()?.type === 'close' ? 'convocatorias.confirm_close.title' : 'convocatorias.confirm_delete.title'"
+  [message]="pendingAction()?.type === 'close'
+    ? ('convocatorias.confirm_close.message' | translate : { name: pendingAction()?.name })
+    : ('convocatorias.confirm_delete.message' | translate : { name: pendingAction()?.name })"
+  [confirmLabel]="pendingAction()?.type === 'close' ? 'convocatorias.card.close' : 'common.delete'"
+  [loading]="actionLoading()"
+  (confirmed)="confirmAction()"
+  (cancelled)="cancelAction()" />
