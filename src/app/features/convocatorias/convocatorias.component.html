@@ -53,8 +53,8 @@
           <app-convocatoria-card
             [convocatoria]="conv"
             (viewDetail)="navigateToDetail($event)"
-            (close)="requestClose($event)"
-            (delete)="requestDelete($event)" />
+            (closeRequested)="requestClose($event)"
+            (deleteRequested)="requestDelete($event)" />
         } @empty {
           <app-empty-state
             icon="inbox"

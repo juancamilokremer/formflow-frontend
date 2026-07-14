@@ -76,7 +76,7 @@ describe('ConvocatoriaCardComponent', () => {
     it('emits convocatoria id on onClose', async () => {
       const c = await create();
       let emitted: string | undefined;
-      c.close.subscribe((id) => (emitted = id));
+      c.closeRequested.subscribe((id) => (emitted = id));
       c['onClose']();
       expect(emitted).toBe('conv-1');
     });
@@ -84,7 +84,7 @@ describe('ConvocatoriaCardComponent', () => {
     it('emits convocatoria id on onDelete', async () => {
       const c = await create();
       let emitted: string | undefined;
-      c.delete.subscribe((id) => (emitted = id));
+      c.deleteRequested.subscribe((id) => (emitted = id));
       c['onDelete']();
       expect(emitted).toBe('conv-1');
     });

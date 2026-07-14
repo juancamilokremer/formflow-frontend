@@ -370,9 +370,9 @@
       "closed": "Cerradas"
     },
     "status": {
-      "ACTIVE": "● Activa",
-      "DRAFT": "● Borrador",
-      "CLOSED": "● Cerrada"
+      "ACTIVE": "Activa",
+      "DRAFT": "Borrador",
+      "CLOSED": "Cerrada"
     },
     "card": {
       "created": "Creada {{date}}",

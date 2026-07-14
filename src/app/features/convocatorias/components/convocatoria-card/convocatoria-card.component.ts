@@ -14,9 +14,9 @@ import { ConvocatoriaSummary } from '../../models/convocatoria.model';
 export class ConvocatoriaCardComponent {
   readonly convocatoria = input.required<ConvocatoriaSummary>();
 
-  readonly viewDetail = output<string>();
-  readonly close      = output<string>();
-  readonly delete     = output<string>();
+  readonly viewDetail      = output<string>();
+  readonly closeRequested  = output<string>();
+  readonly deleteRequested = output<string>();
 
   protected readonly progressPercent = computed(() => {
     const c = this.convocatoria();
@@ -33,6 +33,6 @@ export class ConvocatoriaCardComponent {
   protected readonly isClosed  = computed(() => this.convocatoria().status === 'CLOSED');
 
   protected onViewDetail(): void { this.viewDetail.emit(this.convocatoria().id); }
-  protected onClose():      void { this.close.emit(this.convocatoria().id); }
-  protected onDelete():     void { this.delete.emit(this.convocatoria().id); }
+  protected onClose():      void { this.closeRequested.emit(this.convocatoria().id); }
+  protected onDelete():     void { this.deleteRequested.emit(this.convocatoria().id); }
 }
