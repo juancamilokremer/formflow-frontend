@@ -22,25 +22,25 @@
       <div class="conv__center">
         <app-empty-state
           icon="alert-circle"
-          title="{{ 'convocatorias.error.load' | translate }}" />
+          [title]="'convocatorias.error.load' | translate" />
       </div>
     }
 
     @default {
       <div class="conv__stats">
         <app-stat-card
-          label="{{ 'convocatorias.stats.active' | translate }}"
+          [label]="'convocatorias.stats.active' | translate"
           [value]="activeCount()"
           color="success" />
         <app-stat-card
-          label="{{ 'convocatorias.stats.draft' | translate }}"
+          [label]="'convocatorias.stats.draft' | translate"
           [value]="draftCount()"
           color="warning" />
         <app-stat-card
-          label="{{ 'convocatorias.stats.total_candidates' | translate }}"
+          [label]="'convocatorias.stats.total_candidates' | translate"
           [value]="totalCandidates()" />
         <app-stat-card
-          label="{{ 'convocatorias.stats.responded' | translate }}"
+          [label]="'convocatorias.stats.responded' | translate"
           [value]="totalResponded()"
           color="info" />
       </div>
@@ -59,8 +59,8 @@
         } @empty {
           <app-empty-state
             icon="inbox"
-            title="{{ 'convocatorias.empty.title' | translate }}"
-            subtitle="{{ 'convocatorias.empty.subtitle' | translate }}" />
+            [title]="'convocatorias.empty.title' | translate"
+            [subtitle]="'convocatorias.empty.subtitle' | translate" />
         }
       </div>
     }
