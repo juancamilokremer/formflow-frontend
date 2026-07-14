@@ -1,13 +1,14 @@
 <div class="conv">
 
-  <div class="conv__header">
-    <app-page-header
-      title="{{ 'convocatorias.title' | translate }}"
-      subtitle="{{ 'convocatorias.subtitle' | translate }}" />
+  <app-page-header
+    [title]="'convocatorias.title' | translate"
+    [subtitle]="'convocatorias.subtitle' | translate"
+  >
     <app-button (click)="navigateToNew()">
-      + {{ 'convocatorias.new_button' | translate }}
+      <app-icon name="plus" [size]="16" />
+      {{ 'convocatorias.new_button' | translate }}
     </app-button>
-  </div>
+  </app-page-header>
 
   @switch (view()) {
 

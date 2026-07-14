@@ -5,6 +5,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { RouteConstants } from '../../core/constants/route.constants';
 import { ButtonComponent } from '../../shared/components/button/button.component';
 import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
+import { IconComponent } from '../../shared/icons/icon.component';
 import { StatCardComponent } from '../../shared/components/stat-card/stat-card.component';
 import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state.component';
 import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner/loading-spinner.component';
@@ -23,7 +24,7 @@ import {
   selector: 'app-convocatorias',
   imports: [
     TranslatePipe,
-    ButtonComponent, PageHeaderComponent, StatCardComponent,
+    ButtonComponent, PageHeaderComponent, IconComponent, StatCardComponent,
     EmptyStateComponent, LoadingSpinnerComponent, ConfirmDialogComponent,
     ConvocatoriaCardComponent, StatusFilterComponent,
   ],
