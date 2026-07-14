@@ -1,0 +1,52 @@
+<article class="conv-card" [class.conv-card--closed]="isClosed()">
+
+  <div class="conv-card__header">
+    <div class="conv-card__badges">
+      <span class="conv-card__status-badge" [class]="'conv-card__status-badge--' + convocatoria().status.toLowerCase()">
+        {{ statusKey() | translate }}
+      </span>
+    </div>
+
+    <div class="conv-card__actions">
+      @if (isActive() || isClosed()) {
+        <app-button variant="outline-primary" (click)="onViewDetail()">
+          {{ 'convocatorias.card.view' | translate }}
+        </app-button>
+      }
+      @if (isActive()) {
+        <app-button variant="ghost" (click)="onClose()">
+          {{ 'convocatorias.card.close' | translate }}
+        </app-button>
+      }
+      @if (isDraft()) {
+        <app-button variant="outline-primary" (click)="onViewDetail()">
+          {{ 'convocatorias.card.view' | translate }}
+        </app-button>
+        <app-button variant="ghost" [danger]="true" (click)="onDelete()">
+          <app-icon name="trash-2" [size]="14" />
+        </app-button>
+      }
+    </div>
+  </div>
+
+  <h3 class="conv-card__name">{{ convocatoria().name }}</h3>
+
+  <p class="conv-card__meta">
+    {{ 'convocatorias.card.created' | translate : { date: (convocatoria().createdAt | date: 'd MMM yyyy') } }}
+  </p>
+
+  @if (convocatoria().candidateCount > 0) {
+    <div class="conv-card__progress">
+      <div class="conv-card__progress-labels">
+        <span>{{ 'convocatorias.card.responded_of' | translate : { responded: convocatoria().respondedCount, total: convocatoria().candidateCount } }}</span>
+        <span class="conv-card__progress-percent">{{ progressPercent() }}%</span>
+      </div>
+      <div class="conv-card__progress-bar">
+        <div class="conv-card__progress-fill" [style.width.%]="progressPercent()"></div>
+      </div>
+    </div>
+  } @else {
+    <p class="conv-card__no-candidates">{{ 'convocatorias.card.no_candidates' | translate }}</p>
+  }
+
+</article>

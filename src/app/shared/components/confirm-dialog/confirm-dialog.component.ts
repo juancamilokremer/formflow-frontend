@@ -10,11 +10,12 @@ import { ButtonComponent } from '../button/button.component';
   styleUrl: './confirm-dialog.component.scss',
 })
 export class ConfirmDialogComponent {
-  readonly isOpen = input(false);
-  readonly title = input('common.confirm_title');
-  readonly message = input.required<string>();
+  readonly isOpen       = input(false);
+  readonly title        = input('common.confirm_title');
+  readonly message      = input.required<string>();
   readonly confirmLabel = input('common.delete');
-  readonly cancelLabel = input('common.cancel');
-  readonly confirmed = output<void>();
-  readonly cancelled = output<void>();
+  readonly cancelLabel  = input('common.cancel');
+  readonly loading      = input(false);
+  readonly confirmed    = output<void>();
+  readonly cancelled    = output<void>();
 }

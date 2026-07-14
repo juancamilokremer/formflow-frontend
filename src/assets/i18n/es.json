@@ -353,6 +353,51 @@
       }
     }
   },
+  "convocatorias": {
+    "title": "Convocatorias",
+    "subtitle": "Gestiona procesos de evaluación y encuestas grupales",
+    "new_button": "Nueva convocatoria",
+    "stats": {
+      "active": "ACTIVAS",
+      "draft": "BORRADORES",
+      "total_candidates": "CANDIDATOS",
+      "responded": "RESPONDIERON"
+    },
+    "filter": {
+      "all": "Todas",
+      "active": "Activas",
+      "draft": "Borradores",
+      "closed": "Cerradas"
+    },
+    "status": {
+      "ACTIVE": "Activa",
+      "DRAFT": "Borrador",
+      "CLOSED": "Cerrada"
+    },
+    "card": {
+      "created": "Creada {{date}}",
+      "responded_of": "{{responded}} de {{total}} respondieron",
+      "view": "Ver resultados",
+      "close": "Cerrar",
+      "delete": "Eliminar",
+      "no_candidates": "Sin candidatos aún"
+    },
+    "empty": {
+      "title": "No tienes convocatorias aún",
+      "subtitle": "Crea tu primera convocatoria para evaluar candidatos o aplicar encuestas a tu equipo."
+    },
+    "confirm_close": {
+      "title": "¿Cerrar convocatoria?",
+      "message": "La convocatoria \"{{name}}\" quedará cerrada. Los candidatos pendientes ya no podrán responder."
+    },
+    "confirm_delete": {
+      "title": "¿Eliminar convocatoria?",
+      "message": "Se eliminará la convocatoria \"{{name}}\". Esta acción no se puede deshacer."
+    },
+    "error": {
+      "load": "No se pudo cargar la lista de convocatorias."
+    }
+  },
   "errors": {
     "unauthorized": "No tienes permiso para realizar esta acción.",
     "not_found": "El recurso solicitado no existe.",
