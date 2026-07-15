@@ -2,6 +2,8 @@
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.0.1.
 
+📄 **[Del formulario al análisis](https://claude.ai/code/artifact/c10b5065-1331-4d5b-b2fd-c9dc58a7b1e3)** — recorrido completo del producto (creación del formulario, categorías y puntaje, convocatorias, respuesta del candidato, scoring y estado real de cada pieza, frontend + backend).
+
 ## Development server
 
 To start a local development server, run:

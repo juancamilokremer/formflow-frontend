@@ -4,7 +4,7 @@ import { Observable, map } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ApiResponse } from '../../../core/models/api-response.model';
 import {
-  Form, FormDetail, FormSection, FormQuestion,
+  Form, FormDetail, FormSection, FormQuestion, FormStatus,
   CreateFormRequest, CreateSectionRequest, UpdateSectionRequest,
   AddQuestionRequest, UpdateQuestionRequest,
 } from '../models/form.model';
@@ -34,6 +34,12 @@ export class FormsService {
 
   update(id: string, name: string, description: string | null, timeLimitSeconds: number | null): Observable<void> {
     return this.http.put<void>(`${this.apiUrl}/${id}`, { name, description, timeLimitSeconds });
+  }
+
+  updateStatus(id: string, status: FormStatus): Observable<Form> {
+    return this.http.patch<ApiResponse<Form>>(`${this.apiUrl}/${id}/status`, { status }).pipe(
+      map((r) => r.data!),
+    );
   }
 
   remove(id: string): Observable<void> {

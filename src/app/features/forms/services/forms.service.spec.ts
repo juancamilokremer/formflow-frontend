@@ -61,6 +61,17 @@ describe('FormsService', () => {
     expect(result).toEqual(mockForm);
   });
 
+  it('updateStatus() should PATCH the status and return the updated form', () => {
+    let result: Form | undefined;
+    service.updateStatus('f1', 'ACTIVE').subscribe((f) => (result = f));
+
+    const req = http.expectOne((r) => r.method === 'PATCH' && r.url.includes('/f1/status'));
+    expect(req.request.body).toEqual({ status: 'ACTIVE' });
+    req.flush({ success: true, data: { ...mockForm, status: 'ACTIVE' } });
+
+    expect(result).toEqual({ ...mockForm, status: 'ACTIVE' });
+  });
+
   it('remove() should send DELETE request', () => {
     let called = false;
     service.remove('f1').subscribe(() => (called = true));
