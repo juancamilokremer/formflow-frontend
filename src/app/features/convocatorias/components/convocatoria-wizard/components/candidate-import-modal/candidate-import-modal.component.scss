@@ -1,0 +1,30 @@
+:host { display: contents; }
+
+.cim {
+  &__note {
+    font-size: 13px;
+    color: var(--ff-text-secondary);
+    margin: 0 0 12px;
+  }
+
+  &__table-wrap {
+    max-height: 260px;
+    overflow-y: auto;
+    border: 1px solid var(--ff-border);
+    border-radius: var(--ff-radius-md);
+  }
+
+  &__table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+
+    td {
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--ff-border);
+      color: var(--ff-text-primary);
+    }
+
+    tr:last-child td { border-bottom: none; }
+  }
+}

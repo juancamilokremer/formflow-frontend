@@ -1,0 +1,36 @@
+<app-dialog
+  [title]="'convocatorias.wizard.import_modal.title' | translate"
+  [isOpen]="isOpen()"
+  maxWidth="480px"
+  (closed)="cancelled.emit()"
+>
+  @if (previewRows().length === 0) {
+    <app-empty-state
+      icon="alert-triangle"
+      [compact]="true"
+      [title]="'convocatorias.wizard.import_modal.empty' | translate" />
+  } @else {
+    <p class="cim__note">{{ 'convocatorias.wizard.import_modal.note' | translate }}</p>
+    <div class="cim__table-wrap">
+      <table class="cim__table">
+        <tbody>
+          @for (row of previewRows(); track row.email) {
+            <tr>
+              <td>{{ row.name }}</td>
+              <td>{{ row.email }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+
+  <div dialog-footer>
+    <app-button variant="secondary" type="button" (click)="cancelled.emit()">
+      {{ 'common.cancel' | translate }}
+    </app-button>
+    <app-button type="button" (click)="confirmed.emit()">
+      {{ 'convocatorias.wizard.import_modal.confirm' | translate }}
+    </app-button>
+  </div>
+</app-dialog>

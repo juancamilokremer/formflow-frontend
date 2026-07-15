@@ -2,7 +2,7 @@ import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
-import { RouteConstants } from '../../core/constants/route.constants';
+import { RouteConstants, convocatoriaNewPath } from '../../core/constants/route.constants';
 import { ButtonComponent } from '../../shared/components/button/button.component';
 import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 import { IconComponent } from '../../shared/icons/icon.component';
@@ -71,7 +71,7 @@ export class ConvocatoriasComponent {
   }
 
   protected navigateToNew(): void {
-    this.router.navigate(['/', RouteConstants.CONVOCATORIAS, 'nueva']);
+    this.router.navigate(convocatoriaNewPath());
   }
 
   protected navigateToDetail(id: string): void {

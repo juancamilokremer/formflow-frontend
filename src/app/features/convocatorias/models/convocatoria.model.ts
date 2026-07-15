@@ -1,5 +1,69 @@
 export type ConvocatoriaStatus = 'DRAFT' | 'ACTIVE' | 'CLOSED';
 
+export interface CategoryWeight {
+  categoryId: string;
+  weight: number;
+}
+
+export interface ScoringConfig {
+  aptoMin: number;
+  revisarMin: number;
+}
+
+export type CandidateStatus = 'PENDING' | 'INVITED' | 'RESPONDED' | 'EXPIRED';
+
+export interface CandidateScores {
+  total: number;
+  byCategory: Record<string, number>;
+}
+
+export interface Candidate {
+  id: string;
+  convocatoriaId: string;
+  name: string;
+  email: string;
+  token: string;
+  status: CandidateStatus;
+  responseId: string | null;
+  scores: CandidateScores | null;
+  invitedAt: string | null;
+  respondedAt: string | null;
+  createdAt: string;
+}
+
+export interface ConvocatoriaDetail {
+  id: string;
+  tenantId: string;
+  formId: string;
+  name: string;
+  status: ConvocatoriaStatus;
+  categoryWeights: CategoryWeight[];
+  scoringConfig: ScoringConfig;
+  startDate: string | null;
+  endDate: string | null;
+  createdAt: string;
+  updatedAt: string;
+  candidates: Candidate[];
+}
+
+export interface CreateConvocatoriaRequest {
+  name: string;
+  formId: string;
+  categoryWeights?: CategoryWeight[];
+  scoringConfig?: ScoringConfig;
+}
+
+export interface AddCandidateRequest {
+  name: string;
+  email: string;
+}
+
+export interface ImportResponse {
+  imported: number;
+  skipped: number;
+  errors: string[];
+}
+
 export interface ConvocatoriaSummary {
   id: string;
   name: string;

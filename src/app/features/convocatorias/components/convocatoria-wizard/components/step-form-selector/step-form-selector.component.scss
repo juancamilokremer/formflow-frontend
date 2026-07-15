@@ -1,0 +1,15 @@
+:host { display: block; }
+
+.sfs {
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &__label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ff-text-primary);
+  }
+}

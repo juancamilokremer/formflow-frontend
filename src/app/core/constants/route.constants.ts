@@ -17,6 +17,7 @@ export const RouteConstants = {
   FORM_BUILDER:  'edit',
   FORM_PREVIEW:  'preview',
   FORM_RESPOND:  'respond',
+  CONVOCATORIA_NEW: 'nueva',
 } as const;
 
 export function publicFormPath(convId: string, token: string): string {
@@ -33,4 +34,8 @@ export function formPreviewPath(formId: string): string[] {
 
 export function formRespondPath(formId: string): string[] {
   return ['/', RouteConstants.FORMS, formId, RouteConstants.FORM_RESPOND];
+}
+
+export function convocatoriaNewPath(): string[] {
+  return ['/', RouteConstants.CONVOCATORIAS, RouteConstants.CONVOCATORIA_NEW];
 }
