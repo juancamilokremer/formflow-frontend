@@ -1,0 +1,51 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.sth {
+  &__field-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+
+  &__label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ff-text-primary);
+  }
+
+  &__value {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ff-primary);
+  }
+
+  &__field input[type='range'] {
+    width: 100%;
+    accent-color: var(--ff-primary);
+  }
+
+  &__preview {
+    display: flex;
+    border-radius: var(--ff-radius-md);
+    overflow: hidden;
+    margin-top: 8px;
+  }
+
+  &__zone {
+    padding: 10px 4px;
+    text-align: center;
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    &--no-apto { background: var(--ff-error-bg); color: var(--ff-error-text); }
+    &--revisar { background: var(--ff-warning-bg); color: var(--ff-warning); }
+    &--apto    { background: var(--ff-success-bg); color: var(--ff-success); }
+  }
+}

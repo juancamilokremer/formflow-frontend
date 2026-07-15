@@ -1,0 +1,136 @@
+<div class="srv__summary">
+  <p class="srv__summary-title">{{ 'convocatorias.wizard.review.summary_title' | translate }}</p>
+
+  <div class="srv__summary-row">
+    <span class="srv__summary-label">{{ draft().name }}</span>
+  </div>
+  <div class="srv__summary-row">
+    <span class="srv__summary-key">{{ 'convocatorias.wizard.review.process_type' | translate }}</span>
+    <span>{{ processTypeLabelKey() | translate }}</span>
+  </div>
+  <div class="srv__summary-row">
+    <span class="srv__summary-key">{{ 'convocatorias.wizard.review.form' | translate }}</span>
+    <span>{{ selectedFormName() }}</span>
+  </div>
+  <div class="srv__summary-row">
+    <span class="srv__summary-key">{{ 'convocatorias.wizard.review.weights' | translate }}</span>
+    @if (resolvedWeights().length === 0) {
+      <span>{{ 'convocatorias.wizard.review.no_weights' | translate }}</span>
+    } @else {
+      <span>
+        @for (w of resolvedWeights(); track w.name; let last = $last) {
+          {{ w.name }} {{ w.weight }}%{{ last ? '' : ' · ' }}
+        }
+      </span>
+    }
+  </div>
+  <div class="srv__summary-row">
+    <span class="srv__summary-key">{{ 'convocatorias.wizard.review.thresholds' | translate }}</span>
+    <span>
+      {{ 'convocatorias.wizard.thresholds.zone_apto' | translate }} ≥ {{ draft().aptoMin }}
+      · {{ 'convocatorias.wizard.thresholds.zone_revisar' | translate }} ≥ {{ draft().revisarMin }}
+    </span>
+  </div>
+</div>
+
+<div class="srv__candidates">
+  <p class="srv__summary-title">{{ 'convocatorias.wizard.review.candidates_title' | translate }}</p>
+
+  <div class="srv__manual" [class.srv__manual--disabled]="!!draft().csvFile">
+    <p class="srv__section-label">{{ 'convocatorias.wizard.review.add_manual_title' | translate }}</p>
+    <div class="srv__manual-form">
+      <input
+        type="text"
+        class="srv__input"
+        [placeholder]="'convocatorias.wizard.review.name_placeholder' | translate"
+        [value]="manualName()"
+        [disabled]="!!draft().csvFile"
+        (input)="manualName.set($any($event.target).value)" />
+      <input
+        type="email"
+        class="srv__input"
+        [placeholder]="'convocatorias.wizard.review.email_placeholder' | translate"
+        [value]="manualEmail()"
+        [disabled]="!!draft().csvFile"
+        (input)="manualEmail.set($any($event.target).value)" />
+      <app-button
+        type="button"
+        variant="secondary"
+        [disabled]="!canAddManual() || !!draft().csvFile"
+        (click)="addManualCandidate()">
+        {{ 'convocatorias.wizard.review.add_button' | translate }}
+      </app-button>
+    </div>
+    @if (draft().csvFile) {
+      <p class="srv__hint">{{ 'convocatorias.wizard.review.csv_disabled_hint' | translate }}</p>
+    }
+
+    @if (draft().manualCandidates.length > 0) {
+      <div class="srv__list">
+        @for (candidate of draft().manualCandidates; track candidate.email; let i = $index) {
+          <div class="srv__list-row">
+            <span>{{ candidate.name }}</span>
+            <span class="srv__list-email">{{ candidate.email }}</span>
+            <button type="button" class="srv__remove" (click)="removeManualCandidate(i)">
+              <app-icon name="x" [size]="14" />
+            </button>
+          </div>
+        }
+      </div>
+    }
+  </div>
+
+  <div class="srv__csv">
+    @if (draft().csvFile) {
+      <div class="srv__csv-staged">
+        <app-icon name="file-text" [size]="16" />
+        <span>
+          {{ 'convocatorias.wizard.review.csv_staged' | translate: {
+            fileName: draft().csvFile!.name, count: draft().csvPreviewRows.length } }}
+        </span>
+        <button type="button" class="srv__remove" (click)="clearCsv()">
+          {{ 'convocatorias.wizard.review.csv_clear' | translate }}
+        </button>
+      </div>
+    } @else {
+      <label class="srv__csv-upload">
+        <app-icon name="upload" [size]="16" />
+        {{ 'convocatorias.wizard.review.csv_upload_label' | translate }}
+        <input type="file" accept=".csv" hidden (change)="onFileSelected($event)" />
+      </label>
+    }
+    @if (csvReadError()) {
+      <p class="srv__error">{{ 'convocatorias.wizard.review.csv_read_error' | translate }}</p>
+    }
+  </div>
+
+  @if (candidateAddFailures().length > 0) {
+    <p class="srv__warning">
+      {{ 'convocatorias.wizard.review.candidates_failed_warning' | translate: { count: candidateAddFailures().length } }}
+    </p>
+  }
+
+  @if (!hasCandidates()) {
+    <p class="srv__hint">{{ 'convocatorias.wizard.review.no_candidates_hint' | translate }}</p>
+  }
+</div>
+
+@if (submitError()) {
+  <p class="srv__error">{{ submitError()! | translate }}</p>
+}
+
+<app-button
+  [fullWidth]="true"
+  type="button"
+  [loading]="submitting()"
+  [disabled]="!canLaunch()"
+  (click)="requestLaunch()">
+  {{ 'convocatorias.wizard.review.launch_button' | translate }}
+</app-button>
+
+<app-candidate-import-modal
+  [isOpen]="importModalOpen()"
+  [fileName]="pendingFile()?.name ?? ''"
+  [previewRows]="pendingPreviewRows()"
+  (confirmed)="confirmCsvImport()"
+  (cancelled)="cancelCsvImport()" />

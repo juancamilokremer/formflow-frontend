@@ -89,6 +89,16 @@ export const routes: Routes = [
           ),
       },
       {
+        // Must stay before a future `convocatorias/:id` (issue #59) or that route will
+        // swallow this path as an :id param.
+        path: `${RouteConstants.CONVOCATORIAS}/${RouteConstants.CONVOCATORIA_NEW}`,
+        data: { titleKey: 'convocatorias.wizard.title' },
+        loadComponent: () =>
+          import(
+            './features/convocatorias/components/convocatoria-wizard/convocatoria-wizard.component'
+          ).then((m) => m.ConvocatoriaWizardComponent),
+      },
+      {
         path: RouteConstants.BILLING,
         data: { titleKey: 'shell.nav.billing' },
         loadComponent: () =>

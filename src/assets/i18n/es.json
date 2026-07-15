@@ -397,6 +397,84 @@
     },
     "error": {
       "load": "No se pudo cargar la lista de convocatorias."
+    },
+    "wizard": {
+      "title": "Nueva convocatoria",
+      "step_label": "Paso {{n}} de 5",
+      "steps": {
+        "basic_info": "Información básica",
+        "form_selector": "Formulario",
+        "weights": "Pesos por categoría",
+        "thresholds": "Umbrales",
+        "review": "Revisión y candidatos"
+      },
+      "basic_info": {
+        "name_label": "Nombre de la convocatoria",
+        "name_placeholder": "Ej: Analista de RRHH — Q3 2026",
+        "type_label": "Tipo de proceso",
+        "type_candidates": "Evaluación de candidatos",
+        "type_candidates_desc": "Recibe aspirantes, califica y rankea automáticamente",
+        "type_diagnostic": "Diagnóstico / encuesta",
+        "type_diagnostic_desc": "Encuesta grupal con análisis por dimensión"
+      },
+      "form_selector": {
+        "label": "Formulario a usar",
+        "placeholder": "Selecciona un formulario",
+        "empty_title": "No hay formularios activos de este tipo",
+        "empty_subtitle": "Publica un formulario en la sección Formularios antes de continuar."
+      },
+      "weights": {
+        "title": "Asigna un peso a cada categoría",
+        "hint": "Deben sumar 100%, o dejarse en 0 si no quieres ponderar por categoría",
+        "sum_ok": "Suma: {{sum}}% ✓",
+        "sum_invalid": "Suma: {{sum}}% — debe ser 100%",
+        "sum_skip": "Sin ponderar por categoría (opcional)",
+        "empty_title": "Este formulario no tiene preguntas categorizadas",
+        "empty_subtitle": "Puedes continuar sin ponderar categorías."
+      },
+      "thresholds": {
+        "apto_label": "Mínimo para Apto",
+        "revisar_label": "Mínimo para Revisar",
+        "zone_apto": "Apto",
+        "zone_revisar": "Revisar",
+        "zone_no_apto": "No apto"
+      },
+      "review": {
+        "summary_title": "Resumen",
+        "process_type": "Tipo de proceso",
+        "form": "Formulario",
+        "weights": "Pesos por categoría",
+        "no_weights": "Sin ponderar por categoría",
+        "thresholds": "Umbrales",
+        "candidates_title": "Candidatos",
+        "add_manual_title": "Agregar manualmente",
+        "name_placeholder": "Nombre completo",
+        "email_placeholder": "correo@ejemplo.com",
+        "add_button": "Agregar",
+        "csv_upload_label": "Importar desde CSV",
+        "csv_staged": "Archivo listo: {{fileName}} ({{count}} filas)",
+        "csv_clear": "Quitar archivo",
+        "csv_disabled_hint": "Quita el archivo CSV para agregar candidatos manualmente",
+        "csv_read_error": "No se pudo leer el archivo. Verifica que sea un CSV válido e intenta de nuevo.",
+        "launch_button": "Lanzar convocatoria",
+        "launch_success": "Convocatoria lanzada — emails enviados a {{count}} candidatos",
+        "launch_success_detail": "Ya puedes verla en la lista de convocatorias.",
+        "error_create": "No se pudo crear la convocatoria. Intenta de nuevo.",
+        "error_candidates": "La convocatoria se creó como borrador pero no se pudieron agregar los candidatos.",
+        "error_launch": "No se pudo lanzar la convocatoria. Intenta de nuevo.",
+        "no_candidates_hint": "Agrega al menos un candidato para poder lanzar.",
+        "candidates_failed_warning": "{{count}} candidato(s) no se pudieron agregar (posibles duplicados)."
+      },
+      "import_modal": {
+        "title": "Vista previa de importación",
+        "note": "Se importarán al crear la convocatoria — los duplicados se omiten automáticamente.",
+        "confirm": "Usar este archivo",
+        "empty": "No se encontraron filas válidas en el archivo."
+      },
+      "discard_confirm": {
+        "title": "¿Descartar convocatoria?",
+        "message": "Perderás la información ingresada en este asistente."
+      }
     }
   },
   "errors": {
