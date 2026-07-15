@@ -29,6 +29,7 @@ function buildComponent(formResult: 'ok' | 'error' = 'ok') {
   const mockFormsService = {
     getById:       vi.fn().mockReturnValue(formResult === 'ok' ? of(MOCK_FORM) : throwError(() => new Error())),
     update:        vi.fn().mockReturnValue(of(undefined)),
+    updateStatus:  vi.fn().mockImplementation((_id: string, status: string) => of({ ...MOCK_FORM, status })),
     createSection: vi.fn().mockReturnValue(of({ id: 's2', title: 'Nueva sección', position: 2, questions: [] } satisfies FormSection)),
     updateSection: vi.fn().mockReturnValue(of({ ...MOCK_SECTION, title: 'Renombrada' } satisfies FormSection)),
     deleteSection: vi.fn().mockReturnValue(of(undefined)),
@@ -69,6 +70,21 @@ describe('FormBuilderComponent', () => {
     (component as any).onNameChanged('Nuevo nombre');
     expect(mockFormsService.update).toHaveBeenCalledWith('f1', 'Nuevo nombre', null, null);
     expect((component as any).form()!.name).toBe('Nuevo nombre');
+  });
+
+  it('onPublishClicked activates a DRAFT form', () => {
+    const { component, mockFormsService } = buildComponent();
+    (component as any).onPublishClicked();
+    expect(mockFormsService.updateStatus).toHaveBeenCalledWith('f1', 'ACTIVE');
+    expect((component as any).form()!.status).toBe('ACTIVE');
+  });
+
+  it('onPublishClicked archives an ACTIVE form', () => {
+    const { component, mockFormsService } = buildComponent();
+    (component as any).form.update((f: FormDetail) => ({ ...f, status: 'ACTIVE' }));
+    (component as any).onPublishClicked();
+    expect(mockFormsService.updateStatus).toHaveBeenCalledWith('f1', 'ARCHIVED');
+    expect((component as any).form()!.status).toBe('ARCHIVED');
   });
 
   it('onSectionAdded calls createSection and appends to sections', () => {
