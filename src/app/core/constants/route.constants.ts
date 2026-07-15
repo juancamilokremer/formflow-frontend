@@ -17,7 +17,7 @@ export const RouteConstants = {
   FORM_BUILDER:  'edit',
   FORM_PREVIEW:  'preview',
   FORM_RESPOND:  'respond',
-  CONVOCATORIA_NEW: 'nueva',
+  CONVOCATORIA_NEW: 'new',
 } as const;
 
 export function publicFormPath(convId: string, token: string): string {
