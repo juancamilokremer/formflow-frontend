@@ -1,20 +1,14 @@
 import { Component, computed, input, output, signal } from '@angular/core';
+import { AbstractControl, Validators } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ButtonComponent } from '../../../../../../shared/components/button/button.component';
 import { IconComponent } from '../../../../../../shared/icons/icon.component';
 import { Category } from '../../../../models/category.model';
 import {
-  ConvocatoriaDraft, ManualCandidateDraft, parseCsvPreview,
+  CandidateAddFailure, ConvocatoriaDraft, ManualCandidateDraft, PROCESS_TYPE_LABEL_KEYS,
+  parseCsvPreview,
 } from '../../../../models/convocatoria-wizard.model';
 import { CandidateImportModalComponent } from '../candidate-import-modal/candidate-import-modal.component';
-
-export interface CandidateAddFailure {
-  ok: false;
-  candidate: ManualCandidateDraft;
-  error: unknown;
-}
-
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 @Component({
   selector: 'app-step-review',
@@ -42,6 +36,7 @@ export class StepReviewComponent {
   protected readonly pendingFile = signal<File | null>(null);
   protected readonly pendingPreviewRows = signal<ManualCandidateDraft[]>([]);
   protected readonly importModalOpen = signal(false);
+  protected readonly csvReadError = signal(false);
 
   protected readonly resolvedWeights = computed(() => {
     const byId = new Map(this.categories().map((c) => [c.id, c]));
@@ -50,8 +45,14 @@ export class StepReviewComponent {
       .map(([categoryId, weight]) => ({ name: byId.get(categoryId)?.name ?? categoryId, weight }));
   });
 
-  protected readonly canAddManual = computed(() =>
-    this.manualName().trim().length > 0 && EMAIL_PATTERN.test(this.manualEmail().trim()));
+  protected readonly processTypeLabelKey = computed(() => PROCESS_TYPE_LABEL_KEYS[this.draft().processType]);
+
+  protected readonly canAddManual = computed(() => {
+    const email = this.manualEmail().trim();
+    return this.manualName().trim().length > 0
+      && email.length > 0
+      && !Validators.email({ value: email } as AbstractControl);
+  });
 
   protected readonly hasCandidates = computed(() =>
     this.draft().manualCandidates.length > 0 || !!this.draft().csvFile);
@@ -73,12 +74,16 @@ export class StepReviewComponent {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (!file) return;
 
+    this.csvReadError.set(false);
     const reader = new FileReader();
     reader.onload = () => {
       const rows = parseCsvPreview(String(reader.result ?? ''));
       this.pendingFile.set(file);
       this.pendingPreviewRows.set(rows);
       this.importModalOpen.set(true);
+    };
+    reader.onerror = () => {
+      this.csvReadError.set(true);
     };
     reader.readAsText(file);
   }

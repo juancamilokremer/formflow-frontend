@@ -6,11 +6,7 @@
   </div>
   <div class="srv__summary-row">
     <span class="srv__summary-key">{{ 'convocatorias.wizard.review.process_type' | translate }}</span>
-    <span>
-      {{ (draft().processType === 'CANDIDATES'
-            ? 'convocatorias.wizard.basic_info.type_candidates'
-            : 'convocatorias.wizard.basic_info.type_diagnostic') | translate }}
-    </span>
+    <span>{{ processTypeLabelKey() | translate }}</span>
   </div>
   <div class="srv__summary-row">
     <span class="srv__summary-key">{{ 'convocatorias.wizard.review.form' | translate }}</span>
@@ -102,6 +98,9 @@
         {{ 'convocatorias.wizard.review.csv_upload_label' | translate }}
         <input type="file" accept=".csv" hidden (change)="onFileSelected($event)" />
       </label>
+    }
+    @if (csvReadError()) {
+      <p class="srv__error">{{ 'convocatorias.wizard.review.csv_read_error' | translate }}</p>
     }
   </div>
 

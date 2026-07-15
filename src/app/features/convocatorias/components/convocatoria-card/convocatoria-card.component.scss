@@ -34,7 +34,7 @@
       font-size: 8px;
     }
 
-    &--active  { background: #dcfce7; color: #15803d; }
+    &--active  { background: var(--ff-success-bg); color: var(--ff-success); }
     &--draft   { background: #fef3c7; color: #92400e; }
     &--closed  { background: var(--ff-bg-secondary); color: var(--ff-text-secondary); }
   }

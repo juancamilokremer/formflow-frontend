@@ -10,7 +10,7 @@ export interface ScoringConfig {
   revisarMin: number;
 }
 
-export type CandidateStatus = 'PENDING' | 'INVITED' | 'RESPONDED' | 'EXPIRED';
+export type CandidateStatus = 'INVITED' | 'RESPONDED' | 'EXPIRED';
 
 export interface CandidateScores {
   total: number;

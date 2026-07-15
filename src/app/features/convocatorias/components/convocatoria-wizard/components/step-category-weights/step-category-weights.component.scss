@@ -73,7 +73,7 @@
     font-weight: 600;
     color: var(--ff-text-secondary);
 
-    &--valid { color: #15803d; }
+    &--valid { color: var(--ff-success); }
     &--invalid { color: var(--ff-error-text); }
   }
 }

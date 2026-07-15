@@ -1,6 +1,6 @@
 import { Component, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { ProcessType } from '../../../../models/convocatoria-wizard.model';
+import { PROCESS_TYPE_LABEL_KEYS, ProcessType } from '../../../../models/convocatoria-wizard.model';
 
 interface ProcessTypeOption {
   value: ProcessType;
@@ -11,12 +11,12 @@ interface ProcessTypeOption {
 const PROCESS_TYPE_OPTIONS: ProcessTypeOption[] = [
   {
     value: 'CANDIDATES',
-    labelKey: 'convocatorias.wizard.basic_info.type_candidates',
+    labelKey: PROCESS_TYPE_LABEL_KEYS.CANDIDATES,
     descKey: 'convocatorias.wizard.basic_info.type_candidates_desc',
   },
   {
     value: 'DIAGNOSTIC',
-    labelKey: 'convocatorias.wizard.basic_info.type_diagnostic',
+    labelKey: PROCESS_TYPE_LABEL_KEYS.DIAGNOSTIC,
     descKey: 'convocatorias.wizard.basic_info.type_diagnostic_desc',
   },
 ];

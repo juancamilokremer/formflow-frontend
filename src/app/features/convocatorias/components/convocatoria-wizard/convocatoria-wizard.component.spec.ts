@@ -3,10 +3,11 @@ import { provideTranslateService } from '@ngx-translate/core';
 import { provideRouter } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { ConvocatoriaWizardComponent } from './convocatoria-wizard.component';
-import { ConvocatoriaService } from '../../services/convocatoria.service';
+import { ConvocatoriaLaunchService } from '../../services/convocatoria-launch.service';
 import { CategoryService } from '../../services/category.service';
 import { FormsService } from '../../../forms/services/forms.service';
 import { ConvocatoriaDetail } from '../../models/convocatoria.model';
+import { LaunchError, LaunchResult } from '../../models/convocatoria-wizard.model';
 import { FormDetail, FormSection } from '../../../forms/models/form.model';
 import { Category } from '../../models/category.model';
 
@@ -17,19 +18,13 @@ const MOCK_CONVOCATORIA: ConvocatoriaDetail = {
   candidates: [{ id: 'cand1', convocatoriaId: 'c1', name: 'Ana', email: 'ana@x.com', token: 't', status: 'INVITED', responseId: null, scores: null, invitedAt: null, respondedAt: null, createdAt: '' }],
 };
 
-function buildComponent(overrides: {
-  create?: unknown; addCandidate?: unknown; importCandidates?: unknown; launch?: unknown;
-} = {}) {
-  const callOrder: string[] = [];
+const MOCK_LAUNCH_RESULT: LaunchResult = {
+  launched: MOCK_CONVOCATORIA, convocatoriaId: 'c1', failures: [],
+};
 
-  const mockConvocatoriaService = {
-    getAll: vi.fn().mockReturnValue(of([])),
-    create: overrides.create ?? vi.fn().mockImplementation(() => { callOrder.push('create'); return of(MOCK_CONVOCATORIA); }),
-    addCandidate: overrides.addCandidate ?? vi.fn().mockImplementation(() => { callOrder.push('addCandidate'); return of({}); }),
-    importCandidates: overrides.importCandidates ?? vi.fn().mockImplementation(() => { callOrder.push('importCandidates'); return of({ imported: 1, skipped: 0, errors: [] }); }),
-    launch: overrides.launch ?? vi.fn().mockImplementation(() => { callOrder.push('launch'); return of(MOCK_CONVOCATORIA); }),
-    close: vi.fn(),
-    delete: vi.fn(),
+function buildComponent(launchImpl?: ReturnType<typeof vi.fn>) {
+  const mockLaunchService = {
+    launch: launchImpl ?? vi.fn().mockReturnValue(of(MOCK_LAUNCH_RESULT)),
   };
 
   const mockCategoryService = {
@@ -41,13 +36,20 @@ function buildComponent(overrides: {
     getById: vi.fn().mockReturnValue(of({} as FormDetail)),
   };
 
-  TestBed.overrideProvider(ConvocatoriaService, { useValue: mockConvocatoriaService });
+  TestBed.overrideProvider(ConvocatoriaLaunchService, { useValue: mockLaunchService });
   TestBed.overrideProvider(CategoryService, { useValue: mockCategoryService });
   TestBed.overrideProvider(FormsService, { useValue: mockFormsService });
 
   const fixture = TestBed.createComponent(ConvocatoriaWizardComponent);
   fixture.detectChanges();
-  return { component: fixture.componentInstance, mockConvocatoriaService, mockCategoryService, mockFormsService, callOrder };
+  return { component: fixture.componentInstance, mockLaunchService, mockCategoryService, mockFormsService };
+}
+
+function withOneCandidate(component: ConvocatoriaWizardComponent) {
+  component['draft'].update((d) => ({
+    ...d, name: 'RRHH', formId: 'f1',
+    manualCandidates: [{ name: 'Ana', email: 'ana@x.com' }],
+  }));
 }
 
 describe('ConvocatoriaWizardComponent', () => {
@@ -103,25 +105,29 @@ describe('ConvocatoriaWizardComponent', () => {
     });
   });
 
-  describe('buildCreateRequest', () => {
-    it('omits categoryWeights when the total weight is 0', () => {
+  describe('onBasicInfoChanged', () => {
+    it('keeps formId and weights when only the name changes', () => {
       const { component } = buildComponent();
-      component['draft'].update((d) => ({ ...d, name: 'RRHH', formId: 'f1', weights: {} }));
-      const req = component['buildCreateRequest']();
-      expect(req.categoryWeights).toBeUndefined();
-      expect(req.scoringConfig).toEqual({ aptoMin: 70, revisarMin: 50 });
+      component['draft'].update((d) => ({ ...d, formId: 'f1', weights: { c1: 40 } }));
+
+      component['onBasicInfoChanged']({ name: 'Nuevo nombre', processType: 'CANDIDATES' });
+
+      expect(component['draft']().formId).toBe('f1');
+      expect(component['draft']().weights).toEqual({ c1: 40 });
     });
 
-    it('includes only weights greater than 0', () => {
+    it('resets formId, weights and loaded categories when processType changes', () => {
       const { component } = buildComponent();
-      component['draft'].update((d) => ({
-        ...d, name: 'RRHH', formId: 'f1', weights: { c1: 40, c2: 60, c3: 0 },
-      }));
-      const req = component['buildCreateRequest']();
-      expect(req.categoryWeights).toEqual([
-        { categoryId: 'c1', weight: 40 },
-        { categoryId: 'c2', weight: 60 },
+      component['draft'].update((d) => ({ ...d, formId: 'f1', weights: { c1: 40 } }));
+      component['formCategories'].set([
+        { id: 'c1', name: 'Técnicas', color: '#000', description: null, createdAt: '', updatedAt: '' },
       ]);
+
+      component['onBasicInfoChanged']({ name: 'RRHH', processType: 'DIAGNOSTIC' });
+
+      expect(component['draft']().formId).toBeNull();
+      expect(component['draft']().weights).toEqual({});
+      expect(component['formCategories']()).toEqual([]);
     });
   });
 
@@ -157,62 +163,65 @@ describe('ConvocatoriaWizardComponent', () => {
     });
   });
 
-  describe('onLaunchRequested orchestration', () => {
-    function withOneCandidate(component: ConvocatoriaWizardComponent) {
-      component['draft'].update((d) => ({
-        ...d, name: 'RRHH', formId: 'f1',
-        manualCandidates: [{ name: 'Ana', email: 'ana@x.com' }],
-      }));
-    }
+  describe('onLaunchRequested', () => {
+    it('does nothing when step5 is invalid', () => {
+      const { component, mockLaunchService } = buildComponent();
+      component['onLaunchRequested']();
+      expect(mockLaunchService.launch).not.toHaveBeenCalled();
+    });
 
-    it('creates, adds candidates, then launches in that order', () => {
-      const { component, callOrder } = buildComponent();
+    it('delegates to ConvocatoriaLaunchService with the draft, null id and empty succeeded set on first attempt', () => {
+      const { component, mockLaunchService } = buildComponent();
       withOneCandidate(component);
 
       component['onLaunchRequested']();
 
-      expect(callOrder).toEqual(['create', 'addCandidate', 'launch']);
+      expect(mockLaunchService.launch).toHaveBeenCalledWith(
+        component['draft'](), null, new Set(),
+      );
+    });
+
+    it('on success, stores the convocatoriaId, failures and launch result', () => {
+      const failures = [{ ok: false as const, candidate: { name: 'Bea', email: 'bea@x.com' }, error: 'dup' }];
+      const launch = vi.fn().mockReturnValue(of({ launched: MOCK_CONVOCATORIA, convocatoriaId: 'c1', failures }));
+      const { component } = buildComponent(launch);
+      withOneCandidate(component);
+
+      component['onLaunchRequested']();
+
       expect(component['launchResult']()).toEqual(MOCK_CONVOCATORIA);
+      expect(component['candidateAddFailures']()).toEqual(failures);
       expect(component['submitting']()).toBe(false);
     });
 
-    it('uses the csv import endpoint instead of addCandidate when a csv file is staged', () => {
-      const { component, callOrder, mockConvocatoriaService } = buildComponent();
-      component['draft'].update((d) => ({
-        ...d, name: 'RRHH', formId: 'f1', csvFile: new File(['a'], 'c.csv'),
-      }));
-
-      component['onLaunchRequested']();
-
-      expect(callOrder).toEqual(['create', 'importCandidates', 'launch']);
-      expect(mockConvocatoriaService.addCandidate).not.toHaveBeenCalled();
-    });
-
-    it('does not re-create the convocatoria on retry after a later-stage failure', () => {
-      let launchCalls = 0;
-      const launch = vi.fn().mockImplementation(() => {
-        launchCalls += 1;
-        return launchCalls === 1 ? throwError(() => new Error('boom')) : of(MOCK_CONVOCATORIA);
-      });
-      const { component, mockConvocatoriaService } = buildComponent({ launch });
+    it('on error, sets submitError according to the failed stage and remembers the convocatoriaId for retry', () => {
+      const err: LaunchError = { stage: 'launch', convocatoriaId: 'c1', failures: [] };
+      const launch = vi.fn().mockReturnValue(throwError(() => err));
+      const { component, mockLaunchService } = buildComponent(launch);
       withOneCandidate(component);
 
       component['onLaunchRequested']();
-      expect(component['submitError']()).toBe('convocatorias.wizard.review.error_launch');
-      expect(mockConvocatoriaService.create).toHaveBeenCalledTimes(1);
 
+      expect(component['submitError']()).toBe('convocatorias.wizard.review.error_launch');
+      expect(component['submitting']()).toBe(false);
+
+      // Retrying must reuse the convocatoriaId captured from the error, not null. Ana isn't in
+      // the reported failures, so a 'launch'-stage failure implies she was already added.
+      mockLaunchService.launch.mockReturnValue(of(MOCK_LAUNCH_RESULT));
       component['onLaunchRequested']();
-      expect(mockConvocatoriaService.create).toHaveBeenCalledTimes(1);
-      expect(component['launchResult']()).toEqual(MOCK_CONVOCATORIA);
+      expect(mockLaunchService.launch).toHaveBeenLastCalledWith(
+        component['draft'](), 'c1', new Set(['ana@x.com']),
+      );
     });
 
-    it('still launches when some manual candidates fail as long as one succeeds', () => {
-      let call = 0;
-      const addCandidate = vi.fn().mockImplementation(() => {
-        call += 1;
-        return call === 1 ? throwError(() => new Error('duplicate')) : of({});
-      });
-      const { component, callOrder } = buildComponent({ addCandidate });
+    it('accumulates succeeded candidate emails across a launch-stage failure and passes them on retry', () => {
+      const err: LaunchError = {
+        stage: 'launch',
+        convocatoriaId: 'c1',
+        failures: [{ ok: false as const, candidate: { name: 'Bea', email: 'bea@x.com' }, error: 'dup' }],
+      };
+      const launch = vi.fn().mockReturnValue(throwError(() => err));
+      const { component, mockLaunchService } = buildComponent(launch);
       component['draft'].update((d) => ({
         ...d, name: 'RRHH', formId: 'f1',
         manualCandidates: [{ name: 'Ana', email: 'ana@x.com' }, { name: 'Bea', email: 'bea@x.com' }],
@@ -220,27 +229,28 @@ describe('ConvocatoriaWizardComponent', () => {
 
       component['onLaunchRequested']();
 
-      expect(callOrder).toEqual(['create', 'launch']);
-      expect(component['candidateAddFailures']().length).toBe(1);
-      expect(component['launchResult']()).toEqual(MOCK_CONVOCATORIA);
+      mockLaunchService.launch.mockReturnValue(of(MOCK_LAUNCH_RESULT));
+      component['onLaunchRequested']();
+
+      // Ana succeeded in the failed round (only Bea is reported as a failure), so she must be
+      // excluded from the retry's "already succeeded" set... i.e. included in it.
+      expect(mockLaunchService.launch).toHaveBeenLastCalledWith(
+        component['draft'](), 'c1', new Set(['ana@x.com']),
+      );
     });
 
-    it('aborts before launch when all candidate adds fail', () => {
-      const addCandidate = vi.fn().mockReturnValue(throwError(() => new Error('duplicate')));
-      const { component, callOrder } = buildComponent({ addCandidate });
+    it('does not mark anyone as succeeded when the create stage fails (no convocatoriaId yet)', () => {
+      const err: LaunchError = { stage: 'create' };
+      const launch = vi.fn().mockReturnValue(throwError(() => err));
+      const { component, mockLaunchService } = buildComponent(launch);
       withOneCandidate(component);
 
       component['onLaunchRequested']();
 
-      expect(callOrder).toEqual(['create']);
-      expect(component['submitError']()).toBe('convocatorias.wizard.review.error_candidates');
-      expect(component['launchResult']()).toBeNull();
-    });
-
-    it('does nothing when step5 is invalid', () => {
-      const { component, callOrder } = buildComponent();
+      expect(component['submitError']()).toBe('convocatorias.wizard.review.error_create');
+      mockLaunchService.launch.mockReturnValue(of(MOCK_LAUNCH_RESULT));
       component['onLaunchRequested']();
-      expect(callOrder).toEqual([]);
+      expect(mockLaunchService.launch).toHaveBeenLastCalledWith(component['draft'](), null, new Set());
     });
   });
 });

@@ -1,11 +1,37 @@
 import { FormDetail } from '../../forms/models/form.model';
+import { ConvocatoriaDetail } from './convocatoria.model';
 
 export type WizardStep = 1 | 2 | 3 | 4 | 5;
 export type ProcessType = 'CANDIDATES' | 'DIAGNOSTIC';
 
+export const PROCESS_TYPE_LABEL_KEYS: Record<ProcessType, string> = {
+  CANDIDATES: 'convocatorias.wizard.basic_info.type_candidates',
+  DIAGNOSTIC: 'convocatorias.wizard.basic_info.type_diagnostic',
+};
+
 export interface ManualCandidateDraft {
   name: string;
   email: string;
+}
+
+export interface CandidateAddFailure {
+  ok: false;
+  candidate: ManualCandidateDraft;
+  error: unknown;
+}
+
+export type LaunchStage = 'create' | 'candidates' | 'launch';
+
+export interface LaunchError {
+  stage: LaunchStage;
+  convocatoriaId?: string;
+  failures?: CandidateAddFailure[];
+}
+
+export interface LaunchResult {
+  launched: ConvocatoriaDetail;
+  convocatoriaId: string;
+  failures: CandidateAddFailure[];
 }
 
 export interface ConvocatoriaDraft {

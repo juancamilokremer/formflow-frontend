@@ -53,7 +53,7 @@
   }
 
   &__step--done &__step-num {
-    background: #15803d;
+    background: var(--ff-success);
     color: var(--ff-white);
   }
 

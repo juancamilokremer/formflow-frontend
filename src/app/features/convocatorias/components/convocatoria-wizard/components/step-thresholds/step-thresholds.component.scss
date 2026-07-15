@@ -44,8 +44,8 @@
     overflow: hidden;
     text-overflow: ellipsis;
 
-    &--no-apto { background: #fee2e2; color: #b91c1c; }
-    &--revisar { background: #fef9c3; color: #854d0e; }
-    &--apto    { background: #dcfce7; color: #15803d; }
+    &--no-apto { background: var(--ff-error-bg); color: var(--ff-error-text); }
+    &--revisar { background: var(--ff-warning-bg); color: var(--ff-warning); }
+    &--apto    { background: var(--ff-success-bg); color: var(--ff-success); }
   }
 }

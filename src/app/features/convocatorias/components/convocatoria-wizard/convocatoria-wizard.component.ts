@@ -2,9 +2,7 @@ import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
-import {
-  Observable, concatMap, from, of, switchMap, tap, toArray, catchError, map, throwError, forkJoin,
-} from 'rxjs';
+import { forkJoin } from 'rxjs';
 import { RouteConstants } from '../../../../core/constants/route.constants';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
 import { CardComponent } from '../../../../shared/components/card/card.component';
@@ -14,19 +12,19 @@ import { ConfirmDialogComponent } from '../../../../shared/components/confirm-di
 import { SuccessCardComponent } from '../../../../shared/components/success-card/success-card.component';
 import { FormsService } from '../../../forms/services/forms.service';
 import { Form } from '../../../forms/models/form.model';
-import { ConvocatoriaService } from '../../services/convocatoria.service';
+import { ConvocatoriaLaunchService } from '../../services/convocatoria-launch.service';
 import { CategoryService } from '../../services/category.service';
 import { Category } from '../../models/category.model';
-import { ConvocatoriaDetail, CreateConvocatoriaRequest } from '../../models/convocatoria.model';
+import { ConvocatoriaDetail } from '../../models/convocatoria.model';
 import {
-  ConvocatoriaDraft, DEFAULT_DRAFT, ManualCandidateDraft, ProcessType, WizardStep,
-  deriveCategoryIds,
+  CandidateAddFailure, ConvocatoriaDraft, DEFAULT_DRAFT, LaunchError, ManualCandidateDraft,
+  ProcessType, WizardStep, deriveCategoryIds,
 } from '../../models/convocatoria-wizard.model';
 import { StepBasicInfoComponent } from './components/step-basic-info/step-basic-info.component';
 import { StepFormSelectorComponent } from './components/step-form-selector/step-form-selector.component';
 import { StepCategoryWeightsComponent } from './components/step-category-weights/step-category-weights.component';
 import { StepThresholdsComponent } from './components/step-thresholds/step-thresholds.component';
-import { StepReviewComponent, CandidateAddFailure } from './components/step-review/step-review.component';
+import { StepReviewComponent } from './components/step-review/step-review.component';
 
 const STEP_KEYS = [
   'convocatorias.wizard.steps.basic_info',
@@ -48,7 +46,7 @@ const STEP_KEYS = [
   styleUrl: './convocatoria-wizard.component.scss',
 })
 export class ConvocatoriaWizardComponent {
-  private readonly convocatoriaService = inject(ConvocatoriaService);
+  private readonly launchService = inject(ConvocatoriaLaunchService);
   private readonly categoryService = inject(CategoryService);
   private readonly formsService = inject(FormsService);
   private readonly router = inject(Router);
@@ -68,6 +66,7 @@ export class ConvocatoriaWizardComponent {
   protected readonly submitError = signal<string | null>(null);
   protected readonly candidateAddFailures = signal<CandidateAddFailure[]>([]);
   private readonly createdConvocatoriaId = signal<string | null>(null);
+  private readonly succeededCandidateEmails = signal<ReadonlySet<string>>(new Set());
   protected readonly launchResult = signal<ConvocatoriaDetail | null>(null);
 
   protected readonly discardConfirmOpen = signal(false);
@@ -106,7 +105,19 @@ export class ConvocatoriaWizardComponent {
   }
 
   protected onBasicInfoChanged(patch: { name: string; processType: ProcessType }): void {
-    this.draft.update((d) => ({ ...d, ...patch }));
+    const processTypeChanged = this.draft().processType !== patch.processType;
+
+    this.draft.update((d) => ({
+      ...d,
+      ...patch,
+      formId: processTypeChanged ? null : d.formId,
+      weights: processTypeChanged ? {} : d.weights,
+    }));
+
+    if (processTypeChanged) {
+      this.formCategories.set([]);
+      this.lastFetchedFormId.set(null);
+    }
   }
 
   protected onFormSelected(formId: string): void {
@@ -197,76 +208,41 @@ export class ConvocatoriaWizardComponent {
     if (!this.step5Valid() || this.submitting()) return;
     this.submitting.set(true);
     this.submitError.set(null);
-    this.candidateAddFailures.set([]);
 
-    const existingId = this.createdConvocatoriaId();
-    const create$ = existingId
-      ? of({ id: existingId } as ConvocatoriaDetail)
-      : this.convocatoriaService.create(this.buildCreateRequest());
-
-    create$.pipe(
-      tap((c) => this.createdConvocatoriaId.set(c.id)),
-      catchError(() => throwError(() => ({ stage: 'create' }))),
-      switchMap((c) => this.addOrImportCandidates(c.id).pipe(map(() => c.id))),
-      switchMap((id) => this.convocatoriaService.launch(id).pipe(
-        catchError(() => throwError(() => ({ stage: 'launch' }))),
-      )),
-      takeUntilDestroyed(this.destroyRef),
-    ).subscribe({
-      next: (launched) => {
-        this.submitting.set(false);
-        this.launchResult.set(launched);
-      },
-      error: (err: { stage?: string }) => {
-        this.submitting.set(false);
-        this.submitError.set(this.describeSubmitError(err?.stage));
-      },
-    });
+    this.launchService
+      .launch(this.draft(), this.createdConvocatoriaId(), this.succeededCandidateEmails())
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: ({ launched, convocatoriaId, failures }) => {
+          this.createdConvocatoriaId.set(convocatoriaId);
+          this.candidateAddFailures.set(failures);
+          this.markCandidatesSucceeded(failures);
+          this.submitting.set(false);
+          this.launchResult.set(launched);
+        },
+        error: (err: LaunchError) => {
+          if (err.convocatoriaId) this.createdConvocatoriaId.set(err.convocatoriaId);
+          if (err.failures) {
+            this.candidateAddFailures.set(err.failures);
+            this.markCandidatesSucceeded(err.failures);
+          }
+          this.submitting.set(false);
+          this.submitError.set(this.describeSubmitError(err.stage));
+        },
+      });
   }
 
-  private buildCreateRequest(): CreateConvocatoriaRequest {
-    const d = this.draft();
-    const total = this.totalWeight();
-    return {
-      name: d.name.trim(),
-      formId: d.formId!,
-      categoryWeights: total === 0
-        ? undefined
-        : Object.entries(d.weights)
-            .filter(([, weight]) => weight > 0)
-            .map(([categoryId, weight]) => ({ categoryId, weight })),
-      scoringConfig: { aptoMin: d.aptoMin, revisarMin: d.revisarMin },
-    };
-  }
+  /** Remembers which manual candidates are already persisted, so a retry doesn't resend them. */
+  private markCandidatesSucceeded(failuresThisRound: CandidateAddFailure[]): void {
+    const alreadySucceeded = this.succeededCandidateEmails();
+    const attempted = this.draft().manualCandidates.filter((c) => !alreadySucceeded.has(c.email));
+    if (attempted.length === 0) return;
 
-  private addOrImportCandidates(convocatoriaId: string): Observable<unknown> {
-    const d = this.draft();
-
-    if (d.csvFile) {
-      return this.convocatoriaService.importCandidates(convocatoriaId, d.csvFile).pipe(
-        catchError(() => throwError(() => ({ stage: 'candidates' }))),
-      );
+    const failedEmails = new Set(failuresThisRound.map((f) => f.candidate.email));
+    const newlySucceeded = attempted.filter((c) => !failedEmails.has(c.email)).map((c) => c.email);
+    if (newlySucceeded.length > 0) {
+      this.succeededCandidateEmails.set(new Set([...alreadySucceeded, ...newlySucceeded]));
     }
-
-    if (d.manualCandidates.length === 0) {
-      return of(null);
-    }
-
-    return from(d.manualCandidates).pipe(
-      concatMap((candidate) =>
-        this.convocatoriaService.addCandidate(convocatoriaId, candidate).pipe(
-          map(() => ({ ok: true as const, candidate })),
-          catchError((err) => of({ ok: false as const, candidate, error: err })),
-        ),
-      ),
-      toArray(),
-      switchMap((results) => {
-        const failed = results.filter((r) => !r.ok) as CandidateAddFailure[];
-        this.candidateAddFailures.set(failed);
-        const succeeded = results.length - failed.length;
-        return succeeded === 0 ? throwError(() => ({ stage: 'candidates' })) : of(results);
-      }),
-    );
   }
 
   private describeSubmitError(stage: string | undefined): string {

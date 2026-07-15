@@ -9,6 +9,28 @@ const categories: Category[] = [
   { id: 'c2', name: 'Blandas', color: '#7C3AED', description: null, createdAt: '', updatedAt: '' },
 ];
 
+class FakeFileReaderSuccess {
+  onload: (() => void) | null = null;
+  onerror: (() => void) | null = null;
+  result: string | null = null;
+  readAsText(): void {
+    this.result = 'nombre,email\nAna,ana@x.com';
+    this.onload?.();
+  }
+}
+
+class FakeFileReaderError {
+  onload: (() => void) | null = null;
+  onerror: (() => void) | null = null;
+  readAsText(): void {
+    this.onerror?.();
+  }
+}
+
+function fileSelectedEvent(file: File | undefined): Event {
+  return { target: { files: file ? [file] : [] } } as unknown as Event;
+}
+
 async function create(draft: Partial<ConvocatoriaDraft> = {}) {
   await TestBed.configureTestingModule({
     imports: [StepReviewComponent],
@@ -140,6 +162,38 @@ describe('StepReviewComponent', () => {
       expect(emitted).toBe(false);
       expect(c['importModalOpen']()).toBe(false);
       expect(c['pendingFile']()).toBeNull();
+    });
+  });
+
+  describe('onFileSelected', () => {
+    afterEach(() => vi.unstubAllGlobals());
+
+    it('sets csvReadError and does not open the modal when the file cannot be read', async () => {
+      vi.stubGlobal('FileReader', FakeFileReaderError);
+      const c = await create();
+
+      c['onFileSelected'](fileSelectedEvent(new File(['a'], 'c.csv')));
+
+      expect(c['csvReadError']()).toBe(true);
+      expect(c['importModalOpen']()).toBe(false);
+    });
+
+    it('parses the file and opens the import modal on success, clearing any previous error', async () => {
+      vi.stubGlobal('FileReader', FakeFileReaderSuccess);
+      const c = await create();
+      c['csvReadError'].set(true);
+
+      c['onFileSelected'](fileSelectedEvent(new File(['a'], 'c.csv')));
+
+      expect(c['csvReadError']()).toBe(false);
+      expect(c['importModalOpen']()).toBe(true);
+      expect(c['pendingPreviewRows']()).toEqual([{ name: 'Ana', email: 'ana@x.com' }]);
+    });
+
+    it('does nothing when no file is selected', async () => {
+      const c = await create();
+      c['onFileSelected'](fileSelectedEvent(undefined));
+      expect(c['importModalOpen']()).toBe(false);
     });
   });
 

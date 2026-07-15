@@ -68,5 +68,15 @@ describe('StepThresholdsComponent', () => {
 
       expect(emitted).toEqual({ aptoMin: 80, revisarMin: 50 });
     });
+
+    it('never lets revisarMin go negative when aptoMin is dragged down to 0', async () => {
+      const c = await create(70, 50);
+      let emitted: { aptoMin: number; revisarMin: number } | undefined;
+      c.thresholdsChanged.subscribe((e) => (emitted = e));
+
+      c['onAptoInput'](0);
+
+      expect(emitted).toEqual({ aptoMin: 0, revisarMin: 0 });
+    });
   });
 });

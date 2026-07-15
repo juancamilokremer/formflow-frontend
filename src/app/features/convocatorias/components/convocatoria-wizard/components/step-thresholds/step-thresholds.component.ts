@@ -17,12 +17,12 @@ export class StepThresholdsComponent {
   protected readonly aptoZoneWidth = computed(() => 100 - this.aptoMin());
 
   protected onAptoInput(value: number): void {
-    const revisarMin = Math.min(this.revisarMin(), value - 1);
+    const revisarMin = Math.max(0, Math.min(this.revisarMin(), value - 1));
     this.thresholdsChanged.emit({ aptoMin: value, revisarMin });
   }
 
   protected onRevisarInput(value: number): void {
-    const revisarMin = Math.min(value, this.aptoMin() - 1);
+    const revisarMin = Math.max(0, Math.min(value, this.aptoMin() - 1));
     this.thresholdsChanged.emit({ aptoMin: this.aptoMin(), revisarMin });
   }
 }

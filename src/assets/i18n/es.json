@@ -454,6 +454,7 @@
         "csv_staged": "Archivo listo: {{fileName}} ({{count}} filas)",
         "csv_clear": "Quitar archivo",
         "csv_disabled_hint": "Quita el archivo CSV para agregar candidatos manualmente",
+        "csv_read_error": "No se pudo leer el archivo. Verifica que sea un CSV válido e intenta de nuevo.",
         "launch_button": "Lanzar convocatoria",
         "launch_success": "Convocatoria lanzada — emails enviados a {{count}} candidatos",
         "launch_success_detail": "Ya puedes verla en la lista de convocatorias.",
