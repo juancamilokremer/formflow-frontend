@@ -25,7 +25,7 @@
       {{ 'builder.preview' | translate }}
     </app-button>
     <app-button (click)="publishClicked.emit()">
-      {{ 'builder.publish' | translate }}
+      {{ (form().status === 'ACTIVE' ? 'builder.archive' : 'builder.publish') | translate }}
     </app-button>
   </div>
 </div>

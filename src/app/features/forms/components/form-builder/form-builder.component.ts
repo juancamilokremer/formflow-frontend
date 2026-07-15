@@ -7,7 +7,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { IconComponent } from '../../../../shared/icons/icon.component';
 import { FormsService } from '../../services/forms.service';
 import {
-  FormDetail, FormSection, FormQuestion, QuestionType,
+  FormDetail, FormSection, FormQuestion, FormStatus, QuestionType,
   AddQuestionRequest, UpdateQuestionRequest, QuestionMovedEvent, CanvasQuestionChangedEvent,
   ConditionalLogicConfig,
 } from '../../models/form.model';
@@ -91,7 +91,11 @@ export class FormBuilderComponent implements OnInit {
   }
 
   protected onPublishClicked(): void {
-    // stub — implemented in a future issue
+    const currentForm = this.form()!;
+    const nextStatus: FormStatus = currentForm.status === 'ACTIVE' ? 'ARCHIVED' : 'ACTIVE';
+    this.formsService.updateStatus(currentForm.id, nextStatus).subscribe({
+      next: () => this.form.update((current) => (current ? { ...current, status: nextStatus } : current)),
+    });
   }
 
   // ---------------------------------------------------------------------------
