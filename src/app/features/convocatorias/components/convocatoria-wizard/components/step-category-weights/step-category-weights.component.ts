@@ -2,7 +2,7 @@ import { Component, computed, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { EmptyStateComponent } from '../../../../../../shared/components/empty-state/empty-state.component';
 import { LoadingSpinnerComponent } from '../../../../../../shared/components/loading-spinner/loading-spinner.component';
-import { Category } from '../../../../models/category.model';
+import { Category } from '../../../../../categories/models/category.model';
 
 @Component({
   selector: 'app-step-category-weights',

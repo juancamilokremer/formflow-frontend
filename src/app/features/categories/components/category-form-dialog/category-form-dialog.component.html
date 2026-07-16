@@ -1,0 +1,72 @@
+<app-dialog
+  [title]="(isEditMode() ? 'categories.dialog.edit_title' : 'categories.dialog.create_title') | translate"
+  [isOpen]="isOpen()"
+  (closed)="cancel()"
+>
+  <div class="cfd__field">
+    <label class="cfd__label" for="cat-name">{{ 'categories.dialog.name_label' | translate }}</label>
+    <input
+      id="cat-name"
+      class="cfd__input"
+      type="text"
+      [placeholder]="'categories.dialog.name_placeholder' | translate"
+      [value]="name()"
+      (input)="name.set($any($event.target).value)"
+      (keydown.enter)="submit()"
+      autocomplete="off"
+    />
+  </div>
+
+  <div class="cfd__field">
+    <label class="cfd__label" for="cat-color">{{ 'categories.dialog.color_label' | translate }}</label>
+    <div class="cfd__color-row">
+      <input
+        id="cat-color"
+        class="cfd__color-swatch"
+        type="color"
+        [value]="colorValid() ? color() : '#000000'"
+        (input)="color.set($any($event.target).value)"
+      />
+      <input
+        class="cfd__input cfd__color-hex"
+        type="text"
+        maxlength="7"
+        [value]="color()"
+        (input)="color.set($any($event.target).value)"
+      />
+    </div>
+    @if (!colorValid()) {
+      <p class="cfd__hint cfd__hint--error">{{ 'categories.dialog.error_invalid_color' | translate }}</p>
+    }
+  </div>
+
+  <div class="cfd__field">
+    <label class="cfd__label" for="cat-desc">{{ 'categories.dialog.description_label' | translate }}</label>
+    <input
+      id="cat-desc"
+      class="cfd__input"
+      type="text"
+      [placeholder]="'categories.dialog.description_placeholder' | translate"
+      [value]="description()"
+      (input)="description.set($any($event.target).value)"
+    />
+  </div>
+
+  @if (errorKey()) {
+    <p class="cfd__hint cfd__hint--error">{{ errorKey()! | translate }}</p>
+  }
+
+  <div dialog-footer>
+    <app-button variant="secondary" type="button" [disabled]="saving()" (click)="cancel()">
+      {{ 'common.cancel' | translate }}
+    </app-button>
+    <app-button
+      type="button"
+      [loading]="saving()"
+      [disabled]="!canSubmit()"
+      (click)="submit()"
+    >
+      {{ (isEditMode() ? 'categories.dialog.save_btn' : 'categories.dialog.create_btn') | translate }}
+    </app-button>
+  </div>
+</app-dialog>

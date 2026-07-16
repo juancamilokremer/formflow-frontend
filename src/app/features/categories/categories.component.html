@@ -1,0 +1,41 @@
+<div class="categories-page">
+
+  <app-page-header
+    [title]="'categories.title' | translate"
+    [subtitle]="'categories.subtitle' | translate"
+  >
+    <app-button (click)="openCreateDialog()">
+      <app-icon name="plus" [size]="16" />
+      {{ 'categories.create_btn' | translate }}
+    </app-button>
+  </app-page-header>
+
+  @if (!loading() && !loadError() && categories().length === 0) {
+    <app-empty-state
+      icon="tag"
+      [title]="'categories.empty.title' | translate"
+      [subtitle]="'categories.empty.subtitle' | translate"
+    >
+      <app-button (click)="openCreateDialog()">
+        <app-icon name="plus" [size]="16" />
+        {{ 'categories.create_btn' | translate }}
+      </app-button>
+    </app-empty-state>
+  } @else {
+    <app-categories-list
+      [categories]="categories()"
+      [loading]="loading()"
+      [loadError]="loadError()"
+      (editRequested)="openEditDialog($event)"
+      (deleted)="onDeleted($event)"
+    />
+  }
+
+</div>
+
+<app-category-form-dialog
+  [isOpen]="dialogOpen()"
+  [category]="editingCategory()"
+  (saved)="onSaved($event)"
+  (cancelled)="closeDialog()"
+/>

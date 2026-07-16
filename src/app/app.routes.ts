@@ -81,6 +81,14 @@ export const routes: Routes = [
           ),
       },
       {
+        path: RouteConstants.CATEGORIES,
+        data: { titleKey: 'shell.nav.categories' },
+        loadComponent: () =>
+          import('./features/categories/categories.component').then(
+            (m) => m.CategoriesComponent,
+          ),
+      },
+      {
         path: RouteConstants.CONVOCATORIAS,
         data: { titleKey: 'shell.nav.convocatorias' },
         loadComponent: () =>
