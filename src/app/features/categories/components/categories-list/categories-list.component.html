@@ -1,0 +1,54 @@
+@if (deleteError()) {
+  <p class="cl__error">{{ deleteError()! | translate }}</p>
+}
+
+<app-table
+  [columns]="tableColumns"
+  [rows]="filteredCategories()"
+  [loading]="loading()"
+  [loadError]="loadError()"
+  [loadingMessage]="'common.loading' | translate"
+  [errorTitle]="'categories.error.load' | translate"
+  emptyIcon="search-x"
+  [emptyTitle]="'categories.empty.no_results_title' | translate"
+  [emptySubtitle]="'categories.empty.no_results_subtitle' | translate"
+>
+
+  <ng-template appTableToolbar>
+    <app-search-input
+      [placeholder]="'categories.search_placeholder' | translate"
+      (searched)="onSearch($event)"
+    />
+  </ng-template>
+
+  <ng-template appTableCell [column]="'name'" let-row>
+    <div class="cl__cell-name">
+      <span class="cl__dot" [style.background]="$any(row).color"></span>
+      <span class="cl__name">{{ $any(row).name }}</span>
+    </div>
+  </ng-template>
+
+  <ng-template appTableCell [column]="'description'" let-row>
+    <span class="cl__cell-muted">{{ $any(row).description || '—' }}</span>
+  </ng-template>
+
+  <ng-template appTableCell [column]="'__actions'" let-row>
+    <div class="cl__cell-actions">
+      <app-button variant="secondary" (click)="editRequested.emit($any(row))">
+        {{ 'categories.actions.edit' | translate }}
+      </app-button>
+      <app-button variant="ghost" [danger]="true" (click)="confirmDelete($any(row).id)">
+        <app-icon name="trash-2" [size]="14" />
+      </app-button>
+    </div>
+  </ng-template>
+
+</app-table>
+
+<app-confirm-dialog
+  [isOpen]="!!pendingDeleteId()"
+  [message]="'categories.actions.confirm_delete' | translate"
+  confirmLabel="categories.actions.delete_yes"
+  (confirmed)="deleteCategory()"
+  (cancelled)="cancelDelete()"
+/>

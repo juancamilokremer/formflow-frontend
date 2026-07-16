@@ -1,0 +1,39 @@
+:host { display: block; }
+
+.cl {
+  &__cell-name {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  &__dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  &__name {
+    font-weight: 500;
+    color: var(--ff-text-primary);
+  }
+
+  &__cell-muted {
+    color: var(--ff-text-secondary);
+    font-size: 13px;
+  }
+
+  &__cell-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: flex-end;
+  }
+
+  &__error {
+    font-size: 13px;
+    color: var(--ff-error-text);
+    margin: 0 0 12px;
+  }
+}

@@ -17,6 +17,7 @@ interface NavItem {
 const NAV_ITEMS: NavItem[] = [
   { labelKey: 'shell.nav.dashboard', icon: 'home', route: RouteConstants.DASHBOARD },
   { labelKey: 'shell.nav.forms', icon: 'file-text', route: RouteConstants.FORMS },
+  { labelKey: 'shell.nav.categories', icon: 'tag', route: RouteConstants.CATEGORIES },
   { labelKey: 'shell.nav.convocatorias', icon: 'megaphone', route: RouteConstants.CONVOCATORIAS },
   { labelKey: 'shell.nav.users', icon: 'users', route: RouteConstants.USERS },
   { labelKey: 'shell.nav.settings', icon: 'settings', route: RouteConstants.SETTINGS },

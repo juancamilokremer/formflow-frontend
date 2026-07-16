@@ -13,8 +13,8 @@ import { SuccessCardComponent } from '../../../../shared/components/success-card
 import { FormsService } from '../../../forms/services/forms.service';
 import { Form } from '../../../forms/models/form.model';
 import { ConvocatoriaLaunchService } from '../../services/convocatoria-launch.service';
-import { CategoryService } from '../../services/category.service';
-import { Category } from '../../models/category.model';
+import { CategoryService } from '../../../categories/services/category.service';
+import { Category } from '../../../categories/models/category.model';
 import { ConvocatoriaDetail } from '../../models/convocatoria.model';
 import {
   CandidateAddFailure, ConvocatoriaDraft, DEFAULT_DRAFT, LaunchError, ManualCandidateDraft,

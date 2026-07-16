@@ -3,7 +3,7 @@ import { AbstractControl, Validators } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ButtonComponent } from '../../../../../../shared/components/button/button.component';
 import { IconComponent } from '../../../../../../shared/icons/icon.component';
-import { Category } from '../../../../models/category.model';
+import { Category } from '../../../../../categories/models/category.model';
 import {
   CandidateAddFailure, ConvocatoriaDraft, ManualCandidateDraft, PROCESS_TYPE_LABEL_KEYS,
   parseCsvPreview,
