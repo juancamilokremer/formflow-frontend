@@ -1,0 +1,16 @@
+<div class="qp__field">
+  <label class="qp__label" for="qp-category">{{ 'builder.prop.category' | translate }}</label>
+  <select id="qp-category" class="qp__select" (change)="onChange($event)">
+    <option value="" [selected]="!selectedCategoryId()">{{ 'builder.prop.category_none' | translate }}</option>
+    @for (cat of categories(); track cat.id) {
+      <option [value]="cat.id" [selected]="cat.id === selectedCategoryId()">{{ cat.name }}</option>
+    }
+    <option value="__new__">{{ 'builder.prop.category_create' | translate }}</option>
+  </select>
+</div>
+
+<app-category-form-dialog
+  [isOpen]="dialogOpen()"
+  (saved)="onCategoryCreated($event)"
+  (cancelled)="onDialogCancelled()"
+/>

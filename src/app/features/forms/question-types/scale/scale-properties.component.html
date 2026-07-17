@@ -66,5 +66,10 @@
     @if (scoringType() === 'auto') {
       <div class="qp__info-box">{{ 'builder.prop.scoring_auto_info' | translate }}</div>
     }
+
+    <app-category-selector
+      [selectedCategoryId]="question().categoryId"
+      (categoryChange)="onCategoryChange($event)"
+    />
   }
 </div>

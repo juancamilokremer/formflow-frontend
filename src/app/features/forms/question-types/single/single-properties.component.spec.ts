@@ -53,4 +53,11 @@ describe('SinglePropertiesComponent', () => {
     (component as any).onTitleBlur(event);
     expect(emitted?.title).toBe('Nuevo título');
   });
+
+  it('emits categoryId via onCategoryChange', () => {
+    let emitted: Partial<FormQuestion> | undefined;
+    component.changed.subscribe((v) => (emitted = v));
+    (component as any).onCategoryChange('cat-1');
+    expect(emitted?.categoryId).toBe('cat-1');
+  });
 });

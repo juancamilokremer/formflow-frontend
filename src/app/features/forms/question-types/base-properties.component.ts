@@ -21,4 +21,8 @@ export abstract class BasePropertiesComponent implements PropertiesQuestionCompo
     const description = (event.target as HTMLTextAreaElement).value.trim() || null;
     if (description !== this.question().description) this.changed.emit({ description });
   }
+
+  protected onCategoryChange(categoryId: string | null): void {
+    this.changed.emit({ categoryId });
+  }
 }
