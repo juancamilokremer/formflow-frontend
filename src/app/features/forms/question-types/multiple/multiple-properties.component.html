@@ -43,8 +43,10 @@
     </div>
 
     <app-category-selector
+      [categories]="categories()"
       [selectedCategoryId]="question().categoryId"
       (categoryChange)="onCategoryChange($event)"
+      (categoryCreated)="onCategoryCreated($event)"
     />
   }
 </div>

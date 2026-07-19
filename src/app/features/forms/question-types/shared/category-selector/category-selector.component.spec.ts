@@ -2,9 +2,7 @@ import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideTranslateService } from '@ngx-translate/core';
-import { of } from 'rxjs';
-import { Category } from '../../../../categories/models/category.model';
-import { CategoryService } from '../../../../categories/services/category.service';
+import { Category } from '../../../../../core/models/category.model';
 import { CategorySelectorComponent } from './category-selector.component';
 
 const MOCK_CATEGORIES: Category[] = [
@@ -16,21 +14,22 @@ const MOCK_NEW_CATEGORY: Category = {
 };
 
 @Component({
-  template: `<app-category-selector [selectedCategoryId]="selectedCategoryId" (categoryChange)="last = $event" />`,
+  template: `<app-category-selector [categories]="categories" [selectedCategoryId]="selectedCategoryId" (categoryChange)="lastChange = $event" (categoryCreated)="lastCreated = $event" />`,
   imports: [CategorySelectorComponent],
 })
 class HostComponent {
+  categories: Category[] = MOCK_CATEGORIES;
   selectedCategoryId: string | null = null;
-  last?: string | null;
+  lastChange?: string | null;
+  lastCreated?: Category;
 }
 
 describe('CategorySelectorComponent', () => {
-  function setup(getAll = vi.fn().mockReturnValue(of(MOCK_CATEGORIES))) {
+  function setup() {
     TestBed.configureTestingModule({
       imports: [HostComponent],
       providers: [provideTranslateService({ lang: 'es' })],
     });
-    TestBed.overrideProvider(CategoryService, { useValue: { getAll } });
     const fixture = TestBed.createComponent(HostComponent);
     fixture.detectChanges();
     const selectorEl = fixture.debugElement.query(By.directive(CategorySelectorComponent));
@@ -38,23 +37,18 @@ describe('CategorySelectorComponent', () => {
     return { fixture, host: fixture.componentInstance, selector };
   }
 
-  it('loads categories from CategoryService on init', () => {
-    const { selector } = setup();
-    expect(selector['categories']()).toEqual(MOCK_CATEGORIES);
-  });
-
   it('emits the selected categoryId', () => {
     const { host, selector } = setup();
     const event = { target: { value: 'cat-1' } } as unknown as Event;
     selector['onChange'](event);
-    expect(host.last).toBe('cat-1');
+    expect(host.lastChange).toBe('cat-1');
   });
 
   it('emits null when "sin categoría" is selected', () => {
     const { host, selector } = setup();
     const event = { target: { value: '' } } as unknown as Event;
     selector['onChange'](event);
-    expect(host.last).toBeNull();
+    expect(host.lastChange).toBeNull();
   });
 
   it('opens the create-category dialog instead of emitting when "__new__" is selected', () => {
@@ -62,16 +56,16 @@ describe('CategorySelectorComponent', () => {
     const event = { target: { value: '__new__' } } as unknown as Event;
     selector['onChange'](event);
     expect(selector['dialogOpen']()).toBe(true);
-    expect(host.last).toBeUndefined();
+    expect(host.lastChange).toBeUndefined();
   });
 
-  it('appends the created category, closes the dialog, and emits its id', () => {
+  it('closes the dialog and emits categoryCreated + categoryChange when a category is created', () => {
     const { host, selector } = setup();
     selector['dialogOpen'].set(true);
     selector['onCategoryCreated'](MOCK_NEW_CATEGORY);
-    expect(selector['categories']()).toEqual([...MOCK_CATEGORIES, MOCK_NEW_CATEGORY]);
     expect(selector['dialogOpen']()).toBe(false);
-    expect(host.last).toBe('cat-2');
+    expect(host.lastCreated).toEqual(MOCK_NEW_CATEGORY);
+    expect(host.lastChange).toBe('cat-2');
   });
 
   it('closes the dialog on cancel without emitting', () => {
@@ -79,6 +73,7 @@ describe('CategorySelectorComponent', () => {
     selector['dialogOpen'].set(true);
     selector['onDialogCancelled']();
     expect(selector['dialogOpen']()).toBe(false);
-    expect(host.last).toBeUndefined();
+    expect(host.lastChange).toBeUndefined();
+    expect(host.lastCreated).toBeUndefined();
   });
 });

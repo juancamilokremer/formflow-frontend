@@ -1,5 +1,6 @@
 import { Component, ComponentRef, OnDestroy, ViewContainerRef, computed, effect, input, output, viewChild } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
+import { Category } from '../../../../../../core/models/category.model';
 import { IconComponent } from '../../../../../../shared/icons/icon.component';
 import { FormQuestion, FormSection, FormType, QuestionType } from '../../../../models/form.model';
 import { getQuestionTypeDef } from '../../../../question-types/question-type.registry';
@@ -16,9 +17,11 @@ export class PropertiesPanelComponent implements OnDestroy {
   readonly formType                = input<FormType | undefined>(undefined);
   readonly formSections            = input<FormSection[]>([]);
   readonly currentSectionId        = input<string | null>(null);
+  readonly categories              = input<Category[]>([]);
   readonly questionChanged         = output<Partial<FormQuestion>>();
   readonly conditionalLogicClicked = output<void>();
   readonly sectionChanged          = output<string>();
+  readonly categoryCreated         = output<Category>();
 
   protected readonly hasQuestion = computed(() => {
     const q = this.question();
@@ -42,14 +45,17 @@ export class PropertiesPanelComponent implements OnDestroy {
 
   constructor() {
     effect(() => {
-      const outlet   = this.outlet();
-      const q        = this.question();
-      const formType = this.formType();
-      this.updateDynamicComponent(outlet, q, formType);
+      const outlet     = this.outlet();
+      const q          = this.question();
+      const formType   = this.formType();
+      const categories = this.categories();
+      this.updateDynamicComponent(outlet, q, formType, categories);
     });
   }
 
-  private updateDynamicComponent(outlet: ViewContainerRef, q: FormQuestion | null, formType: FormType | undefined): void {
+  private updateDynamicComponent(
+    outlet: ViewContainerRef, q: FormQuestion | null, formType: FormType | undefined, categories: Category[],
+  ): void {
     const def = q ? getQuestionTypeDef(q.type) : undefined;
 
     if (!def) {
@@ -64,10 +70,14 @@ export class PropertiesPanelComponent implements OnDestroy {
       this.compRef.instance.changed.subscribe((change) =>
         this.questionChanged.emit(change),
       );
+      this.compRef.instance.categoryCreated?.subscribe((category) =>
+        this.categoryCreated.emit(category),
+      );
     }
 
     this.compRef?.setInput('question', q);
     this.compRef?.setInput('formType', formType);
+    this.compRef?.setInput('categories', categories);
   }
 
   private destroyDynamicComponent(outlet?: ViewContainerRef): void {

@@ -7,8 +7,8 @@ import { AppTableComponent, TableColumn } from '../../../../shared/components/ta
 import { TableCellDirective } from '../../../../shared/components/table/table-cell.directive';
 import { TableToolbarDirective } from '../../../../shared/components/table/table-toolbar.directive';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
-import { CategoryService } from '../../services/category.service';
-import { Category } from '../../models/category.model';
+import { CategoryService } from '../../../../core/services/category.service';
+import { Category } from '../../../../core/models/category.model';
 
 const TABLE_COLUMNS: TableColumn[] = [
   { key: 'name',        header: 'categories.table.name' },

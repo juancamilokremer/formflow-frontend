@@ -6,6 +6,7 @@ import {
   CdkDropList, CdkDrag, CdkDragHandle,
   CdkDragDrop, moveItemInArray,
 } from '@angular/cdk/drag-drop';
+import { Category } from '../../../../../../core/models/category.model';
 import { IconComponent } from '../../../../../../shared/icons/icon.component';
 import { ConfirmDialogComponent } from '../../../../../../shared/components/confirm-dialog/confirm-dialog.component';
 import {
@@ -32,6 +33,7 @@ export class SectionCardComponent {
   readonly isActive            = input(false);
   readonly connectedListIds    = input<string[]>([]);
   readonly formType            = input<FormType | undefined>(undefined);
+  readonly categories          = input<Category[]>([]);
 
   readonly sectionUpdated    = output<{ id: string; title: string }>();
   readonly sectionDeleted    = output<string>();
@@ -52,6 +54,10 @@ export class SectionCardComponent {
 
   protected getScoringType(question: FormQuestion): string {
     return (question.config['scoringType'] as string) ?? 'none';
+  }
+
+  protected categoryFor(question: FormQuestion): Category | undefined {
+    return this.categories().find((c) => c.id === question.categoryId);
   }
 
   constructor() {

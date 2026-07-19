@@ -1,4 +1,5 @@
 import { InputSignal, OutputEmitterRef } from '@angular/core';
+import { Category } from '../../../core/models/category.model';
 import { FormQuestion, FormType } from '../models/form.model';
 
 export interface CanvasQuestionComponent {
@@ -16,4 +17,6 @@ export interface PropertiesQuestionComponent {
   readonly question: InputSignal<FormQuestion>;
   readonly changed: OutputEmitterRef<Partial<FormQuestion>>;
   readonly formType?: InputSignal<FormType | undefined>;
+  readonly categories?: InputSignal<Category[]>;
+  readonly categoryCreated?: OutputEmitterRef<Category>;
 }

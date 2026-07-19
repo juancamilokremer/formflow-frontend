@@ -1,9 +1,9 @@
 import { Component, computed, effect, inject, input, output, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { DialogComponent } from '../../../../shared/components/dialog/dialog.component';
-import { ButtonComponent } from '../../../../shared/components/button/button.component';
-import { CategoryService } from '../../services/category.service';
-import { Category } from '../../models/category.model';
+import { DialogComponent } from '../dialog/dialog.component';
+import { ButtonComponent } from '../button/button.component';
+import { CategoryService } from '../../../core/services/category.service';
+import { Category } from '../../../core/models/category.model';
 
 const HEX_COLOR_PATTERN = /^#[0-9A-Fa-f]{6}$/;
 const DEFAULT_COLOR = '#4F46E5';

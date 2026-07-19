@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { provideTranslateService } from '@ngx-translate/core';
 import { StepReviewComponent } from './step-review.component';
-import { Category } from '../../../../../categories/models/category.model';
+import { Category } from '../../../../../../core/models/category.model';
 import { ConvocatoriaDraft, DEFAULT_DRAFT } from '../../../../models/convocatoria-wizard.model';
 
 const categories: Category[] = [

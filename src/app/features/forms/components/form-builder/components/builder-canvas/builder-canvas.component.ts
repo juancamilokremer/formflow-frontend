@@ -1,6 +1,7 @@
 import { Component, computed, inject, input, output } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { CdkDropList, CdkDrag, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { Category } from '../../../../../../core/models/category.model';
 import { SectionCardComponent } from '../section-card/section-card.component';
 import {
   FormDetail, FormSection, FormType,
@@ -20,6 +21,7 @@ export class BuilderCanvasComponent {
   readonly selectedQuestionId  = input<string | null>(null);
   readonly activeSectionId     = input<string | null>(null);
   readonly formType            = input<FormType | undefined>(undefined);
+  readonly categories          = input<Category[]>([]);
 
   readonly sectionAdded      = output<string>();
   readonly sectionUpdated    = output<{ id: string; title: string }>();

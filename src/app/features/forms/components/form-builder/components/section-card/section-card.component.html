@@ -75,6 +75,12 @@
               {{ 'logic.chip_label' | translate }}
             </span>
           }
+          @if (categoryFor(q); as category) {
+            <span class="sc__q-badge sc__q-badge--category">
+              <span class="sc__q-badge-dot" [style.background]="category.color"></span>
+              {{ category.name }}
+            </span>
+          }
           <span class="sc__q-spacer"></span>
           <button
             class="sc__q-delete"

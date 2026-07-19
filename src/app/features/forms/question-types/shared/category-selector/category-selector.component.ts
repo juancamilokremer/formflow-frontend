@@ -1,8 +1,7 @@
-import { Component, inject, input, output, signal } from '@angular/core';
+import { Component, input, output, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { CategoryFormDialogComponent } from '../../../../categories/components/category-form-dialog/category-form-dialog.component';
-import { Category } from '../../../../categories/models/category.model';
-import { CategoryService } from '../../../../categories/services/category.service';
+import { Category } from '../../../../../core/models/category.model';
+import { CategoryFormDialogComponent } from '../../../../../shared/components/category-form-dialog/category-form-dialog.component';
 
 const CREATE_NEW_VALUE = '__new__';
 
@@ -13,17 +12,13 @@ const CREATE_NEW_VALUE = '__new__';
   styleUrl: './category-selector.component.scss',
 })
 export class CategorySelectorComponent {
-  private readonly categoryService = inject(CategoryService);
-
+  readonly categories = input<Category[]>([]);
   readonly selectedCategoryId = input<string | null>(null);
+
   readonly categoryChange = output<string | null>();
+  readonly categoryCreated = output<Category>();
 
-  protected readonly categories = signal<Category[]>([]);
   protected readonly dialogOpen = signal(false);
-
-  constructor() {
-    this.categoryService.getAll().subscribe((categories) => this.categories.set(categories));
-  }
 
   protected onChange(event: Event): void {
     const value = (event.target as HTMLSelectElement).value;
@@ -35,8 +30,8 @@ export class CategorySelectorComponent {
   }
 
   protected onCategoryCreated(category: Category): void {
-    this.categories.update((categories) => [...categories, category]);
     this.dialogOpen.set(false);
+    this.categoryCreated.emit(category);
     this.categoryChange.emit(category.id);
   }
 

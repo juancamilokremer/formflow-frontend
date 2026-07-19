@@ -161,21 +161,21 @@
       background: #fef3c7;
     }
 
-    &--scoring {
+    &--scoring, &--logic, &--category {
       display: inline-flex;
       align-items: center;
       gap: 4px;
-      color: #c2410c;
-      background: #fff7ed;
     }
 
-    &--logic {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      color: #6d28d9;
-      background: #ede9fe;
-    }
+    &--scoring   { color: #c2410c; background: #fff7ed; }
+    &--logic     { color: #6d28d9; background: #ede9fe; }
+    &--category  { color: var(--ff-text-secondary); background: var(--ff-bg); }
+  }
+
+  &__q-badge-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
   }
 
   &__q-spacer { flex: 1; }

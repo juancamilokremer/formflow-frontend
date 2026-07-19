@@ -4,10 +4,10 @@ import { ButtonComponent } from '../../shared/components/button/button.component
 import { IconComponent } from '../../shared/icons/icon.component';
 import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state.component';
-import { CategoryFormDialogComponent } from './components/category-form-dialog/category-form-dialog.component';
+import { CategoryFormDialogComponent } from '../../shared/components/category-form-dialog/category-form-dialog.component';
 import { CategoriesListComponent } from './components/categories-list/categories-list.component';
-import { CategoryService } from './services/category.service';
-import { Category } from './models/category.model';
+import { CategoryService } from '../../core/services/category.service';
+import { Category } from '../../core/models/category.model';
 
 @Component({
   selector: 'app-categories',

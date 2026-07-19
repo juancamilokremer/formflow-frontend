@@ -2,8 +2,8 @@ import { TestBed } from '@angular/core/testing';
 import { provideTranslateService } from '@ngx-translate/core';
 import { of, throwError } from 'rxjs';
 import { CategoryFormDialogComponent } from './category-form-dialog.component';
-import { CategoryService } from '../../services/category.service';
-import { Category } from '../../models/category.model';
+import { CategoryService } from '../../../core/services/category.service';
+import { Category } from '../../../core/models/category.model';
 
 const MOCK_CATEGORY: Category = {
   id: 'c1', name: 'Técnicas', color: '#4F46E5', description: 'Competencias técnicas',

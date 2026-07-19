@@ -2,8 +2,8 @@ import { TestBed } from '@angular/core/testing';
 import { provideTranslateService } from '@ngx-translate/core';
 import { of, throwError } from 'rxjs';
 import { CategoriesComponent } from './categories.component';
-import { CategoryService } from './services/category.service';
-import { Category } from './models/category.model';
+import { CategoryService } from '../../core/services/category.service';
+import { Category } from '../../core/models/category.model';
 
 const CATEGORIES: Category[] = [
   { id: 'c1', name: 'Técnicas', color: '#4F46E5', description: null, createdAt: '', updatedAt: '' },
