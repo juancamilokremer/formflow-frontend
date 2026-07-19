@@ -8,6 +8,7 @@ import {
 } from '@angular/cdk/drag-drop';
 import { Category } from '../../../../../../core/models/category.model';
 import { IconComponent } from '../../../../../../shared/icons/icon.component';
+import { BadgeComponent } from '../../../../../../shared/components/badge/badge.component';
 import { ConfirmDialogComponent } from '../../../../../../shared/components/confirm-dialog/confirm-dialog.component';
 import {
   FormSection, FormQuestion, FormType, QuestionType,
@@ -18,7 +19,7 @@ import { CanvasEditService } from '../../../../services/canvas-edit.service';
 
 @Component({
   selector: 'app-section-card',
-  imports: [TranslatePipe, IconComponent, ConfirmDialogComponent, NgComponentOutlet,
+  imports: [TranslatePipe, IconComponent, BadgeComponent, ConfirmDialogComponent, NgComponentOutlet,
             CdkDropList, CdkDrag, CdkDragHandle],
   templateUrl: './section-card.component.html',
   styleUrl: './section-card.component.scss',

@@ -59,27 +59,22 @@
       >
         <div class="sc__q-header">
           <app-icon cdkDragHandle class="sc__q-grip" name="grip-vertical" [size]="13" />
-          <span class="sc__q-badge">{{ 'builder.type.' + q.type | translate }}</span>
+          <app-badge>{{ 'builder.type.' + q.type | translate }}</app-badge>
           @if (q.required) {
-            <span class="sc__q-badge sc__q-badge--required">{{ 'builder.required_chip' | translate }}</span>
+            <app-badge variant="amber">{{ 'builder.required_chip' | translate }}</app-badge>
           }
           @if (showScoring() && getScoringType(q) !== 'none') {
-            <span class="sc__q-badge sc__q-badge--scoring">
-              <app-icon name="scale" [size]="10" />
+            <app-badge variant="orange" icon="scale">
               {{ getScoringType(q) === 'auto' ? ('builder.scoring_badge_auto' | translate) : ('builder.scoring_badge' | translate) }}
-            </span>
+            </app-badge>
           }
           @if (q.conditionalLogic?.conditions?.length) {
-            <span class="sc__q-badge sc__q-badge--logic">
-              <app-icon name="sliders" [size]="10" />
+            <app-badge variant="purple" icon="sliders">
               {{ 'logic.chip_label' | translate }}
-            </span>
+            </app-badge>
           }
           @if (categoryFor(q); as category) {
-            <span class="sc__q-badge sc__q-badge--category">
-              <span class="sc__q-badge-dot" [style.background]="category.color"></span>
-              {{ category.name }}
-            </span>
+            <app-badge variant="neutral" [dotColor]="category.color">{{ category.name }}</app-badge>
           }
           <span class="sc__q-spacer"></span>
           <button
