@@ -2,13 +2,23 @@ import { SectionCardComponent } from './section-card.component';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideRouter } from '@angular/router';
-import { FormSection } from '../../../../models/form.model';
+import { Category } from '../../../../../../core/models/category.model';
+import { FormQuestion, FormSection } from '../../../../models/form.model';
 
 const MOCK_SECTION: FormSection = {
   id: 's1',
   title: 'Datos personales',
   position: 1,
   questions: [],
+};
+
+const MOCK_CATEGORIES: Category[] = [
+  { id: 'cat-1', name: 'Técnicas', color: '#4F46E5', description: null, createdAt: '', updatedAt: '' },
+];
+
+const MOCK_QUESTION: FormQuestion = {
+  id: 'q1', type: 'single', title: 'Q', description: null,
+  position: 0, required: false, categoryId: 'cat-1', config: {},
 };
 
 describe('SectionCardComponent', () => {
@@ -107,5 +117,20 @@ describe('SectionCardComponent', () => {
     const input = document.createElement('input');
     (component as any).onTitleKeydown({ key: 'Escape', target: input } as unknown as KeyboardEvent);
     expect((component as any).isEditing()).toBe(false);
+  });
+
+  it('categoryFor returns the matching category', () => {
+    fixture.componentRef.setInput('categories', MOCK_CATEGORIES);
+    expect((component as any).categoryFor(MOCK_QUESTION)).toEqual(MOCK_CATEGORIES[0]);
+  });
+
+  it('categoryFor returns undefined when the question has no categoryId', () => {
+    fixture.componentRef.setInput('categories', MOCK_CATEGORIES);
+    expect((component as any).categoryFor({ ...MOCK_QUESTION, categoryId: null })).toBeUndefined();
+  });
+
+  it('categoryFor returns undefined when no category matches', () => {
+    fixture.componentRef.setInput('categories', []);
+    expect((component as any).categoryFor(MOCK_QUESTION)).toBeUndefined();
   });
 });

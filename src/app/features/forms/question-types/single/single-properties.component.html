@@ -41,5 +41,12 @@
         <option value="manual" [selected]="scoringType() === 'manual'">{{ 'builder.prop.scoring_manual' | translate }}</option>
       </select>
     </div>
+
+    <app-category-selector
+      [categories]="categories()"
+      [selectedCategoryId]="question().categoryId"
+      (categoryChange)="onCategoryChange($event)"
+      (categoryCreated)="onCategoryCreated($event)"
+    />
   }
 </div>

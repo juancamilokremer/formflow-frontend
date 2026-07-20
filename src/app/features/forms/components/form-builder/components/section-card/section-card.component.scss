@@ -145,39 +145,6 @@
     &:active { cursor: grabbing; }
   }
 
-  &__q-badge {
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.03em;
-    color: var(--ff-primary);
-    background: var(--ff-primary-light);
-    border-radius: 99px;
-    padding: 2px 8px;
-    white-space: nowrap;
-    flex-shrink: 0;
-
-    &--required {
-      color: #92400e;
-      background: #fef3c7;
-    }
-
-    &--scoring {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      color: #c2410c;
-      background: #fff7ed;
-    }
-
-    &--logic {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      color: #6d28d9;
-      background: #ede9fe;
-    }
-  }
-
   &__q-spacer { flex: 1; }
 
   &__q-title {

@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { provideTranslateService } from '@ngx-translate/core';
 import { StepCategoryWeightsComponent } from './step-category-weights.component';
-import { Category } from '../../../../../categories/models/category.model';
+import { Category } from '../../../../../../core/models/category.model';
 
 const categories: Category[] = [
   { id: 'c1', name: 'Técnicas', color: '#4F46E5', description: null, createdAt: '', updatedAt: '' },

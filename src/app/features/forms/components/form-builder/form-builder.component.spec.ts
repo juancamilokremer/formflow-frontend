@@ -4,8 +4,14 @@ import { provideTranslateService } from '@ngx-translate/core';
 import { provideRouter } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { of, throwError } from 'rxjs';
+import { Category } from '../../../../core/models/category.model';
+import { CategoryService } from '../../../../core/services/category.service';
 import { FormsService } from '../../services/forms.service';
 import { FormDetail, FormSection } from '../../models/form.model';
+
+const MOCK_CATEGORIES: Category[] = [
+  { id: 'cat-1', name: 'Técnicas', color: '#4F46E5', description: null, createdAt: '', updatedAt: '' },
+];
 
 const MOCK_SECTION: FormSection = { id: 's1', title: 'Sección 1', position: 1, questions: [] };
 
@@ -35,10 +41,15 @@ function buildComponent(formResult: 'ok' | 'error' = 'ok') {
     deleteSection: vi.fn().mockReturnValue(of(undefined)),
   };
 
+  const mockCategoryService = {
+    getAll: vi.fn().mockReturnValue(of(MOCK_CATEGORIES)),
+  };
+
   TestBed.overrideProvider(FormsService, { useValue: mockFormsService });
+  TestBed.overrideProvider(CategoryService, { useValue: mockCategoryService });
   const fixture = TestBed.createComponent(FormBuilderComponent);
   fixture.detectChanges();
-  return { fixture, component: fixture.componentInstance, mockFormsService };
+  return { fixture, component: fixture.componentInstance, mockFormsService, mockCategoryService };
 }
 
 describe('FormBuilderComponent', () => {
@@ -57,6 +68,20 @@ describe('FormBuilderComponent', () => {
     const { component } = buildComponent();
     expect((component as any).form()).toEqual(MOCK_FORM);
     expect((component as any).loading()).toBe(false);
+  });
+
+  it('loads categories on init', () => {
+    const { component } = buildComponent();
+    expect((component as any).categories()).toEqual(MOCK_CATEGORIES);
+  });
+
+  it('onCategoryCreated appends the category to the signal', () => {
+    const { component } = buildComponent();
+    const newCategory: Category = {
+      id: 'cat-2', name: 'Blandas', color: '#10B981', description: null, createdAt: '', updatedAt: '',
+    };
+    (component as any).onCategoryCreated(newCategory);
+    expect((component as any).categories()).toEqual([...MOCK_CATEGORIES, newCategory]);
   });
 
   it('sets loadError on HTTP failure', () => {

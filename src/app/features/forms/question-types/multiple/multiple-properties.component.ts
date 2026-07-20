@@ -2,11 +2,12 @@ import { Component, computed, effect, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { QuestionOption } from '../../models/form.model';
 import { BasePropertiesComponent } from '../base-properties.component';
+import { CategorySelectorComponent } from '../shared/category-selector/category-selector.component';
 import { OptionListEditorComponent } from '../shared/option-list-editor/option-list-editor.component';
 
 @Component({
   selector: 'app-multiple-properties',
-  imports: [TranslatePipe, OptionListEditorComponent],
+  imports: [TranslatePipe, OptionListEditorComponent, CategorySelectorComponent],
   templateUrl: './multiple-properties.component.html',
   styleUrl: './multiple-properties.component.scss',
 })

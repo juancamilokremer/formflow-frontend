@@ -4,6 +4,8 @@ import { BreakpointObserver } from '@angular/cdk/layout';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { Category } from '../../../../core/models/category.model';
+import { CategoryService } from '../../../../core/services/category.service';
 import { IconComponent } from '../../../../shared/icons/icon.component';
 import { FormsService } from '../../services/forms.service';
 import {
@@ -36,6 +38,7 @@ export class FormBuilderComponent implements OnInit {
   private readonly route              = inject(ActivatedRoute);
   private readonly router             = inject(Router);
   private readonly formsService       = inject(FormsService);
+  private readonly categoryService    = inject(CategoryService);
   private readonly translateSvc       = inject(TranslateService);
   private readonly breakpointObserver = inject(BreakpointObserver);
 
@@ -55,6 +58,7 @@ export class FormBuilderComponent implements OnInit {
   protected readonly selectedQuestionId = signal<string | null>(null);
   protected readonly activeSectionId    = signal<string | null>(null);
   protected readonly drawerOpen         = signal(false);
+  protected readonly categories         = signal<Category[]>([]);
 
   protected readonly selectedQuestion = computed<FormQuestion | null>(() => {
     const questionId  = this.selectedQuestionId();
@@ -68,6 +72,8 @@ export class FormBuilderComponent implements OnInit {
   });
 
   ngOnInit(): void {
+    this.categoryService.getAll().subscribe((categories) => this.categories.set(categories));
+
     const formId = this.route.snapshot.paramMap.get('id')!;
     this.formsService.getById(formId).subscribe({
       next: (form) => {
@@ -82,6 +88,10 @@ export class FormBuilderComponent implements OnInit {
   // ---------------------------------------------------------------------------
   // Form-level handlers
   // ---------------------------------------------------------------------------
+
+  protected onCategoryCreated(category: Category): void {
+    this.categories.update((categories) => [...categories, category]);
+  }
 
   protected onNameChanged(name: string): void {
     const currentForm = this.form()!;

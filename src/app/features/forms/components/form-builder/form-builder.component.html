@@ -35,6 +35,7 @@
         [selectedQuestionId]="selectedQuestionId()"
         [activeSectionId]="activeSectionId()"
         [formType]="form()!.type"
+        [categories]="categories()"
         (sectionAdded)="onSectionAdded($event)"
         (sectionUpdated)="onSectionUpdated($event)"
         (sectionDeleted)="onSectionDeleted($event)"
@@ -60,9 +61,11 @@
             [formType]="form()!.type"
             [formSections]="form()!.sections"
             [currentSectionId]="activeSectionId()"
+            [categories]="categories()"
             (questionChanged)="onQuestionChanged($event)"
             (conditionalLogicClicked)="drawerOpen.set(true)"
             (sectionChanged)="onMoveQuestionToSection($event)"
+            (categoryCreated)="onCategoryCreated($event)"
           />
         }
       </div>

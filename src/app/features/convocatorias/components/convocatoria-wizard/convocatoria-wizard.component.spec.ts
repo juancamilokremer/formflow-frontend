@@ -4,12 +4,12 @@ import { provideRouter } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { ConvocatoriaWizardComponent } from './convocatoria-wizard.component';
 import { ConvocatoriaLaunchService } from '../../services/convocatoria-launch.service';
-import { CategoryService } from '../../../categories/services/category.service';
+import { CategoryService } from '../../../../core/services/category.service';
 import { FormsService } from '../../../forms/services/forms.service';
 import { ConvocatoriaDetail } from '../../models/convocatoria.model';
 import { LaunchError, LaunchResult } from '../../models/convocatoria-wizard.model';
 import { FormDetail, FormSection } from '../../../forms/models/form.model';
-import { Category } from '../../../categories/models/category.model';
+import { Category } from '../../../../core/models/category.model';
 
 const MOCK_CONVOCATORIA: ConvocatoriaDetail = {
   id: 'c1', tenantId: 't1', formId: 'f1', name: 'Analista de RRHH', status: 'ACTIVE',

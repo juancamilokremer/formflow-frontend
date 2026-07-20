@@ -53,4 +53,19 @@ describe('SinglePropertiesComponent', () => {
     (component as any).onTitleBlur(event);
     expect(emitted?.title).toBe('Nuevo título');
   });
+
+  it('emits categoryId via onCategoryChange', () => {
+    let emitted: Partial<FormQuestion> | undefined;
+    component.changed.subscribe((v) => (emitted = v));
+    (component as any).onCategoryChange('cat-1');
+    expect(emitted?.categoryId).toBe('cat-1');
+  });
+
+  it('emits categoryCreated via onCategoryCreated', () => {
+    const category = { id: 'cat-2', name: 'Blandas', color: '#10B981', description: null, createdAt: '', updatedAt: '' };
+    let emitted: unknown;
+    component.categoryCreated.subscribe((v) => (emitted = v));
+    (component as any).onCategoryCreated(category);
+    expect(emitted).toEqual(category);
+  });
 });
