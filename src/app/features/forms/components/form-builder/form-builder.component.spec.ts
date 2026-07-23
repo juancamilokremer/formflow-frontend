@@ -46,6 +46,7 @@ function buildComponent(formResult: 'ok' | 'error' = 'ok') {
     createSection: vi.fn().mockReturnValue(of({ id: 's2', title: 'Nueva sección', position: 2, questions: [] } satisfies FormSection)),
     updateSection: vi.fn().mockReturnValue(of({ ...MOCK_SECTION, title: 'Renombrada' } satisfies FormSection)),
     deleteSection: vi.fn().mockReturnValue(of(undefined)),
+    remove: vi.fn().mockReturnValue(of(undefined)),
   };
 
   const mockCategoryService = {
@@ -163,14 +164,19 @@ describe('FormBuilderComponent with convocatoriaId in query params', () => {
         { provide: Router, useValue: mockRouter },
         {
           provide: ActivatedRoute,
-          useValue: { snapshot: { paramMap: { get: () => 'f1' }, queryParamMap: { get: () => 'conv1' } } },
+          useValue: {
+            snapshot: {
+              paramMap: { get: () => 'f1' },
+              queryParamMap: { get: (key: string) => ({ convocatoriaId: 'conv1' } as Record<string, string>)[key] ?? null },
+            },
+          },
         },
       ],
     }).compileComponents();
   });
 
-  it('onReturnToConvocatoria attaches the form and navigates to the convocatoria', () => {
-    const { component, mockConvocatoriaService } = buildComponent();
+  it('onReturnToConvocatoria attaches the form, navigates to the convocatoria, and does not delete anything', () => {
+    const { component, mockConvocatoriaService, mockFormsService } = buildComponent();
 
     (component as any).onReturnToConvocatoria();
 
@@ -181,5 +187,41 @@ describe('FormBuilderComponent with convocatoriaId in query params', () => {
       categoryWeights: [{ categoryId: 'cat-1', weight: 100 }],
       scoringConfig: { aptoMin: 70, revisarMin: 50 },
     });
+    expect(mockFormsService.remove).not.toHaveBeenCalled();
+    expect(mockRouter.navigate).toHaveBeenCalledWith(['/', 'convocatorias', 'conv1']);
+  });
+});
+
+describe('FormBuilderComponent with convocatoriaId and replacesFormId in query params', () => {
+  const mockRouter = { navigate: vi.fn() };
+  const queryParams: Record<string, string> = { convocatoriaId: 'conv1', replacesFormId: 'f9' };
+
+  beforeEach(async () => {
+    mockRouter.navigate.mockClear();
+    await TestBed.configureTestingModule({
+      imports: [FormBuilderComponent],
+      providers: [
+        provideRouter([]),
+        provideTranslateService({ lang: 'es' }),
+        { provide: Router, useValue: mockRouter },
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            snapshot: {
+              paramMap: { get: () => 'f1' },
+              queryParamMap: { get: (key: string) => queryParams[key] ?? null },
+            },
+          },
+        },
+      ],
+    }).compileComponents();
+  });
+
+  it('deletes the replaced form after successfully attaching the new one', () => {
+    const { component, mockFormsService } = buildComponent();
+
+    (component as any).onReturnToConvocatoria();
+
+    expect(mockFormsService.remove).toHaveBeenCalledWith('f9');
   });
 });

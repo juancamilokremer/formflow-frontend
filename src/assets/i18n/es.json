@@ -477,7 +477,12 @@
         "duplicate_placeholder": "Selecciona un formulario",
         "duplicate_action": "Duplicar",
         "duplicate_empty": "No hay formularios activos de este tipo para duplicar",
-        "error": "No se pudo completar la acción. Intenta de nuevo."
+        "error": "No se pudo completar la acción. Intenta de nuevo.",
+        "replace_confirm": {
+          "title": "¿Reemplazar formulario?",
+          "message": "\"{{name}}\" se eliminará — todavía no tiene respuestas porque la convocatoria sigue en borrador.",
+          "confirm": "Reemplazar"
+        }
       },
       "weights": {
         "title": "Pesos por categoría",

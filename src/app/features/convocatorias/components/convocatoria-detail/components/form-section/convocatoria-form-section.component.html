@@ -35,3 +35,11 @@
 @if (error()) {
   <p class="cfs__error">{{ 'convocatorias.detail.form.error' | translate }}</p>
 }
+
+<app-confirm-dialog
+  [isOpen]="replaceConfirmOpen()"
+  title="convocatorias.detail.form.replace_confirm.title"
+  [message]="'convocatorias.detail.form.replace_confirm.message' | translate: { name: currentForm()?.name }"
+  confirmLabel="convocatorias.detail.form.replace_confirm.confirm"
+  (confirmed)="confirmReplace()"
+  (cancelled)="cancelReplace()" />

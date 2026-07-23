@@ -17,11 +17,12 @@ const NEW_FORM: Form = { ...ACTIVE_CANDIDATES_FORM, id: 'f4', name: 'RRHH' };
 const DUPLICATED_FORM: Form = { ...ACTIVE_CANDIDATES_FORM, id: 'f5', name: 'Evaluación técnica (copia)' };
 
 function buildComponent(overrides: {
-  createImpl?: unknown; duplicateImpl?: unknown; updateImpl?: unknown; currentForm?: Form | null;
+  createImpl?: unknown; duplicateImpl?: unknown; updateImpl?: unknown; removeImpl?: unknown; currentForm?: Form | null;
 } = {}) {
   const mockFormsService = {
     create: overrides.createImpl ?? vi.fn().mockReturnValue(of(NEW_FORM)),
     duplicate: overrides.duplicateImpl ?? vi.fn().mockReturnValue(of(DUPLICATED_FORM)),
+    remove: overrides.removeImpl ?? vi.fn().mockReturnValue(of(undefined)),
   };
   const mockConvocatoriaService = {
     update: overrides.updateImpl ?? vi.fn().mockReturnValue(of({})),
@@ -94,6 +95,38 @@ describe('ConvocatoriaFormSectionComponent', () => {
       expect(component['error']()).toBe(true);
       expect(component['creating']()).toBe(false);
     });
+
+    it('asks for confirmation instead of creating right away when a form is already attached', () => {
+      const { component, mockFormsService } = buildComponent({ currentForm: ACTIVE_CANDIDATES_FORM });
+
+      component['createNew']();
+
+      expect(mockFormsService.create).not.toHaveBeenCalled();
+      expect(component['replaceConfirmOpen']()).toBe(true);
+    });
+
+    it('creates and navigates with replacesFormId once the replacement is confirmed', () => {
+      const { component, mockFormsService, mockRouter } = buildComponent({ currentForm: ACTIVE_CANDIDATES_FORM });
+
+      component['createNew']();
+      component['confirmReplace']();
+
+      expect(mockFormsService.create).toHaveBeenCalledWith({ name: 'RRHH', type: 'CANDIDATES' });
+      expect(mockRouter.navigate).toHaveBeenCalledWith(
+        ['forms', 'f4', 'edit'],
+        { queryParams: { convocatoriaId: 'c1', replacesFormId: 'f1' } },
+      );
+    });
+
+    it('cancelReplace closes the dialog without creating anything', () => {
+      const { component, mockFormsService } = buildComponent({ currentForm: ACTIVE_CANDIDATES_FORM });
+
+      component['createNew']();
+      component['cancelReplace']();
+
+      expect(component['replaceConfirmOpen']()).toBe(false);
+      expect(mockFormsService.create).not.toHaveBeenCalled();
+    });
   });
 
   describe('duplicateSelected', () => {
@@ -127,6 +160,28 @@ describe('ConvocatoriaFormSectionComponent', () => {
 
       expect(component['error']()).toBe(true);
       expect(component['duplicating']()).toBe(false);
+    });
+
+    it('asks for confirmation instead of duplicating right away when a form is already attached', () => {
+      const { component, mockFormsService } = buildComponent({ currentForm: ACTIVE_CANDIDATES_FORM });
+      component['selectedFormId'].set('f1');
+
+      component['duplicateSelected']();
+
+      expect(mockFormsService.duplicate).not.toHaveBeenCalled();
+      expect(component['replaceConfirmOpen']()).toBe(true);
+    });
+
+    it('removes the previously attached form once the replacement is confirmed and the new one is attached', () => {
+      const oldForm = { ...ACTIVE_CANDIDATES_FORM, id: 'f9' };
+      const { component, mockFormsService } = buildComponent({ currentForm: oldForm });
+      component['selectedFormId'].set('f1');
+
+      component['duplicateSelected']();
+      component['confirmReplace']();
+
+      expect(mockFormsService.duplicate).toHaveBeenCalledWith('f1');
+      expect(mockFormsService.remove).toHaveBeenCalledWith('f9');
     });
   });
 });

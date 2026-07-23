@@ -46,6 +46,7 @@ export class FormBuilderComponent implements OnInit {
   private readonly breakpointObserver = inject(BreakpointObserver);
 
   protected readonly convocatoriaId = this.route.snapshot.queryParamMap.get(RouteConstants.QUERY_CONVOCATORIA_ID);
+  private readonly replacesFormId = this.route.snapshot.queryParamMap.get(RouteConstants.QUERY_REPLACES_FORM_ID);
 
   protected readonly isMobile = toSignal(
     this.breakpointObserver.observe('(max-width: 767px)').pipe(map((state) => state.matches)),
@@ -117,7 +118,12 @@ export class FormBuilderComponent implements OnInit {
         categoryWeights: detail.categoryWeights,
         scoringConfig: detail.scoringConfig,
       })),
-    ).subscribe(() => this.router.navigate(convocatoriaDetailPath(convocatoriaId)));
+    ).subscribe(() => {
+      if (this.replacesFormId) {
+        this.formsService.remove(this.replacesFormId).subscribe();
+      }
+      this.router.navigate(convocatoriaDetailPath(convocatoriaId));
+    });
   }
 
   protected onPublishClicked(): void {

@@ -5,15 +5,18 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { ButtonComponent } from '../../../../../../shared/components/button/button.component';
 import { IconComponent } from '../../../../../../shared/icons/icon.component';
 import { SelectComponent, SelectOption } from '../../../../../../shared/components/select/select.component';
+import { ConfirmDialogComponent } from '../../../../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { RouteConstants, formBuilderPath } from '../../../../../../core/constants/route.constants';
 import { FormsService } from '../../../../../forms/services/forms.service';
 import { Form } from '../../../../../forms/models/form.model';
 import { ConvocatoriaService } from '../../../../services/convocatoria.service';
 import { ProcessType } from '../../../../models/convocatoria.model';
 
+type PendingReplaceAction = 'create' | 'duplicate';
+
 @Component({
   selector: 'app-convocatoria-form-section',
-  imports: [TranslatePipe, ButtonComponent, IconComponent, SelectComponent],
+  imports: [TranslatePipe, ButtonComponent, IconComponent, SelectComponent, ConfirmDialogComponent],
   templateUrl: './convocatoria-form-section.component.html',
   styleUrl: './convocatoria-form-section.component.scss',
 })
@@ -35,6 +38,8 @@ export class ConvocatoriaFormSectionComponent {
   protected readonly duplicating = signal(false);
   protected readonly selectedFormId = signal('');
   protected readonly error = signal(false);
+  protected readonly replaceConfirmOpen = signal(false);
+  private pendingAction: PendingReplaceAction | null = null;
 
   protected readonly matchingForms = computed(() =>
     this.forms().filter((f) => f.status === 'ACTIVE' && f.type === this.processType()));
@@ -58,15 +63,51 @@ export class ConvocatoriaFormSectionComponent {
 
   protected createNew(): void {
     if (this.creating()) return;
+    if (this.currentForm()) {
+      this.pendingAction = 'create';
+      this.replaceConfirmOpen.set(true);
+      return;
+    }
+    this.performCreateNew();
+  }
+
+  protected duplicateSelected(): void {
+    if (!this.selectedFormId() || this.duplicating()) return;
+    if (this.currentForm()) {
+      this.pendingAction = 'duplicate';
+      this.replaceConfirmOpen.set(true);
+      return;
+    }
+    this.performDuplicate();
+  }
+
+  protected confirmReplace(): void {
+    this.replaceConfirmOpen.set(false);
+    if (this.pendingAction === 'create') this.performCreateNew();
+    if (this.pendingAction === 'duplicate') this.performDuplicate();
+    this.pendingAction = null;
+  }
+
+  protected cancelReplace(): void {
+    this.replaceConfirmOpen.set(false);
+    this.pendingAction = null;
+  }
+
+  private performCreateNew(): void {
     this.creating.set(true);
     this.error.set(false);
+    const replacesFormId = this.currentForm()?.id ?? null;
 
     this.formsService.create({ name: this.convocatoriaName(), type: this.processType() })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (form) => this.router.navigate(formBuilderPath(form.id), {
-          queryParams: { [RouteConstants.QUERY_CONVOCATORIA_ID]: this.convocatoriaId() },
-        }),
+        next: (form) => {
+          const queryParams: Record<string, string> = {
+            [RouteConstants.QUERY_CONVOCATORIA_ID]: this.convocatoriaId(),
+          };
+          if (replacesFormId) queryParams[RouteConstants.QUERY_REPLACES_FORM_ID] = replacesFormId;
+          this.router.navigate(formBuilderPath(form.id), { queryParams });
+        },
         error: () => {
           this.creating.set(false);
           this.error.set(true);
@@ -74,9 +115,9 @@ export class ConvocatoriaFormSectionComponent {
       });
   }
 
-  protected duplicateSelected(): void {
+  private performDuplicate(): void {
     const formId = this.selectedFormId();
-    if (!formId || this.duplicating()) return;
+    const replacesFormId = this.currentForm()?.id ?? null;
     this.duplicating.set(true);
     this.error.set(false);
 
@@ -91,6 +132,9 @@ export class ConvocatoriaFormSectionComponent {
           next: () => {
             this.duplicating.set(false);
             this.selectedFormId.set('');
+            if (replacesFormId) {
+              this.formsService.remove(replacesFormId).pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
+            }
             this.formAttached.emit(newForm);
           },
           error: () => {
