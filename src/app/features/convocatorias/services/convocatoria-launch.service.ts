@@ -51,7 +51,8 @@ export class ConvocatoriaLaunchService {
     const total = Object.values(draft.weights).reduce((a, b) => a + b, 0);
     return {
       name: draft.name.trim(),
-      formId: draft.formId!,
+      type: draft.processType,
+      formId: draft.formId ?? undefined,
       categoryWeights: total === 0
         ? undefined
         : Object.entries(draft.weights)

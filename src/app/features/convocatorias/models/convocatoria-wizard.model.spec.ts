@@ -1,5 +1,6 @@
-import { deriveCategoryIds, parseCsvPreview } from './convocatoria-wizard.model';
+import { deriveCategoryIds, draftFromDetail, parseCsvPreview } from './convocatoria-wizard.model';
 import { FormDetail, FormQuestion, FormSection } from '../../forms/models/form.model';
+import { ConvocatoriaDetail } from './convocatoria.model';
 
 function question(id: string, categoryId: string | null): FormQuestion {
   return {
@@ -78,5 +79,49 @@ describe('parseCsvPreview', () => {
   it('skips rows missing a name or email', () => {
     const text = 'nombre,email\nAna,\n,carlos@x.com';
     expect(parseCsvPreview(text)).toEqual([]);
+  });
+});
+
+describe('draftFromDetail', () => {
+  function detail(overrides: Partial<ConvocatoriaDetail> = {}): ConvocatoriaDetail {
+    return {
+      id: 'c1', tenantId: 't1', formId: 'f1', name: 'Analista RRHH', type: 'CANDIDATES',
+      status: 'DRAFT', categoryWeights: [], scoringConfig: { aptoMin: 70, revisarMin: 50 },
+      startDate: null, endDate: null, createdAt: '', updatedAt: '', candidates: [],
+      ...overrides,
+    };
+  }
+
+  it('maps scalar fields directly', () => {
+    const draft = draftFromDetail(detail());
+    expect(draft.name).toBe('Analista RRHH');
+    expect(draft.processType).toBe('CANDIDATES');
+    expect(draft.formId).toBe('f1');
+    expect(draft.aptoMin).toBe(70);
+    expect(draft.revisarMin).toBe(50);
+  });
+
+  it('maps categoryWeights into a categoryId -> weight record', () => {
+    const draft = draftFromDetail(detail({
+      categoryWeights: [{ categoryId: 'cat1', weight: 60 }, { categoryId: 'cat2', weight: 40 }],
+    }));
+    expect(draft.weights).toEqual({ cat1: 60, cat2: 40 });
+  });
+
+  it('leaves candidates and csv state empty', () => {
+    const draft = draftFromDetail(detail());
+    expect(draft.manualCandidates).toEqual([]);
+    expect(draft.csvFile).toBeNull();
+    expect(draft.csvPreviewRows).toEqual([]);
+  });
+
+  it('preserves a null formId', () => {
+    const draft = draftFromDetail(detail({ formId: null }));
+    expect(draft.formId).toBeNull();
+  });
+
+  it('produces an empty weights record when categoryWeights is empty', () => {
+    const draft = draftFromDetail(detail({ categoryWeights: [] }));
+    expect(draft.weights).toEqual({});
   });
 });

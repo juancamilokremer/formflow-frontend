@@ -9,7 +9,21 @@
     </app-button>
   </app-page-header>
 
-  @if (launchResult(); as result) {
+  @if (hydrating()) {
+    <app-card class="wiz__body">
+      <div class="wiz__loading">
+        <app-icon name="file-text" [size]="32" />
+        <span>{{ 'common.loading' | translate }}</span>
+      </div>
+    </app-card>
+  } @else if (hydrateError()) {
+    <app-card class="wiz__body">
+      <div class="wiz__error">
+        <app-icon name="alert-circle" [size]="32" />
+        <span>{{ 'convocatorias.wizard.error.load' | translate }}</span>
+      </div>
+    </app-card>
+  } @else if (launchResult(); as result) {
     <app-success-card
       [title]="'convocatorias.wizard.review.launch_success' | translate: { count: result.candidates.length }"
       [message]="'convocatorias.wizard.review.launch_success_detail' | translate"
@@ -84,12 +98,16 @@
       }
     </app-card>
 
+    @if (currentStep() === 1 && createError()) {
+      <p class="wiz__inline-error">{{ 'convocatorias.wizard.error.create' | translate }}</p>
+    }
+
     <div class="wiz__nav">
-      <app-button variant="secondary" type="button" [disabled]="currentStep() === 1" (click)="goBack()">
+      <app-button variant="secondary" type="button" [disabled]="currentStep() === minStep()" (click)="goBack()">
         {{ 'common.back' | translate }}
       </app-button>
       @if (currentStep() < 5) {
-        <app-button type="button" [disabled]="!canGoNext()" (click)="goNext()">
+        <app-button type="button" [disabled]="!canGoNext() || creatingConvocatoria()" (click)="goNext()">
           {{ 'common.next' | translate }}
         </app-button>
       }

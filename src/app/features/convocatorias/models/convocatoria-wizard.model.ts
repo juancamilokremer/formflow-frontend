@@ -79,6 +79,25 @@ export function deriveCategoryIds(form: FormDetail): string[] {
 }
 
 /**
+ * Hydrates the wizard's local draft from a persisted convocatoria (early-draft flow) —
+ * candidates are intentionally left out, since today they're only sent at launch time,
+ * not added incrementally as the user progresses through the wizard.
+ */
+export function draftFromDetail(detail: ConvocatoriaDetail): ConvocatoriaDraft {
+  return {
+    name: detail.name,
+    processType: detail.type,
+    formId: detail.formId,
+    weights: Object.fromEntries(detail.categoryWeights.map((w) => [w.categoryId, w.weight])),
+    aptoMin: detail.scoringConfig.aptoMin,
+    revisarMin: detail.scoringConfig.revisarMin,
+    manualCandidates: [],
+    csvFile: null,
+    csvPreviewRows: [],
+  };
+}
+
+/**
  * Client-side preview only — the backend re-parses and validates authoritatively on import.
  * Minimal comma-split, no quoting/escaping support.
  */

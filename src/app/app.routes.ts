@@ -107,6 +107,14 @@ export const routes: Routes = [
           ).then((m) => m.ConvocatoriaWizardComponent),
       },
       {
+        path: `${RouteConstants.CONVOCATORIAS}/:id/${RouteConstants.CONVOCATORIA_WIZARD}`,
+        data: { titleKey: 'convocatorias.wizard.title' },
+        loadComponent: () =>
+          import(
+            './features/convocatorias/components/convocatoria-wizard/convocatoria-wizard.component'
+          ).then((m) => m.ConvocatoriaWizardComponent),
+      },
+      {
         path: RouteConstants.BILLING,
         data: { titleKey: 'shell.nav.billing' },
         loadComponent: () =>
