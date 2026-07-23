@@ -424,6 +424,7 @@
       "created": "Creada {{date}}",
       "responded_of": "{{responded}} de {{total}} respondieron",
       "view": "Ver resultados",
+      "edit": "Editar",
       "close": "Cerrar",
       "delete": "Eliminar",
       "no_candidates": "Sin candidatos aún"

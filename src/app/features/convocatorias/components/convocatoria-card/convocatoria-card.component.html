@@ -20,7 +20,7 @@
       }
       @if (isDraft()) {
         <app-button variant="outline-primary" (click)="onViewDetail()">
-          {{ 'convocatorias.card.view' | translate }}
+          {{ 'convocatorias.card.edit' | translate }}
         </app-button>
         <app-button variant="ghost" [danger]="true" (click)="onDelete()">
           <app-icon name="trash-2" [size]="14" />
