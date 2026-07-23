@@ -17,9 +17,11 @@ export class BuilderTopbarComponent {
   private readonly router = inject(Router);
 
   readonly form = input.required<FormDetail>();
+  readonly convocatoriaId = input<string | null>(null);
 
   readonly nameChanged = output<string>();
   readonly publishClicked = output<void>();
+  readonly returnToConvocatoriaClicked = output<void>();
 
   protected readonly formsRoute = `/${RouteConstants.FORMS}`;
 

@@ -2,12 +2,14 @@ import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { map } from 'rxjs';
+import { map, switchMap } from 'rxjs';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { RouteConstants, convocatoriaDetailPath } from '../../../../core/constants/route.constants';
 import { Category } from '../../../../core/models/category.model';
 import { CategoryService } from '../../../../core/services/category.service';
 import { IconComponent } from '../../../../shared/icons/icon.component';
 import { FormsService } from '../../services/forms.service';
+import { ConvocatoriaService } from '../../../convocatorias/services/convocatoria.service';
 import {
   FormDetail, FormSection, FormQuestion, FormStatus, QuestionType,
   AddQuestionRequest, UpdateQuestionRequest, QuestionMovedEvent, CanvasQuestionChangedEvent,
@@ -39,8 +41,11 @@ export class FormBuilderComponent implements OnInit {
   private readonly router             = inject(Router);
   private readonly formsService       = inject(FormsService);
   private readonly categoryService    = inject(CategoryService);
+  private readonly convocatoriaService = inject(ConvocatoriaService);
   private readonly translateSvc       = inject(TranslateService);
   private readonly breakpointObserver = inject(BreakpointObserver);
+
+  protected readonly convocatoriaId = this.route.snapshot.queryParamMap.get(RouteConstants.QUERY_CONVOCATORIA_ID);
 
   protected readonly isMobile = toSignal(
     this.breakpointObserver.observe('(max-width: 767px)').pipe(map((state) => state.matches)),
@@ -98,6 +103,21 @@ export class FormBuilderComponent implements OnInit {
     this.formsService.update(currentForm.id, name, currentForm.description, currentForm.timeLimitSeconds).subscribe({
       next: () => this.form.update((current) => (current ? { ...current, name } : current)),
     });
+  }
+
+  protected onReturnToConvocatoria(): void {
+    const convocatoriaId = this.convocatoriaId;
+    const currentForm = this.form();
+    if (!convocatoriaId || !currentForm) return;
+
+    this.convocatoriaService.getById(convocatoriaId).pipe(
+      switchMap((detail) => this.convocatoriaService.update(convocatoriaId, {
+        name: detail.name,
+        formId: currentForm.id,
+        categoryWeights: detail.categoryWeights,
+        scoringConfig: detail.scoringConfig,
+      })),
+    ).subscribe(() => this.router.navigate(convocatoriaDetailPath(convocatoriaId)));
   }
 
   protected onPublishClicked(): void {

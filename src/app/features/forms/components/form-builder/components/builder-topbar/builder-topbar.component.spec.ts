@@ -95,6 +95,18 @@ describe('BuilderTopbarComponent', () => {
     expect(blurSpy).toHaveBeenCalled();
   });
 
+  it('emits returnToConvocatoriaClicked instead of navigating when convocatoriaId is set', () => {
+    fixture.componentRef.setInput('convocatoriaId', 'conv1');
+    fixture.detectChanges();
+    let emitted = false;
+    component.returnToConvocatoriaClicked.subscribe(() => (emitted = true));
+
+    const backLink = fixture.nativeElement.querySelector('.topbar__back') as HTMLElement;
+    backLink.click();
+
+    expect(emitted).toBe(true);
+  });
+
   it('emits publishClicked when publish button clicked', () => {
     let emitted = false;
     component.publishClicked.subscribe(() => (emitted = true));

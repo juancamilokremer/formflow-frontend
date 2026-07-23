@@ -1,0 +1,29 @@
+<div class="sth__field">
+  <div class="sth__field-header">
+    <label class="sth__label" for="sth-apto">{{ 'convocatorias.detail.thresholds.apto_label' | translate }}</label>
+    <span class="sth__value">{{ aptoMin() }}</span>
+  </div>
+  <input id="sth-apto" type="range" min="1" max="100" [value]="aptoMin()"
+    (input)="onAptoInput($any($event.target).valueAsNumber)" />
+</div>
+
+<div class="sth__field">
+  <div class="sth__field-header">
+    <label class="sth__label" for="sth-revisar">{{ 'convocatorias.detail.thresholds.revisar_label' | translate }}</label>
+    <span class="sth__value">{{ revisarMin() }}</span>
+  </div>
+  <input id="sth-revisar" type="range" min="0" max="100" [value]="revisarMin()"
+    (input)="onRevisarInput($any($event.target).valueAsNumber)" />
+</div>
+
+<div class="sth__preview">
+  <div class="sth__zone sth__zone--no-apto" [style.flex-basis.%]="noAptoZoneWidth()">
+    {{ 'convocatorias.detail.thresholds.zone_no_apto' | translate }}
+  </div>
+  <div class="sth__zone sth__zone--revisar" [style.flex-basis.%]="revisarZoneWidth()">
+    {{ 'convocatorias.detail.thresholds.zone_revisar' | translate }}
+  </div>
+  <div class="sth__zone sth__zone--apto" [style.flex-basis.%]="aptoZoneWidth()">
+    {{ 'convocatorias.detail.thresholds.zone_apto' | translate }}
+  </div>
+</div>

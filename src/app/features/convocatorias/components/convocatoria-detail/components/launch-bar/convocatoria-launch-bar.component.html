@@ -1,0 +1,9 @@
+@if (!hasCandidates()) {
+  <p class="clb__hint">{{ 'convocatorias.detail.launch.no_candidates_hint' | translate }}</p>
+}
+@if (error()) {
+  <p class="clb__error">{{ 'convocatorias.detail.launch.error' | translate }}</p>
+}
+<app-button [fullWidth]="true" type="button" [loading]="submitting()" [disabled]="!canLaunch()" (click)="requestLaunch()">
+  {{ 'convocatorias.detail.launch.button' | translate }}
+</app-button>

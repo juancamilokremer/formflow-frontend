@@ -36,6 +36,12 @@ export class FormsService {
     return this.http.put<void>(`${this.apiUrl}/${id}`, { name, description, timeLimitSeconds });
   }
 
+  duplicate(id: string): Observable<Form> {
+    return this.http.post<ApiResponse<Form>>(`${this.apiUrl}/${id}/duplicate`, {}).pipe(
+      map((r) => r.data!),
+    );
+  }
+
   updateStatus(id: string, status: FormStatus): Observable<Form> {
     return this.http.patch<ApiResponse<Form>>(`${this.apiUrl}/${id}/status`, { status }).pipe(
       map((r) => r.data!),

@@ -19,7 +19,7 @@ export const RouteConstants = {
   FORM_PREVIEW:  'preview',
   FORM_RESPOND:  'respond',
   CONVOCATORIA_NEW: 'new',
-  CONVOCATORIA_WIZARD: 'wizard',
+  QUERY_CONVOCATORIA_ID: 'convocatoriaId',
 } as const;
 
 export function publicFormPath(convId: string, token: string): string {
@@ -42,6 +42,6 @@ export function convocatoriaNewPath(): string[] {
   return ['/', RouteConstants.CONVOCATORIAS, RouteConstants.CONVOCATORIA_NEW];
 }
 
-export function convocatoriaWizardPath(id: string): string[] {
-  return ['/', RouteConstants.CONVOCATORIAS, id, RouteConstants.CONVOCATORIA_WIZARD];
+export function convocatoriaDetailPath(id: string): string[] {
+  return ['/', RouteConstants.CONVOCATORIAS, id];
 }

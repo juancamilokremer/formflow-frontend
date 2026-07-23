@@ -1,0 +1,31 @@
+<div class="bif__field">
+  <label class="bif__label" for="bif-name">
+    {{ 'convocatorias.create.name_label' | translate }}
+  </label>
+  <input
+    id="bif-name"
+    class="bif__input"
+    type="text"
+    [placeholder]="'convocatorias.create.name_placeholder' | translate"
+    [value]="name()"
+    (input)="onNameInput($any($event.target).value)"
+    autocomplete="off"
+  />
+</div>
+
+<div class="bif__field">
+  <span class="bif__label">{{ 'convocatorias.create.type_label' | translate }}</span>
+  <div class="bif__type-options">
+    @for (opt of processTypeOptions; track opt.value) {
+      <button
+        type="button"
+        class="bif__type-option"
+        [class.bif__type-option--selected]="processType() === opt.value"
+        (click)="selectProcessType(opt.value)"
+      >
+        <span class="bif__type-name">{{ opt.labelKey | translate }}</span>
+        <span class="bif__type-desc">{{ opt.descKey | translate }}</span>
+      </button>
+    }
+  </div>
+</div>

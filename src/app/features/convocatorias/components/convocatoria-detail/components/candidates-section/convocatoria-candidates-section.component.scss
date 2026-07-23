@@ -1,0 +1,104 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.ccs {
+  &__section-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ff-text-primary);
+    margin: 0 0 8px;
+  }
+
+  &__manual {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &__manual-form {
+    display: flex;
+    gap: 8px;
+  }
+
+  &__input {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid var(--ff-border);
+    border-radius: var(--ff-radius-sm);
+    font-size: 13px;
+    outline: none;
+
+    &:focus { border-color: var(--ff-primary); }
+  }
+
+  &__hint {
+    font-size: 12px;
+    color: var(--ff-text-muted);
+    margin: 0;
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  &__list-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    background: var(--ff-white);
+    border: 1px solid var(--ff-border);
+    border-radius: var(--ff-radius-sm);
+    font-size: 13px;
+  }
+
+  &__list-email {
+    flex: 1;
+    color: var(--ff-text-secondary);
+  }
+
+  &__list-status {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--ff-text-muted);
+    text-transform: uppercase;
+  }
+
+  &__csv {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &__csv-upload {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border: 1px dashed var(--ff-border);
+    border-radius: var(--ff-radius-sm);
+    font-size: 13px;
+    color: var(--ff-text-secondary);
+    cursor: pointer;
+    width: fit-content;
+
+    &:hover { border-color: var(--ff-primary); color: var(--ff-primary); }
+  }
+
+  &__csv-result {
+    font-size: 12px;
+    color: var(--ff-text-secondary);
+    margin: 0;
+  }
+
+  &__error {
+    font-size: 13px;
+    color: var(--ff-error-text);
+    margin: 0;
+  }
+}

@@ -97,22 +97,22 @@ export const routes: Routes = [
           ),
       },
       {
-        // Must stay before a future `convocatorias/:id` (issue #59) or that route will
-        // swallow this path as an :id param.
+        // Must stay before `convocatorias/:id` below or that route will swallow this path
+        // as an :id param.
         path: `${RouteConstants.CONVOCATORIAS}/${RouteConstants.CONVOCATORIA_NEW}`,
-        data: { titleKey: 'convocatorias.wizard.title' },
+        data: { titleKey: 'convocatorias.create.title' },
         loadComponent: () =>
           import(
-            './features/convocatorias/components/convocatoria-wizard/convocatoria-wizard.component'
-          ).then((m) => m.ConvocatoriaWizardComponent),
+            './features/convocatorias/components/convocatoria-create/convocatoria-create.component'
+          ).then((m) => m.ConvocatoriaCreateComponent),
       },
       {
-        path: `${RouteConstants.CONVOCATORIAS}/:id/${RouteConstants.CONVOCATORIA_WIZARD}`,
-        data: { titleKey: 'convocatorias.wizard.title' },
+        path: `${RouteConstants.CONVOCATORIAS}/:id`,
+        data: { titleKey: 'convocatorias.detail.title' },
         loadComponent: () =>
           import(
-            './features/convocatorias/components/convocatoria-wizard/convocatoria-wizard.component'
-          ).then((m) => m.ConvocatoriaWizardComponent),
+            './features/convocatorias/components/convocatoria-detail/convocatoria-detail.component'
+          ).then((m) => m.ConvocatoriaDetailComponent),
       },
       {
         path: RouteConstants.BILLING,
