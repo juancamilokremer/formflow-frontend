@@ -63,6 +63,8 @@ export class ConvocatoriaDetailComponent {
   protected readonly deleting = signal(false);
 
   protected readonly isDraft = computed(() => this.convocatoria()?.status === 'DRAFT');
+  protected readonly currentForm = computed(() =>
+    this.forms().find((f) => f.id === this.convocatoria()?.formId) ?? null);
 
   private readonly weightsThresholdsChange$ = new Subject<void>();
 
@@ -148,6 +150,7 @@ export class ConvocatoriaDetailComponent {
 
   protected onFormAttached(form: Form): void {
     this.convocatoria.update((c) => (c ? { ...c, formId: form.id } : c));
+    this.forms.update((forms) => [...forms, form]);
     this.loadFormCategories(form.id);
   }
 

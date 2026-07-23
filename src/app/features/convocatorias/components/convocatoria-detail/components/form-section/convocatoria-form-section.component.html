@@ -1,7 +1,11 @@
-@if (currentFormName()) {
-  <p class="cfs__current">
-    {{ 'convocatorias.detail.form.current' | translate: { name: currentFormName() } }}
-  </p>
+@if (currentForm(); as form) {
+  <div class="cfs__current">
+    <span class="cfs__current-name">{{ 'convocatorias.detail.form.current' | translate: { name: form.name } }}</span>
+    <app-button type="button" variant="secondary" (click)="openCurrentForm()">
+      {{ 'convocatorias.detail.form.open_action' | translate }}
+    </app-button>
+  </div>
+  <p class="cfs__replace-label">{{ 'convocatorias.detail.form.replace_label' | translate }}</p>
 }
 
 <div class="cfs__cards">

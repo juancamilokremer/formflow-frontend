@@ -26,7 +26,7 @@ export class ConvocatoriaFormSectionComponent {
   readonly convocatoriaId = input.required<string>();
   readonly convocatoriaName = input.required<string>();
   readonly processType = input.required<ProcessType>();
-  readonly currentFormName = input<string | null>(null);
+  readonly currentForm = input<Form | null>(null);
   readonly forms = input.required<Form[]>();
 
   readonly formAttached = output<Form>();
@@ -46,6 +46,14 @@ export class ConvocatoriaFormSectionComponent {
 
   protected onDuplicateSelected(formId: string): void {
     this.selectedFormId.set(formId);
+  }
+
+  protected openCurrentForm(): void {
+    const current = this.currentForm();
+    if (!current) return;
+    this.router.navigate(formBuilderPath(current.id), {
+      queryParams: { [RouteConstants.QUERY_CONVOCATORIA_ID]: this.convocatoriaId() },
+    });
   }
 
   protected createNew(): void {

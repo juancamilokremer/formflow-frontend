@@ -34,7 +34,7 @@
           [convocatoriaId]="conv.id"
           [convocatoriaName]="conv.name"
           [processType]="conv.type"
-          [currentFormName]="null"
+          [currentForm]="currentForm()"
           [forms]="forms()"
           (formAttached)="onFormAttached($event)" />
       </app-card>

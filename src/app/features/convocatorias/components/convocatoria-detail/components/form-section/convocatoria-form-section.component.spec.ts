@@ -17,7 +17,7 @@ const NEW_FORM: Form = { ...ACTIVE_CANDIDATES_FORM, id: 'f4', name: 'RRHH' };
 const DUPLICATED_FORM: Form = { ...ACTIVE_CANDIDATES_FORM, id: 'f5', name: 'Evaluación técnica (copia)' };
 
 function buildComponent(overrides: {
-  createImpl?: unknown; duplicateImpl?: unknown; updateImpl?: unknown;
+  createImpl?: unknown; duplicateImpl?: unknown; updateImpl?: unknown; currentForm?: Form | null;
 } = {}) {
   const mockFormsService = {
     create: overrides.createImpl ?? vi.fn().mockReturnValue(of(NEW_FORM)),
@@ -43,6 +43,7 @@ function buildComponent(overrides: {
   fixture.componentRef.setInput('convocatoriaName', 'RRHH');
   fixture.componentRef.setInput('processType', 'CANDIDATES');
   fixture.componentRef.setInput('forms', [ACTIVE_CANDIDATES_FORM, DRAFT_FORM, DIAGNOSTIC_FORM]);
+  fixture.componentRef.setInput('currentForm', overrides.currentForm ?? null);
   fixture.detectChanges();
   return { component: fixture.componentInstance, mockFormsService, mockConvocatoriaService, mockRouter };
 }
@@ -53,6 +54,25 @@ describe('ConvocatoriaFormSectionComponent', () => {
   it('matchingForms filters by ACTIVE status and matching processType', () => {
     const { component } = buildComponent();
     expect(component['matchingForms']().map((f) => f.id)).toEqual(['f1']);
+  });
+
+  describe('openCurrentForm', () => {
+    it('does nothing without a current form', () => {
+      const { component, mockRouter } = buildComponent();
+      component['openCurrentForm']();
+      expect(mockRouter.navigate).not.toHaveBeenCalled();
+    });
+
+    it('navigates to the builder for the current form with convocatoriaId', () => {
+      const { component, mockRouter } = buildComponent({ currentForm: ACTIVE_CANDIDATES_FORM });
+
+      component['openCurrentForm']();
+
+      expect(mockRouter.navigate).toHaveBeenCalledWith(
+        ['forms', 'f1', 'edit'],
+        { queryParams: { convocatoriaId: 'c1' } },
+      );
+    });
   });
 
   describe('createNew', () => {

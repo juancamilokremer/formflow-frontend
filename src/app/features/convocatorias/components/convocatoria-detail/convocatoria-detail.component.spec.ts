@@ -20,6 +20,7 @@ function buildComponent(options: {
   convocatoria?: ConvocatoriaDetail;
   updateImpl?: ReturnType<typeof vi.fn>;
   getByIdImpl?: ReturnType<typeof vi.fn>;
+  forms?: Form[];
 } = {}) {
   const initial = options.convocatoria ?? DRAFT_CONVOCATORIA;
   const mockConvocatoriaService = {
@@ -29,7 +30,7 @@ function buildComponent(options: {
   };
   const mockCategoryService = { getAll: vi.fn().mockReturnValue(of([] as Category[])) };
   const mockFormsService = {
-    getAll: vi.fn().mockReturnValue(of([] as Form[])),
+    getAll: vi.fn().mockReturnValue(of(options.forms ?? [] as Form[])),
     getById: vi.fn().mockReturnValue(of({ sections: [] } as unknown as Form)),
   };
   const mockRouter = { navigate: vi.fn() };
@@ -49,7 +50,7 @@ function buildComponent(options: {
 
   const fixture = TestBed.createComponent(ConvocatoriaDetailComponent);
   fixture.detectChanges();
-  return { component: fixture.componentInstance, mockConvocatoriaService, mockRouter };
+  return { component: fixture.componentInstance, mockConvocatoriaService, mockFormsService, mockRouter };
 }
 
 describe('ConvocatoriaDetailComponent', () => {
@@ -137,6 +138,34 @@ describe('ConvocatoriaDetailComponent', () => {
     component['onLaunched'](launched);
 
     expect(component['convocatoria']()).toEqual(launched);
+  });
+
+  describe('currentForm', () => {
+    const FORM: Form = {
+      id: 'f1', name: 'Evaluación técnica', description: null, type: 'CANDIDATES', status: 'ACTIVE',
+      version: 1, sectionCount: 2, responseCount: 0, lastResponseAt: null, createdAt: '', updatedAt: '',
+    };
+
+    it('resolves the attached form from the forms list by formId', () => {
+      const { component } = buildComponent({
+        convocatoria: { ...DRAFT_CONVOCATORIA, formId: 'f1' },
+        forms: [FORM],
+      });
+      expect(component['currentForm']()).toEqual(FORM);
+    });
+
+    it('is null when the convocatoria has no formId', () => {
+      const { component } = buildComponent({ forms: [FORM] });
+      expect(component['currentForm']()).toBeNull();
+    });
+
+    it('onFormAttached adds the new form to the forms list so currentForm resolves immediately', () => {
+      const { component } = buildComponent();
+      component['onFormAttached'](FORM);
+
+      expect(component['convocatoria']()?.formId).toBe('f1');
+      expect(component['currentForm']()).toEqual(FORM);
+    });
   });
 
   it('confirmDelete deletes and navigates to the list', () => {

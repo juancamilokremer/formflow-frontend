@@ -467,6 +467,8 @@
       "form": {
         "title": "Formulario",
         "current": "Formulario actual: {{name}}",
+        "open_action": "Abrir formulario",
+        "replace_label": "O reemplázalo:",
         "create_title": "Crear formulario nuevo",
         "create_desc": "Abre el constructor en blanco para este tipo de proceso",
         "create_action": "Crear formulario",
