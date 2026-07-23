@@ -16,7 +16,7 @@ import { Category } from '../../../../core/models/category.model';
 import { FormsService } from '../../../forms/services/forms.service';
 import { Form } from '../../../forms/models/form.model';
 import { ConvocatoriaService } from '../../services/convocatoria.service';
-import { Candidate, ConvocatoriaDetail, ImportResponse } from '../../models/convocatoria.model';
+import { Candidate, ConvocatoriaDetail } from '../../models/convocatoria.model';
 import { deriveCategoryIds } from '../../utils/convocatoria.utils';
 import { ConvocatoriaFormSectionComponent } from './components/form-section/convocatoria-form-section.component';
 import { ConvocatoriaWeightsSectionComponent } from './components/weights-section/convocatoria-weights-section.component';
@@ -166,7 +166,7 @@ export class ConvocatoriaDetailComponent {
     this.convocatoria.update((c) => (c ? { ...c, candidates: [...c.candidates, candidate] } : c));
   }
 
-  protected onCandidatesImported(_result: ImportResponse): void {
+  protected onCandidatesImported(): void {
     this.convocatoriaService.getById(this.id)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((detail) => this.applyDetail(detail));
