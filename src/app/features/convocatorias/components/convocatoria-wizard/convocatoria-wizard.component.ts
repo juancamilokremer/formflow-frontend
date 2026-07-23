@@ -1,9 +1,9 @@
 import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { forkJoin } from 'rxjs';
-import { RouteConstants } from '../../../../core/constants/route.constants';
+import { RouteConstants, convocatoriaWizardPath } from '../../../../core/constants/route.constants';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
 import { CardComponent } from '../../../../shared/components/card/card.component';
 import { PageHeaderComponent } from '../../../../shared/components/page-header/page-header.component';
@@ -13,12 +13,13 @@ import { SuccessCardComponent } from '../../../../shared/components/success-card
 import { FormsService } from '../../../forms/services/forms.service';
 import { Form } from '../../../forms/models/form.model';
 import { ConvocatoriaLaunchService } from '../../services/convocatoria-launch.service';
+import { ConvocatoriaService } from '../../services/convocatoria.service';
 import { CategoryService } from '../../../../core/services/category.service';
 import { Category } from '../../../../core/models/category.model';
 import { ConvocatoriaDetail } from '../../models/convocatoria.model';
 import {
   CandidateAddFailure, ConvocatoriaDraft, DEFAULT_DRAFT, LaunchError, ManualCandidateDraft,
-  ProcessType, WizardStep, deriveCategoryIds,
+  ProcessType, WizardStep, deriveCategoryIds, draftFromDetail,
 } from '../../models/convocatoria-wizard.model';
 import { StepBasicInfoComponent } from './components/step-basic-info/step-basic-info.component';
 import { StepFormSelectorComponent } from './components/step-form-selector/step-form-selector.component';
@@ -47,9 +48,11 @@ const STEP_KEYS = [
 })
 export class ConvocatoriaWizardComponent {
   private readonly launchService = inject(ConvocatoriaLaunchService);
+  private readonly convocatoriaService = inject(ConvocatoriaService);
   private readonly categoryService = inject(CategoryService);
   private readonly formsService = inject(FormsService);
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
   private readonly destroyRef = inject(DestroyRef);
 
   protected readonly stepKeys = STEP_KEYS;
@@ -65,9 +68,14 @@ export class ConvocatoriaWizardComponent {
   protected readonly submitting = signal(false);
   protected readonly submitError = signal<string | null>(null);
   protected readonly candidateAddFailures = signal<CandidateAddFailure[]>([]);
-  private readonly createdConvocatoriaId = signal<string | null>(null);
+  protected readonly convocatoriaId = signal<string | null>(null);
   private readonly succeededCandidateEmails = signal<ReadonlySet<string>>(new Set());
   protected readonly launchResult = signal<ConvocatoriaDetail | null>(null);
+
+  protected readonly hydrating = signal(false);
+  protected readonly hydrateError = signal(false);
+  protected readonly creatingConvocatoria = signal(false);
+  protected readonly createError = signal(false);
 
   protected readonly discardConfirmOpen = signal(false);
 
@@ -88,6 +96,8 @@ export class ConvocatoriaWizardComponent {
   protected readonly step5Valid = computed(() =>
     this.draft().manualCandidates.length > 0 || !!this.draft().csvFile);
 
+  protected readonly minStep = computed<WizardStep>(() => (this.convocatoriaId() ? 2 : 1));
+
   protected readonly canGoNext = computed<boolean>(() => {
     switch (this.currentStep()) {
       case 1: return this.step1Valid();
@@ -102,6 +112,25 @@ export class ConvocatoriaWizardComponent {
     this.formsService.getAll()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((forms) => this.forms.set(forms));
+
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.convocatoriaId.set(id);
+      this.currentStep.set(2);
+      this.hydrating.set(true);
+      this.convocatoriaService.getById(id)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe({
+          next: (detail) => {
+            this.draft.set(draftFromDetail(detail));
+            this.hydrating.set(false);
+          },
+          error: () => {
+            this.hydrateError.set(true);
+            this.hydrating.set(false);
+          },
+        });
+    }
   }
 
   protected onBasicInfoChanged(patch: { name: string; processType: ProcessType }): void {
@@ -153,12 +182,32 @@ export class ConvocatoriaWizardComponent {
 
   protected goNext(): void {
     if (!this.canGoNext()) return;
+    if (this.currentStep() === 1 && !this.convocatoriaId()) {
+      this.onCreateConvocatoria();
+      return;
+    }
     if (this.currentStep() === 2) this.loadFormCategories();
     if (this.currentStep() < 5) this.currentStep.update((s) => (s + 1) as WizardStep);
   }
 
   protected goBack(): void {
-    if (this.currentStep() > 1) this.currentStep.update((s) => (s - 1) as WizardStep);
+    if (this.currentStep() > this.minStep()) this.currentStep.update((s) => (s - 1) as WizardStep);
+  }
+
+  protected onCreateConvocatoria(): void {
+    if (!this.step1Valid() || this.creatingConvocatoria()) return;
+    this.creatingConvocatoria.set(true);
+    this.createError.set(false);
+
+    this.convocatoriaService.create({ name: this.draft().name.trim(), type: this.draft().processType })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (detail) => this.router.navigate(convocatoriaWizardPath(detail.id)),
+        error: () => {
+          this.creatingConvocatoria.set(false);
+          this.createError.set(true);
+        },
+      });
   }
 
   private loadFormCategories(): void {
@@ -210,18 +259,18 @@ export class ConvocatoriaWizardComponent {
     this.submitError.set(null);
 
     this.launchService
-      .launch(this.draft(), this.createdConvocatoriaId(), this.succeededCandidateEmails())
+      .launch(this.draft(), this.convocatoriaId(), this.succeededCandidateEmails())
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: ({ launched, convocatoriaId, failures }) => {
-          this.createdConvocatoriaId.set(convocatoriaId);
+          this.convocatoriaId.set(convocatoriaId);
           this.candidateAddFailures.set(failures);
           this.markCandidatesSucceeded(failures);
           this.submitting.set(false);
           this.launchResult.set(launched);
         },
         error: (err: LaunchError) => {
-          if (err.convocatoriaId) this.createdConvocatoriaId.set(err.convocatoriaId);
+          if (err.convocatoriaId) this.convocatoriaId.set(err.convocatoriaId);
           if (err.failures) {
             this.candidateAddFailures.set(err.failures);
             this.markCandidatesSucceeded(err.failures);

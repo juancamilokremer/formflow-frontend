@@ -518,6 +518,10 @@
       "discard_confirm": {
         "title": "¿Descartar convocatoria?",
         "message": "Perderás la información ingresada en este asistente."
+      },
+      "error": {
+        "create": "No se pudo crear la convocatoria. Intenta de nuevo.",
+        "load": "No se pudo cargar la convocatoria."
       }
     }
   },

@@ -6,7 +6,7 @@ import { ConvocatoriaDetail } from '../models/convocatoria.model';
 import { ConvocatoriaDraft, DEFAULT_DRAFT } from '../models/convocatoria-wizard.model';
 
 const MOCK_CONVOCATORIA: ConvocatoriaDetail = {
-  id: 'c1', tenantId: 't1', formId: 'f1', name: 'Analista de RRHH', status: 'ACTIVE',
+  id: 'c1', tenantId: 't1', formId: 'f1', name: 'Analista de RRHH', type: 'CANDIDATES', status: 'ACTIVE',
   categoryWeights: [], scoringConfig: { aptoMin: 70, revisarMin: 50 },
   startDate: null, endDate: null, createdAt: '', updatedAt: '',
   candidates: [{ id: 'cand1', convocatoriaId: 'c1', name: 'Ana', email: 'ana@x.com', token: 't', status: 'INVITED', responseId: null, scores: null, invitedAt: null, respondedAt: null, createdAt: '' }],

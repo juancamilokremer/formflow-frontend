@@ -1,3 +1,5 @@
+import type { ProcessType } from './convocatoria-wizard.model';
+
 export type ConvocatoriaStatus = 'DRAFT' | 'ACTIVE' | 'CLOSED';
 
 export interface CategoryWeight {
@@ -34,8 +36,9 @@ export interface Candidate {
 export interface ConvocatoriaDetail {
   id: string;
   tenantId: string;
-  formId: string;
+  formId: string | null;
   name: string;
+  type: ProcessType;
   status: ConvocatoriaStatus;
   categoryWeights: CategoryWeight[];
   scoringConfig: ScoringConfig;
@@ -48,7 +51,8 @@ export interface ConvocatoriaDetail {
 
 export interface CreateConvocatoriaRequest {
   name: string;
-  formId: string;
+  type: ProcessType;
+  formId?: string;
   categoryWeights?: CategoryWeight[];
   scoringConfig?: ScoringConfig;
 }
