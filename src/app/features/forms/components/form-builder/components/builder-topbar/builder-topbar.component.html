@@ -1,7 +1,13 @@
 <div class="topbar">
-  <a class="topbar__back" [routerLink]="formsRoute">
-    <app-icon name="arrow-left" [size]="15" /> {{ 'builder.back' | translate }}
-  </a>
+  @if (convocatoriaId()) {
+    <a class="topbar__back" role="button" tabindex="0" (click)="returnToConvocatoriaClicked.emit()">
+      <app-icon name="arrow-left" [size]="15" /> {{ 'builder.back_to_convocatoria' | translate }}
+    </a>
+  } @else {
+    <a class="topbar__back" [routerLink]="formsRoute">
+      <app-icon name="arrow-left" [size]="15" /> {{ 'builder.back' | translate }}
+    </a>
+  }
 
   <div class="topbar__divider"></div>
 

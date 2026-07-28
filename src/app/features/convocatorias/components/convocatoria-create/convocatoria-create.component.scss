@@ -1,0 +1,25 @@
+:host { display: block; }
+
+.cc {
+  padding: 28px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 720px;
+  margin: 0 auto;
+
+  &__body {
+    display: block;
+  }
+
+  &__error {
+    color: var(--ff-error-text);
+    font-size: 13px;
+    margin: 0;
+  }
+
+  &__nav {
+    display: flex;
+    justify-content: flex-end;
+  }
+}

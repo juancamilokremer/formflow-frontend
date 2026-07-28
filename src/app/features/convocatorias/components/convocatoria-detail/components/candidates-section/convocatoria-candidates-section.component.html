@@ -1,0 +1,45 @@
+<div class="ccs__manual">
+  <p class="ccs__section-label">{{ 'convocatorias.detail.candidates.add_manual_title' | translate }}</p>
+  <div class="ccs__manual-form">
+    <input type="text" class="ccs__input" [placeholder]="'convocatorias.detail.candidates.name_placeholder' | translate"
+      [value]="manualName()" (input)="manualName.set($any($event.target).value)" />
+    <input type="email" class="ccs__input" [placeholder]="'convocatorias.detail.candidates.email_placeholder' | translate"
+      [value]="manualEmail()" (input)="manualEmail.set($any($event.target).value)" />
+    <app-button type="button" variant="secondary" [loading]="adding()" [disabled]="!canAddManual()"
+      (click)="addManualCandidate()">{{ 'convocatorias.detail.candidates.add_button' | translate }}</app-button>
+  </div>
+  @if (addError()) {
+    <p class="ccs__error">{{ 'convocatorias.detail.candidates.add_error' | translate }}</p>
+  }
+</div>
+
+@if (candidates().length > 0) {
+  <div class="ccs__list">
+    @for (candidate of candidates(); track candidate.id) {
+      <div class="ccs__list-row">
+        <span>{{ candidate.name }}</span>
+        <span class="ccs__list-email">{{ candidate.email }}</span>
+        <span class="ccs__list-status">{{ 'convocatorias.candidate_status.' + candidate.status | translate }}</span>
+      </div>
+    }
+  </div>
+} @else {
+  <p class="ccs__hint">{{ 'convocatorias.detail.candidates.no_candidates_hint' | translate }}</p>
+}
+
+<div class="ccs__csv">
+  <label class="ccs__csv-upload" [class.ccs__csv-upload--loading]="importing()">
+    <app-icon name="upload" [size]="16" />
+    {{ (importing() ? 'convocatorias.detail.candidates.csv_importing' : 'convocatorias.detail.candidates.csv_upload_label') | translate }}
+    <input type="file" accept=".csv" hidden [disabled]="importing()" (change)="onFileSelected($event)" />
+  </label>
+  <p class="ccs__csv-hint">{{ 'convocatorias.detail.candidates.csv_format_hint' | translate }}</p>
+  @if (importResult(); as result) {
+    <p class="ccs__csv-result">
+      {{ 'convocatorias.detail.candidates.csv_result' | translate: { imported: result.imported, skipped: result.skipped } }}
+    </p>
+  }
+  @if (csvReadError()) {
+    <p class="ccs__error">{{ 'convocatorias.detail.candidates.csv_read_error' | translate }}</p>
+  }
+</div>

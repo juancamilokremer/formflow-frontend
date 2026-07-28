@@ -1,6 +1,10 @@
-import type { ProcessType } from './convocatoria-wizard.model';
-
 export type ConvocatoriaStatus = 'DRAFT' | 'ACTIVE' | 'CLOSED';
+export type ProcessType = 'CANDIDATES' | 'DIAGNOSTIC';
+
+export const PROCESS_TYPE_LABEL_KEYS: Record<ProcessType, string> = {
+  CANDIDATES: 'convocatorias.create.type_candidates',
+  DIAGNOSTIC: 'convocatorias.create.type_diagnostic',
+};
 
 export interface CategoryWeight {
   categoryId: string;
@@ -52,6 +56,13 @@ export interface ConvocatoriaDetail {
 export interface CreateConvocatoriaRequest {
   name: string;
   type: ProcessType;
+  formId?: string;
+  categoryWeights?: CategoryWeight[];
+  scoringConfig?: ScoringConfig;
+}
+
+export interface UpdateConvocatoriaRequest {
+  name: string;
   formId?: string;
   categoryWeights?: CategoryWeight[];
   scoringConfig?: ScoringConfig;

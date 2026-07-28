@@ -1,0 +1,23 @@
+<div class="cc">
+  <app-page-header
+    [title]="'convocatorias.create.title' | translate"
+    [subtitle]="'convocatorias.create.subtitle' | translate"
+  />
+
+  <app-card class="cc__body">
+    <app-basic-info-form
+      [name]="name()"
+      [processType]="processType()"
+      (changed)="onBasicInfoChanged($event)" />
+  </app-card>
+
+  @if (createError()) {
+    <p class="cc__error">{{ 'convocatorias.create.error' | translate }}</p>
+  }
+
+  <div class="cc__nav">
+    <app-button type="button" [loading]="creating()" [disabled]="!isValid()" (click)="submit()">
+      {{ 'common.next' | translate }}
+    </app-button>
+  </div>
+</div>

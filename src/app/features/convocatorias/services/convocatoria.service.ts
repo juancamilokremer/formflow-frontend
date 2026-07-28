@@ -5,7 +5,7 @@ import { environment } from '../../../../environments/environment';
 import { ApiResponse } from '../../../core/models/api-response.model';
 import {
   AddCandidateRequest, Candidate, ConvocatoriaDetail, ConvocatoriaSummary,
-  CreateConvocatoriaRequest, ImportResponse,
+  CreateConvocatoriaRequest, ImportResponse, UpdateConvocatoriaRequest,
 } from '../models/convocatoria.model';
 
 @Injectable({ providedIn: 'root' })
@@ -28,6 +28,12 @@ export class ConvocatoriaService {
   create(request: CreateConvocatoriaRequest): Observable<ConvocatoriaDetail> {
     return this.http
       .post<ApiResponse<ConvocatoriaDetail>>(this.base, request)
+      .pipe(map((r) => r.data!));
+  }
+
+  update(id: string, request: UpdateConvocatoriaRequest): Observable<ConvocatoriaDetail> {
+    return this.http
+      .put<ApiResponse<ConvocatoriaDetail>>(`${this.base}/${id}`, request)
       .pipe(map((r) => r.data!));
   }
 
