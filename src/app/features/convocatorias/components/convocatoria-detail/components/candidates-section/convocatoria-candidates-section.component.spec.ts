@@ -82,51 +82,56 @@ describe('ConvocatoriaCandidatesSectionComponent', () => {
     });
   });
 
-  describe('confirmCsvImport', () => {
-    it('imports the staged file, emits candidatesImported, and stores the result', () => {
+  describe('onFileSelected', () => {
+    function fileSelectedEvent(file: File): Event {
+      const input = document.createElement('input');
+      input.type = 'file';
+      Object.defineProperty(input, 'files', { value: [file] });
+      return { target: input } as unknown as Event;
+    }
+
+    it('uploads the selected file directly and emits candidatesImported on success', () => {
       const { component, mockConvocatoriaService } = buildComponent();
       const file = new File(['a'], 'c.csv');
-      component['pendingFile'].set(file);
       let emitted: ImportResponse | undefined;
       component.candidatesImported.subscribe((r) => (emitted = r));
 
-      component['confirmCsvImport']();
+      component['onFileSelected'](fileSelectedEvent(file));
 
       expect(mockConvocatoriaService.importCandidates).toHaveBeenCalledWith('c1', file);
       expect(emitted).toEqual({ imported: 2, skipped: 0, errors: [] });
       expect(component['importResult']()).toEqual({ imported: 2, skipped: 0, errors: [] });
-      expect(component['importModalOpen']()).toBe(false);
+      expect(component['importing']()).toBe(false);
     });
 
     it('sets csvReadError when the import request fails', () => {
       const { component } = buildComponent({
         importCandidates: vi.fn().mockReturnValue(throwError(() => new Error('boom'))),
       });
-      component['pendingFile'].set(new File(['a'], 'c.csv'));
 
-      component['confirmCsvImport']();
+      component['onFileSelected'](fileSelectedEvent(new File(['a'], 'c.csv')));
 
       expect(component['csvReadError']()).toBe(true);
       expect(component['importing']()).toBe(false);
     });
 
-    it('does nothing when there is no pending file', () => {
+    it('does nothing when no file was selected', () => {
       const { component, mockConvocatoriaService } = buildComponent();
-      component['confirmCsvImport']();
+      const input = document.createElement('input');
+      input.type = 'file';
+
+      component['onFileSelected']({ target: input } as unknown as Event);
+
       expect(mockConvocatoriaService.importCandidates).not.toHaveBeenCalled();
     });
-  });
 
-  describe('cancelCsvImport', () => {
-    it('clears the pending file and closes the modal', () => {
-      const { component } = buildComponent();
-      component['pendingFile'].set(new File(['a'], 'c.csv'));
-      component['importModalOpen'].set(true);
+    it('ignores a new selection while an import is already in flight', () => {
+      const { component, mockConvocatoriaService } = buildComponent();
+      component['importing'].set(true);
 
-      component['cancelCsvImport']();
+      component['onFileSelected'](fileSelectedEvent(new File(['a'], 'c.csv')));
 
-      expect(component['pendingFile']()).toBeNull();
-      expect(component['importModalOpen']()).toBe(false);
+      expect(mockConvocatoriaService.importCandidates).not.toHaveBeenCalled();
     });
   });
 });

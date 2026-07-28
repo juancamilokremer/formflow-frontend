@@ -88,6 +88,18 @@
     width: fit-content;
 
     &:hover { border-color: var(--ff-primary); color: var(--ff-primary); }
+
+    &--loading {
+      cursor: default;
+      opacity: 0.7;
+      pointer-events: none;
+    }
+  }
+
+  &__csv-hint {
+    font-size: 12px;
+    color: var(--ff-text-muted);
+    margin: 0;
   }
 
   &__csv-result {

@@ -99,8 +99,3 @@ export interface PendingConvocatoriaAction {
   id: string;
   name: string;
 }
-
-export interface ManualCandidateDraft {
-  name: string;
-  email: string;
-}

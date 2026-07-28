@@ -5,13 +5,11 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { ButtonComponent } from '../../../../../../shared/components/button/button.component';
 import { IconComponent } from '../../../../../../shared/icons/icon.component';
 import { ConvocatoriaService } from '../../../../services/convocatoria.service';
-import { Candidate, ImportResponse, ManualCandidateDraft } from '../../../../models/convocatoria.model';
-import { parseCsvPreview } from '../../../../utils/convocatoria.utils';
-import { CandidateImportModalComponent } from './candidate-import-modal/candidate-import-modal.component';
+import { Candidate, ImportResponse } from '../../../../models/convocatoria.model';
 
 @Component({
   selector: 'app-convocatoria-candidates-section',
-  imports: [TranslatePipe, ButtonComponent, IconComponent, CandidateImportModalComponent],
+  imports: [TranslatePipe, ButtonComponent, IconComponent],
   templateUrl: './convocatoria-candidates-section.component.html',
   styleUrl: './convocatoria-candidates-section.component.scss',
 })
@@ -30,9 +28,6 @@ export class ConvocatoriaCandidatesSectionComponent {
   protected readonly adding = signal(false);
   protected readonly addError = signal(false);
 
-  protected readonly pendingFile = signal<File | null>(null);
-  protected readonly pendingPreviewRows = signal<ManualCandidateDraft[]>([]);
-  protected readonly importModalOpen = signal(false);
   protected readonly importing = signal(false);
   protected readonly csvReadError = signal(false);
   protected readonly importResult = signal<ImportResponse | null>(null);
@@ -67,24 +62,11 @@ export class ConvocatoriaCandidatesSectionComponent {
   }
 
   protected onFileSelected(event: Event): void {
-    const file = (event.target as HTMLInputElement).files?.[0];
-    if (!file) return;
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file || this.importing()) return;
 
     this.csvReadError.set(false);
-    const reader = new FileReader();
-    reader.onload = () => {
-      const rows = parseCsvPreview(String(reader.result ?? ''));
-      this.pendingFile.set(file);
-      this.pendingPreviewRows.set(rows);
-      this.importModalOpen.set(true);
-    };
-    reader.onerror = () => { this.csvReadError.set(true); };
-    reader.readAsText(file);
-  }
-
-  protected confirmCsvImport(): void {
-    const file = this.pendingFile();
-    if (!file || this.importing()) return;
     this.importing.set(true);
 
     this.convocatoriaService.importCandidates(this.convocatoriaId(), file)
@@ -92,22 +74,15 @@ export class ConvocatoriaCandidatesSectionComponent {
       .subscribe({
         next: (result) => {
           this.importing.set(false);
-          this.importModalOpen.set(false);
-          this.pendingFile.set(null);
-          this.pendingPreviewRows.set([]);
           this.importResult.set(result);
+          input.value = '';
           this.candidatesImported.emit(result);
         },
         error: () => {
           this.importing.set(false);
+          input.value = '';
           this.csvReadError.set(true);
         },
       });
-  }
-
-  protected cancelCsvImport(): void {
-    this.importModalOpen.set(false);
-    this.pendingFile.set(null);
-    this.pendingPreviewRows.set([]);
   }
 }

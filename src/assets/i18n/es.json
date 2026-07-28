@@ -511,6 +511,8 @@
         "add_error": "No se pudo agregar el candidato. Verifica que el email no esté repetido.",
         "no_candidates_hint": "Todavía no hay candidatos.",
         "csv_upload_label": "Importar desde CSV",
+        "csv_importing": "Importando…",
+        "csv_format_hint": "Dos columnas: nombre y correo. Primera fila opcional como encabezado. Separador , o ; — se detecta automáticamente.",
         "csv_result": "{{imported}} importados, {{skipped}} omitidos",
         "csv_read_error": "No se pudo leer o importar el archivo. Verifica que sea un CSV válido e intenta de nuevo."
       },
@@ -518,12 +520,6 @@
         "button": "Lanzar convocatoria",
         "no_candidates_hint": "Agrega al menos un candidato para poder lanzar.",
         "error": "No se pudo lanzar la convocatoria. Intenta de nuevo."
-      },
-      "import_modal": {
-        "title": "Vista previa de importación",
-        "note": "Se importarán de inmediato — los duplicados se omiten automáticamente.",
-        "confirm": "Importar",
-        "empty": "No se encontraron filas válidas en el archivo."
       },
       "delete_confirm": {
         "title": "¿Eliminar borrador?",

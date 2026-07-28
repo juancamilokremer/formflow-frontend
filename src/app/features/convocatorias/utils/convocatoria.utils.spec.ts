@@ -1,4 +1,4 @@
-import { deriveCategoryIds, parseCsvPreview } from './convocatoria.utils';
+import { deriveCategoryIds } from './convocatoria.utils';
 import { FormDetail, FormQuestion, FormSection } from '../../forms/models/form.model';
 
 function question(id: string, categoryId: string | null): FormQuestion {
@@ -42,41 +42,5 @@ describe('deriveCategoryIds', () => {
   it('returns an empty array when no question has a category', () => {
     const f = form([section('s1', [question('q1', null)])]);
     expect(deriveCategoryIds(f)).toEqual([]);
-  });
-});
-
-describe('parseCsvPreview', () => {
-  it('skips the header row and parses name,email pairs', () => {
-    const text = 'nombre,email\nAna,ana@x.com\nCarlos,carlos@x.com';
-    expect(parseCsvPreview(text)).toEqual([
-      { name: 'Ana', email: 'ana@x.com' },
-      { name: 'Carlos', email: 'carlos@x.com' },
-    ]);
-  });
-
-  it('trims whitespace around each cell', () => {
-    const text = 'nombre,email\n  Ana  ,  ana@x.com  ';
-    expect(parseCsvPreview(text)).toEqual([{ name: 'Ana', email: 'ana@x.com' }]);
-  });
-
-  it('skips blank lines', () => {
-    const text = 'nombre,email\nAna,ana@x.com\n\n\nCarlos,carlos@x.com';
-    expect(parseCsvPreview(text)).toEqual([
-      { name: 'Ana', email: 'ana@x.com' },
-      { name: 'Carlos', email: 'carlos@x.com' },
-    ]);
-  });
-
-  it('returns an empty array for an empty file', () => {
-    expect(parseCsvPreview('')).toEqual([]);
-  });
-
-  it('returns an empty array for a header-only file', () => {
-    expect(parseCsvPreview('nombre,email')).toEqual([]);
-  });
-
-  it('skips rows missing a name or email', () => {
-    const text = 'nombre,email\nAna,\n,carlos@x.com';
-    expect(parseCsvPreview(text)).toEqual([]);
   });
 });

@@ -28,11 +28,12 @@
 }
 
 <div class="ccs__csv">
-  <label class="ccs__csv-upload">
+  <label class="ccs__csv-upload" [class.ccs__csv-upload--loading]="importing()">
     <app-icon name="upload" [size]="16" />
-    {{ 'convocatorias.detail.candidates.csv_upload_label' | translate }}
-    <input type="file" accept=".csv" hidden (change)="onFileSelected($event)" />
+    {{ (importing() ? 'convocatorias.detail.candidates.csv_importing' : 'convocatorias.detail.candidates.csv_upload_label') | translate }}
+    <input type="file" accept=".csv" hidden [disabled]="importing()" (change)="onFileSelected($event)" />
   </label>
+  <p class="ccs__csv-hint">{{ 'convocatorias.detail.candidates.csv_format_hint' | translate }}</p>
   @if (importResult(); as result) {
     <p class="ccs__csv-result">
       {{ 'convocatorias.detail.candidates.csv_result' | translate: { imported: result.imported, skipped: result.skipped } }}
@@ -42,10 +43,3 @@
     <p class="ccs__error">{{ 'convocatorias.detail.candidates.csv_read_error' | translate }}</p>
   }
 </div>
-
-<app-candidate-import-modal
-  [isOpen]="importModalOpen()"
-  [fileName]="pendingFile()?.name ?? ''"
-  [previewRows]="pendingPreviewRows()"
-  (confirmed)="confirmCsvImport()"
-  (cancelled)="cancelCsvImport()" />

@@ -1,5 +1,4 @@
 import { FormDetail } from '../../forms/models/form.model';
-import { ManualCandidateDraft } from '../models/convocatoria.model';
 
 /**
  * Walks the form's sections/questions in their existing (position-ordered) array order,
@@ -19,23 +18,4 @@ export function deriveCategoryIds(form: FormDetail): string[] {
     }
   }
   return ordered;
-}
-
-/**
- * Client-side preview only — the backend re-parses and validates authoritatively on import.
- * Minimal comma-split, no quoting/escaping support.
- */
-export function parseCsvPreview(text: string): ManualCandidateDraft[] {
-  const lines = text.split(/\r?\n/).map((line) => line.trim()).filter((line) => line.length > 0);
-  if (lines.length === 0) return [];
-
-  const rows = lines.slice(1); // skip header row (nombre, email)
-  const result: ManualCandidateDraft[] = [];
-  for (const line of rows) {
-    const [name, email] = line.split(',').map((cell) => cell?.trim() ?? '');
-    if (name && email) {
-      result.push({ name, email });
-    }
-  }
-  return result;
 }
