@@ -4,6 +4,7 @@ import { Observable, map } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ApiResponse } from '../../../core/models/api-response.model';
 import {
+  CandidateChecklist,
   PublicCandidateForm,
   PublicForm,
   SubmitPublicResponsePayload,
@@ -18,7 +19,7 @@ export class PublicResponseService {
   getForm(formId: string): Observable<PublicForm> {
     return this.http
       .get<ApiResponse<PublicForm>>(`${this.apiUrl}/forms/${formId}`)
-      .pipe(map((r) => r.data!));
+      .pipe(map((response) => response.data!));
   }
 
   submitResponse(
@@ -30,24 +31,31 @@ export class PublicResponseService {
         `${this.apiUrl}/forms/${formId}/responses`,
         payload,
       )
-      .pipe(map((r) => r.data!));
+      .pipe(map((response) => response.data!));
   }
 
-  getCandidateForm(token: string): Observable<PublicCandidateForm> {
+  getCandidateChecklist(token: string): Observable<CandidateChecklist> {
     return this.http
-      .get<ApiResponse<PublicCandidateForm>>(`${this.apiUrl}/candidates/${token}`)
-      .pipe(map((r) => r.data!));
+      .get<ApiResponse<CandidateChecklist>>(`${this.apiUrl}/candidates/${token}`)
+      .pipe(map((response) => response.data!));
+  }
+
+  getCandidateForm(token: string, formId: string): Observable<PublicCandidateForm> {
+    return this.http
+      .get<ApiResponse<PublicCandidateForm>>(`${this.apiUrl}/candidates/${token}/forms/${formId}`)
+      .pipe(map((response) => response.data!));
   }
 
   submitCandidateResponse(
     token: string,
+    formId: string,
     payload: SubmitPublicResponsePayload,
   ): Observable<SubmitPublicResponseResult> {
     return this.http
       .post<ApiResponse<SubmitPublicResponseResult>>(
-        `${this.apiUrl}/candidates/${token}/responses`,
+        `${this.apiUrl}/candidates/${token}/forms/${formId}/responses`,
         payload,
       )
-      .pipe(map((r) => r.data!));
+      .pipe(map((response) => response.data!));
   }
 }

@@ -30,24 +30,91 @@
     </div>
   }
 
-  @case ('already_responded') {
+  @case ('checklist') {
+    <div class="cfp">
+      @if (checklist()!.allCompleted) {
+        <div class="cfp__state-page">
+          <div class="cfp__state-card">
+            <app-icon name="check-circle" [size]="48" class="cfp__check-icon" />
+            <h1 class="cfp__state-title">{{ 'responder.candidate.all_done.title' | translate }}</h1>
+            <p class="cfp__state-message">
+              {{ 'responder.candidate.all_done.message' | translate : { convocatoriaName: checklist()!.convocatoriaName } }}
+            </p>
+          </div>
+        </div>
+      } @else {
+        <div class="cfp__checklist">
+          <header class="cfp__checklist-header">
+            <span class="cfp__checklist-greeting">
+              {{ 'responder.candidate.greeting' | translate : { candidateName: checklist()!.candidateName } }}
+            </span>
+            <h1 class="cfp__checklist-title">{{ checklist()!.convocatoriaName }}</h1>
+            <p class="cfp__checklist-subtitle">{{ 'responder.candidate.checklist.subtitle' | translate }}</p>
+          </header>
+
+          <ul class="cfp__checklist-list">
+            @for (formItem of checklist()!.forms; track formItem.formId) {
+              <li class="cfp__checklist-item" [class.cfp__checklist-item--completed]="formItem.completed">
+                <div class="cfp__checklist-item-info">
+                  <app-icon
+                    [name]="formItem.completed ? 'check-circle' : 'file-text'"
+                    [size]="20"
+                    class="cfp__checklist-item-icon"
+                  />
+                  <div>
+                    <p class="cfp__checklist-item-name">{{ formItem.name }}</p>
+                    <span class="cfp__checklist-item-status">
+                      {{
+                        (formItem.completed
+                          ? 'responder.candidate.checklist.status_completed'
+                          : 'responder.candidate.checklist.status_pending') | translate
+                      }}
+                    </span>
+                  </div>
+                </div>
+                <app-button
+                  variant="secondary"
+                  [loading]="pendingFormId() === formItem.formId"
+                  [disabled]="!!pendingFormId() && pendingFormId() !== formItem.formId"
+                  (click)="selectForm(formItem)"
+                >
+                  {{
+                    (formItem.completed
+                      ? 'responder.candidate.checklist.action_view'
+                      : 'responder.candidate.checklist.action_start') | translate
+                  }}
+                </app-button>
+              </li>
+            }
+          </ul>
+        </div>
+      }
+    </div>
+  }
+
+  @case ('form_already_done') {
     <div class="cfp cfp--center">
       <div class="cfp__state-card">
         <app-icon name="check-circle" [size]="48" class="cfp__check-icon" />
-        <h1 class="cfp__state-title">{{ 'responder.candidate.already_responded.title' | translate }}</h1>
+        <h1 class="cfp__state-title">{{ 'responder.candidate.form_already_done.title' | translate }}</h1>
         <p class="cfp__state-message">
-          {{ 'responder.candidate.already_responded.message' | translate : { convocatoriaName: convocatoriaName() } }}
+          {{ 'responder.candidate.form_already_done.message' | translate : { formName: selectedFormName() } }}
         </p>
+        <app-button variant="secondary" (click)="onBackToChecklist()">
+          {{ 'responder.candidate.back_to_checklist' | translate }}
+        </app-button>
       </div>
     </div>
   }
 
-  @case ('ready') {
+  @case ('form_ready') {
     <app-form-filler
       [form]="form()!"
       [submitFn]="doSubmit"
-      [candidateName]="candidateName()"
-      [convocatoriaName]="convocatoriaName()"
+      [candidateName]="checklist()!.candidateName"
+      [convocatoriaName]="checklist()!.convocatoriaName"
+      [showBackToChecklist]="true"
+      (backToChecklist)="onBackToChecklist()"
     />
   }
 

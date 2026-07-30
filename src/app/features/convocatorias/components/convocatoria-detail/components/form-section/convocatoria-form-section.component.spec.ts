@@ -3,12 +3,12 @@ import { provideTranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { of, throwError } from 'rxjs';
-import { ConvocatoriaFormSectionComponent, FormAddedEvent } from './convocatoria-form-section.component';
+import { ConvocatoriaFormSectionComponent } from './convocatoria-form-section.component';
 import { FormsService } from '../../../../../forms/services/forms.service';
 import { ConvocatoriaService } from '../../../../services/convocatoria.service';
 import { CategoryService } from '../../../../../../core/services/category.service';
 import { Form } from '../../../../../forms/models/form.model';
-import { ConvocatoriaForm } from '../../../../models/convocatoria.model';
+import { ConvocatoriaForm, FormAddedEvent } from '../../../../models/convocatoria.model';
 
 const ACTIVE_CANDIDATES_FORM: Form = {
   id: 'f1', name: 'Evaluación técnica', description: null, type: 'CANDIDATES', status: 'ACTIVE',

@@ -181,5 +181,22 @@ describe('FormFillerComponent', () => {
       const { component } = await createFiller({ candidateName: 'María' });
       expect(component['candidateName']()).toBe('María');
     });
+
+    it('showBackToChecklist input is false by default', async () => {
+      const { component } = await createFiller();
+      expect(component['showBackToChecklist']()).toBe(false);
+    });
+  });
+
+  describe('backToChecklist output', () => {
+    it('can be emitted independently of submit (candidate flow re-entry point)', async () => {
+      const { component } = await createFiller();
+      let emitted = false;
+      component.backToChecklist.subscribe(() => (emitted = true));
+
+      component.backToChecklist.emit();
+
+      expect(emitted).toBe(true);
+    });
   });
 });

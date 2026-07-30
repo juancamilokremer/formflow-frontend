@@ -32,6 +32,11 @@
               {{ 'responder.confirmation.by' | translate : { tenantName: form().tenantName } }}
             }
           </p>
+          @if (showBackToChecklist()) {
+            <app-button variant="secondary" (click)="backToChecklist.emit()">
+              {{ 'responder.candidate.back_to_checklist' | translate }}
+            </app-button>
+          }
         </div>
       </div>
     }
