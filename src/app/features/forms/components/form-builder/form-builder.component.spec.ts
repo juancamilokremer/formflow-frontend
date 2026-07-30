@@ -38,7 +38,7 @@ const MOCK_CONVOCATORIA: ConvocatoriaDetail = {
   startDate: null, endDate: null, createdAt: '', updatedAt: '', candidates: [], forms: [],
 };
 
-function buildComponent(formResult: 'ok' | 'error' = 'ok') {
+function buildComponent(formResult: 'ok' | 'error' = 'ok', convocatoriaDetail: ConvocatoriaDetail = MOCK_CONVOCATORIA) {
   const mockFormsService = {
     getById:       vi.fn().mockReturnValue(formResult === 'ok' ? of(MOCK_FORM) : throwError(() => new Error())),
     update:        vi.fn().mockReturnValue(of(undefined)),
@@ -54,7 +54,7 @@ function buildComponent(formResult: 'ok' | 'error' = 'ok') {
   };
 
   const mockConvocatoriaService = {
-    getById: vi.fn().mockReturnValue(of(MOCK_CONVOCATORIA)),
+    getById: vi.fn().mockReturnValue(of(convocatoriaDetail)),
     addForm: vi.fn().mockReturnValue(of({
       id: 'cf1', formId: 'f1', weight: 100, categoryWeights: [], minScore: null, position: 0,
     })),
@@ -190,6 +190,20 @@ describe('FormBuilderComponent with convocatoriaId in query params', () => {
       minScore: null,
     });
     expect(mockFormsService.remove).not.toHaveBeenCalled();
+    expect(mockRouter.navigate).toHaveBeenCalledWith(['/', 'convocatorias', 'conv1']);
+  });
+
+  it('onReturnToConvocatoria does not re-attach a form that is already in the convocatoria, just navigates back', () => {
+    const alreadyAttached: ConvocatoriaDetail = {
+      ...MOCK_CONVOCATORIA,
+      forms: [{ id: 'cf1', formId: 'f1', weight: 100, categoryWeights: [], minScore: null, position: 0 }],
+    };
+    const { component, mockConvocatoriaService } = buildComponent('ok', alreadyAttached);
+
+    (component as any).onReturnToConvocatoria();
+
+    expect(mockConvocatoriaService.getById).toHaveBeenCalledWith('conv1');
+    expect(mockConvocatoriaService.addForm).not.toHaveBeenCalled();
     expect(mockRouter.navigate).toHaveBeenCalledWith(['/', 'convocatorias', 'conv1']);
   });
 });
