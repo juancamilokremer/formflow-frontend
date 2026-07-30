@@ -66,10 +66,39 @@
           (launched)="onLaunched($event)" />
       </app-card>
     } @else {
+      <div class="cd__tabs">
+        <button type="button" class="cd__tab" [class.cd__tab--active]="activeTab() === 'ranking'"
+          (click)="setActiveTab('ranking')">
+          {{ 'convocatorias.detail.tabs.ranking' | translate }}
+        </button>
+        <button type="button" class="cd__tab" [class.cd__tab--active]="activeTab() === 'stats'"
+          (click)="setActiveTab('stats')">
+          {{ 'convocatorias.detail.tabs.stats' | translate }}
+        </button>
+        <button type="button" class="cd__tab" [class.cd__tab--active]="activeTab() === 'formularios'"
+          (click)="setActiveTab('formularios')">
+          {{ 'convocatorias.detail.tabs.formularios' | translate }}
+        </button>
+      </div>
+
       <app-card class="cd__section">
-        <p class="cd__placeholder">
-          {{ 'convocatorias.detail.not_draft_placeholder' | translate: { count: conv.candidates.length } }}
-        </p>
+        @switch (activeTab()) {
+          @case ('ranking') {
+            <app-convocatoria-ranking-section [convocatoriaId]="conv.id" />
+          }
+          @case ('stats') {
+            <app-convocatoria-stats-section [convocatoriaId]="conv.id" />
+          }
+          @case ('formularios') {
+            <app-convocatoria-form-section
+              [convocatoriaId]="conv.id"
+              [convocatoriaName]="conv.name"
+              [processType]="conv.type"
+              [convocatoriaForms]="conv.forms"
+              [forms]="forms()"
+              [readonly]="true" />
+          }
+        }
       </app-card>
     }
   </div>

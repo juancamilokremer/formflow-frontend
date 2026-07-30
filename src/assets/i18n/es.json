@@ -458,8 +458,14 @@
     },
     "candidate_status": {
       "INVITED": "Invitado",
+      "IN_PROGRESS": "En progreso",
       "RESPONDED": "Respondió",
       "EXPIRED": "Expirado"
+    },
+    "classification": {
+      "APTO": "Apto",
+      "REVISAR": "A revisar",
+      "NO_APTO": "No apto"
     },
     "create": {
       "title": "Nueva convocatoria",
@@ -476,10 +482,36 @@
     "detail": {
       "title": "Convocatoria",
       "name_label": "Nombre de la convocatoria",
-      "not_draft_placeholder": "{{count}} candidato(s). El detalle completo con ranking y estadísticas llega en una próxima entrega.",
+      "tabs": {
+        "ranking": "Ranking",
+        "stats": "Estadísticas",
+        "formularios": "Formularios"
+      },
+      "ranking": {
+        "col_candidate": "Candidato",
+        "col_score": "Puntaje",
+        "col_classification": "Clasificación",
+        "col_status": "Estado",
+        "not_completed": "Sin completar",
+        "empty_title": "Todavía no hay candidatos respondiendo",
+        "empty_subtitle": "El ranking aparecerá aquí cuando los candidatos empiecen a responder.",
+        "error_title": "No se pudo cargar el ranking"
+      },
+      "stats": {
+        "total": "Total candidatos",
+        "not_started": "No iniciado",
+        "in_progress": "En progreso",
+        "responded": "Completado",
+        "participation": "% Participación",
+        "apto": "Aptos",
+        "revisar": "A revisar",
+        "no_apto": "No aptos",
+        "error_title": "No se pudieron cargar las estadísticas"
+      },
       "form": {
         "title": "Formularios",
         "open_action": "Abrir formulario",
+        "preview_action": "Vista previa",
         "weight_label": "Peso",
         "weight_sum_ok": "Los pesos suman {{sum}}% ✓",
         "weight_sum_invalid": "Los pesos suman {{sum}}% — deben sumar 100% para poder lanzar",

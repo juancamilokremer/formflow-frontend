@@ -6,7 +6,7 @@ import { ConvocatoriaDetailComponent } from './convocatoria-detail.component';
 import { ConvocatoriaService } from '../../services/convocatoria.service';
 import { FormsService } from '../../../forms/services/forms.service';
 import { CategoryService } from '../../../../core/services/category.service';
-import { Candidate, ConvocatoriaDetail, ConvocatoriaForm } from '../../models/convocatoria.model';
+import { Candidate, ConvocatoriaDetail, ConvocatoriaForm, ConvocatoriaStats, RankingEntry } from '../../models/convocatoria.model';
 import { Form, FormDetail } from '../../../forms/models/form.model';
 
 const DRAFT_CONVOCATORIA: ConvocatoriaDetail = {
@@ -38,6 +38,11 @@ function buildComponent(options: {
     update: options.updateImpl ?? vi.fn().mockReturnValue(of(initial)),
     reorderForms: options.reorderFormsImpl ?? vi.fn().mockReturnValue(of([])),
     delete: vi.fn().mockReturnValue(of(undefined)),
+    getRanking: vi.fn().mockReturnValue(of([] as RankingEntry[])),
+    getStats: vi.fn().mockReturnValue(of({
+      convocatoriaId: 'c1', convocatoriaName: 'RRHH', total: 0, notStarted: 0, inProgress: 0,
+      responded: 0, aptoCount: 0, revisarCount: 0, noAptoCount: 0, participationPct: 0,
+    } satisfies ConvocatoriaStats)),
   };
   const mockFormsService = {
     getAll: vi.fn().mockReturnValue(of([] as Form[])),
@@ -88,6 +93,20 @@ describe('ConvocatoriaDetailComponent', () => {
   it('isDraft reflects the convocatoria status', () => {
     const { component } = buildComponent({ convocatoria: { ...DRAFT_CONVOCATORIA, status: 'ACTIVE' } });
     expect(component['isDraft']()).toBe(false);
+  });
+
+  describe('setActiveTab', () => {
+    it('defaults to the ranking tab and switches on demand', () => {
+      const { component } = buildComponent({ convocatoria: { ...DRAFT_CONVOCATORIA, status: 'ACTIVE' } });
+
+      expect(component['activeTab']()).toBe('ranking');
+
+      component['setActiveTab']('formularios');
+      expect(component['activeTab']()).toBe('formularios');
+
+      component['setActiveTab']('stats');
+      expect(component['activeTab']()).toBe('stats');
+    });
   });
 
   it('debounces thresholds changes into a single update() call with name + scoringConfig only', () => {

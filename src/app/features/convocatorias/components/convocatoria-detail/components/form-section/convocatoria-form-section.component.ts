@@ -31,6 +31,7 @@ export class ConvocatoriaFormSectionComponent {
   readonly processType = input.required<ProcessType>();
   readonly convocatoriaForms = input.required<ConvocatoriaForm[]>();
   readonly forms = input.required<Form[]>();
+  readonly readonly = input(false);
 
   readonly formAdded = output<FormAddedEvent>();
   readonly formUpdated = output<ConvocatoriaForm>();
@@ -44,21 +45,21 @@ export class ConvocatoriaFormSectionComponent {
   protected readonly liveWeights = signal<Record<string, number>>({});
 
   protected readonly matchingForms = computed(() =>
-    this.forms().filter((f) => f.status === 'ACTIVE' && f.type === this.processType()));
+    this.forms().filter((form) => form.status === 'ACTIVE' && form.type === this.processType()));
 
   protected readonly duplicateOptions = computed<SelectOption[]>(() => [
     { value: '', label: 'convocatorias.detail.form.duplicate_placeholder' },
-    ...this.matchingForms().map((f) => ({ value: f.id, label: f.name })),
+    ...this.matchingForms().map((form) => ({ value: form.id, label: form.name })),
   ]);
 
   protected readonly totalWeight = computed(() => {
     const live = this.liveWeights();
-    return this.convocatoriaForms().reduce((sum, cf) => sum + (live[cf.id] ?? cf.weight), 0);
+    return this.convocatoriaForms().reduce((sum, convocatoriaForm) => sum + (live[convocatoriaForm.id] ?? convocatoriaForm.weight), 0);
   });
   protected readonly sumValid = computed(() => this.totalWeight() === 100);
 
   protected formName(convocatoriaForm: ConvocatoriaForm): string {
-    return this.forms().find((f) => f.id === convocatoriaForm.formId)?.name ?? '';
+    return this.forms().find((form) => form.id === convocatoriaForm.formId)?.name ?? '';
   }
 
   protected onDuplicateSelected(formId: string): void {
@@ -66,7 +67,7 @@ export class ConvocatoriaFormSectionComponent {
   }
 
   protected onWeightPreview(convocatoriaFormId: string, weight: number): void {
-    this.liveWeights.update((w) => ({ ...w, [convocatoriaFormId]: weight }));
+    this.liveWeights.update((weights) => ({ ...weights, [convocatoriaFormId]: weight }));
   }
 
   protected onCardUpdated(updated: ConvocatoriaForm): void {
@@ -74,8 +75,8 @@ export class ConvocatoriaFormSectionComponent {
   }
 
   protected onCardRemoved(convocatoriaFormId: string): void {
-    this.liveWeights.update((w) => {
-      const next = { ...w };
+    this.liveWeights.update((weights) => {
+      const next = { ...weights };
       delete next[convocatoriaFormId];
       return next;
     });
@@ -83,7 +84,7 @@ export class ConvocatoriaFormSectionComponent {
   }
 
   protected onDrop(event: CdkDragDrop<ConvocatoriaForm[]>): void {
-    const orderedIds = this.convocatoriaForms().map((f) => f.id);
+    const orderedIds = this.convocatoriaForms().map((convocatoriaForm) => convocatoriaForm.id);
     moveItemInArray(orderedIds, event.previousIndex, event.currentIndex);
     this.formsReordered.emit(orderedIds);
   }

@@ -18,7 +18,7 @@ export interface ScoringConfig {
   revisarMin: number;
 }
 
-export type CandidateStatus = 'INVITED' | 'RESPONDED' | 'EXPIRED';
+export type CandidateStatus = 'INVITED' | 'IN_PROGRESS' | 'RESPONDED' | 'EXPIRED';
 
 export interface CandidateScores {
   total: number;
@@ -124,4 +124,42 @@ export interface PendingConvocatoriaAction {
   type: 'close' | 'delete';
   id: string;
   name: string;
+}
+
+export type CandidateClassification = 'APTO' | 'REVISAR' | 'NO_APTO';
+
+export interface RankingFormScore {
+  formId: string;
+  formName: string;
+  weight: number;
+  score: number | null;
+  completed: boolean;
+}
+
+export interface RankingEntry {
+  candidateId: string;
+  name: string;
+  email: string;
+  token: string | null;
+  status: CandidateStatus;
+  responseId: string | null;
+  rank: number | null;
+  totalScore: number | null;
+  classification: CandidateClassification | null;
+  scoresByCategory: Record<string, number>;
+  respondedAt: string | null;
+  formScores: RankingFormScore[];
+}
+
+export interface ConvocatoriaStats {
+  convocatoriaId: string;
+  convocatoriaName: string;
+  total: number;
+  notStarted: number;
+  inProgress: number;
+  responded: number;
+  aptoCount: number;
+  revisarCount: number;
+  noAptoCount: number;
+  participationPct: number;
 }

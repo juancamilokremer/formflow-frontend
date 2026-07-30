@@ -5,6 +5,10 @@
   border-radius: var(--ff-radius-md);
   padding: 14px;
   cursor: grab;
+
+  &.cfc--readonly {
+    cursor: default;
+  }
 }
 
 .cfc {
@@ -45,6 +49,18 @@
   &__pct {
     font-size: 13px;
     color: var(--ff-text-secondary);
+  }
+
+  &__weight-readonly {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ff-primary);
+  }
+
+  &__min-score-readonly {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ff-text-primary);
   }
 
   &__min-score {

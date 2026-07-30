@@ -2,7 +2,7 @@ import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { IconComponent } from '../../../../shared/icons/icon.component';
-import { RouteConstants } from '../../../../core/constants/route.constants';
+import { RouteConstants, convocatoriaDetailPath, formBuilderPath } from '../../../../core/constants/route.constants';
 import { FormDetail, FormQuestion, FormSection } from '../../models/form.model';
 import { FormsService } from '../../services/forms.service';
 import { ConditionEngineService } from '../../services/condition-engine.service';
@@ -90,7 +90,13 @@ export class FormPreviewComponent implements OnInit {
   }
 
   protected goBack(): void {
+    const convocatoriaId = this.route.snapshot.queryParamMap.get(RouteConstants.QUERY_CONVOCATORIA_ID);
+    if (convocatoriaId) {
+      this.router.navigate(convocatoriaDetailPath(convocatoriaId));
+      return;
+    }
+
     const id = this.route.snapshot.paramMap.get('id')!;
-    this.router.navigate([RouteConstants.FORMS, id, RouteConstants.FORM_BUILDER]);
+    this.router.navigate(formBuilderPath(id));
   }
 }

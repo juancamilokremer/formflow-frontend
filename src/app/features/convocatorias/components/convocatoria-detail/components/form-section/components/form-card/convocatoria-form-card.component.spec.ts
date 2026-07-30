@@ -64,7 +64,7 @@ function buildComponent(overrides: {
   fixture.componentRef.setInput('convocatoriaForm', overrides.convocatoriaForm ?? CONV_FORM);
   fixture.componentRef.setInput('formName', 'Evaluación técnica');
   fixture.detectChanges();
-  return { component: fixture.componentInstance, mockConvocatoriaService, mockFormsService, mockRouter };
+  return { fixture, component: fixture.componentInstance, mockConvocatoriaService, mockFormsService, mockRouter };
 }
 
 describe('ConvocatoriaFormCardComponent', () => {
@@ -173,6 +173,28 @@ describe('ConvocatoriaFormCardComponent', () => {
       ['forms', 'f1', 'edit'],
       { queryParams: { convocatoriaId: 'c1' } },
     );
+  });
+
+  it('openPreview navigates to the preview route with the convocatoriaId query param', () => {
+    const { component, mockRouter } = buildComponent();
+    component['openPreview']();
+    expect(mockRouter.navigate).toHaveBeenCalledWith(
+      ['/', 'forms', 'f1', 'preview'],
+      { queryParams: { convocatoriaId: 'c1' } },
+    );
+  });
+
+  describe('readonly', () => {
+    it('defaults to false', () => {
+      const { component } = buildComponent();
+      expect(component['readonly']()).toBe(false);
+    });
+
+    it('reflects the readonly input when set', () => {
+      const { fixture, component } = buildComponent();
+      fixture.componentRef.setInput('readonly', true);
+      expect(component['readonly']()).toBe(true);
+    });
   });
 
   describe('requestRemove / confirmRemove', () => {

@@ -19,6 +19,10 @@ import { ConvocatoriaFormSectionComponent } from './components/form-section/conv
 import { ConvocatoriaThresholdsSectionComponent } from './components/thresholds-section/convocatoria-thresholds-section.component';
 import { ConvocatoriaCandidatesSectionComponent } from './components/candidates-section/convocatoria-candidates-section.component';
 import { ConvocatoriaLaunchBarComponent } from './components/launch-bar/convocatoria-launch-bar.component';
+import { ConvocatoriaRankingSectionComponent } from './components/ranking-section/convocatoria-ranking-section.component';
+import { ConvocatoriaStatsSectionComponent } from './components/stats-section/convocatoria-stats-section.component';
+
+type ConvocatoriaDetailTab = 'ranking' | 'stats' | 'formularios';
 
 @Component({
   selector: 'app-convocatoria-detail',
@@ -28,6 +32,7 @@ import { ConvocatoriaLaunchBarComponent } from './components/launch-bar/convocat
     LoadingSpinnerComponent, EmptyStateComponent,
     ConvocatoriaFormSectionComponent, ConvocatoriaThresholdsSectionComponent,
     ConvocatoriaCandidatesSectionComponent, ConvocatoriaLaunchBarComponent,
+    ConvocatoriaRankingSectionComponent, ConvocatoriaStatsSectionComponent,
   ],
   templateUrl: './convocatoria-detail.component.html',
   styleUrl: './convocatoria-detail.component.scss',
@@ -52,6 +57,8 @@ export class ConvocatoriaDetailComponent {
 
   protected readonly deleteConfirmOpen = signal(false);
   protected readonly deleting = signal(false);
+
+  protected readonly activeTab = signal<ConvocatoriaDetailTab>('ranking');
 
   protected readonly isDraft = computed(() => this.convocatoria()?.status === 'DRAFT');
 
@@ -150,6 +157,10 @@ export class ConvocatoriaDetailComponent {
 
   protected onLaunched(detail: ConvocatoriaDetail): void {
     this.applyDetail(detail);
+  }
+
+  protected setActiveTab(tab: ConvocatoriaDetailTab): void {
+    this.activeTab.set(tab);
   }
 
   protected requestDelete(): void {

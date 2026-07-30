@@ -5,8 +5,8 @@ import { environment } from '../../../../environments/environment';
 import { ApiResponse } from '../../../core/models/api-response.model';
 import {
   AddCandidateRequest, AddConvocatoriaFormRequest, Candidate, ConvocatoriaDetail, ConvocatoriaForm,
-  ConvocatoriaSummary, CreateConvocatoriaRequest, ImportResponse, UpdateConvocatoriaFormRequest,
-  UpdateConvocatoriaRequest,
+  ConvocatoriaStats, ConvocatoriaSummary, CreateConvocatoriaRequest, ImportResponse, RankingEntry,
+  UpdateConvocatoriaFormRequest, UpdateConvocatoriaRequest,
 } from '../models/convocatoria.model';
 
 @Injectable({ providedIn: 'root' })
@@ -92,5 +92,17 @@ export class ConvocatoriaService {
     return this.http
       .delete<ApiResponse<void>>(`${this.base}/${id}`)
       .pipe(map(() => undefined));
+  }
+
+  getRanking(id: string): Observable<RankingEntry[]> {
+    return this.http
+      .get<ApiResponse<RankingEntry[]>>(`${this.base}/${id}/ranking`)
+      .pipe(map((response) => response.data ?? []));
+  }
+
+  getStats(id: string): Observable<ConvocatoriaStats> {
+    return this.http
+      .get<ApiResponse<ConvocatoriaStats>>(`${this.base}/${id}/stats`)
+      .pipe(map((response) => response.data!));
   }
 }

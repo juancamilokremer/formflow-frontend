@@ -1,0 +1,71 @@
+@if (loading()) {
+  <div class="convocatoria-ranking__center"><app-loading-spinner /></div>
+} @else if (loadError()) {
+  <app-empty-state icon="alert-circle" [compact]="true"
+    [title]="'convocatorias.detail.ranking.error_title' | translate" />
+} @else if (entries().length === 0) {
+  <app-empty-state [compact]="true"
+    [title]="'convocatorias.detail.ranking.empty_title' | translate"
+    [subtitle]="'convocatorias.detail.ranking.empty_subtitle' | translate" />
+} @else {
+  <div class="convocatoria-ranking__scroll">
+    <table class="convocatoria-ranking__table">
+      <thead>
+        <tr>
+          <th class="convocatoria-ranking__col-rank">#</th>
+          <th>{{ 'convocatorias.detail.ranking.col_candidate' | translate }}</th>
+          <th>{{ 'convocatorias.detail.ranking.col_score' | translate }}</th>
+          <th>{{ 'convocatorias.detail.ranking.col_classification' | translate }}</th>
+          <th>{{ 'convocatorias.detail.ranking.col_status' | translate }}</th>
+          <th class="convocatoria-ranking__col-chevron"></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (entry of entries(); track entry.candidateId) {
+          <tr class="convocatoria-ranking__row" (click)="toggleExpanded(entry.candidateId)">
+            <td class="convocatoria-ranking__col-rank">{{ entry.rank ?? '—' }}</td>
+            <td>
+              <p class="convocatoria-ranking__name">{{ entry.name }}</p>
+              <span class="convocatoria-ranking__email">{{ entry.email }}</span>
+            </td>
+            <td>{{ entry.totalScore !== null ? (entry.totalScore | number: '1.0-1') : '—' }}</td>
+            <td>
+              @if (entry.classification) {
+                <span class="convocatoria-ranking__badge" [class]="'convocatoria-ranking__badge--' + entry.classification.toLowerCase()">
+                  {{ 'convocatorias.classification.' + entry.classification | translate }}
+                </span>
+              } @else {
+                <span class="convocatoria-ranking__dash">—</span>
+              }
+            </td>
+            <td>{{ 'convocatorias.candidate_status.' + entry.status | translate }}</td>
+            <td class="convocatoria-ranking__col-chevron">
+              <app-icon name="chevron-down" [size]="16"
+                class="convocatoria-ranking__chevron"
+                [class.convocatoria-ranking__chevron--open]="isExpanded(entry.candidateId)" />
+            </td>
+          </tr>
+          @if (isExpanded(entry.candidateId)) {
+            <tr class="convocatoria-ranking__detail-row">
+              <td colspan="6">
+                <div class="convocatoria-ranking__detail">
+                  @for (formScore of entry.formScores; track formScore.formId) {
+                    <div class="convocatoria-ranking__detail-item">
+                      <span class="convocatoria-ranking__detail-name">{{ formScore.formName }}</span>
+                      <span class="convocatoria-ranking__detail-weight">{{ formScore.weight }}%</span>
+                      <span class="convocatoria-ranking__detail-score">
+                        {{ formScore.completed
+                          ? (formScore.score | number: '1.0-1')
+                          : ('convocatorias.detail.ranking.not_completed' | translate) }}
+                      </span>
+                    </div>
+                  }
+                </div>
+              </td>
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+  </div>
+}

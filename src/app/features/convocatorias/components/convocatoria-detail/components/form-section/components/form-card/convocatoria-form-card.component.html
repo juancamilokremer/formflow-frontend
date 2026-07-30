@@ -1,33 +1,47 @@
 <div class="cfc">
   <div class="cfc__header">
     <span class="cfc__name">{{ formName() }}</span>
-    <div class="cfc__weight-wrap">
-      <input type="number" min="0" max="100" class="cfc__weight-input"
-        [value]="weight()"
-        [attr.aria-label]="'convocatorias.detail.form.weight_label' | translate"
-        (input)="onWeightInput($any($event.target).valueAsNumber)" />
-      <span class="cfc__pct">%</span>
-    </div>
-    <app-button type="button" variant="secondary" (click)="openForm()">
-      {{ 'convocatorias.detail.form.open_action' | translate }}
-    </app-button>
-    <app-button type="button" variant="ghost" [iconOnly]="true" (click)="requestRemove()">
-      <app-icon name="trash-2" [size]="16" />
-    </app-button>
+
+    @if (readonly()) {
+      <span class="cfc__weight-readonly">{{ weight() }}%</span>
+      <app-button type="button" variant="secondary" (click)="openPreview()">
+        {{ 'convocatorias.detail.form.preview_action' | translate }}
+      </app-button>
+    } @else {
+      <div class="cfc__weight-wrap">
+        <input type="number" min="0" max="100" class="cfc__weight-input"
+          [value]="weight()"
+          [attr.aria-label]="'convocatorias.detail.form.weight_label' | translate"
+          (input)="onWeightInput($any($event.target).valueAsNumber)" />
+        <span class="cfc__pct">%</span>
+      </div>
+      <app-button type="button" variant="secondary" (click)="openForm()">
+        {{ 'convocatorias.detail.form.open_action' | translate }}
+      </app-button>
+      <app-button type="button" variant="ghost" [iconOnly]="true" (click)="requestRemove()">
+        <app-icon name="trash-2" [size]="16" />
+      </app-button>
+    }
   </div>
 
   <app-convocatoria-weights-section
     [categories]="categories()"
     [weights]="categoryWeights()"
     [loading]="loadingCategories()"
+    [readonly]="readonly()"
     (weightsChanged)="onWeightsChanged($event)" />
 
   <div class="cfc__min-score">
-    <label class="cfc__min-score-label" for="min-score-{{ convocatoriaForm().id }}">{{ 'convocatorias.detail.form.min_score_label' | translate }}</label>
-    <input type="number" min="0" max="100" class="cfc__min-score-input" id="min-score-{{ convocatoriaForm().id }}"
-      [value]="minScore() ?? ''"
-      [placeholder]="'convocatorias.detail.form.min_score_placeholder' | translate"
-      (input)="onMinScoreInput($any($event.target).value)" />
+    @if (readonly()) {
+      <span class="cfc__min-score-label">{{ 'convocatorias.detail.form.min_score_label' | translate }}</span>
+      <span class="cfc__min-score-readonly">{{ minScore() ?? '—' }}</span>
+    } @else {
+      <label class="cfc__min-score-label" for="min-score-{{ convocatoriaForm().id }}">{{ 'convocatorias.detail.form.min_score_label' | translate }}</label>
+      <input type="number" min="0" max="100" class="cfc__min-score-input" id="min-score-{{ convocatoriaForm().id }}"
+        [value]="minScore() ?? ''"
+        [placeholder]="'convocatorias.detail.form.min_score_placeholder' | translate"
+        (input)="onMinScoreInput($any($event.target).value)" />
+    }
   </div>
 </div>
 

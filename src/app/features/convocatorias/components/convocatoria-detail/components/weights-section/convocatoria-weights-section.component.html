@@ -11,12 +11,16 @@
       <div class="scw__row">
         <span class="scw__dot" [style.background]="category.color"></span>
         <span class="scw__name">{{ category.name }}</span>
-        <div class="scw__input-wrap">
-          <input type="number" min="0" max="100" class="scw__input"
-            [value]="weights()[category.id] ?? 0"
-            (input)="onWeightInput(category.id, $any($event.target).valueAsNumber)" />
-          <span class="scw__pct">%</span>
-        </div>
+        @if (readonly()) {
+          <span class="scw__readonly-value">{{ weights()[category.id] ?? 0 }}%</span>
+        } @else {
+          <div class="scw__input-wrap">
+            <input type="number" min="0" max="100" class="scw__input"
+              [value]="weights()[category.id] ?? 0"
+              (input)="onWeightInput(category.id, $any($event.target).valueAsNumber)" />
+            <span class="scw__pct">%</span>
+          </div>
+        }
       </div>
     }
   </div>

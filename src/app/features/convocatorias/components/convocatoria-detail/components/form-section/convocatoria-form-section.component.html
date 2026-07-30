@@ -1,47 +1,61 @@
 @if (convocatoriaForms().length > 0) {
-  <div class="cfs__list" cdkDropList (cdkDropListDropped)="onDrop($event)">
-    @for (cf of convocatoriaForms(); track cf.id) {
-      <app-convocatoria-form-card
-        cdkDrag
-        [convocatoriaId]="convocatoriaId()"
-        [convocatoriaForm]="cf"
-        [formName]="formName(cf)"
-        (weightPreview)="onWeightPreview(cf.id, $event)"
-        (formUpdated)="onCardUpdated($event)"
-        (formRemoved)="onCardRemoved($event)" />
-    }
-  </div>
+  @if (readonly()) {
+    <div class="cfs__list">
+      @for (cf of convocatoriaForms(); track cf.id) {
+        <app-convocatoria-form-card
+          [convocatoriaId]="convocatoriaId()"
+          [convocatoriaForm]="cf"
+          [formName]="formName(cf)"
+          [readonly]="true" />
+      }
+    </div>
+  } @else {
+    <div class="cfs__list" cdkDropList (cdkDropListDropped)="onDrop($event)">
+      @for (cf of convocatoriaForms(); track cf.id) {
+        <app-convocatoria-form-card
+          cdkDrag
+          [convocatoriaId]="convocatoriaId()"
+          [convocatoriaForm]="cf"
+          [formName]="formName(cf)"
+          (weightPreview)="onWeightPreview(cf.id, $event)"
+          (formUpdated)="onCardUpdated($event)"
+          (formRemoved)="onCardRemoved($event)" />
+      }
+    </div>
 
-  <div class="cfs__sum" [class.cfs__sum--valid]="sumValid()" [class.cfs__sum--invalid]="!sumValid()">
-    {{ (sumValid() ? 'convocatorias.detail.form.weight_sum_ok' : 'convocatorias.detail.form.weight_sum_invalid')
-      | translate: { sum: totalWeight() } }}
-  </div>
+    <div class="cfs__sum" [class.cfs__sum--valid]="sumValid()" [class.cfs__sum--invalid]="!sumValid()">
+      {{ (sumValid() ? 'convocatorias.detail.form.weight_sum_ok' : 'convocatorias.detail.form.weight_sum_invalid')
+        | translate: { sum: totalWeight() } }}
+    </div>
+  }
 }
 
-<div class="cfs__cards">
-  <div class="cfs__card">
-    <app-icon name="file-plus" [size]="20" />
-    <p class="cfs__card-title">{{ 'convocatorias.detail.form.create_title' | translate }}</p>
-    <p class="cfs__card-desc">{{ 'convocatorias.detail.form.create_desc' | translate }}</p>
-    <app-button type="button" variant="secondary" [loading]="creating()" (click)="createNew()">
-      {{ 'convocatorias.detail.form.create_action' | translate }}
-    </app-button>
+@if (!readonly()) {
+  <div class="cfs__cards">
+    <div class="cfs__card">
+      <app-icon name="file-plus" [size]="20" />
+      <p class="cfs__card-title">{{ 'convocatorias.detail.form.create_title' | translate }}</p>
+      <p class="cfs__card-desc">{{ 'convocatorias.detail.form.create_desc' | translate }}</p>
+      <app-button type="button" variant="secondary" [loading]="creating()" (click)="createNew()">
+        {{ 'convocatorias.detail.form.create_action' | translate }}
+      </app-button>
+    </div>
+
+    <div class="cfs__card">
+      <app-icon name="layers" [size]="20" />
+      <p class="cfs__card-title">{{ 'convocatorias.detail.form.duplicate_title' | translate }}</p>
+      <p class="cfs__card-desc">{{ 'convocatorias.detail.form.duplicate_desc' | translate }}</p>
+      @if (matchingForms().length === 0) {
+        <p class="cfs__empty">{{ 'convocatorias.detail.form.duplicate_empty' | translate }}</p>
+      } @else {
+        <app-select [options]="duplicateOptions()" [value]="selectedFormId()" (changed)="onDuplicateSelected($event)" />
+        <app-button type="button" variant="secondary" [loading]="duplicating()" [disabled]="!selectedFormId()"
+          (click)="duplicateSelected()">{{ 'convocatorias.detail.form.duplicate_action' | translate }}</app-button>
+      }
+    </div>
   </div>
 
-  <div class="cfs__card">
-    <app-icon name="layers" [size]="20" />
-    <p class="cfs__card-title">{{ 'convocatorias.detail.form.duplicate_title' | translate }}</p>
-    <p class="cfs__card-desc">{{ 'convocatorias.detail.form.duplicate_desc' | translate }}</p>
-    @if (matchingForms().length === 0) {
-      <p class="cfs__empty">{{ 'convocatorias.detail.form.duplicate_empty' | translate }}</p>
-    } @else {
-      <app-select [options]="duplicateOptions()" [value]="selectedFormId()" (changed)="onDuplicateSelected($event)" />
-      <app-button type="button" variant="secondary" [loading]="duplicating()" [disabled]="!selectedFormId()"
-        (click)="duplicateSelected()">{{ 'convocatorias.detail.form.duplicate_action' | translate }}</app-button>
-    }
-  </div>
-</div>
-
-@if (error()) {
-  <p class="cfs__error">{{ 'convocatorias.detail.form.error' | translate }}</p>
+  @if (error()) {
+    <p class="cfs__error">{{ 'convocatorias.detail.form.error' | translate }}</p>
+  }
 }

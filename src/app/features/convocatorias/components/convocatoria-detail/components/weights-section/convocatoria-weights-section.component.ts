@@ -14,10 +14,11 @@ export class ConvocatoriaWeightsSectionComponent {
   readonly categories = input.required<Category[]>();
   readonly weights = input.required<Record<string, number>>();
   readonly loading = input(false);
+  readonly readonly = input(false);
   readonly weightsChanged = output<Record<string, number>>();
 
   protected readonly totalWeight = computed(() =>
-    Object.values(this.weights()).reduce((a, b) => a + b, 0));
+    Object.values(this.weights()).reduce((sum, weight) => sum + weight, 0));
 
   protected readonly isSkipped = computed(() => this.totalWeight() === 0);
   protected readonly sumValid = computed(() => this.totalWeight() === 100);
