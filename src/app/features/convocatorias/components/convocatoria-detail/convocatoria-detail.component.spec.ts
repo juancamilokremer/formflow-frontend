@@ -4,34 +4,47 @@ import { ActivatedRoute, provideRouter, Router } from '@angular/router';
 import { of } from 'rxjs';
 import { ConvocatoriaDetailComponent } from './convocatoria-detail.component';
 import { ConvocatoriaService } from '../../services/convocatoria.service';
-import { CategoryService } from '../../../../core/services/category.service';
 import { FormsService } from '../../../forms/services/forms.service';
-import { Candidate, ConvocatoriaDetail } from '../../models/convocatoria.model';
-import { Category } from '../../../../core/models/category.model';
-import { Form } from '../../../forms/models/form.model';
+import { CategoryService } from '../../../../core/services/category.service';
+import { Candidate, ConvocatoriaDetail, ConvocatoriaForm } from '../../models/convocatoria.model';
+import { Form, FormDetail } from '../../../forms/models/form.model';
 
 const DRAFT_CONVOCATORIA: ConvocatoriaDetail = {
-  id: 'c1', tenantId: 't1', formId: null, name: 'RRHH', type: 'CANDIDATES', status: 'DRAFT',
-  categoryWeights: [], scoringConfig: { aptoMin: 70, revisarMin: 50 },
-  startDate: null, endDate: null, createdAt: '', updatedAt: '', candidates: [],
+  id: 'c1', tenantId: 't1', name: 'RRHH', type: 'CANDIDATES', status: 'DRAFT',
+  scoringConfig: { aptoMin: 70, revisarMin: 50 },
+  startDate: null, endDate: null, createdAt: '', updatedAt: '', candidates: [], forms: [],
 };
+
+const CONV_FORM_1: ConvocatoriaForm = {
+  id: 'cf1', formId: 'f1', weight: 100, categoryWeights: [], minScore: null, position: 0,
+};
+
+const FORM_1: Form = {
+  id: 'f1', name: 'Evaluación técnica', description: null, type: 'CANDIDATES', status: 'ACTIVE',
+  version: 1, sectionCount: 2, responseCount: 0, lastResponseAt: null, createdAt: '', updatedAt: '',
+};
+
+const FORM_1_DETAIL: FormDetail = { ...FORM_1, sections: [], timeLimitSeconds: null };
 
 function buildComponent(options: {
   convocatoria?: ConvocatoriaDetail;
   updateImpl?: ReturnType<typeof vi.fn>;
   getByIdImpl?: ReturnType<typeof vi.fn>;
-  forms?: Form[];
+  reorderFormsImpl?: ReturnType<typeof vi.fn>;
 } = {}) {
   const initial = options.convocatoria ?? DRAFT_CONVOCATORIA;
   const mockConvocatoriaService = {
     getById: options.getByIdImpl ?? vi.fn().mockReturnValue(of(initial)),
     update: options.updateImpl ?? vi.fn().mockReturnValue(of(initial)),
+    reorderForms: options.reorderFormsImpl ?? vi.fn().mockReturnValue(of([])),
     delete: vi.fn().mockReturnValue(of(undefined)),
   };
-  const mockCategoryService = { getAll: vi.fn().mockReturnValue(of([] as Category[])) };
   const mockFormsService = {
-    getAll: vi.fn().mockReturnValue(of(options.forms ?? [] as Form[])),
-    getById: vi.fn().mockReturnValue(of({ sections: [] } as unknown as Form)),
+    getAll: vi.fn().mockReturnValue(of([] as Form[])),
+    getById: vi.fn().mockReturnValue(of(FORM_1_DETAIL)),
+  };
+  const mockCategoryService = {
+    getAll: vi.fn().mockReturnValue(of([])),
   };
   const mockRouter = { navigate: vi.fn() };
 
@@ -41,8 +54,8 @@ function buildComponent(options: {
       provideRouter([]),
       provideTranslateService({ lang: 'es' }),
       { provide: ConvocatoriaService, useValue: mockConvocatoriaService },
-      { provide: CategoryService, useValue: mockCategoryService },
       { provide: FormsService, useValue: mockFormsService },
+      { provide: CategoryService, useValue: mockCategoryService },
       { provide: Router, useValue: mockRouter },
       { provide: ActivatedRoute, useValue: { snapshot: { paramMap: { get: () => 'c1' } } } },
     ],
@@ -59,16 +72,14 @@ describe('ConvocatoriaDetailComponent', () => {
     vi.useRealTimers();
   });
 
-  it('hydrates from getById and seeds weights/thresholds', () => {
-    const withWeights: ConvocatoriaDetail = {
+  it('hydrates from getById and seeds thresholds', () => {
+    const withThresholds: ConvocatoriaDetail = {
       ...DRAFT_CONVOCATORIA,
-      categoryWeights: [{ categoryId: 'cat1', weight: 60 }],
       scoringConfig: { aptoMin: 80, revisarMin: 40 },
     };
-    const { component } = buildComponent({ convocatoria: withWeights });
+    const { component } = buildComponent({ convocatoria: withThresholds });
 
-    expect(component['convocatoria']()).toEqual(withWeights);
-    expect(component['weights']()).toEqual({ cat1: 60 });
+    expect(component['convocatoria']()).toEqual(withThresholds);
     expect(component['aptoMin']()).toBe(80);
     expect(component['revisarMin']()).toBe(40);
     expect(component['loading']()).toBe(false);
@@ -79,13 +90,12 @@ describe('ConvocatoriaDetailComponent', () => {
     expect(component['isDraft']()).toBe(false);
   });
 
-  it('debounces weights/thresholds changes into a single update() call', () => {
+  it('debounces thresholds changes into a single update() call with name + scoringConfig only', () => {
     vi.useFakeTimers();
     const { component, mockConvocatoriaService } = buildComponent();
 
-    component['onWeightsChanged']({ cat1: 40 });
-    component['onWeightsChanged']({ cat1: 60 });
     component['onThresholdsChanged']({ aptoMin: 75, revisarMin: 45 });
+    component['onThresholdsChanged']({ aptoMin: 78, revisarMin: 48 });
 
     expect(mockConvocatoriaService.update).not.toHaveBeenCalled();
     vi.advanceTimersByTime(600);
@@ -93,9 +103,7 @@ describe('ConvocatoriaDetailComponent', () => {
     expect(mockConvocatoriaService.update).toHaveBeenCalledTimes(1);
     expect(mockConvocatoriaService.update).toHaveBeenCalledWith('c1', {
       name: 'RRHH',
-      formId: undefined,
-      categoryWeights: [{ categoryId: 'cat1', weight: 60 }],
-      scoringConfig: { aptoMin: 75, revisarMin: 45 },
+      scoringConfig: { aptoMin: 78, revisarMin: 48 },
     });
   });
 
@@ -140,31 +148,50 @@ describe('ConvocatoriaDetailComponent', () => {
     expect(component['convocatoria']()).toEqual(launched);
   });
 
-  describe('currentForm', () => {
-    const FORM: Form = {
-      id: 'f1', name: 'Evaluación técnica', description: null, type: 'CANDIDATES', status: 'ACTIVE',
-      version: 1, sectionCount: 2, responseCount: 0, lastResponseAt: null, createdAt: '', updatedAt: '',
-    };
-
-    it('resolves the attached form from the forms list by formId', () => {
-      const { component } = buildComponent({
-        convocatoria: { ...DRAFT_CONVOCATORIA, formId: 'f1' },
-        forms: [FORM],
-      });
-      expect(component['currentForm']()).toEqual(FORM);
-    });
-
-    it('is null when the convocatoria has no formId', () => {
-      const { component } = buildComponent({ forms: [FORM] });
-      expect(component['currentForm']()).toBeNull();
-    });
-
-    it('onFormAttached adds the new form to the forms list so currentForm resolves immediately', () => {
+  describe('forms list wiring', () => {
+    it('onFormAdded appends the new ConvocatoriaForm and the underlying Form to their respective lists', () => {
       const { component } = buildComponent();
-      component['onFormAttached'](FORM);
 
-      expect(component['convocatoria']()?.formId).toBe('f1');
-      expect(component['currentForm']()).toEqual(FORM);
+      component['onFormAdded']({ convocatoriaForm: CONV_FORM_1, form: FORM_1 });
+
+      expect(component['convocatoria']()?.forms).toEqual([CONV_FORM_1]);
+      expect(component['forms']()).toEqual([FORM_1]);
+    });
+
+    it('onFormUpdated replaces the matching form in place', () => {
+      const { component } = buildComponent({
+        convocatoria: { ...DRAFT_CONVOCATORIA, forms: [CONV_FORM_1] },
+      });
+      const updated: ConvocatoriaForm = { ...CONV_FORM_1, weight: 60 };
+
+      component['onFormUpdated'](updated);
+
+      expect(component['convocatoria']()?.forms).toEqual([updated]);
+    });
+
+    it('onFormRemoved filters the form out of the list', () => {
+      const { component } = buildComponent({
+        convocatoria: { ...DRAFT_CONVOCATORIA, forms: [CONV_FORM_1] },
+      });
+
+      component['onFormRemoved']('cf1');
+
+      expect(component['convocatoria']()?.forms).toEqual([]);
+    });
+
+    it('onFormsReordered optimistically reorders locally, then reconciles with the backend response', () => {
+      const cf2: ConvocatoriaForm = { ...CONV_FORM_1, id: 'cf2', position: 1 };
+      const reordered = [cf2, CONV_FORM_1];
+      const { component, mockConvocatoriaService } = buildComponent({
+        convocatoria: { ...DRAFT_CONVOCATORIA, forms: [CONV_FORM_1, cf2] },
+        reorderFormsImpl: vi.fn().mockReturnValue(of(reordered)),
+      });
+
+      component['onFormsReordered'](['cf2', 'cf1']);
+
+      expect(component['convocatoria']()?.forms.map((f) => f.id)).toEqual(['cf2', 'cf1']);
+      expect(mockConvocatoriaService.reorderForms).toHaveBeenCalledWith('c1', ['cf2', 'cf1']);
+      expect(component['convocatoria']()?.forms).toEqual(reordered);
     });
   });
 

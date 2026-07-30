@@ -4,8 +4,9 @@ import { Observable, map } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ApiResponse } from '../../../core/models/api-response.model';
 import {
-  AddCandidateRequest, Candidate, ConvocatoriaDetail, ConvocatoriaSummary,
-  CreateConvocatoriaRequest, ImportResponse, UpdateConvocatoriaRequest,
+  AddCandidateRequest, AddConvocatoriaFormRequest, Candidate, ConvocatoriaDetail, ConvocatoriaForm,
+  ConvocatoriaSummary, CreateConvocatoriaRequest, ImportResponse, UpdateConvocatoriaFormRequest,
+  UpdateConvocatoriaRequest,
 } from '../models/convocatoria.model';
 
 @Injectable({ providedIn: 'root' })
@@ -35,6 +36,30 @@ export class ConvocatoriaService {
     return this.http
       .put<ApiResponse<ConvocatoriaDetail>>(`${this.base}/${id}`, request)
       .pipe(map((r) => r.data!));
+  }
+
+  addForm(id: string, request: AddConvocatoriaFormRequest): Observable<ConvocatoriaForm> {
+    return this.http
+      .post<ApiResponse<ConvocatoriaForm>>(`${this.base}/${id}/forms`, request)
+      .pipe(map((r) => r.data!));
+  }
+
+  updateForm(id: string, convocatoriaFormId: string, request: UpdateConvocatoriaFormRequest): Observable<ConvocatoriaForm> {
+    return this.http
+      .put<ApiResponse<ConvocatoriaForm>>(`${this.base}/${id}/forms/${convocatoriaFormId}`, request)
+      .pipe(map((r) => r.data!));
+  }
+
+  removeForm(id: string, convocatoriaFormId: string): Observable<void> {
+    return this.http
+      .delete<ApiResponse<void>>(`${this.base}/${id}/forms/${convocatoriaFormId}`)
+      .pipe(map(() => undefined));
+  }
+
+  reorderForms(id: string, orderedConvocatoriaFormIds: string[]): Observable<ConvocatoriaForm[]> {
+    return this.http
+      .put<ApiResponse<ConvocatoriaForm[]>>(`${this.base}/${id}/forms/reorder`, { orderedConvocatoriaFormIds })
+      .pipe(map((r) => r.data ?? []));
   }
 
   addCandidate(id: string, request: AddCandidateRequest): Observable<Candidate> {

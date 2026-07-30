@@ -34,18 +34,12 @@
           [convocatoriaId]="conv.id"
           [convocatoriaName]="conv.name"
           [processType]="conv.type"
-          [currentForm]="currentForm()"
+          [convocatoriaForms]="conv.forms"
           [forms]="forms()"
-          (formAttached)="onFormAttached($event)" />
-      </app-card>
-
-      <app-card class="cd__section">
-        <h2 class="cd__section-title">{{ 'convocatorias.detail.weights.title' | translate }}</h2>
-        <app-convocatoria-weights-section
-          [categories]="formCategories()"
-          [weights]="weights()"
-          [loading]="loadingCategories()"
-          (weightsChanged)="onWeightsChanged($event)" />
+          (formAdded)="onFormAdded($event)"
+          (formUpdated)="onFormUpdated($event)"
+          (formRemoved)="onFormRemoved($event)"
+          (formsReordered)="onFormsReordered($event)" />
       </app-card>
 
       <app-card class="cd__section">

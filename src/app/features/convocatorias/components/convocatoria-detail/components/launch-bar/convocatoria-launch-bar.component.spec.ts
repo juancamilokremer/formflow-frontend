@@ -6,9 +6,9 @@ import { ConvocatoriaService } from '../../../../services/convocatoria.service';
 import { ConvocatoriaDetail } from '../../../../models/convocatoria.model';
 
 const MOCK_LAUNCHED: ConvocatoriaDetail = {
-  id: 'c1', tenantId: 't1', formId: 'f1', name: 'RRHH', type: 'CANDIDATES', status: 'ACTIVE',
-  categoryWeights: [], scoringConfig: { aptoMin: 70, revisarMin: 50 },
-  startDate: null, endDate: null, createdAt: '', updatedAt: '', candidates: [],
+  id: 'c1', tenantId: 't1', name: 'RRHH', type: 'CANDIDATES', status: 'ACTIVE',
+  scoringConfig: { aptoMin: 70, revisarMin: 50 },
+  startDate: null, endDate: null, createdAt: '', updatedAt: '', candidates: [], forms: [],
 };
 
 function buildComponent(launchImpl?: ReturnType<typeof vi.fn>, hasCandidates = true) {

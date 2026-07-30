@@ -2,7 +2,7 @@ import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
-import { Subject, debounceTime, forkJoin, switchMap } from 'rxjs';
+import { Subject, debounceTime, switchMap } from 'rxjs';
 import { RouteConstants } from '../../../../core/constants/route.constants';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
 import { CardComponent } from '../../../../shared/components/card/card.component';
@@ -11,15 +11,11 @@ import { IconComponent } from '../../../../shared/icons/icon.component';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { LoadingSpinnerComponent } from '../../../../shared/components/loading-spinner/loading-spinner.component';
 import { EmptyStateComponent } from '../../../../shared/components/empty-state/empty-state.component';
-import { CategoryService } from '../../../../core/services/category.service';
-import { Category } from '../../../../core/models/category.model';
 import { FormsService } from '../../../forms/services/forms.service';
 import { Form } from '../../../forms/models/form.model';
 import { ConvocatoriaService } from '../../services/convocatoria.service';
-import { Candidate, ConvocatoriaDetail } from '../../models/convocatoria.model';
-import { deriveCategoryIds } from '../../utils/convocatoria.utils';
-import { ConvocatoriaFormSectionComponent } from './components/form-section/convocatoria-form-section.component';
-import { ConvocatoriaWeightsSectionComponent } from './components/weights-section/convocatoria-weights-section.component';
+import { Candidate, ConvocatoriaDetail, ConvocatoriaForm } from '../../models/convocatoria.model';
+import { ConvocatoriaFormSectionComponent, FormAddedEvent } from './components/form-section/convocatoria-form-section.component';
 import { ConvocatoriaThresholdsSectionComponent } from './components/thresholds-section/convocatoria-thresholds-section.component';
 import { ConvocatoriaCandidatesSectionComponent } from './components/candidates-section/convocatoria-candidates-section.component';
 import { ConvocatoriaLaunchBarComponent } from './components/launch-bar/convocatoria-launch-bar.component';
@@ -30,7 +26,7 @@ import { ConvocatoriaLaunchBarComponent } from './components/launch-bar/convocat
     TranslatePipe,
     ButtonComponent, CardComponent, PageHeaderComponent, IconComponent, ConfirmDialogComponent,
     LoadingSpinnerComponent, EmptyStateComponent,
-    ConvocatoriaFormSectionComponent, ConvocatoriaWeightsSectionComponent, ConvocatoriaThresholdsSectionComponent,
+    ConvocatoriaFormSectionComponent, ConvocatoriaThresholdsSectionComponent,
     ConvocatoriaCandidatesSectionComponent, ConvocatoriaLaunchBarComponent,
   ],
   templateUrl: './convocatoria-detail.component.html',
@@ -40,7 +36,6 @@ export class ConvocatoriaDetailComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly convocatoriaService = inject(ConvocatoriaService);
-  private readonly categoryService = inject(CategoryService);
   private readonly formsService = inject(FormsService);
   private readonly destroyRef = inject(DestroyRef);
 
@@ -51,11 +46,7 @@ export class ConvocatoriaDetailComponent {
   protected readonly convocatoria = signal<ConvocatoriaDetail | null>(null);
 
   protected readonly forms = signal<Form[]>([]);
-  protected readonly formCategories = signal<Category[]>([]);
-  protected readonly loadingCategories = signal(false);
-  private readonly lastFetchedFormId = signal<string | null>(null);
 
-  protected readonly weights = signal<Record<string, number>>({});
   protected readonly aptoMin = signal(70);
   protected readonly revisarMin = signal(50);
 
@@ -63,10 +54,8 @@ export class ConvocatoriaDetailComponent {
   protected readonly deleting = signal(false);
 
   protected readonly isDraft = computed(() => this.convocatoria()?.status === 'DRAFT');
-  protected readonly currentForm = computed(() =>
-    this.forms().find((f) => f.id === this.convocatoria()?.formId) ?? null);
 
-  private readonly weightsThresholdsChange$ = new Subject<void>();
+  private readonly thresholdsChange$ = new Subject<void>();
 
   constructor() {
     this.formsService.getAll()
@@ -79,7 +68,6 @@ export class ConvocatoriaDetailComponent {
         next: (detail) => {
           this.applyDetail(detail);
           this.loading.set(false);
-          if (detail.formId) this.loadFormCategories(detail.formId);
         },
         error: () => {
           this.loadError.set(true);
@@ -87,7 +75,7 @@ export class ConvocatoriaDetailComponent {
         },
       });
 
-    this.weightsThresholdsChange$.pipe(
+    this.thresholdsChange$.pipe(
       debounceTime(600),
       switchMap(() => this.convocatoriaService.update(this.id, this.buildUpdateRequest())),
       takeUntilDestroyed(this.destroyRef),
@@ -96,7 +84,6 @@ export class ConvocatoriaDetailComponent {
 
   private applyDetail(detail: ConvocatoriaDetail): void {
     this.convocatoria.set(detail);
-    this.weights.set(Object.fromEntries(detail.categoryWeights.map((w) => [w.categoryId, w.weight])));
     this.aptoMin.set(detail.scoringConfig.aptoMin);
     this.revisarMin.set(detail.scoringConfig.revisarMin);
   }
@@ -105,37 +92,8 @@ export class ConvocatoriaDetailComponent {
     const current = this.convocatoria();
     return {
       name: current?.name ?? '',
-      formId: current?.formId ?? undefined,
-      categoryWeights: Object.entries(this.weights())
-        .filter(([, weight]) => weight > 0)
-        .map(([categoryId, weight]) => ({ categoryId, weight })),
       scoringConfig: { aptoMin: this.aptoMin(), revisarMin: this.revisarMin() },
     };
-  }
-
-  private loadFormCategories(formId: string): void {
-    if (formId === this.lastFetchedFormId()) return;
-    this.loadingCategories.set(true);
-
-    forkJoin({
-      form: this.formsService.getById(formId),
-      categories: this.categoryService.getAll(),
-    }).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: ({ form, categories }) => {
-        const orderedIds = deriveCategoryIds(form);
-        const byId = new Map(categories.map((c) => [c.id, c]));
-        const resolved = orderedIds.map((catId) => byId.get(catId)).filter((c): c is Category => c !== undefined);
-
-        this.formCategories.set(resolved);
-        this.lastFetchedFormId.set(formId);
-        this.weights.update((w) => Object.fromEntries(resolved.map((c) => [c.id, w[c.id] ?? 0])));
-        this.loadingCategories.set(false);
-      },
-      error: () => {
-        this.formCategories.set([]);
-        this.loadingCategories.set(false);
-      },
-    });
   }
 
   protected onNameBlur(event: FocusEvent): void {
@@ -148,21 +106,36 @@ export class ConvocatoriaDetailComponent {
       .subscribe((detail) => this.applyDetail(detail));
   }
 
-  protected onFormAttached(form: Form): void {
-    this.convocatoria.update((c) => (c ? { ...c, formId: form.id } : c));
-    this.forms.update((forms) => [...forms, form]);
-    this.loadFormCategories(form.id);
+  protected onFormAdded(event: FormAddedEvent): void {
+    this.convocatoria.update((c) => (c ? { ...c, forms: [...c.forms, event.convocatoriaForm] } : c));
+    this.forms.update((forms) => [...forms, event.form]);
   }
 
-  protected onWeightsChanged(weights: Record<string, number>): void {
-    this.weights.set(weights);
-    this.weightsThresholdsChange$.next();
+  protected onFormUpdated(updated: ConvocatoriaForm): void {
+    this.convocatoria.update((c) =>
+      c ? { ...c, forms: c.forms.map((f) => (f.id === updated.id ? updated : f)) } : c);
+  }
+
+  protected onFormRemoved(convocatoriaFormId: string): void {
+    this.convocatoria.update((c) =>
+      c ? { ...c, forms: c.forms.filter((f) => f.id !== convocatoriaFormId) } : c);
+  }
+
+  protected onFormsReordered(orderedIds: string[]): void {
+    this.convocatoria.update((c) =>
+      c ? { ...c, forms: orderedIds.map((formId) => c.forms.find((f) => f.id === formId)!) } : c);
+
+    this.convocatoriaService.reorderForms(this.id, orderedIds)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((reordered) => {
+        this.convocatoria.update((c) => (c ? { ...c, forms: reordered } : c));
+      });
   }
 
   protected onThresholdsChanged(patch: { aptoMin: number; revisarMin: number }): void {
     this.aptoMin.set(patch.aptoMin);
     this.revisarMin.set(patch.revisarMin);
-    this.weightsThresholdsChange$.next();
+    this.thresholdsChange$.next();
   }
 
   protected onCandidateAdded(candidate: Candidate): void {
