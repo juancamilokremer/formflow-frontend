@@ -2,7 +2,7 @@ import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { map, switchMap } from 'rxjs';
+import { map, of, switchMap } from 'rxjs';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { RouteConstants, convocatoriaDetailPath } from '../../../../core/constants/route.constants';
 import { Category } from '../../../../core/models/category.model';
@@ -111,12 +111,17 @@ export class FormBuilderComponent implements OnInit {
     if (!convocatoriaId || !currentForm) return;
 
     this.convocatoriaService.getById(convocatoriaId).pipe(
-      switchMap((detail) => this.convocatoriaService.addForm(convocatoriaId, {
-        formId: currentForm.id,
-        weight: detail.forms.length === 0 ? 100 : 0,
-        categoryWeights: [],
-        minScore: null,
-      })),
+      switchMap((detail) => {
+        const alreadyAttached = detail.forms.some((convocatoriaForm) => convocatoriaForm.formId === currentForm.id);
+        if (alreadyAttached) return of(undefined);
+
+        return this.convocatoriaService.addForm(convocatoriaId, {
+          formId: currentForm.id,
+          weight: detail.forms.length === 0 ? 100 : 0,
+          categoryWeights: [],
+          minScore: null,
+        });
+      }),
     ).subscribe(() => {
       this.router.navigate(convocatoriaDetailPath(convocatoriaId));
     });
