@@ -1,4 +1,4 @@
-import { Component, DestroyRef, computed, inject, input, signal } from '@angular/core';
+import { Component, DestroyRef, computed, inject, input, output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Observable } from 'rxjs';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -27,10 +27,13 @@ export class FormFillerComponent {
   private readonly condEngine = inject(ConditionEngineService);
   private readonly destroyRef = inject(DestroyRef);
 
-  readonly form             = input.required<PublicForm>();
-  readonly submitFn         = input.required<(payload: SubmitPublicResponsePayload) => Observable<SubmitPublicResponseResult>>();
-  readonly candidateName    = input<string | null>(null);
-  readonly convocatoriaName = input<string | null>(null);
+  readonly form                = input.required<PublicForm>();
+  readonly submitFn            = input.required<(payload: SubmitPublicResponsePayload) => Observable<SubmitPublicResponseResult>>();
+  readonly candidateName       = input<string | null>(null);
+  readonly convocatoriaName    = input<string | null>(null);
+  readonly showBackToChecklist = input(false);
+
+  readonly backToChecklist = output<void>();
 
   protected readonly view        = signal<FillerView>('form');
   protected readonly submitting  = signal(false);

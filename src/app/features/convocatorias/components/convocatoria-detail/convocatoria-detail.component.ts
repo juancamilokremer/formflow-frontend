@@ -14,8 +14,8 @@ import { EmptyStateComponent } from '../../../../shared/components/empty-state/e
 import { FormsService } from '../../../forms/services/forms.service';
 import { Form } from '../../../forms/models/form.model';
 import { ConvocatoriaService } from '../../services/convocatoria.service';
-import { Candidate, ConvocatoriaDetail, ConvocatoriaForm } from '../../models/convocatoria.model';
-import { ConvocatoriaFormSectionComponent, FormAddedEvent } from './components/form-section/convocatoria-form-section.component';
+import { Candidate, ConvocatoriaDetail, ConvocatoriaForm, FormAddedEvent } from '../../models/convocatoria.model';
+import { ConvocatoriaFormSectionComponent } from './components/form-section/convocatoria-form-section.component';
 import { ConvocatoriaThresholdsSectionComponent } from './components/thresholds-section/convocatoria-thresholds-section.component';
 import { ConvocatoriaCandidatesSectionComponent } from './components/candidates-section/convocatoria-candidates-section.component';
 import { ConvocatoriaLaunchBarComponent } from './components/launch-bar/convocatoria-launch-bar.component';

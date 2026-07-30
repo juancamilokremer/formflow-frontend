@@ -1,3 +1,5 @@
+import { Form } from '../../forms/models/form.model';
+
 export type ConvocatoriaStatus = 'DRAFT' | 'ACTIVE' | 'CLOSED';
 export type ProcessType = 'CANDIDATES' | 'DIAGNOSTIC';
 
@@ -44,6 +46,11 @@ export interface ConvocatoriaForm {
   categoryWeights: CategoryWeight[];
   minScore: number | null;
   position: number;
+}
+
+export interface FormAddedEvent {
+  convocatoriaForm: ConvocatoriaForm;
+  form: Form;
 }
 
 export interface ConvocatoriaDetail {

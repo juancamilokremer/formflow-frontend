@@ -43,3 +43,17 @@ export interface PublicCandidateForm {
   alreadyResponded: boolean;
   form: PublicForm;
 }
+
+export interface CandidateChecklistFormItem {
+  formId: string;
+  name: string;
+  completed: boolean;
+}
+
+export interface CandidateChecklist {
+  candidateName: string;
+  convocatoriaName: string;
+  endDate: string | null;
+  allCompleted: boolean;
+  forms: CandidateChecklistFormItem[];
+}

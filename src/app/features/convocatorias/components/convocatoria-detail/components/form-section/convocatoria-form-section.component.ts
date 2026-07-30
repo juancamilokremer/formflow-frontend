@@ -11,13 +11,8 @@ import { RouteConstants, formBuilderPath } from '../../../../../../core/constant
 import { FormsService } from '../../../../../forms/services/forms.service';
 import { Form } from '../../../../../forms/models/form.model';
 import { ConvocatoriaService } from '../../../../services/convocatoria.service';
-import { ConvocatoriaForm, ProcessType } from '../../../../models/convocatoria.model';
+import { ConvocatoriaForm, FormAddedEvent, ProcessType } from '../../../../models/convocatoria.model';
 import { ConvocatoriaFormCardComponent } from './components/form-card/convocatoria-form-card.component';
-
-export interface FormAddedEvent {
-  convocatoriaForm: ConvocatoriaForm;
-  form: Form;
-}
 
 @Component({
   selector: 'app-convocatoria-form-section',
