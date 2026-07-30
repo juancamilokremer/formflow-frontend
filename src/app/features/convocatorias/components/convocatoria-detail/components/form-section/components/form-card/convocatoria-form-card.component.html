@@ -23,8 +23,8 @@
     (weightsChanged)="onWeightsChanged($event)" />
 
   <div class="cfc__min-score">
-    <label class="cfc__min-score-label">{{ 'convocatorias.detail.form.min_score_label' | translate }}</label>
-    <input type="number" min="0" max="100" class="cfc__min-score-input"
+    <label class="cfc__min-score-label" for="min-score-{{ convocatoriaForm().id }}">{{ 'convocatorias.detail.form.min_score_label' | translate }}</label>
+    <input type="number" min="0" max="100" class="cfc__min-score-input" id="min-score-{{ convocatoriaForm().id }}"
       [value]="minScore() ?? ''"
       [placeholder]="'convocatorias.detail.form.min_score_placeholder' | translate"
       (input)="onMinScoreInput($any($event.target).value)" />
