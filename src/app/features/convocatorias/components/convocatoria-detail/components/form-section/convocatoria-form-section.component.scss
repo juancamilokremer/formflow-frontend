@@ -1,28 +1,21 @@
 :host { display: block; }
 
 .cfs {
-  &__current {
+  &__list {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    padding: 10px 14px;
-    background: var(--ff-bg);
-    border: 1px solid var(--ff-border);
-    border-radius: var(--ff-radius-md);
-    margin: 0 0 12px;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 12px;
   }
 
-  &__current-name {
+  &__sum {
     font-size: 13px;
     font-weight: 600;
-    color: var(--ff-text-primary);
-  }
+    color: var(--ff-text-secondary);
+    margin: 0 0 16px;
 
-  &__replace-label {
-    font-size: 12px;
-    color: var(--ff-text-muted);
-    margin: 0 0 8px;
+    &--valid { color: var(--ff-success); }
+    &--invalid { color: var(--ff-error-text); }
   }
 
   &__cards {
@@ -37,7 +30,7 @@
     align-items: flex-start;
     gap: 8px;
     padding: 16px;
-    border: 1px solid var(--ff-border);
+    border: 1px dashed var(--ff-border);
     border-radius: var(--ff-radius-md);
     background: var(--ff-bg);
     color: var(--ff-primary);

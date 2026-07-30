@@ -1,11 +1,21 @@
-@if (currentForm(); as form) {
-  <div class="cfs__current">
-    <span class="cfs__current-name">{{ 'convocatorias.detail.form.current' | translate: { name: form.name } }}</span>
-    <app-button type="button" variant="secondary" (click)="openCurrentForm()">
-      {{ 'convocatorias.detail.form.open_action' | translate }}
-    </app-button>
+@if (convocatoriaForms().length > 0) {
+  <div class="cfs__list" cdkDropList (cdkDropListDropped)="onDrop($event)">
+    @for (cf of convocatoriaForms(); track cf.id) {
+      <app-convocatoria-form-card
+        cdkDrag
+        [convocatoriaId]="convocatoriaId()"
+        [convocatoriaForm]="cf"
+        [formName]="formName(cf)"
+        (weightPreview)="onWeightPreview(cf.id, $event)"
+        (formUpdated)="onCardUpdated($event)"
+        (formRemoved)="onCardRemoved($event)" />
+    }
   </div>
-  <p class="cfs__replace-label">{{ 'convocatorias.detail.form.replace_label' | translate }}</p>
+
+  <div class="cfs__sum" [class.cfs__sum--valid]="sumValid()" [class.cfs__sum--invalid]="!sumValid()">
+    {{ (sumValid() ? 'convocatorias.detail.form.weight_sum_ok' : 'convocatorias.detail.form.weight_sum_invalid')
+      | translate: { sum: totalWeight() } }}
+  </div>
 }
 
 <div class="cfs__cards">
@@ -35,11 +45,3 @@
 @if (error()) {
   <p class="cfs__error">{{ 'convocatorias.detail.form.error' | translate }}</p>
 }
-
-<app-confirm-dialog
-  [isOpen]="replaceConfirmOpen()"
-  title="convocatorias.detail.form.replace_confirm.title"
-  [message]="'convocatorias.detail.form.replace_confirm.message' | translate: { name: currentForm()?.name }"
-  confirmLabel="convocatorias.detail.form.replace_confirm.confirm"
-  (confirmed)="confirmReplace()"
-  (cancelled)="cancelReplace()" />

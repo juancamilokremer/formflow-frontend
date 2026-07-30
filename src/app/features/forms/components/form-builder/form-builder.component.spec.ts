@@ -33,9 +33,9 @@ const MOCK_FORM: FormDetail = {
 };
 
 const MOCK_CONVOCATORIA: ConvocatoriaDetail = {
-  id: 'conv1', tenantId: 't1', formId: null, name: 'RRHH', type: 'CANDIDATES', status: 'DRAFT',
-  categoryWeights: [{ categoryId: 'cat-1', weight: 100 }], scoringConfig: { aptoMin: 70, revisarMin: 50 },
-  startDate: null, endDate: null, createdAt: '', updatedAt: '', candidates: [],
+  id: 'conv1', tenantId: 't1', name: 'RRHH', type: 'CANDIDATES', status: 'DRAFT',
+  scoringConfig: { aptoMin: 70, revisarMin: 50 },
+  startDate: null, endDate: null, createdAt: '', updatedAt: '', candidates: [], forms: [],
 };
 
 function buildComponent(formResult: 'ok' | 'error' = 'ok') {
@@ -55,7 +55,9 @@ function buildComponent(formResult: 'ok' | 'error' = 'ok') {
 
   const mockConvocatoriaService = {
     getById: vi.fn().mockReturnValue(of(MOCK_CONVOCATORIA)),
-    update: vi.fn().mockReturnValue(of(MOCK_CONVOCATORIA)),
+    addForm: vi.fn().mockReturnValue(of({
+      id: 'cf1', formId: 'f1', weight: 100, categoryWeights: [], minScore: null, position: 0,
+    })),
   };
 
   TestBed.overrideProvider(FormsService, { useValue: mockFormsService });
@@ -181,47 +183,13 @@ describe('FormBuilderComponent with convocatoriaId in query params', () => {
     (component as any).onReturnToConvocatoria();
 
     expect(mockConvocatoriaService.getById).toHaveBeenCalledWith('conv1');
-    expect(mockConvocatoriaService.update).toHaveBeenCalledWith('conv1', {
-      name: 'RRHH',
+    expect(mockConvocatoriaService.addForm).toHaveBeenCalledWith('conv1', {
       formId: 'f1',
-      categoryWeights: [{ categoryId: 'cat-1', weight: 100 }],
-      scoringConfig: { aptoMin: 70, revisarMin: 50 },
+      weight: 100,
+      categoryWeights: [],
+      minScore: null,
     });
     expect(mockFormsService.remove).not.toHaveBeenCalled();
     expect(mockRouter.navigate).toHaveBeenCalledWith(['/', 'convocatorias', 'conv1']);
-  });
-});
-
-describe('FormBuilderComponent with convocatoriaId and replacesFormId in query params', () => {
-  const mockRouter = { navigate: vi.fn() };
-  const queryParams: Record<string, string> = { convocatoriaId: 'conv1', replacesFormId: 'f9' };
-
-  beforeEach(async () => {
-    mockRouter.navigate.mockClear();
-    await TestBed.configureTestingModule({
-      imports: [FormBuilderComponent],
-      providers: [
-        provideRouter([]),
-        provideTranslateService({ lang: 'es' }),
-        { provide: Router, useValue: mockRouter },
-        {
-          provide: ActivatedRoute,
-          useValue: {
-            snapshot: {
-              paramMap: { get: () => 'f1' },
-              queryParamMap: { get: (key: string) => queryParams[key] ?? null },
-            },
-          },
-        },
-      ],
-    }).compileComponents();
-  });
-
-  it('deletes the replaced form after successfully attaching the new one', () => {
-    const { component, mockFormsService } = buildComponent();
-
-    (component as any).onReturnToConvocatoria();
-
-    expect(mockFormsService.remove).toHaveBeenCalledWith('f9');
   });
 });

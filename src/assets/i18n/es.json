@@ -466,10 +466,13 @@
       "name_label": "Nombre de la convocatoria",
       "not_draft_placeholder": "{{count}} candidato(s). El detalle completo con ranking y estadísticas llega en una próxima entrega.",
       "form": {
-        "title": "Formulario",
-        "current": "Formulario actual: {{name}}",
+        "title": "Formularios",
         "open_action": "Abrir formulario",
-        "replace_label": "O reemplázalo:",
+        "weight_label": "Peso",
+        "weight_sum_ok": "Los pesos suman {{sum}}% ✓",
+        "weight_sum_invalid": "Los pesos suman {{sum}}% — deben sumar 100% para poder lanzar",
+        "min_score_label": "Umbral mínimo (opcional)",
+        "min_score_placeholder": "Sin umbral",
         "create_title": "Crear formulario nuevo",
         "create_desc": "Abre el constructor en blanco para este tipo de proceso",
         "create_action": "Crear formulario",
@@ -479,14 +482,13 @@
         "duplicate_action": "Duplicar",
         "duplicate_empty": "No hay formularios activos de este tipo para duplicar",
         "error": "No se pudo completar la acción. Intenta de nuevo.",
-        "replace_confirm": {
-          "title": "¿Reemplazar formulario?",
-          "message": "\"{{name}}\" se eliminará — todavía no tiene respuestas porque la convocatoria sigue en borrador.",
-          "confirm": "Reemplazar"
+        "remove_confirm": {
+          "title": "¿Quitar formulario?",
+          "message": "\"{{name}}\" se quitará de la convocatoria y se eliminará — todavía no tiene respuestas porque la convocatoria sigue en borrador.",
+          "confirm": "Quitar"
         }
       },
       "weights": {
-        "title": "Pesos por categoría",
         "hint": "Deben sumar 100%, o dejarse en 0 si no quieres ponderar por categoría",
         "sum_ok": "Suma: {{sum}}% ✓",
         "sum_invalid": "Suma: {{sum}}% — debe ser 100%",

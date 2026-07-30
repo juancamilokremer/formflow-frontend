@@ -37,20 +37,28 @@ export interface Candidate {
   createdAt: string;
 }
 
+export interface ConvocatoriaForm {
+  id: string;
+  formId: string;
+  weight: number;
+  categoryWeights: CategoryWeight[];
+  minScore: number | null;
+  position: number;
+}
+
 export interface ConvocatoriaDetail {
   id: string;
   tenantId: string;
-  formId: string | null;
   name: string;
   type: ProcessType;
   status: ConvocatoriaStatus;
-  categoryWeights: CategoryWeight[];
   scoringConfig: ScoringConfig;
   startDate: string | null;
   endDate: string | null;
   createdAt: string;
   updatedAt: string;
   candidates: Candidate[];
+  forms: ConvocatoriaForm[];
 }
 
 export interface CreateConvocatoriaRequest {
@@ -63,9 +71,20 @@ export interface CreateConvocatoriaRequest {
 
 export interface UpdateConvocatoriaRequest {
   name: string;
-  formId?: string;
-  categoryWeights?: CategoryWeight[];
   scoringConfig?: ScoringConfig;
+}
+
+export interface AddConvocatoriaFormRequest {
+  formId: string;
+  weight: number;
+  categoryWeights?: CategoryWeight[];
+  minScore?: number | null;
+}
+
+export interface UpdateConvocatoriaFormRequest {
+  weight: number;
+  categoryWeights?: CategoryWeight[];
+  minScore?: number | null;
 }
 
 export interface AddCandidateRequest {

@@ -7,9 +7,9 @@ import { ConvocatoriaService } from '../../services/convocatoria.service';
 import { ConvocatoriaDetail } from '../../models/convocatoria.model';
 
 const MOCK_CONVOCATORIA: ConvocatoriaDetail = {
-  id: 'c1', tenantId: 't1', formId: null, name: 'RRHH', type: 'CANDIDATES', status: 'DRAFT',
-  categoryWeights: [], scoringConfig: { aptoMin: 70, revisarMin: 50 },
-  startDate: null, endDate: null, createdAt: '', updatedAt: '', candidates: [],
+  id: 'c1', tenantId: 't1', name: 'RRHH', type: 'CANDIDATES', status: 'DRAFT',
+  scoringConfig: { aptoMin: 70, revisarMin: 50 },
+  startDate: null, endDate: null, createdAt: '', updatedAt: '', candidates: [], forms: [],
 };
 
 function buildComponent(createImpl?: ReturnType<typeof vi.fn>) {

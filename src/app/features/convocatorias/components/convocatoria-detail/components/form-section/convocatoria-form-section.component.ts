@@ -1,22 +1,27 @@
 import { Component, DestroyRef, computed, inject, input, output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
+import { switchMap } from 'rxjs';
 import { TranslatePipe } from '@ngx-translate/core';
+import { CdkDropList, CdkDrag, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ButtonComponent } from '../../../../../../shared/components/button/button.component';
 import { IconComponent } from '../../../../../../shared/icons/icon.component';
 import { SelectComponent, SelectOption } from '../../../../../../shared/components/select/select.component';
-import { ConfirmDialogComponent } from '../../../../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { RouteConstants, formBuilderPath } from '../../../../../../core/constants/route.constants';
 import { FormsService } from '../../../../../forms/services/forms.service';
 import { Form } from '../../../../../forms/models/form.model';
 import { ConvocatoriaService } from '../../../../services/convocatoria.service';
-import { ProcessType } from '../../../../models/convocatoria.model';
+import { ConvocatoriaForm, ProcessType } from '../../../../models/convocatoria.model';
+import { ConvocatoriaFormCardComponent } from './components/form-card/convocatoria-form-card.component';
 
-type PendingReplaceAction = 'create' | 'duplicate';
+export interface FormAddedEvent {
+  convocatoriaForm: ConvocatoriaForm;
+  form: Form;
+}
 
 @Component({
   selector: 'app-convocatoria-form-section',
-  imports: [TranslatePipe, ButtonComponent, IconComponent, SelectComponent, ConfirmDialogComponent],
+  imports: [TranslatePipe, ButtonComponent, IconComponent, SelectComponent, CdkDropList, CdkDrag, ConvocatoriaFormCardComponent],
   templateUrl: './convocatoria-form-section.component.html',
   styleUrl: './convocatoria-form-section.component.scss',
 })
@@ -29,17 +34,19 @@ export class ConvocatoriaFormSectionComponent {
   readonly convocatoriaId = input.required<string>();
   readonly convocatoriaName = input.required<string>();
   readonly processType = input.required<ProcessType>();
-  readonly currentForm = input<Form | null>(null);
+  readonly convocatoriaForms = input.required<ConvocatoriaForm[]>();
   readonly forms = input.required<Form[]>();
 
-  readonly formAttached = output<Form>();
+  readonly formAdded = output<FormAddedEvent>();
+  readonly formUpdated = output<ConvocatoriaForm>();
+  readonly formRemoved = output<string>();
+  readonly formsReordered = output<string[]>();
 
   protected readonly creating = signal(false);
   protected readonly duplicating = signal(false);
   protected readonly selectedFormId = signal('');
   protected readonly error = signal(false);
-  protected readonly replaceConfirmOpen = signal(false);
-  private pendingAction: PendingReplaceAction | null = null;
+  protected readonly liveWeights = signal<Record<string, number>>({});
 
   protected readonly matchingForms = computed(() =>
     this.forms().filter((f) => f.status === 'ACTIVE' && f.type === this.processType()));
@@ -49,64 +56,55 @@ export class ConvocatoriaFormSectionComponent {
     ...this.matchingForms().map((f) => ({ value: f.id, label: f.name })),
   ]);
 
+  protected readonly totalWeight = computed(() => {
+    const live = this.liveWeights();
+    return this.convocatoriaForms().reduce((sum, cf) => sum + (live[cf.id] ?? cf.weight), 0);
+  });
+  protected readonly sumValid = computed(() => this.totalWeight() === 100);
+
+  protected formName(convocatoriaForm: ConvocatoriaForm): string {
+    return this.forms().find((f) => f.id === convocatoriaForm.formId)?.name ?? '';
+  }
+
   protected onDuplicateSelected(formId: string): void {
     this.selectedFormId.set(formId);
   }
 
-  protected openCurrentForm(): void {
-    const current = this.currentForm();
-    if (!current) return;
-    this.router.navigate(formBuilderPath(current.id), {
-      queryParams: { [RouteConstants.QUERY_CONVOCATORIA_ID]: this.convocatoriaId() },
+  protected onWeightPreview(convocatoriaFormId: string, weight: number): void {
+    this.liveWeights.update((w) => ({ ...w, [convocatoriaFormId]: weight }));
+  }
+
+  protected onCardUpdated(updated: ConvocatoriaForm): void {
+    this.formUpdated.emit(updated);
+  }
+
+  protected onCardRemoved(convocatoriaFormId: string): void {
+    this.liveWeights.update((w) => {
+      const next = { ...w };
+      delete next[convocatoriaFormId];
+      return next;
     });
+    this.formRemoved.emit(convocatoriaFormId);
+  }
+
+  protected onDrop(event: CdkDragDrop<ConvocatoriaForm[]>): void {
+    const orderedIds = this.convocatoriaForms().map((f) => f.id);
+    moveItemInArray(orderedIds, event.previousIndex, event.currentIndex);
+    this.formsReordered.emit(orderedIds);
   }
 
   protected createNew(): void {
     if (this.creating()) return;
-    if (this.currentForm()) {
-      this.pendingAction = 'create';
-      this.replaceConfirmOpen.set(true);
-      return;
-    }
-    this.performCreateNew();
-  }
-
-  protected duplicateSelected(): void {
-    if (!this.selectedFormId() || this.duplicating()) return;
-    if (this.currentForm()) {
-      this.pendingAction = 'duplicate';
-      this.replaceConfirmOpen.set(true);
-      return;
-    }
-    this.performDuplicate();
-  }
-
-  protected confirmReplace(): void {
-    this.replaceConfirmOpen.set(false);
-    if (this.pendingAction === 'create') this.performCreateNew();
-    if (this.pendingAction === 'duplicate') this.performDuplicate();
-    this.pendingAction = null;
-  }
-
-  protected cancelReplace(): void {
-    this.replaceConfirmOpen.set(false);
-    this.pendingAction = null;
-  }
-
-  private performCreateNew(): void {
     this.creating.set(true);
     this.error.set(false);
-    const replacesFormId = this.currentForm()?.id ?? null;
 
     this.formsService.create({ name: this.convocatoriaName(), type: this.processType() })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (form) => {
-          const queryParams: Record<string, string> = {
-            [RouteConstants.QUERY_CONVOCATORIA_ID]: this.convocatoriaId(),
-          };
-          if (replacesFormId) queryParams[RouteConstants.QUERY_REPLACES_FORM_ID] = replacesFormId;
-          this.router.navigate(formBuilderPath(form.id), { queryParams });
+          this.router.navigate(formBuilderPath(form.id), {
+            queryParams: { [RouteConstants.QUERY_CONVOCATORIA_ID]: this.convocatoriaId() },
+          });
         },
         error: () => {
           this.creating.set(false);
@@ -115,38 +113,38 @@ export class ConvocatoriaFormSectionComponent {
       });
   }
 
-  private performDuplicate(): void {
-    const formId = this.selectedFormId();
-    const replacesFormId = this.currentForm()?.id ?? null;
+  protected duplicateSelected(): void {
+    if (!this.selectedFormId() || this.duplicating()) return;
     this.duplicating.set(true);
     this.error.set(false);
+    const weight = this.nextWeight();
+    let duplicatedForm!: Form;
 
-    this.formsService.duplicate(formId).pipe(
+    this.formsService.duplicate(this.selectedFormId()).pipe(
+      switchMap((newForm) => {
+        duplicatedForm = newForm;
+        return this.convocatoriaService.addForm(this.convocatoriaId(), {
+          formId: newForm.id,
+          weight,
+          categoryWeights: [],
+          minScore: null,
+        });
+      }),
       takeUntilDestroyed(this.destroyRef),
     ).subscribe({
-      next: (newForm) => {
-        this.convocatoriaService.update(this.convocatoriaId(), {
-          name: this.convocatoriaName(),
-          formId: newForm.id,
-        }).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-          next: () => {
-            this.duplicating.set(false);
-            this.selectedFormId.set('');
-            if (replacesFormId) {
-              this.formsService.remove(replacesFormId).pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
-            }
-            this.formAttached.emit(newForm);
-          },
-          error: () => {
-            this.duplicating.set(false);
-            this.error.set(true);
-          },
-        });
+      next: (convocatoriaForm) => {
+        this.duplicating.set(false);
+        this.selectedFormId.set('');
+        this.formAdded.emit({ convocatoriaForm, form: duplicatedForm });
       },
       error: () => {
         this.duplicating.set(false);
         this.error.set(true);
       },
     });
+  }
+
+  private nextWeight(): number {
+    return this.convocatoriaForms().length === 0 ? 100 : 0;
   }
 }

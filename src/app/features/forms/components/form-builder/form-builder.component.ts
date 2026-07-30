@@ -46,7 +46,6 @@ export class FormBuilderComponent implements OnInit {
   private readonly breakpointObserver = inject(BreakpointObserver);
 
   protected readonly convocatoriaId = this.route.snapshot.queryParamMap.get(RouteConstants.QUERY_CONVOCATORIA_ID);
-  private readonly replacesFormId = this.route.snapshot.queryParamMap.get(RouteConstants.QUERY_REPLACES_FORM_ID);
 
   protected readonly isMobile = toSignal(
     this.breakpointObserver.observe('(max-width: 767px)').pipe(map((state) => state.matches)),
@@ -112,16 +111,13 @@ export class FormBuilderComponent implements OnInit {
     if (!convocatoriaId || !currentForm) return;
 
     this.convocatoriaService.getById(convocatoriaId).pipe(
-      switchMap((detail) => this.convocatoriaService.update(convocatoriaId, {
-        name: detail.name,
+      switchMap((detail) => this.convocatoriaService.addForm(convocatoriaId, {
         formId: currentForm.id,
-        categoryWeights: detail.categoryWeights,
-        scoringConfig: detail.scoringConfig,
+        weight: detail.forms.length === 0 ? 100 : 0,
+        categoryWeights: [],
+        minScore: null,
       })),
     ).subscribe(() => {
-      if (this.replacesFormId) {
-        this.formsService.remove(this.replacesFormId).subscribe();
-      }
       this.router.navigate(convocatoriaDetailPath(convocatoriaId));
     });
   }

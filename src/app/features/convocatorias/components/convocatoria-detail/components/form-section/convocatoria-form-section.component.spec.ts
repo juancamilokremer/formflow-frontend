@@ -1,11 +1,14 @@
 import { TestBed } from '@angular/core/testing';
 import { provideTranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
+import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { of, throwError } from 'rxjs';
-import { ConvocatoriaFormSectionComponent } from './convocatoria-form-section.component';
+import { ConvocatoriaFormSectionComponent, FormAddedEvent } from './convocatoria-form-section.component';
 import { FormsService } from '../../../../../forms/services/forms.service';
 import { ConvocatoriaService } from '../../../../services/convocatoria.service';
+import { CategoryService } from '../../../../../../core/services/category.service';
 import { Form } from '../../../../../forms/models/form.model';
+import { ConvocatoriaForm } from '../../../../models/convocatoria.model';
 
 const ACTIVE_CANDIDATES_FORM: Form = {
   id: 'f1', name: 'Evaluación técnica', description: null, type: 'CANDIDATES', status: 'ACTIVE',
@@ -16,17 +19,27 @@ const DIAGNOSTIC_FORM: Form = { ...ACTIVE_CANDIDATES_FORM, id: 'f3', type: 'DIAG
 const NEW_FORM: Form = { ...ACTIVE_CANDIDATES_FORM, id: 'f4', name: 'RRHH' };
 const DUPLICATED_FORM: Form = { ...ACTIVE_CANDIDATES_FORM, id: 'f5', name: 'Evaluación técnica (copia)' };
 
+const CONV_FORM_1: ConvocatoriaForm = {
+  id: 'cf1', formId: 'f1', weight: 100, categoryWeights: [], minScore: null, position: 0,
+};
+
 function buildComponent(overrides: {
-  createImpl?: unknown; duplicateImpl?: unknown; updateImpl?: unknown; removeImpl?: unknown; currentForm?: Form | null;
+  createImpl?: unknown; duplicateImpl?: unknown; addFormImpl?: unknown;
+  convocatoriaForms?: ConvocatoriaForm[];
 } = {}) {
   const mockFormsService = {
     create: overrides.createImpl ?? vi.fn().mockReturnValue(of(NEW_FORM)),
     duplicate: overrides.duplicateImpl ?? vi.fn().mockReturnValue(of(DUPLICATED_FORM)),
-    remove: overrides.removeImpl ?? vi.fn().mockReturnValue(of(undefined)),
+    getById: vi.fn().mockReturnValue(of({ sections: [] })),
+    remove: vi.fn().mockReturnValue(of(undefined)),
   };
   const mockConvocatoriaService = {
-    update: overrides.updateImpl ?? vi.fn().mockReturnValue(of({})),
+    addForm: overrides.addFormImpl ?? vi.fn().mockReturnValue(
+      of({ id: 'cf5', formId: 'f5', weight: 0, categoryWeights: [], minScore: null, position: 1 })),
+    updateForm: vi.fn().mockReturnValue(of(CONV_FORM_1)),
+    removeForm: vi.fn().mockReturnValue(of(undefined)),
   };
+  const mockCategoryService = { getAll: vi.fn().mockReturnValue(of([])) };
   const mockRouter = { navigate: vi.fn() };
 
   TestBed.configureTestingModule({
@@ -35,6 +48,7 @@ function buildComponent(overrides: {
       provideTranslateService({ lang: 'es' }),
       { provide: FormsService, useValue: mockFormsService },
       { provide: ConvocatoriaService, useValue: mockConvocatoriaService },
+      { provide: CategoryService, useValue: mockCategoryService },
       { provide: Router, useValue: mockRouter },
     ],
   }).compileComponents();
@@ -44,7 +58,7 @@ function buildComponent(overrides: {
   fixture.componentRef.setInput('convocatoriaName', 'RRHH');
   fixture.componentRef.setInput('processType', 'CANDIDATES');
   fixture.componentRef.setInput('forms', [ACTIVE_CANDIDATES_FORM, DRAFT_FORM, DIAGNOSTIC_FORM]);
-  fixture.componentRef.setInput('currentForm', overrides.currentForm ?? null);
+  fixture.componentRef.setInput('convocatoriaForms', overrides.convocatoriaForms ?? []);
   fixture.detectChanges();
   return { component: fixture.componentInstance, mockFormsService, mockConvocatoriaService, mockRouter };
 }
@@ -57,22 +71,25 @@ describe('ConvocatoriaFormSectionComponent', () => {
     expect(component['matchingForms']().map((f) => f.id)).toEqual(['f1']);
   });
 
-  describe('openCurrentForm', () => {
-    it('does nothing without a current form', () => {
-      const { component, mockRouter } = buildComponent();
-      component['openCurrentForm']();
-      expect(mockRouter.navigate).not.toHaveBeenCalled();
+  it('formName resolves the form name from the forms list by formId', () => {
+    const { component } = buildComponent();
+    expect(component['formName'](CONV_FORM_1)).toBe('Evaluación técnica');
+  });
+
+  describe('totalWeight / sumValid', () => {
+    it('sums the weights of all attached forms', () => {
+      const { component } = buildComponent({
+        convocatoriaForms: [CONV_FORM_1, { ...CONV_FORM_1, id: 'cf2', weight: 0 }],
+      });
+      expect(component['totalWeight']()).toBe(100);
+      expect(component['sumValid']()).toBe(true);
     });
 
-    it('navigates to the builder for the current form with convocatoriaId', () => {
-      const { component, mockRouter } = buildComponent({ currentForm: ACTIVE_CANDIDATES_FORM });
-
-      component['openCurrentForm']();
-
-      expect(mockRouter.navigate).toHaveBeenCalledWith(
-        ['forms', 'f1', 'edit'],
-        { queryParams: { convocatoriaId: 'c1' } },
-      );
+    it('reflects live (unsaved) weight previews immediately, without waiting for a save', () => {
+      const { component } = buildComponent({ convocatoriaForms: [CONV_FORM_1] });
+      component['onWeightPreview']('cf1', 60);
+      expect(component['totalWeight']()).toBe(60);
+      expect(component['sumValid']()).toBe(false);
     });
   });
 
@@ -95,38 +112,6 @@ describe('ConvocatoriaFormSectionComponent', () => {
       expect(component['error']()).toBe(true);
       expect(component['creating']()).toBe(false);
     });
-
-    it('asks for confirmation instead of creating right away when a form is already attached', () => {
-      const { component, mockFormsService } = buildComponent({ currentForm: ACTIVE_CANDIDATES_FORM });
-
-      component['createNew']();
-
-      expect(mockFormsService.create).not.toHaveBeenCalled();
-      expect(component['replaceConfirmOpen']()).toBe(true);
-    });
-
-    it('creates and navigates with replacesFormId once the replacement is confirmed', () => {
-      const { component, mockFormsService, mockRouter } = buildComponent({ currentForm: ACTIVE_CANDIDATES_FORM });
-
-      component['createNew']();
-      component['confirmReplace']();
-
-      expect(mockFormsService.create).toHaveBeenCalledWith({ name: 'RRHH', type: 'CANDIDATES' });
-      expect(mockRouter.navigate).toHaveBeenCalledWith(
-        ['forms', 'f4', 'edit'],
-        { queryParams: { convocatoriaId: 'c1', replacesFormId: 'f1' } },
-      );
-    });
-
-    it('cancelReplace closes the dialog without creating anything', () => {
-      const { component, mockFormsService } = buildComponent({ currentForm: ACTIVE_CANDIDATES_FORM });
-
-      component['createNew']();
-      component['cancelReplace']();
-
-      expect(component['replaceConfirmOpen']()).toBe(false);
-      expect(mockFormsService.create).not.toHaveBeenCalled();
-    });
   });
 
   describe('duplicateSelected', () => {
@@ -136,23 +121,36 @@ describe('ConvocatoriaFormSectionComponent', () => {
       expect(mockFormsService.duplicate).not.toHaveBeenCalled();
     });
 
-    it('duplicates the selected form and attaches it to the convocatoria', () => {
+    it('duplicates the selected form, defaults weight to 100 when it is the first form, and emits formAdded', () => {
       const { component, mockFormsService, mockConvocatoriaService } = buildComponent();
       component['selectedFormId'].set('f1');
-      let emitted: Form | undefined;
-      component.formAttached.subscribe((f) => (emitted = f));
+      let emitted: FormAddedEvent | undefined;
+      component.formAdded.subscribe((e) => (emitted = e));
 
       component['duplicateSelected']();
 
       expect(mockFormsService.duplicate).toHaveBeenCalledWith('f1');
-      expect(mockConvocatoriaService.update).toHaveBeenCalledWith('c1', { name: 'RRHH', formId: 'f5' });
-      expect(emitted).toEqual(DUPLICATED_FORM);
+      expect(mockConvocatoriaService.addForm).toHaveBeenCalledWith('c1', {
+        formId: 'f5', weight: 100, categoryWeights: [], minScore: null,
+      });
+      expect(emitted?.form).toEqual(DUPLICATED_FORM);
       expect(component['selectedFormId']()).toBe('');
+    });
+
+    it('defaults weight to 0 when a form is already attached', () => {
+      const { component, mockConvocatoriaService } = buildComponent({ convocatoriaForms: [CONV_FORM_1] });
+      component['selectedFormId'].set('f1');
+
+      component['duplicateSelected']();
+
+      expect(mockConvocatoriaService.addForm).toHaveBeenCalledWith('c1', {
+        formId: 'f5', weight: 0, categoryWeights: [], minScore: null,
+      });
     });
 
     it('sets error when the attach step fails', () => {
       const { component } = buildComponent({
-        updateImpl: vi.fn().mockReturnValue(throwError(() => new Error('boom'))),
+        addFormImpl: vi.fn().mockReturnValue(throwError(() => new Error('boom'))),
       });
       component['selectedFormId'].set('f1');
 
@@ -161,27 +159,45 @@ describe('ConvocatoriaFormSectionComponent', () => {
       expect(component['error']()).toBe(true);
       expect(component['duplicating']()).toBe(false);
     });
+  });
 
-    it('asks for confirmation instead of duplicating right away when a form is already attached', () => {
-      const { component, mockFormsService } = buildComponent({ currentForm: ACTIVE_CANDIDATES_FORM });
-      component['selectedFormId'].set('f1');
+  describe('onDrop', () => {
+    it('reorders and emits the new id order', () => {
+      const cf2: ConvocatoriaForm = { ...CONV_FORM_1, id: 'cf2' };
+      const { component } = buildComponent({ convocatoriaForms: [CONV_FORM_1, cf2] });
+      let emitted: string[] | undefined;
+      component.formsReordered.subscribe((ids) => (emitted = ids));
 
-      component['duplicateSelected']();
+      component['onDrop']({ previousIndex: 0, currentIndex: 1 } as CdkDragDrop<ConvocatoriaForm[]>);
 
-      expect(mockFormsService.duplicate).not.toHaveBeenCalled();
-      expect(component['replaceConfirmOpen']()).toBe(true);
+      expect(emitted).toEqual(['cf2', 'cf1']);
     });
+  });
 
-    it('removes the previously attached form once the replacement is confirmed and the new one is attached', () => {
-      const oldForm = { ...ACTIVE_CANDIDATES_FORM, id: 'f9' };
-      const { component, mockFormsService } = buildComponent({ currentForm: oldForm });
-      component['selectedFormId'].set('f1');
+  describe('onCardRemoved', () => {
+    it('clears the live weight preview and emits formRemoved', () => {
+      const { component } = buildComponent({ convocatoriaForms: [CONV_FORM_1] });
+      component['onWeightPreview']('cf1', 40);
+      let emitted: string | undefined;
+      component.formRemoved.subscribe((id) => (emitted = id));
 
-      component['duplicateSelected']();
-      component['confirmReplace']();
+      component['onCardRemoved']('cf1');
 
-      expect(mockFormsService.duplicate).toHaveBeenCalledWith('f1');
-      expect(mockFormsService.remove).toHaveBeenCalledWith('f9');
+      expect(emitted).toBe('cf1');
+      expect(component['liveWeights']()).toEqual({});
+    });
+  });
+
+  describe('onCardUpdated', () => {
+    it('re-emits the updated form as formUpdated', () => {
+      const { component } = buildComponent({ convocatoriaForms: [CONV_FORM_1] });
+      const updated: ConvocatoriaForm = { ...CONV_FORM_1, weight: 70 };
+      let emitted: ConvocatoriaForm | undefined;
+      component.formUpdated.subscribe((f) => (emitted = f));
+
+      component['onCardUpdated'](updated);
+
+      expect(emitted).toEqual(updated);
     });
   });
 });
