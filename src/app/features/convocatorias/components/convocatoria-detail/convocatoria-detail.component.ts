@@ -1,4 +1,5 @@
 import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -14,7 +15,7 @@ import { EmptyStateComponent } from '../../../../shared/components/empty-state/e
 import { FormsService } from '../../../forms/services/forms.service';
 import { Form } from '../../../forms/models/form.model';
 import { ConvocatoriaService } from '../../services/convocatoria.service';
-import { Candidate, ConvocatoriaDetail, ConvocatoriaForm, FormAddedEvent } from '../../models/convocatoria.model';
+import { Candidate, ConvocatoriaDetail, ConvocatoriaForm, FormAddedEvent, PROCESS_TYPE_LABEL_KEYS } from '../../models/convocatoria.model';
 import { ConvocatoriaFormSectionComponent } from './components/form-section/convocatoria-form-section.component';
 import { ConvocatoriaThresholdsSectionComponent } from './components/thresholds-section/convocatoria-thresholds-section.component';
 import { ConvocatoriaCandidatesSectionComponent } from './components/candidates-section/convocatoria-candidates-section.component';
@@ -27,7 +28,7 @@ type ConvocatoriaDetailTab = 'ranking' | 'stats' | 'formularios';
 @Component({
   selector: 'app-convocatoria-detail',
   imports: [
-    TranslatePipe,
+    TranslatePipe, DatePipe,
     ButtonComponent, CardComponent, PageHeaderComponent, IconComponent, ConfirmDialogComponent,
     LoadingSpinnerComponent, EmptyStateComponent,
     ConvocatoriaFormSectionComponent, ConvocatoriaThresholdsSectionComponent,
@@ -59,6 +60,7 @@ export class ConvocatoriaDetailComponent {
   protected readonly deleting = signal(false);
 
   protected readonly activeTab = signal<ConvocatoriaDetailTab>('ranking');
+  protected readonly processTypeLabels = PROCESS_TYPE_LABEL_KEYS;
 
   protected readonly isDraft = computed(() => this.convocatoria()?.status === 'DRAFT');
 

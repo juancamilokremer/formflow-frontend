@@ -1,4 +1,5 @@
 import { Component, DestroyRef, OnInit, inject, input, output, signal } from '@angular/core';
+import { LowerCasePipe } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { Subject, debounceTime, forkJoin, switchMap } from 'rxjs';
@@ -10,6 +11,7 @@ import { RouteConstants, formBuilderPath, formPreviewPath } from '../../../../..
 import { CategoryService } from '../../../../../../../../core/services/category.service';
 import { Category } from '../../../../../../../../core/models/category.model';
 import { FormsService } from '../../../../../../../forms/services/forms.service';
+import { FormStatus } from '../../../../../../../forms/models/form.model';
 import { ConvocatoriaService } from '../../../../../../services/convocatoria.service';
 import { ConvocatoriaForm } from '../../../../../../models/convocatoria.model';
 import { deriveCategoryIds } from '../../../../../../utils/convocatoria.utils';
@@ -17,7 +19,7 @@ import { ConvocatoriaWeightsSectionComponent } from '../../../weights-section/co
 
 @Component({
   selector: 'app-convocatoria-form-card',
-  imports: [TranslatePipe, ButtonComponent, IconComponent, ConfirmDialogComponent, ConvocatoriaWeightsSectionComponent],
+  imports: [TranslatePipe, LowerCasePipe, ButtonComponent, IconComponent, ConfirmDialogComponent, ConvocatoriaWeightsSectionComponent],
   templateUrl: './convocatoria-form-card.component.html',
   styleUrl: './convocatoria-form-card.component.scss',
   host: { '[class.cfc--readonly]': 'readonly()' },
@@ -40,6 +42,8 @@ export class ConvocatoriaFormCardComponent implements OnInit {
 
   protected readonly categories = signal<Category[]>([]);
   protected readonly loadingCategories = signal(true);
+  protected readonly sectionCount = signal(0);
+  protected readonly formStatus = signal<FormStatus | null>(null);
   protected readonly weight = signal(0);
   protected readonly categoryWeights = signal<Record<string, number>>({});
   protected readonly minScore = signal<number | null>(null);
@@ -65,6 +69,8 @@ export class ConvocatoriaFormCardComponent implements OnInit {
         const byId = new Map(categories.map((category) => [category.id, category]));
         const resolved = orderedIds.map((categoryId) => byId.get(categoryId)).filter((category): category is Category => category !== undefined);
         this.categories.set(resolved);
+        this.sectionCount.set(form.sections.length);
+        this.formStatus.set(form.status);
         this.loadingCategories.set(false);
       },
       error: () => {

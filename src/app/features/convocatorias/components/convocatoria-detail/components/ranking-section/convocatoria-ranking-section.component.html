@@ -14,56 +14,54 @@
         <tr>
           <th class="convocatoria-ranking__col-rank">#</th>
           <th>{{ 'convocatorias.detail.ranking.col_candidate' | translate }}</th>
-          <th>{{ 'convocatorias.detail.ranking.col_score' | translate }}</th>
-          <th>{{ 'convocatorias.detail.ranking.col_classification' | translate }}</th>
-          <th>{{ 'convocatorias.detail.ranking.col_status' | translate }}</th>
-          <th class="convocatoria-ranking__col-chevron"></th>
+          @for (column of formColumns(); track column.formId) {
+            <th class="convocatoria-ranking__col-form">
+              {{ column.formName }}
+              <span class="convocatoria-ranking__col-weight">
+                {{ 'convocatorias.detail.ranking.weight_label' | translate: { weight: column.weight } }}
+              </span>
+            </th>
+          }
+          <th class="convocatoria-ranking__col-total">{{ 'convocatorias.detail.ranking.col_total' | translate }}</th>
+          <th>{{ 'convocatorias.detail.ranking.col_verdict' | translate }}</th>
         </tr>
       </thead>
       <tbody>
         @for (entry of entries(); track entry.candidateId) {
-          <tr class="convocatoria-ranking__row" (click)="toggleExpanded(entry.candidateId)">
-            <td class="convocatoria-ranking__col-rank">{{ entry.rank ?? '—' }}</td>
+          <tr class="convocatoria-ranking__row">
+            <td class="convocatoria-ranking__col-rank">{{ medal(entry.rank) ?? (entry.rank ?? '—') }}</td>
             <td>
               <p class="convocatoria-ranking__name">{{ entry.name }}</p>
               <span class="convocatoria-ranking__email">{{ entry.email }}</span>
             </td>
-            <td>{{ entry.totalScore !== null ? (entry.totalScore | number: '1.0-1') : '—' }}</td>
-            <td>
-              @if (entry.classification) {
-                <span class="convocatoria-ranking__badge" [class]="'convocatoria-ranking__badge--' + entry.classification.toLowerCase()">
-                  {{ 'convocatorias.classification.' + entry.classification | translate }}
+            @for (column of formColumns(); track column.formId) {
+              <td class="convocatoria-ranking__col-form">
+                {{ scoreFor(entry, column.formId) !== null ? (scoreFor(entry, column.formId) | number: '1.0-1') : '—' }}
+              </td>
+            }
+            <td class="convocatoria-ranking__col-total">
+              @if (entry.totalScore !== null) {
+                <span class="convocatoria-ranking__total-badge"
+                  [class]="'convocatoria-ranking__total-badge--' + (entry.classification ?? '').toLowerCase()">
+                  {{ entry.totalScore | number: '1.0-1' }}
                 </span>
               } @else {
                 <span class="convocatoria-ranking__dash">—</span>
               }
             </td>
-            <td>{{ 'convocatorias.candidate_status.' + entry.status | translate }}</td>
-            <td class="convocatoria-ranking__col-chevron">
-              <app-icon name="chevron-down" [size]="16"
-                class="convocatoria-ranking__chevron"
-                [class.convocatoria-ranking__chevron--open]="isExpanded(entry.candidateId)" />
+            <td>
+              @if (entry.classification) {
+                <span class="convocatoria-ranking__verdict"
+                  [class]="'convocatoria-ranking__verdict--' + entry.classification.toLowerCase()">
+                  {{ 'convocatorias.classification.' + entry.classification | translate }}
+                </span>
+              } @else {
+                <span class="convocatoria-ranking__progress-chip">
+                  {{ 'convocatorias.detail.ranking.progress' | translate: { completed: completedCount(entry), total: formColumns().length } }}
+                </span>
+              }
             </td>
           </tr>
-          @if (isExpanded(entry.candidateId)) {
-            <tr class="convocatoria-ranking__detail-row">
-              <td colspan="6">
-                <div class="convocatoria-ranking__detail">
-                  @for (formScore of entry.formScores; track formScore.formId) {
-                    <div class="convocatoria-ranking__detail-item">
-                      <span class="convocatoria-ranking__detail-name">{{ formScore.formName }}</span>
-                      <span class="convocatoria-ranking__detail-weight">{{ formScore.weight }}%</span>
-                      <span class="convocatoria-ranking__detail-score">
-                        {{ formScore.completed
-                          ? (formScore.score | number: '1.0-1')
-                          : ('convocatorias.detail.ranking.not_completed' | translate) }}
-                      </span>
-                    </div>
-                  }
-                </div>
-              </td>
-            </tr>
-          }
         }
       </tbody>
     </table>

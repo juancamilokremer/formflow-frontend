@@ -18,37 +18,40 @@
 
     th {
       text-align: left;
-      font-size: 12.5px;
-      font-weight: 600;
+      font-size: 11px;
+      font-weight: 700;
       color: var(--ff-text-secondary);
-      padding: 10px 12px;
+      padding: 0 10px 10px 0;
       border-bottom: 1px solid var(--ff-border);
       white-space: nowrap;
     }
 
     td {
-      padding: 10px 12px;
-      border-bottom: 1px solid var(--ff-border);
+      padding: 11px 10px 11px 0;
+      border-bottom: 1px solid var(--ff-bg-secondary);
       color: var(--ff-text-primary);
       vertical-align: middle;
     }
   }
 
   &__col-rank {
-    width: 40px;
-    text-align: center;
+    width: 48px;
+    text-align: center !important;
   }
 
-  &__col-chevron {
-    width: 32px;
+  &__col-form {
+    text-align: center !important;
+    font-variant-numeric: tabular-nums;
   }
 
-  &__row {
-    cursor: pointer;
+  &__col-weight {
+    display: block;
+    font-weight: 500;
+    color: var(--ff-text-secondary);
+  }
 
-    &:hover {
-      background: var(--ff-bg-secondary);
-    }
+  &__col-total {
+    text-align: center !important;
   }
 
   &__name {
@@ -57,7 +60,7 @@
   }
 
   &__email {
-    font-size: 12.5px;
+    font-size: 12px;
     color: var(--ff-text-secondary);
   }
 
@@ -65,69 +68,59 @@
     color: var(--ff-text-secondary);
   }
 
-  &__badge {
+  &__total-badge {
     display: inline-block;
     padding: 3px 10px;
     border-radius: 999px;
-    font-size: 12px;
-    font-weight: 600;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
 
     &--apto {
       background: var(--ff-success-bg, #dcfce7);
-      color: var(--ff-success, #16a34a);
+      color: var(--ff-success, #15803d);
     }
 
     &--revisar {
-      background: var(--ff-warning-bg, #fef3c7);
-      color: var(--ff-warning, #b45309);
+      background: var(--ff-warning-bg, #fef9c3);
+      color: var(--ff-warning, #854d0e);
     }
 
     &--no_apto {
       background: var(--ff-error-bg, #fee2e2);
-      color: var(--ff-error-text, #dc2626);
+      color: var(--ff-error-text, #b91c1c);
     }
   }
 
-  &__chevron {
-    color: var(--ff-text-secondary);
-    transition: transform 0.15s ease;
+  &__verdict {
+    display: inline-block;
+    padding: 3px 9px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
 
-    &--open {
-      transform: rotate(180deg);
+    &--apto {
+      background: var(--ff-success-bg, #dcfce7);
+      color: var(--ff-success, #15803d);
+    }
+
+    &--revisar {
+      background: var(--ff-warning-bg, #fef9c3);
+      color: var(--ff-warning, #854d0e);
+    }
+
+    &--no_apto {
+      background: var(--ff-error-bg, #fee2e2);
+      color: var(--ff-error-text, #b91c1c);
     }
   }
 
-  &__detail-row td {
-    background: var(--ff-bg-secondary);
-    padding: 12px 16px;
-  }
-
-  &__detail {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  &__detail-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-size: 13px;
-  }
-
-  &__detail-name {
-    flex: 1;
-    color: var(--ff-text-primary);
-  }
-
-  &__detail-weight {
-    color: var(--ff-text-secondary);
-    width: 48px;
-  }
-
-  &__detail-score {
-    font-weight: 600;
-    width: 64px;
-    text-align: right;
+  &__progress-chip {
+    display: inline-block;
+    padding: 3px 9px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    background: var(--ff-warning-bg, #fef9c3);
+    color: var(--ff-warning, #854d0e);
   }
 }

@@ -24,47 +24,56 @@
         <input class="cd__name-input" type="text" [value]="conv.name"
           [attr.aria-label]="'convocatorias.detail.name_label' | translate"
           (blur)="onNameBlur($event)" />
+      } @else {
+        <span class="cd__type-pill">{{ processTypeLabels[conv.type] | translate }}</span>
+        @if (conv.endDate) {
+          <span class="cd__meta-text">
+            {{ 'convocatorias.detail.closes_on' | translate : { date: (conv.endDate | date: 'd MMM yyyy') } }}
+          </span>
+        }
       }
     </div>
 
     @if (isDraft()) {
-      <app-card class="cd__section">
-        <h2 class="cd__section-title">{{ 'convocatorias.detail.form.title' | translate }}</h2>
-        <app-convocatoria-form-section
-          [convocatoriaId]="conv.id"
-          [convocatoriaName]="conv.name"
-          [processType]="conv.type"
-          [convocatoriaForms]="conv.forms"
-          [forms]="forms()"
-          (formAdded)="onFormAdded($event)"
-          (formUpdated)="onFormUpdated($event)"
-          (formRemoved)="onFormRemoved($event)"
-          (formsReordered)="onFormsReordered($event)" />
-      </app-card>
+      <div class="cd__draft">
+        <app-card class="cd__section">
+          <h2 class="cd__section-title">{{ 'convocatorias.detail.form.title' | translate }}</h2>
+          <app-convocatoria-form-section
+            [convocatoriaId]="conv.id"
+            [convocatoriaName]="conv.name"
+            [processType]="conv.type"
+            [convocatoriaForms]="conv.forms"
+            [forms]="forms()"
+            (formAdded)="onFormAdded($event)"
+            (formUpdated)="onFormUpdated($event)"
+            (formRemoved)="onFormRemoved($event)"
+            (formsReordered)="onFormsReordered($event)" />
+        </app-card>
 
-      <app-card class="cd__section">
-        <h2 class="cd__section-title">{{ 'convocatorias.detail.thresholds.title' | translate }}</h2>
-        <app-convocatoria-thresholds-section
-          [aptoMin]="aptoMin()"
-          [revisarMin]="revisarMin()"
-          (thresholdsChanged)="onThresholdsChanged($event)" />
-      </app-card>
+        <app-card class="cd__section">
+          <h2 class="cd__section-title">{{ 'convocatorias.detail.thresholds.title' | translate }}</h2>
+          <app-convocatoria-thresholds-section
+            [aptoMin]="aptoMin()"
+            [revisarMin]="revisarMin()"
+            (thresholdsChanged)="onThresholdsChanged($event)" />
+        </app-card>
 
-      <app-card class="cd__section">
-        <h2 class="cd__section-title">{{ 'convocatorias.detail.candidates.title' | translate }}</h2>
-        <app-convocatoria-candidates-section
-          [convocatoriaId]="conv.id"
-          [candidates]="conv.candidates"
-          (candidateAdded)="onCandidateAdded($event)"
-          (candidatesImported)="onCandidatesImported()" />
-      </app-card>
+        <app-card class="cd__section">
+          <h2 class="cd__section-title">{{ 'convocatorias.detail.candidates.title' | translate }}</h2>
+          <app-convocatoria-candidates-section
+            [convocatoriaId]="conv.id"
+            [candidates]="conv.candidates"
+            (candidateAdded)="onCandidateAdded($event)"
+            (candidatesImported)="onCandidatesImported()" />
+        </app-card>
 
-      <app-card class="cd__section">
-        <app-convocatoria-launch-bar
-          [convocatoriaId]="conv.id"
-          [hasCandidates]="conv.candidates.length > 0"
-          (launched)="onLaunched($event)" />
-      </app-card>
+        <app-card class="cd__section">
+          <app-convocatoria-launch-bar
+            [convocatoriaId]="conv.id"
+            [hasCandidates]="conv.candidates.length > 0"
+            (launched)="onLaunched($event)" />
+        </app-card>
+      </div>
     } @else {
       <div class="cd__tabs">
         <button type="button" class="cd__tab" [class.cd__tab--active]="activeTab() === 'ranking'"

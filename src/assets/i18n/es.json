@@ -463,9 +463,9 @@
       "EXPIRED": "Expirado"
     },
     "classification": {
-      "APTO": "Apto",
-      "REVISAR": "A revisar",
-      "NO_APTO": "No apto"
+      "APTO": "✅ Apto",
+      "REVISAR": "⚠️ A revisar",
+      "NO_APTO": "❌ No apto"
     },
     "create": {
       "title": "Nueva convocatoria",
@@ -482,6 +482,7 @@
     "detail": {
       "title": "Convocatoria",
       "name_label": "Nombre de la convocatoria",
+      "closes_on": "Cierra: {{date}}",
       "tabs": {
         "ranking": "Ranking",
         "stats": "Estadísticas",
@@ -489,10 +490,10 @@
       },
       "ranking": {
         "col_candidate": "Candidato",
-        "col_score": "Puntaje",
-        "col_classification": "Clasificación",
-        "col_status": "Estado",
-        "not_completed": "Sin completar",
+        "col_total": "Total",
+        "col_verdict": "Veredicto",
+        "weight_label": "peso {{weight}}%",
+        "progress": "{{completed}}/{{total}} formularios",
         "empty_title": "Todavía no hay candidatos respondiendo",
         "empty_subtitle": "El ranking aparecerá aquí cuando los candidatos empiecen a responder.",
         "error_title": "No se pudo cargar el ranking"
@@ -511,8 +512,10 @@
       "form": {
         "title": "Formularios",
         "open_action": "Abrir formulario",
-        "preview_action": "Vista previa",
+        "preview_action": "👁 Vista previa",
         "weight_label": "Peso",
+        "weight_chip": "peso {{weight}}%",
+        "readonly_subtitle": "{{count}} secciones · {{status}} — estructura bloqueada mientras la convocatoria está activa",
         "weight_sum_ok": "Los pesos suman {{sum}}% ✓",
         "weight_sum_invalid": "Los pesos suman {{sum}}% — deben sumar 100% para poder lanzar",
         "min_score_label": "Umbral mínimo (opcional)",

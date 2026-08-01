@@ -87,6 +87,12 @@ describe('ConvocatoriaFormCardComponent', () => {
     expect(component['loadingCategories']()).toBe(false);
   });
 
+  it('populates sectionCount and formStatus from the underlying form', () => {
+    const { component } = buildComponent();
+    expect(component['sectionCount']()).toBe(1);
+    expect(component['formStatus']()).toBe('DRAFT');
+  });
+
   it('sets an empty category list on load failure', () => {
     const { component } = buildComponent({ getByIdImpl: vi.fn().mockReturnValue(throwError(() => new Error('boom'))) });
     expect(component['categories']()).toEqual([]);

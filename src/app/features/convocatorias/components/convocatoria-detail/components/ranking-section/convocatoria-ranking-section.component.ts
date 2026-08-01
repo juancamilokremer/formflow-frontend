@@ -1,16 +1,23 @@
-import { Component, DestroyRef, OnInit, inject, input, signal } from '@angular/core';
+import { Component, DestroyRef, OnInit, computed, inject, input, signal } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe } from '@ngx-translate/core';
-import { IconComponent } from '../../../../../../shared/icons/icon.component';
 import { LoadingSpinnerComponent } from '../../../../../../shared/components/loading-spinner/loading-spinner.component';
 import { EmptyStateComponent } from '../../../../../../shared/components/empty-state/empty-state.component';
 import { ConvocatoriaService } from '../../../../services/convocatoria.service';
 import { RankingEntry } from '../../../../models/convocatoria.model';
 
+interface RankingFormColumn {
+  formId: string;
+  formName: string;
+  weight: number;
+}
+
+const RANK_MEDALS: Record<number, string> = { 1: '🥇', 2: '🥈' };
+
 @Component({
   selector: 'app-convocatoria-ranking-section',
-  imports: [TranslatePipe, DecimalPipe, IconComponent, LoadingSpinnerComponent, EmptyStateComponent],
+  imports: [TranslatePipe, DecimalPipe, LoadingSpinnerComponent, EmptyStateComponent],
   templateUrl: './convocatoria-ranking-section.component.html',
   styleUrl: './convocatoria-ranking-section.component.scss',
 })
@@ -23,7 +30,13 @@ export class ConvocatoriaRankingSectionComponent implements OnInit {
   protected readonly loading = signal(true);
   protected readonly loadError = signal(false);
   protected readonly entries = signal<RankingEntry[]>([]);
-  protected readonly expandedCandidateId = signal<string | null>(null);
+
+  protected readonly formColumns = computed<RankingFormColumn[]>(() =>
+    (this.entries()[0]?.formScores ?? []).map((formScore) => ({
+      formId: formScore.formId,
+      formName: formScore.formName,
+      weight: formScore.weight,
+    })));
 
   ngOnInit(): void {
     this.convocatoriaService.getRanking(this.convocatoriaId())
@@ -40,11 +53,15 @@ export class ConvocatoriaRankingSectionComponent implements OnInit {
       });
   }
 
-  protected toggleExpanded(candidateId: string): void {
-    this.expandedCandidateId.set(this.expandedCandidateId() === candidateId ? null : candidateId);
+  protected scoreFor(entry: RankingEntry, formId: string): number | null {
+    return entry.formScores.find((formScore) => formScore.formId === formId)?.score ?? null;
   }
 
-  protected isExpanded(candidateId: string): boolean {
-    return this.expandedCandidateId() === candidateId;
+  protected completedCount(entry: RankingEntry): number {
+    return entry.formScores.filter((formScore) => formScore.completed).length;
+  }
+
+  protected medal(rank: number | null): string | null {
+    return rank !== null ? (RANK_MEDALS[rank] ?? null) : null;
   }
 }

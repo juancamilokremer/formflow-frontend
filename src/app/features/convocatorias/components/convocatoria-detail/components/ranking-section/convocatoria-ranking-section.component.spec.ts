@@ -68,25 +68,48 @@ describe('ConvocatoriaRankingSectionComponent', () => {
     expect(pending.classification).toBeNull();
   });
 
-  describe('toggleExpanded / isExpanded', () => {
-    it('expands a candidate row and collapses it again on a second toggle', () => {
+  describe('formColumns', () => {
+    it('derives one column per form from the first entry, preserving order and weight', () => {
       const { component } = buildComponent();
-      expect(component['isExpanded']('cand1')).toBe(false);
-
-      component['toggleExpanded']('cand1');
-      expect(component['isExpanded']('cand1')).toBe(true);
-
-      component['toggleExpanded']('cand1');
-      expect(component['isExpanded']('cand1')).toBe(false);
+      expect(component['formColumns']()).toEqual([
+        { formId: 'f1', formName: 'Prueba técnica', weight: 60 },
+        { formId: 'f2', formName: 'Perfil', weight: 40 },
+      ]);
     });
 
-    it('switching to another candidate collapses the previous one', () => {
-      const { component } = buildComponent();
-      component['toggleExpanded']('cand1');
-      component['toggleExpanded']('cand2');
+    it('is empty when there are no entries', () => {
+      const { component } = buildComponent({ getRankingImpl: vi.fn().mockReturnValue(of([])) });
+      expect(component['formColumns']()).toEqual([]);
+    });
+  });
 
-      expect(component['isExpanded']('cand1')).toBe(false);
-      expect(component['isExpanded']('cand2')).toBe(true);
+  describe('scoreFor', () => {
+    it('returns the score for a completed form', () => {
+      const { component } = buildComponent();
+      expect(component['scoreFor'](RESPONDED_ENTRY, 'f1')).toBe(85);
+    });
+
+    it('returns null for a form the candidate has not completed', () => {
+      const { component } = buildComponent();
+      expect(component['scoreFor'](PENDING_ENTRY, 'f2')).toBeNull();
+    });
+  });
+
+  describe('completedCount', () => {
+    it('counts only the completed forms', () => {
+      const { component } = buildComponent();
+      expect(component['completedCount'](PENDING_ENTRY)).toBe(1);
+      expect(component['completedCount'](RESPONDED_ENTRY)).toBe(2);
+    });
+  });
+
+  describe('medal', () => {
+    it('returns a medal for rank 1 and 2, and null otherwise', () => {
+      const { component } = buildComponent();
+      expect(component['medal'](1)).toBe('🥇');
+      expect(component['medal'](2)).toBe('🥈');
+      expect(component['medal'](3)).toBeNull();
+      expect(component['medal'](null)).toBeNull();
     });
   });
 });
