@@ -12,6 +12,7 @@ import { IconComponent } from '../../../../shared/icons/icon.component';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { LoadingSpinnerComponent } from '../../../../shared/components/loading-spinner/loading-spinner.component';
 import { EmptyStateComponent } from '../../../../shared/components/empty-state/empty-state.component';
+import { TabItem, TabsComponent } from '../../../../shared/components/tabs/tabs.component';
 import { FormsService } from '../../../forms/services/forms.service';
 import { Form } from '../../../forms/models/form.model';
 import { ConvocatoriaService } from '../../services/convocatoria.service';
@@ -34,6 +35,7 @@ type ConvocatoriaDetailTab = 'ranking' | 'stats' | 'formularios';
     ConvocatoriaFormSectionComponent, ConvocatoriaThresholdsSectionComponent,
     ConvocatoriaCandidatesSectionComponent, ConvocatoriaLaunchBarComponent,
     ConvocatoriaRankingSectionComponent, ConvocatoriaStatsSectionComponent,
+    TabsComponent,
   ],
   templateUrl: './convocatoria-detail.component.html',
   styleUrl: './convocatoria-detail.component.scss',
@@ -61,6 +63,11 @@ export class ConvocatoriaDetailComponent {
 
   protected readonly activeTab = signal<ConvocatoriaDetailTab>('ranking');
   protected readonly processTypeLabels = PROCESS_TYPE_LABEL_KEYS;
+  protected readonly detailTabs: TabItem[] = [
+    { id: 'ranking', label: 'convocatorias.detail.tabs.ranking' },
+    { id: 'stats', label: 'convocatorias.detail.tabs.stats' },
+    { id: 'formularios', label: 'convocatorias.detail.tabs.formularios' },
+  ];
 
   protected readonly isDraft = computed(() => this.convocatoria()?.status === 'DRAFT');
 
@@ -161,8 +168,8 @@ export class ConvocatoriaDetailComponent {
     this.applyDetail(detail);
   }
 
-  protected setActiveTab(tab: ConvocatoriaDetailTab): void {
-    this.activeTab.set(tab);
+  protected setActiveTab(tabId: string): void {
+    this.activeTab.set(tabId as ConvocatoriaDetailTab);
   }
 
   protected requestDelete(): void {

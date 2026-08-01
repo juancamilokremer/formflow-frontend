@@ -75,20 +75,7 @@
         </app-card>
       </div>
     } @else {
-      <div class="cd__tabs">
-        <button type="button" class="cd__tab" [class.cd__tab--active]="activeTab() === 'ranking'"
-          (click)="setActiveTab('ranking')">
-          {{ 'convocatorias.detail.tabs.ranking' | translate }}
-        </button>
-        <button type="button" class="cd__tab" [class.cd__tab--active]="activeTab() === 'stats'"
-          (click)="setActiveTab('stats')">
-          {{ 'convocatorias.detail.tabs.stats' | translate }}
-        </button>
-        <button type="button" class="cd__tab" [class.cd__tab--active]="activeTab() === 'formularios'"
-          (click)="setActiveTab('formularios')">
-          {{ 'convocatorias.detail.tabs.formularios' | translate }}
-        </button>
-      </div>
+      <app-tabs [tabs]="detailTabs" [activeTabId]="activeTab()" (tabChange)="setActiveTab($event)" />
 
       <app-card class="cd__section">
         @switch (activeTab()) {
