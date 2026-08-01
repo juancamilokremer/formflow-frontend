@@ -1,10 +1,10 @@
 import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Subject, debounceTime, switchMap } from 'rxjs';
-import { RouteConstants } from '../../../../core/constants/route.constants';
+import { RouteConstants, convocatoriasListPath } from '../../../../core/constants/route.constants';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
 import { CardComponent } from '../../../../shared/components/card/card.component';
 import { PageHeaderComponent } from '../../../../shared/components/page-header/page-header.component';
@@ -26,10 +26,16 @@ import { ConvocatoriaStatsSectionComponent } from './components/stats-section/co
 
 type ConvocatoriaDetailTab = 'ranking' | 'stats' | 'formularios';
 
+const DETAIL_TAB_IDS: ConvocatoriaDetailTab[] = ['ranking', 'stats', 'formularios'];
+
+function isDetailTab(value: string | null): value is ConvocatoriaDetailTab {
+  return DETAIL_TAB_IDS.includes(value as ConvocatoriaDetailTab);
+}
+
 @Component({
   selector: 'app-convocatoria-detail',
   imports: [
-    TranslatePipe, DatePipe,
+    TranslatePipe, DatePipe, RouterLink,
     ButtonComponent, CardComponent, PageHeaderComponent, IconComponent, ConfirmDialogComponent,
     LoadingSpinnerComponent, EmptyStateComponent,
     ConvocatoriaFormSectionComponent, ConvocatoriaThresholdsSectionComponent,
@@ -61,8 +67,9 @@ export class ConvocatoriaDetailComponent {
   protected readonly deleteConfirmOpen = signal(false);
   protected readonly deleting = signal(false);
 
-  protected readonly activeTab = signal<ConvocatoriaDetailTab>('ranking');
+  protected readonly activeTab = signal<ConvocatoriaDetailTab>(this.resolveInitialTab());
   protected readonly processTypeLabels = PROCESS_TYPE_LABEL_KEYS;
+  protected readonly backToListPath = convocatoriasListPath();
   protected readonly detailTabs: TabItem[] = [
     { id: 'ranking', label: 'convocatorias.detail.tabs.ranking' },
     { id: 'stats', label: 'convocatorias.detail.tabs.stats' },
@@ -172,6 +179,11 @@ export class ConvocatoriaDetailComponent {
     this.activeTab.set(tabId as ConvocatoriaDetailTab);
   }
 
+  private resolveInitialTab(): ConvocatoriaDetailTab {
+    const tabFromQuery = this.route.snapshot.queryParamMap.get(RouteConstants.QUERY_TAB);
+    return isDetailTab(tabFromQuery) ? tabFromQuery : 'ranking';
+  }
+
   protected requestDelete(): void {
     this.deleteConfirmOpen.set(true);
   }
@@ -186,7 +198,7 @@ export class ConvocatoriaDetailComponent {
     this.convocatoriaService.delete(this.id)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: () => this.router.navigate(['/', RouteConstants.CONVOCATORIAS]),
+        next: () => this.router.navigate(convocatoriasListPath()),
         error: () => this.deleting.set(false),
       });
   }

@@ -31,6 +31,7 @@ function buildComponent(options: {
   updateImpl?: ReturnType<typeof vi.fn>;
   getByIdImpl?: ReturnType<typeof vi.fn>;
   reorderFormsImpl?: ReturnType<typeof vi.fn>;
+  queryParams?: Record<string, string>;
 } = {}) {
   const initial = options.convocatoria ?? DRAFT_CONVOCATORIA;
   const mockConvocatoriaService = {
@@ -62,7 +63,15 @@ function buildComponent(options: {
       { provide: FormsService, useValue: mockFormsService },
       { provide: CategoryService, useValue: mockCategoryService },
       { provide: Router, useValue: mockRouter },
-      { provide: ActivatedRoute, useValue: { snapshot: { paramMap: { get: () => 'c1' } } } },
+      {
+        provide: ActivatedRoute,
+        useValue: {
+          snapshot: {
+            paramMap: { get: () => 'c1' },
+            queryParamMap: { get: (key: string) => options.queryParams?.[key] ?? null },
+          },
+        },
+      },
     ],
   }).compileComponents();
 
@@ -107,6 +116,29 @@ describe('ConvocatoriaDetailComponent', () => {
       component['setActiveTab']('stats');
       expect(component['activeTab']()).toBe('stats');
     });
+
+    it('starts on the tab given in the ?tab query param, e.g. after returning from a form preview', () => {
+      const { component } = buildComponent({
+        convocatoria: { ...DRAFT_CONVOCATORIA, status: 'ACTIVE' },
+        queryParams: { tab: 'formularios' },
+      });
+
+      expect(component['activeTab']()).toBe('formularios');
+    });
+
+    it('ignores an invalid ?tab query param and falls back to ranking', () => {
+      const { component } = buildComponent({
+        convocatoria: { ...DRAFT_CONVOCATORIA, status: 'ACTIVE' },
+        queryParams: { tab: 'not-a-real-tab' },
+      });
+
+      expect(component['activeTab']()).toBe('ranking');
+    });
+  });
+
+  it('backToListPath points at the convocatorias list', () => {
+    const { component } = buildComponent();
+    expect(component['backToListPath']).toEqual(['/', 'convocatorias']);
   });
 
   it('debounces thresholds changes into a single update() call with name + scoringConfig only', () => {

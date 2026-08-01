@@ -13,6 +13,21 @@
   flex-direction: column;
   gap: 20px;
 
+  &__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    align-self: flex-start;
+    margin-bottom: -8px;
+    font-size: 13px;
+    color: var(--ff-text-secondary);
+    text-decoration: none;
+
+    &:hover {
+      color: var(--ff-text-primary);
+    }
+  }
+
   &__draft {
     display: flex;
     flex-direction: column;

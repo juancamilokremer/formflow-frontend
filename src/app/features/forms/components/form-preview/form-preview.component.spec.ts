@@ -63,5 +63,14 @@ describe('FormPreviewComponent', () => {
       component['goBack']();
       expect(mockRouter.navigate).toHaveBeenCalledWith(['/', 'convocatorias', 'conv1']);
     });
+
+    it('carries the originating tab back to the convocatoria when present', () => {
+      const { component, mockRouter } = buildComponent({ convocatoriaId: 'conv1', tab: 'formularios' });
+      component['goBack']();
+      expect(mockRouter.navigate).toHaveBeenCalledWith(
+        ['/', 'convocatorias', 'conv1'],
+        { queryParams: { tab: 'formularios' } },
+      );
+    });
   });
 });

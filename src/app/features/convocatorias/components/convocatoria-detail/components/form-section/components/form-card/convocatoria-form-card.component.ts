@@ -118,7 +118,10 @@ export class ConvocatoriaFormCardComponent implements OnInit {
 
   protected openPreview(): void {
     this.router.navigate(formPreviewPath(this.convocatoriaForm().formId), {
-      queryParams: { [RouteConstants.QUERY_CONVOCATORIA_ID]: this.convocatoriaId() },
+      queryParams: {
+        [RouteConstants.QUERY_CONVOCATORIA_ID]: this.convocatoriaId(),
+        [RouteConstants.QUERY_TAB]: 'formularios',
+      },
     });
   }
 

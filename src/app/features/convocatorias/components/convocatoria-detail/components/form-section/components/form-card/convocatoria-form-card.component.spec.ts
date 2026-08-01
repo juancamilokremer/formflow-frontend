@@ -181,12 +181,12 @@ describe('ConvocatoriaFormCardComponent', () => {
     );
   });
 
-  it('openPreview navigates to the preview route with the convocatoriaId query param', () => {
+  it('openPreview navigates to the preview route with the convocatoriaId and tab query params', () => {
     const { component, mockRouter } = buildComponent();
     component['openPreview']();
     expect(mockRouter.navigate).toHaveBeenCalledWith(
       ['/', 'forms', 'f1', 'preview'],
-      { queryParams: { convocatoriaId: 'c1' } },
+      { queryParams: { convocatoriaId: 'c1', tab: 'formularios' } },
     );
   });
 

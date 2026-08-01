@@ -92,7 +92,12 @@ export class FormPreviewComponent implements OnInit {
   protected goBack(): void {
     const convocatoriaId = this.route.snapshot.queryParamMap.get(RouteConstants.QUERY_CONVOCATORIA_ID);
     if (convocatoriaId) {
-      this.router.navigate(convocatoriaDetailPath(convocatoriaId));
+      const tab = this.route.snapshot.queryParamMap.get(RouteConstants.QUERY_TAB);
+      if (tab) {
+        this.router.navigate(convocatoriaDetailPath(convocatoriaId), { queryParams: { [RouteConstants.QUERY_TAB]: tab } });
+      } else {
+        this.router.navigate(convocatoriaDetailPath(convocatoriaId));
+      }
       return;
     }
 

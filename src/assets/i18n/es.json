@@ -482,6 +482,7 @@
     "detail": {
       "title": "Convocatoria",
       "name_label": "Nombre de la convocatoria",
+      "back_to_list": "Convocatorias",
       "closes_on": "Cierra: {{date}}",
       "tabs": {
         "ranking": "Ranking",
