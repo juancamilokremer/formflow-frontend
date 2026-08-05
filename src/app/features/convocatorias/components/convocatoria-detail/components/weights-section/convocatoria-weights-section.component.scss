@@ -68,6 +68,14 @@
     color: var(--ff-text-secondary);
   }
 
+  &__readonly-value {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ff-text-primary);
+    min-width: 56px;
+    text-align: right;
+  }
+
   &__sum {
     font-size: 13px;
     font-weight: 600;

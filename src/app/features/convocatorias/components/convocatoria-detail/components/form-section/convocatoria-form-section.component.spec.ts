@@ -60,7 +60,7 @@ function buildComponent(overrides: {
   fixture.componentRef.setInput('forms', [ACTIVE_CANDIDATES_FORM, DRAFT_FORM, DIAGNOSTIC_FORM]);
   fixture.componentRef.setInput('convocatoriaForms', overrides.convocatoriaForms ?? []);
   fixture.detectChanges();
-  return { component: fixture.componentInstance, mockFormsService, mockConvocatoriaService, mockRouter };
+  return { fixture, component: fixture.componentInstance, mockFormsService, mockConvocatoriaService, mockRouter };
 }
 
 describe('ConvocatoriaFormSectionComponent', () => {
@@ -198,6 +198,19 @@ describe('ConvocatoriaFormSectionComponent', () => {
       component['onCardUpdated'](updated);
 
       expect(emitted).toEqual(updated);
+    });
+  });
+
+  describe('readonly', () => {
+    it('defaults to false', () => {
+      const { component } = buildComponent();
+      expect(component['readonly']()).toBe(false);
+    });
+
+    it('reflects the readonly input when set', () => {
+      const { fixture, component } = buildComponent();
+      fixture.componentRef.setInput('readonly', true);
+      expect(component['readonly']()).toBe(true);
     });
   });
 });

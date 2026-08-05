@@ -1,0 +1,69 @@
+@if (loading()) {
+  <div class="convocatoria-ranking__center"><app-loading-spinner /></div>
+} @else if (loadError()) {
+  <app-empty-state icon="alert-circle" [compact]="true"
+    [title]="'convocatorias.detail.ranking.error_title' | translate" />
+} @else if (entries().length === 0) {
+  <app-empty-state [compact]="true"
+    [title]="'convocatorias.detail.ranking.empty_title' | translate"
+    [subtitle]="'convocatorias.detail.ranking.empty_subtitle' | translate" />
+} @else {
+  <div class="convocatoria-ranking__scroll">
+    <table class="convocatoria-ranking__table">
+      <thead>
+        <tr>
+          <th class="convocatoria-ranking__col-rank">#</th>
+          <th>{{ 'convocatorias.detail.ranking.col_candidate' | translate }}</th>
+          @for (column of formColumns(); track column.formId) {
+            <th class="convocatoria-ranking__col-form">
+              {{ column.formName }}
+              <span class="convocatoria-ranking__col-weight">
+                {{ 'convocatorias.detail.ranking.weight_label' | translate: { weight: column.weight } }}
+              </span>
+            </th>
+          }
+          <th class="convocatoria-ranking__col-total">{{ 'convocatorias.detail.ranking.col_total' | translate }}</th>
+          <th>{{ 'convocatorias.detail.ranking.col_verdict' | translate }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (entry of entries(); track entry.candidateId) {
+          <tr class="convocatoria-ranking__row">
+            <td class="convocatoria-ranking__col-rank">{{ medal(entry.rank) ?? (entry.rank ?? '—') }}</td>
+            <td>
+              <p class="convocatoria-ranking__name">{{ entry.name }}</p>
+              <span class="convocatoria-ranking__email">{{ entry.email }}</span>
+            </td>
+            @for (column of formColumns(); track column.formId) {
+              <td class="convocatoria-ranking__col-form">
+                {{ scoreFor(entry, column.formId) !== null ? (scoreFor(entry, column.formId) | number: '1.0-1') : '—' }}
+              </td>
+            }
+            <td class="convocatoria-ranking__col-total">
+              @if (entry.totalScore !== null) {
+                <span class="convocatoria-ranking__total-badge"
+                  [class]="'convocatoria-ranking__total-badge--' + (entry.classification ?? '').toLowerCase()">
+                  {{ entry.totalScore | number: '1.0-1' }}
+                </span>
+              } @else {
+                <span class="convocatoria-ranking__dash">—</span>
+              }
+            </td>
+            <td>
+              @if (entry.classification) {
+                <span class="convocatoria-ranking__verdict"
+                  [class]="'convocatoria-ranking__verdict--' + entry.classification.toLowerCase()">
+                  {{ 'convocatorias.classification.' + entry.classification | translate }}
+                </span>
+              } @else {
+                <span class="convocatoria-ranking__progress-chip">
+                  {{ 'convocatorias.detail.ranking.progress' | translate: { completed: completedCount(entry), total: formColumns().length } }}
+                </span>
+              }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+}

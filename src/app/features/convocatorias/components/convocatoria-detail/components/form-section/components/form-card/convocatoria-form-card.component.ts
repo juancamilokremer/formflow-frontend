@@ -1,4 +1,5 @@
 import { Component, DestroyRef, OnInit, inject, input, output, signal } from '@angular/core';
+import { LowerCasePipe } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { Subject, debounceTime, forkJoin, switchMap } from 'rxjs';
@@ -6,10 +7,11 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { ButtonComponent } from '../../../../../../../../shared/components/button/button.component';
 import { IconComponent } from '../../../../../../../../shared/icons/icon.component';
 import { ConfirmDialogComponent } from '../../../../../../../../shared/components/confirm-dialog/confirm-dialog.component';
-import { RouteConstants, formBuilderPath } from '../../../../../../../../core/constants/route.constants';
+import { RouteConstants, formBuilderPath, formPreviewPath } from '../../../../../../../../core/constants/route.constants';
 import { CategoryService } from '../../../../../../../../core/services/category.service';
 import { Category } from '../../../../../../../../core/models/category.model';
 import { FormsService } from '../../../../../../../forms/services/forms.service';
+import { FormStatus } from '../../../../../../../forms/models/form.model';
 import { ConvocatoriaService } from '../../../../../../services/convocatoria.service';
 import { ConvocatoriaForm } from '../../../../../../models/convocatoria.model';
 import { deriveCategoryIds } from '../../../../../../utils/convocatoria.utils';
@@ -17,9 +19,10 @@ import { ConvocatoriaWeightsSectionComponent } from '../../../weights-section/co
 
 @Component({
   selector: 'app-convocatoria-form-card',
-  imports: [TranslatePipe, ButtonComponent, IconComponent, ConfirmDialogComponent, ConvocatoriaWeightsSectionComponent],
+  imports: [TranslatePipe, LowerCasePipe, ButtonComponent, IconComponent, ConfirmDialogComponent, ConvocatoriaWeightsSectionComponent],
   templateUrl: './convocatoria-form-card.component.html',
   styleUrl: './convocatoria-form-card.component.scss',
+  host: { '[class.cfc--readonly]': 'readonly()' },
 })
 export class ConvocatoriaFormCardComponent implements OnInit {
   private readonly convocatoriaService = inject(ConvocatoriaService);
@@ -31,6 +34,7 @@ export class ConvocatoriaFormCardComponent implements OnInit {
   readonly convocatoriaId = input.required<string>();
   readonly convocatoriaForm = input.required<ConvocatoriaForm>();
   readonly formName = input.required<string>();
+  readonly readonly = input(false);
 
   readonly formUpdated = output<ConvocatoriaForm>();
   readonly formRemoved = output<string>();
@@ -38,6 +42,8 @@ export class ConvocatoriaFormCardComponent implements OnInit {
 
   protected readonly categories = signal<Category[]>([]);
   protected readonly loadingCategories = signal(true);
+  protected readonly sectionCount = signal(0);
+  protected readonly formStatus = signal<FormStatus | null>(null);
   protected readonly weight = signal(0);
   protected readonly categoryWeights = signal<Record<string, number>>({});
   protected readonly minScore = signal<number | null>(null);
@@ -47,20 +53,24 @@ export class ConvocatoriaFormCardComponent implements OnInit {
   private readonly change$ = new Subject<void>();
 
   ngOnInit(): void {
-    const cf = this.convocatoriaForm();
-    this.weight.set(cf.weight);
-    this.minScore.set(cf.minScore);
-    this.categoryWeights.set(Object.fromEntries(cf.categoryWeights.map((w) => [w.categoryId, w.weight])));
+    const currentForm = this.convocatoriaForm();
+    this.weight.set(currentForm.weight);
+    this.minScore.set(currentForm.minScore);
+    this.categoryWeights.set(
+      Object.fromEntries(currentForm.categoryWeights.map((categoryWeight) => [categoryWeight.categoryId, categoryWeight.weight])),
+    );
 
     forkJoin({
-      form: this.formsService.getById(cf.formId),
+      form: this.formsService.getById(currentForm.formId),
       categories: this.categoryService.getAll(),
     }).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: ({ form, categories }) => {
         const orderedIds = deriveCategoryIds(form);
-        const byId = new Map(categories.map((c) => [c.id, c]));
-        const resolved = orderedIds.map((catId) => byId.get(catId)).filter((c): c is Category => c !== undefined);
+        const byId = new Map(categories.map((category) => [category.id, category]));
+        const resolved = orderedIds.map((categoryId) => byId.get(categoryId)).filter((category): category is Category => category !== undefined);
         this.categories.set(resolved);
+        this.sectionCount.set(form.sections.length);
+        this.formStatus.set(form.status);
         this.loadingCategories.set(false);
       },
       error: () => {
@@ -74,7 +84,7 @@ export class ConvocatoriaFormCardComponent implements OnInit {
       switchMap(() => this.convocatoriaService.updateForm(this.convocatoriaId(), this.convocatoriaForm().id, {
         weight: this.weight(),
         categoryWeights: Object.entries(this.categoryWeights())
-          .filter(([, w]) => w > 0)
+          .filter(([, weight]) => weight > 0)
           .map(([categoryId, weight]) => ({ categoryId, weight })),
         minScore: this.minScore(),
       })),
@@ -106,6 +116,15 @@ export class ConvocatoriaFormCardComponent implements OnInit {
     });
   }
 
+  protected openPreview(): void {
+    this.router.navigate(formPreviewPath(this.convocatoriaForm().formId), {
+      queryParams: {
+        [RouteConstants.QUERY_CONVOCATORIA_ID]: this.convocatoriaId(),
+        [RouteConstants.QUERY_TAB]: 'formularios',
+      },
+    });
+  }
+
   protected requestRemove(): void {
     this.removeConfirmOpen.set(true);
   }
@@ -117,16 +136,16 @@ export class ConvocatoriaFormCardComponent implements OnInit {
   protected confirmRemove(): void {
     if (this.removing()) return;
     this.removing.set(true);
-    const cf = this.convocatoriaForm();
+    const currentForm = this.convocatoriaForm();
 
-    this.convocatoriaService.removeForm(this.convocatoriaId(), cf.id)
+    this.convocatoriaService.removeForm(this.convocatoriaId(), currentForm.id)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
-          this.formsService.remove(cf.formId).pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
+          this.formsService.remove(currentForm.formId).pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
           this.removing.set(false);
           this.removeConfirmOpen.set(false);
-          this.formRemoved.emit(cf.id);
+          this.formRemoved.emit(currentForm.id);
         },
         error: () => this.removing.set(false),
       });

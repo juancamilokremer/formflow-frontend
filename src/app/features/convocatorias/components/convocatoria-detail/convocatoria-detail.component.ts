@@ -1,9 +1,10 @@
 import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Subject, debounceTime, switchMap } from 'rxjs';
-import { RouteConstants } from '../../../../core/constants/route.constants';
+import { RouteConstants, convocatoriasListPath } from '../../../../core/constants/route.constants';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
 import { CardComponent } from '../../../../shared/components/card/card.component';
 import { PageHeaderComponent } from '../../../../shared/components/page-header/page-header.component';
@@ -11,23 +12,36 @@ import { IconComponent } from '../../../../shared/icons/icon.component';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { LoadingSpinnerComponent } from '../../../../shared/components/loading-spinner/loading-spinner.component';
 import { EmptyStateComponent } from '../../../../shared/components/empty-state/empty-state.component';
+import { TabItem, TabsComponent } from '../../../../shared/components/tabs/tabs.component';
 import { FormsService } from '../../../forms/services/forms.service';
 import { Form } from '../../../forms/models/form.model';
 import { ConvocatoriaService } from '../../services/convocatoria.service';
-import { Candidate, ConvocatoriaDetail, ConvocatoriaForm, FormAddedEvent } from '../../models/convocatoria.model';
+import { Candidate, ConvocatoriaDetail, ConvocatoriaForm, FormAddedEvent, PROCESS_TYPE_LABEL_KEYS } from '../../models/convocatoria.model';
 import { ConvocatoriaFormSectionComponent } from './components/form-section/convocatoria-form-section.component';
 import { ConvocatoriaThresholdsSectionComponent } from './components/thresholds-section/convocatoria-thresholds-section.component';
 import { ConvocatoriaCandidatesSectionComponent } from './components/candidates-section/convocatoria-candidates-section.component';
 import { ConvocatoriaLaunchBarComponent } from './components/launch-bar/convocatoria-launch-bar.component';
+import { ConvocatoriaRankingSectionComponent } from './components/ranking-section/convocatoria-ranking-section.component';
+import { ConvocatoriaStatsSectionComponent } from './components/stats-section/convocatoria-stats-section.component';
+
+type ConvocatoriaDetailTab = 'ranking' | 'stats' | 'formularios';
+
+const DETAIL_TAB_IDS: ConvocatoriaDetailTab[] = ['ranking', 'stats', 'formularios'];
+
+function isDetailTab(value: string | null): value is ConvocatoriaDetailTab {
+  return DETAIL_TAB_IDS.includes(value as ConvocatoriaDetailTab);
+}
 
 @Component({
   selector: 'app-convocatoria-detail',
   imports: [
-    TranslatePipe,
+    TranslatePipe, DatePipe, RouterLink,
     ButtonComponent, CardComponent, PageHeaderComponent, IconComponent, ConfirmDialogComponent,
     LoadingSpinnerComponent, EmptyStateComponent,
     ConvocatoriaFormSectionComponent, ConvocatoriaThresholdsSectionComponent,
     ConvocatoriaCandidatesSectionComponent, ConvocatoriaLaunchBarComponent,
+    ConvocatoriaRankingSectionComponent, ConvocatoriaStatsSectionComponent,
+    TabsComponent,
   ],
   templateUrl: './convocatoria-detail.component.html',
   styleUrl: './convocatoria-detail.component.scss',
@@ -52,6 +66,15 @@ export class ConvocatoriaDetailComponent {
 
   protected readonly deleteConfirmOpen = signal(false);
   protected readonly deleting = signal(false);
+
+  protected readonly activeTab = signal<ConvocatoriaDetailTab>(this.resolveInitialTab());
+  protected readonly processTypeLabels = PROCESS_TYPE_LABEL_KEYS;
+  protected readonly backToListPath = convocatoriasListPath();
+  protected readonly detailTabs: TabItem[] = [
+    { id: 'ranking', label: 'convocatorias.detail.tabs.ranking' },
+    { id: 'stats', label: 'convocatorias.detail.tabs.stats' },
+    { id: 'formularios', label: 'convocatorias.detail.tabs.formularios' },
+  ];
 
   protected readonly isDraft = computed(() => this.convocatoria()?.status === 'DRAFT');
 
@@ -152,6 +175,15 @@ export class ConvocatoriaDetailComponent {
     this.applyDetail(detail);
   }
 
+  protected setActiveTab(tabId: string): void {
+    this.activeTab.set(tabId as ConvocatoriaDetailTab);
+  }
+
+  private resolveInitialTab(): ConvocatoriaDetailTab {
+    const tabFromQuery = this.route.snapshot.queryParamMap.get(RouteConstants.QUERY_TAB);
+    return isDetailTab(tabFromQuery) ? tabFromQuery : 'ranking';
+  }
+
   protected requestDelete(): void {
     this.deleteConfirmOpen.set(true);
   }
@@ -166,7 +198,7 @@ export class ConvocatoriaDetailComponent {
     this.convocatoriaService.delete(this.id)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: () => this.router.navigate(['/', RouteConstants.CONVOCATORIAS]),
+        next: () => this.router.navigate(convocatoriasListPath()),
         error: () => this.deleting.set(false),
       });
   }

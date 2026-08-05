@@ -64,7 +64,7 @@ function buildComponent(overrides: {
   fixture.componentRef.setInput('convocatoriaForm', overrides.convocatoriaForm ?? CONV_FORM);
   fixture.componentRef.setInput('formName', 'Evaluación técnica');
   fixture.detectChanges();
-  return { component: fixture.componentInstance, mockConvocatoriaService, mockFormsService, mockRouter };
+  return { fixture, component: fixture.componentInstance, mockConvocatoriaService, mockFormsService, mockRouter };
 }
 
 describe('ConvocatoriaFormCardComponent', () => {
@@ -85,6 +85,12 @@ describe('ConvocatoriaFormCardComponent', () => {
     expect(mockFormsService.getById).toHaveBeenCalledWith('f1');
     expect(component['categories']()).toEqual(MOCK_CATEGORIES);
     expect(component['loadingCategories']()).toBe(false);
+  });
+
+  it('populates sectionCount and formStatus from the underlying form', () => {
+    const { component } = buildComponent();
+    expect(component['sectionCount']()).toBe(1);
+    expect(component['formStatus']()).toBe('DRAFT');
   });
 
   it('sets an empty category list on load failure', () => {
@@ -173,6 +179,28 @@ describe('ConvocatoriaFormCardComponent', () => {
       ['forms', 'f1', 'edit'],
       { queryParams: { convocatoriaId: 'c1' } },
     );
+  });
+
+  it('openPreview navigates to the preview route with the convocatoriaId and tab query params', () => {
+    const { component, mockRouter } = buildComponent();
+    component['openPreview']();
+    expect(mockRouter.navigate).toHaveBeenCalledWith(
+      ['/', 'forms', 'f1', 'preview'],
+      { queryParams: { convocatoriaId: 'c1', tab: 'formularios' } },
+    );
+  });
+
+  describe('readonly', () => {
+    it('defaults to false', () => {
+      const { component } = buildComponent();
+      expect(component['readonly']()).toBe(false);
+    });
+
+    it('reflects the readonly input when set', () => {
+      const { fixture, component } = buildComponent();
+      fixture.componentRef.setInput('readonly', true);
+      expect(component['readonly']()).toBe(true);
+    });
   });
 
   describe('requestRemove / confirmRemove', () => {

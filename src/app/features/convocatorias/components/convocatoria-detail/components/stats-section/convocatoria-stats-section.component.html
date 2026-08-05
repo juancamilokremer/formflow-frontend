@@ -1,0 +1,18 @@
+@if (loading()) {
+  <div class="convocatoria-stats__center"><app-loading-spinner /></div>
+} @else if (loadError()) {
+  <app-empty-state icon="alert-circle" [compact]="true"
+    [title]="'convocatorias.detail.stats.error_title' | translate" />
+} @else if (stats(); as data) {
+  <div class="convocatoria-stats__grid">
+    <app-stat-card [label]="'convocatorias.detail.stats.total' | translate" [value]="data.total" />
+    <app-stat-card [label]="'convocatorias.detail.stats.not_started' | translate" [value]="data.notStarted" />
+    <app-stat-card [label]="'convocatorias.detail.stats.in_progress' | translate" [value]="data.inProgress" color="info" />
+    <app-stat-card [label]="'convocatorias.detail.stats.responded' | translate" [value]="data.responded" color="success" />
+    <app-stat-card [label]="'convocatorias.detail.stats.participation' | translate"
+      [value]="data.participationPct + '%'" color="info" />
+    <app-stat-card [label]="'convocatorias.detail.stats.apto' | translate" [value]="data.aptoCount" color="success" />
+    <app-stat-card [label]="'convocatorias.detail.stats.revisar' | translate" [value]="data.revisarCount" color="warning" />
+    <app-stat-card [label]="'convocatorias.detail.stats.no_apto' | translate" [value]="data.noAptoCount" color="default" />
+  </div>
+}

@@ -1,0 +1,126 @@
+:host { display: block; }
+
+.convocatoria-ranking {
+  &__center {
+    display: flex;
+    justify-content: center;
+    padding: 24px 0;
+  }
+
+  &__scroll {
+    overflow-x: auto;
+  }
+
+  &__table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+
+    th {
+      text-align: left;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--ff-text-secondary);
+      padding: 0 10px 10px 0;
+      border-bottom: 1px solid var(--ff-border);
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 11px 10px 11px 0;
+      border-bottom: 1px solid var(--ff-bg-secondary);
+      color: var(--ff-text-primary);
+      vertical-align: middle;
+    }
+  }
+
+  &__col-rank {
+    width: 48px;
+    text-align: center !important;
+  }
+
+  &__col-form {
+    text-align: center !important;
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__col-weight {
+    display: block;
+    font-weight: 500;
+    color: var(--ff-text-secondary);
+  }
+
+  &__col-total {
+    text-align: center !important;
+  }
+
+  &__name {
+    margin: 0;
+    font-weight: 600;
+  }
+
+  &__email {
+    font-size: 12px;
+    color: var(--ff-text-secondary);
+  }
+
+  &__dash {
+    color: var(--ff-text-secondary);
+  }
+
+  &__total-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+
+    &--apto {
+      background: var(--ff-success-bg, #dcfce7);
+      color: var(--ff-success, #15803d);
+    }
+
+    &--revisar {
+      background: var(--ff-warning-bg, #fef9c3);
+      color: var(--ff-warning, #854d0e);
+    }
+
+    &--no_apto {
+      background: var(--ff-error-bg, #fee2e2);
+      color: var(--ff-error-text, #b91c1c);
+    }
+  }
+
+  &__verdict {
+    display: inline-block;
+    padding: 3px 9px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+
+    &--apto {
+      background: var(--ff-success-bg, #dcfce7);
+      color: var(--ff-success, #15803d);
+    }
+
+    &--revisar {
+      background: var(--ff-warning-bg, #fef9c3);
+      color: var(--ff-warning, #854d0e);
+    }
+
+    &--no_apto {
+      background: var(--ff-error-bg, #fee2e2);
+      color: var(--ff-error-text, #b91c1c);
+    }
+  }
+
+  &__progress-chip {
+    display: inline-block;
+    padding: 3px 9px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    background: var(--ff-warning-bg, #fef9c3);
+    color: var(--ff-warning, #854d0e);
+  }
+}

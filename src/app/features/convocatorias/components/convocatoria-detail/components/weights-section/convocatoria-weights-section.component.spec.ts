@@ -80,4 +80,11 @@ describe('ConvocatoriaWeightsSectionComponent', () => {
       expect(emitted?.['c1']).toBe(0);
     });
   });
+
+  describe('readonly', () => {
+    it('defaults to false', async () => {
+      const c = await create({ c1: 40 });
+      expect(c['readonly']()).toBe(false);
+    });
+  });
 });
