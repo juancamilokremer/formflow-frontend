@@ -81,6 +81,14 @@ export const routes: Routes = [
           ),
       },
       {
+        path: `${RouteConstants.FORMS}/:id/${RouteConstants.FORM_RESULTS}`,
+        data: { titleKey: 'results.title' },
+        loadComponent: () =>
+          import('./features/forms/components/form-results/form-results.component').then(
+            (m) => m.FormResultsComponent,
+          ),
+      },
+      {
         path: RouteConstants.CATEGORIES,
         data: { titleKey: 'shell.nav.categories' },
         loadComponent: () =>

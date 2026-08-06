@@ -1,0 +1,9 @@
+<div class="results-summary__grid">
+  <app-stat-card [label]="'results.summary.total' | translate" [value]="stats().totalResponses" />
+  <app-stat-card [label]="'results.summary.completion_rate' | translate"
+    [value]="completionRateLabel()" color="info" />
+  <app-stat-card [label]="'results.summary.avg_time' | translate"
+    [value]="avgResponseTimeLabel()" color="success" />
+</div>
+
+<app-response-timeline [timeline]="stats().timeline" />
