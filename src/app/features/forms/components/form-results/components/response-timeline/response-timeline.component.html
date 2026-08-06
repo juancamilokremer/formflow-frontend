@@ -1,0 +1,20 @@
+<div class="response-timeline">
+  <div class="response-timeline__header">
+    <h2 class="response-timeline__title">{{ 'results.summary.timeline_title' | translate }}</h2>
+    <app-tabs [tabs]="rangeOptions" [activeTabId]="range()" (tabChange)="setRange($event)" />
+  </div>
+
+  @if (filteredTimeline().length === 0) {
+    <app-empty-state icon="bar-chart-2" [compact]="true"
+      [title]="'results.summary.timeline_empty' | translate" />
+  } @else {
+    <apx-chart
+      [series]="chartSeries()"
+      [chart]="chart"
+      [xaxis]="xaxis"
+      [stroke]="stroke"
+      [dataLabels]="dataLabels"
+      [grid]="grid"
+      [colors]="colors" />
+  }
+</div>

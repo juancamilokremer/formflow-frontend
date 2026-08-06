@@ -3,6 +3,7 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { provideHttpClient } from '@angular/common/http';
 import { FormsService } from './forms.service';
 import { Form } from '../models/form.model';
+import { FormStats } from '../models/form-stats.model';
 
 const mockForm: Form = {
   id: 'f1',
@@ -81,6 +82,26 @@ describe('FormsService', () => {
     req.flush({ success: true, data: { ...mockForm, status: 'ACTIVE' } });
 
     expect(result).toEqual({ ...mockForm, status: 'ACTIVE' });
+  });
+
+  it('getStats() should GET the stats and return the data', () => {
+    const mockStats: FormStats = {
+      formId: 'f1',
+      formName: 'Test Form',
+      totalResponses: 3,
+      completionRate: 0.75,
+      avgResponseTimeSeconds: 120,
+      timeline: [{ date: '2026-08-01', count: 3 }],
+      questions: [],
+    };
+
+    let result: FormStats | undefined;
+    service.getStats('f1').subscribe((s) => (result = s));
+
+    const req = http.expectOne((r) => r.method === 'GET' && r.url.includes('/f1/stats'));
+    req.flush({ success: true, data: mockStats });
+
+    expect(result).toEqual(mockStats);
   });
 
   it('remove() should send DELETE request', () => {

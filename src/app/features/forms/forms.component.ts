@@ -1,7 +1,7 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
-import { formBuilderPath } from '../../core/constants/route.constants';
+import { formBuilderPath, formResultsPath } from '../../core/constants/route.constants';
 import { ButtonComponent } from '../../shared/components/button/button.component';
 import { IconComponent } from '../../shared/icons/icon.component';
 import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
@@ -68,6 +68,6 @@ export class FormsComponent {
   }
 
   protected viewResults(id: string): void {
-    this.router.navigate(['forms', id, 'results']);
+    this.router.navigate(formResultsPath(id));
   }
 }

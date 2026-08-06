@@ -1,0 +1,17 @@
+:host { display: block; }
+
+.fr {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  &__center {
+    display: flex;
+    justify-content: center;
+    padding: 48px 0;
+  }
+
+  &__section {
+    display: block;
+  }
+}

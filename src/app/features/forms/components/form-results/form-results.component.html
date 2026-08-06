@@ -1,0 +1,38 @@
+@if (loading()) {
+  <div class="fr__center"><app-loading-spinner /></div>
+} @else if (loadError()) {
+  <div class="fr__center">
+    <app-empty-state icon="alert-circle" [title]="'results.error.load' | translate" />
+  </div>
+} @else if (stats(); as data) {
+  <div class="fr">
+    <app-page-header [title]="data.formName" [subtitle]="'results.subtitle' | translate" />
+
+    @if (data.totalResponses === 0) {
+      <app-empty-state icon="bar-chart-2" [title]="'results.empty.title' | translate"
+        [subtitle]="'results.empty.subtitle' | translate">
+        <app-button variant="secondary" type="button" (click)="goToPreview()">
+          {{ 'results.empty.cta' | translate }}
+        </app-button>
+      </app-empty-state>
+    } @else {
+      <app-tabs [tabs]="tabs" [activeTabId]="activeTab()" (tabChange)="setActiveTab($event)" />
+
+      <app-card class="fr__section">
+        @switch (activeTab()) {
+          @case ('summary') {
+            <app-results-summary [stats]="data" />
+          }
+          @case ('per-question') {
+            <app-empty-state icon="bar-chart-2" [compact]="true"
+              [title]="'results.tabs.per_question_soon' | translate" />
+          }
+          @case ('responses') {
+            <app-empty-state icon="inbox" [compact]="true"
+              [title]="'results.tabs.responses_soon' | translate" />
+          }
+        }
+      </app-card>
+    }
+  </div>
+}

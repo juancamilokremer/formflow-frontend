@@ -8,6 +8,7 @@ import {
   CreateFormRequest, CreateSectionRequest, UpdateSectionRequest,
   AddQuestionRequest, UpdateQuestionRequest,
 } from '../models/form.model';
+import { FormStats } from '../models/form-stats.model';
 
 @Injectable({ providedIn: 'root' })
 export class FormsService {
@@ -44,6 +45,12 @@ export class FormsService {
 
   updateStatus(id: string, status: FormStatus): Observable<Form> {
     return this.http.patch<ApiResponse<Form>>(`${this.apiUrl}/${id}/status`, { status }).pipe(
+      map((r) => r.data!),
+    );
+  }
+
+  getStats(id: string): Observable<FormStats> {
+    return this.http.get<ApiResponse<FormStats>>(`${this.apiUrl}/${id}/stats`).pipe(
       map((r) => r.data!),
     );
   }

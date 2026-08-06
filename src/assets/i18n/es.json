@@ -364,6 +364,37 @@
     "progress": "Progreso",
     "progress_counter": "{{answered}} de {{total}} preguntas"
   },
+  "results": {
+    "title": "Resultados",
+    "subtitle": "Estadísticas y respuestas del formulario",
+    "error": {
+      "load": "No se pudieron cargar los resultados. Intenta de nuevo."
+    },
+    "empty": {
+      "title": "Todavía no hay respuestas",
+      "subtitle": "Comparte el formulario para empezar a recibir respuestas.",
+      "cta": "Compartir formulario"
+    },
+    "tabs": {
+      "summary": "Resumen",
+      "per_question": "Por pregunta",
+      "per_question_soon": "El detalle por pregunta llega en una próxima entrega.",
+      "responses": "Respuestas individuales",
+      "responses_soon": "El detalle de respuestas individuales llega en una próxima entrega."
+    },
+    "summary": {
+      "total": "Total respuestas",
+      "completion_rate": "Tasa de completado",
+      "avg_time": "Tiempo promedio",
+      "timeline_title": "Respuestas por día",
+      "timeline_empty": "No hay respuestas en este rango."
+    },
+    "range": {
+      "7d": "7 días",
+      "30d": "30 días",
+      "all": "Todo"
+    }
+  },
   "responder": {
     "loading": "Cargando formulario...",
     "not_found": {

@@ -18,6 +18,7 @@ export const RouteConstants = {
   FORM_BUILDER:  'edit',
   FORM_PREVIEW:  'preview',
   FORM_RESPOND:  'respond',
+  FORM_RESULTS:  'results',
   CONVOCATORIA_NEW: 'new',
   QUERY_CONVOCATORIA_ID: 'convocatoriaId',
   QUERY_TAB: 'tab',
@@ -37,6 +38,10 @@ export function formPreviewPath(formId: string): string[] {
 
 export function formRespondPath(formId: string): string[] {
   return ['/', RouteConstants.FORMS, formId, RouteConstants.FORM_RESPOND];
+}
+
+export function formResultsPath(formId: string): string[] {
+  return ['/', RouteConstants.FORMS, formId, RouteConstants.FORM_RESULTS];
 }
 
 export function convocatoriasListPath(): string[] {
