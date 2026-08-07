@@ -1,0 +1,28 @@
+<app-card class="qsc">
+  <h3 class="qsc__title">{{ question().title }}</h3>
+  <p class="qsc__meta">
+    {{ 'results.per_question.answered' | translate : { answered: question().answeredCount, total: question().totalResponses, pct: answeredPct() } }}
+  </p>
+
+  @if (usesPie()) {
+    <app-pie-chart [distributions]="question().distributions ?? []" />
+  } @else if (usesBar()) {
+    <app-bar-chart [distributions]="question().distributions ?? []" />
+  } @else if (question().type === 'scale') {
+    <app-scale-distribution [distributions]="question().distributions ?? []" [average]="question().average" />
+  } @else if (question().type === 'nps') {
+    <app-nps-score [npsScore]="question().npsScore" [distributions]="question().distributions ?? []" />
+  } @else if (question().type === 'matrix') {
+    <app-matrix-heatmap [matrixRows]="question().matrixRows ?? []" />
+  } @else if (question().type === 'text') {
+    @if (question().sampleAnswers.length === 0) {
+      <p class="qsc__no-samples">{{ 'results.per_question.no_answers' | translate }}</p>
+    } @else {
+      <ul class="qsc__samples">
+        @for (sample of question().sampleAnswers; track $index) {
+          <li class="qsc__sample">{{ sample }}</li>
+        }
+      </ul>
+    }
+  }
+</app-card>

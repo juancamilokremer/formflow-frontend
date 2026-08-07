@@ -18,21 +18,33 @@
     } @else {
       <app-tabs [tabs]="tabs" [activeTabId]="activeTab()" (tabChange)="setActiveTab($event)" />
 
-      <app-card class="fr__section">
-        @switch (activeTab()) {
-          @case ('summary') {
+      @switch (activeTab()) {
+        @case ('summary') {
+          <app-card class="fr__section">
             <app-results-summary [stats]="data" />
-          }
-          @case ('per-question') {
-            <app-empty-state icon="bar-chart-2" [compact]="true"
-              [title]="'results.tabs.per_question_soon' | translate" />
-          }
-          @case ('responses') {
-            <app-empty-state icon="inbox" [compact]="true"
-              [title]="'results.tabs.responses_soon' | translate" />
+          </app-card>
+        }
+        @case ('per-question') {
+          @if (data.questions.length === 0) {
+            <app-card class="fr__section">
+              <app-empty-state icon="bar-chart-2" [compact]="true"
+                [title]="'results.per_question.no_questions' | translate" />
+            </app-card>
+          } @else {
+            <div class="fr__questions-grid">
+              @for (q of data.questions; track q.questionId) {
+                <app-question-stats-card [question]="q" />
+              }
+            </div>
           }
         }
-      </app-card>
+        @case ('responses') {
+          <app-card class="fr__section">
+            <app-empty-state icon="inbox" [compact]="true"
+              [title]="'results.tabs.responses_soon' | translate" />
+          </app-card>
+        }
+      }
     }
   </div>
 }

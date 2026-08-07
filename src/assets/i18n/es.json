@@ -378,7 +378,6 @@
     "tabs": {
       "summary": "Resumen",
       "per_question": "Por pregunta",
-      "per_question_soon": "El detalle por pregunta llega en una próxima entrega.",
       "responses": "Respuestas individuales",
       "responses_soon": "El detalle de respuestas individuales llega en una próxima entrega."
     },
@@ -393,6 +392,16 @@
       "7d": "7 días",
       "30d": "30 días",
       "all": "Todo"
+    },
+    "per_question": {
+      "answered": "{{answered}} de {{total}} respondieron ({{pct}}%)",
+      "no_answers": "Todavía no hay respuestas para esta pregunta.",
+      "no_questions": "Este formulario no tiene preguntas con estadísticas.",
+      "nps": {
+        "promoters": "Promotores (9-10)",
+        "passives": "Pasivos (7-8)",
+        "detractors": "Detractores (0-6)"
+      }
     }
   },
   "responder": {
