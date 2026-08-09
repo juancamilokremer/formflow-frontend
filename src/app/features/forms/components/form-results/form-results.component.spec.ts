@@ -4,7 +4,7 @@ import { provideTranslateService } from '@ngx-translate/core';
 import { of, throwError } from 'rxjs';
 import { FormResultsComponent } from './form-results.component';
 import { FormsService } from '../../services/forms.service';
-import { FormStats } from '../../models/form-stats.model';
+import { FormStats, QuestionStats } from '../../models/form-stats.model';
 
 // jsdom doesn't implement ResizeObserver; the Resumen tab renders a real apx-chart.
 class ResizeObserverStub {
@@ -24,9 +24,17 @@ const MOCK_STATS: FormStats = {
   questions: [],
 };
 
-function buildComponent(overrides: { getStatsImpl?: unknown } = {}) {
+function question(overrides: Partial<QuestionStats>): QuestionStats {
+  return {
+    questionId: 'q', title: 'Q', type: 'text', totalResponses: 5, answeredCount: 0,
+    distributions: null, average: null, median: null, npsScore: null, matrixRows: null,
+    sampleAnswers: [], ...overrides,
+  };
+}
+
+function buildComponent(overrides: { getStatsImpl?: unknown; stats?: FormStats } = {}) {
   const mockFormsService = {
-    getStats: overrides.getStatsImpl ?? vi.fn().mockReturnValue(of(MOCK_STATS)),
+    getStats: overrides.getStatsImpl ?? vi.fn().mockReturnValue(of(overrides.stats ?? MOCK_STATS)),
   };
   const mockRouter = { navigate: vi.fn() };
 
@@ -71,6 +79,20 @@ describe('FormResultsComponent', () => {
       const { component } = buildComponent();
       component['setActiveTab']('per-question');
       expect(component['activeTab']()).toBe('per-question');
+    });
+  });
+
+  describe('chartableQuestions', () => {
+    it('filters out info blocks — they never collect answers', () => {
+      const stats: FormStats = {
+        ...MOCK_STATS,
+        questions: [
+          question({ questionId: 'q1', type: 'info' }),
+          question({ questionId: 'q2', type: 'text' }),
+        ],
+      };
+      const { component } = buildComponent({ stats });
+      expect(component['chartableQuestions']().map((q) => q.questionId)).toEqual(['q2']);
     });
   });
 

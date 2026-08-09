@@ -75,8 +75,8 @@ describe('resolveDisplayMode', () => {
     expect(resolveDisplayMode(baseQuestion({ type: 'text', distributions: [] }))).toBe('text');
   });
 
-  it('is "none" for unrecognized types (e.g. date/file/info)', () => {
-    expect(resolveDisplayMode(baseQuestion({ type: 'date', distributions: [] }))).toBe('none');
+  it.each(['date', 'file'])('is "no-preview" for %s (only a count is available today)', (type) => {
+    expect(resolveDisplayMode(baseQuestion({ type, distributions: [] }))).toBe('no-preview');
   });
 });
 

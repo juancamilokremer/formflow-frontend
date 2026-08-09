@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit, inject, signal } from '@angular/core';
+import { Component, DestroyRef, OnInit, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -44,6 +44,12 @@ export class FormResultsComponent implements OnInit {
     { id: 'per-question', label: 'results.tabs.per_question' },
     { id: 'responses', label: 'results.tabs.responses' },
   ];
+
+  // INFO blocks are display-only content, never actual questions — they never
+  // collect answers (answeredCount is always 0), so showing them in the
+  // per-question grid would be misleading rather than just empty.
+  protected readonly chartableQuestions = computed(() =>
+    this.stats()?.questions.filter((q) => q.type !== 'info') ?? []);
 
   ngOnInit(): void {
     this.formsService.getStats(this.formId)

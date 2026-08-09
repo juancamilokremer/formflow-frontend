@@ -25,14 +25,14 @@
           </app-card>
         }
         @case ('per-question') {
-          @if (data.questions.length === 0) {
+          @if (chartableQuestions().length === 0) {
             <app-card class="fr__section">
               <app-empty-state icon="bar-chart-2" [compact]="true"
                 [title]="'results.per_question.no_questions' | translate" />
             </app-card>
           } @else {
             <div class="fr__questions-grid">
-              @for (q of data.questions; track q.questionId) {
+              @for (q of chartableQuestions(); track q.questionId) {
                 <app-question-stats-card [question]="q" />
               }
             </div>
