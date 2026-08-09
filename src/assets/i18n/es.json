@@ -397,6 +397,7 @@
       "answered": "{{answered}} de {{total}} respondieron ({{pct}}%)",
       "no_answers": "Todavía no hay respuestas para esta pregunta.",
       "no_questions": "Este formulario no tiene preguntas con estadísticas.",
+      "no_options": "Esta pregunta todavía no tiene opciones configuradas.",
       "nps": {
         "promoters": "Promotores (9-10)",
         "passives": "Pasivos (7-8)",

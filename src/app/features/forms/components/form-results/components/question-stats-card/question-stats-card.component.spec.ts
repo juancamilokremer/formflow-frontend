@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { provideTranslateService } from '@ngx-translate/core';
-import { QuestionStatsCardComponent } from './question-stats-card.component';
+import { QuestionStatsCardComponent, resolveDisplayMode } from './question-stats-card.component';
 import { QuestionStats } from '../../../../models/form-stats.model';
 
 // jsdom doesn't implement ResizeObserver or SVG getBBox; apx-chart calls both on render.
@@ -32,6 +32,54 @@ function baseQuestion(overrides: Partial<QuestionStats> = {}): QuestionStats {
   };
 }
 
+function distributionsOfLength(n: number) {
+  return Array.from({ length: n }, (_, i) => ({
+    optionId: `${i}`, label: `${i}`, count: 1, percentage: 100 / n,
+  }));
+}
+
+describe('resolveDisplayMode', () => {
+  it('is "pie" for single with <= 6 options', () => {
+    const question = baseQuestion({ type: 'single', distributions: distributionsOfLength(6) });
+    expect(resolveDisplayMode(question)).toBe('pie');
+  });
+
+  it('is "bar" for single with > 6 options', () => {
+    const question = baseQuestion({ type: 'single', distributions: distributionsOfLength(7) });
+    expect(resolveDisplayMode(question)).toBe('bar');
+  });
+
+  it('is "bar" for multiple regardless of option count', () => {
+    const question = baseQuestion({ type: 'multiple', distributions: distributionsOfLength(8) });
+    expect(resolveDisplayMode(question)).toBe('bar');
+  });
+
+  it.each(['single', 'multiple'])('is "no-options" for %s with an empty distributions array', (type) => {
+    const question = baseQuestion({ type, distributions: [] });
+    expect(resolveDisplayMode(question)).toBe('no-options');
+  });
+
+  it('is "scale" for scale questions even with empty distributions', () => {
+    expect(resolveDisplayMode(baseQuestion({ type: 'scale', distributions: [] }))).toBe('scale');
+  });
+
+  it('is "nps" for nps questions even with empty distributions', () => {
+    expect(resolveDisplayMode(baseQuestion({ type: 'nps', distributions: [] }))).toBe('nps');
+  });
+
+  it('is "matrix" for matrix questions', () => {
+    expect(resolveDisplayMode(baseQuestion({ type: 'matrix', distributions: [] }))).toBe('matrix');
+  });
+
+  it('is "text" for text questions', () => {
+    expect(resolveDisplayMode(baseQuestion({ type: 'text', distributions: [] }))).toBe('text');
+  });
+
+  it('is "none" for unrecognized types (e.g. date/file/info)', () => {
+    expect(resolveDisplayMode(baseQuestion({ type: 'date', distributions: [] }))).toBe('none');
+  });
+});
+
 function buildComponent(question: QuestionStats) {
   TestBed.configureTestingModule({
     imports: [QuestionStatsCardComponent],
@@ -59,35 +107,10 @@ describe('QuestionStatsCardComponent', () => {
     });
   });
 
-  describe('chart dispatch', () => {
-    it('uses pie for single with <= 6 options', () => {
-      const distributions = Array.from({ length: 6 }, (_, i) => ({
-        optionId: `${i}`, label: `${i}`, count: 1, percentage: 16.6,
-      }));
-      const { component } = buildComponent(baseQuestion({ type: 'single', distributions }));
-      expect(component['usesPie']()).toBe(true);
-      expect(component['usesBar']()).toBe(false);
-    });
-
-    it('uses bar for single with > 6 options', () => {
-      const distributions = Array.from({ length: 7 }, (_, i) => ({
-        optionId: `${i}`, label: `${i}`, count: 1, percentage: 14.3,
-      }));
-      const { component } = buildComponent(baseQuestion({ type: 'single', distributions }));
-      expect(component['usesPie']()).toBe(false);
-      expect(component['usesBar']()).toBe(true);
-    });
-
-    it('always uses bar for multiple, regardless of option count', () => {
-      const { component } = buildComponent(baseQuestion({ type: 'multiple', distributions: [] }));
-      expect(component['usesPie']()).toBe(false);
-      expect(component['usesBar']()).toBe(true);
-    });
-
-    it.each(['scale', 'nps', 'matrix', 'text'])('does not use pie or bar for %s', (type) => {
-      const { component } = buildComponent(baseQuestion({ type }));
-      expect(component['usesPie']()).toBe(false);
-      expect(component['usesBar']()).toBe(false);
+  describe('displayMode', () => {
+    it('reflects resolveDisplayMode for the given question', () => {
+      const { component } = buildComponent(baseQuestion({ type: 'single', distributions: distributionsOfLength(6) }));
+      expect(component['displayMode']()).toBe('pie');
     });
   });
 });
