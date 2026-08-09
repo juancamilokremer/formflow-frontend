@@ -8,13 +8,14 @@
     <app-empty-state icon="bar-chart-2" [compact]="true"
       [title]="'results.summary.timeline_empty' | translate" />
   } @else {
-    <apx-chart
+    <app-chart
       [series]="chartSeries()"
       [chart]="chart"
       [xaxis]="xaxis"
       [stroke]="stroke"
       [dataLabels]="dataLabels"
       [grid]="grid"
-      [colors]="colors" />
+      [colors]="colors"
+      [markers]="markers" />
   }
 </div>

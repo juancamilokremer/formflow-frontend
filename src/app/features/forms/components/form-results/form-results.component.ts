@@ -12,6 +12,7 @@ import { TabItem, TabsComponent } from '../../../../shared/components/tabs/tabs.
 import { FormsService } from '../../services/forms.service';
 import { FormStats } from '../../models/form-stats.model';
 import { ResultsSummaryComponent } from './components/results-summary/results-summary.component';
+import { QuestionStatsCardComponent } from './components/question-stats-card/question-stats-card.component';
 
 type ResultsTab = 'summary' | 'per-question' | 'responses';
 
@@ -20,7 +21,7 @@ type ResultsTab = 'summary' | 'per-question' | 'responses';
   imports: [
     TranslatePipe,
     ButtonComponent, CardComponent, PageHeaderComponent, LoadingSpinnerComponent,
-    EmptyStateComponent, TabsComponent, ResultsSummaryComponent,
+    EmptyStateComponent, TabsComponent, ResultsSummaryComponent, QuestionStatsCardComponent,
   ],
   templateUrl: './form-results.component.html',
   styleUrl: './form-results.component.scss',

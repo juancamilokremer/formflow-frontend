@@ -1,0 +1,23 @@
+@if (totalAnswered() === 0) {
+  <app-empty-state icon="bar-chart-2" [compact]="true"
+    [title]="'results.per_question.no_answers' | translate" />
+} @else {
+  <div class="nps-score">
+    <app-chart [series]="series()" [chart]="chart" [plotOptions]="plotOptions" [colors]="colors" />
+
+    <div class="nps-score__breakdown">
+      <div class="nps-score__item nps-score__item--promoters">
+        <span class="nps-score__dot"></span>
+        {{ 'results.per_question.nps.promoters' | translate }}: {{ promotersPct() }}%
+      </div>
+      <div class="nps-score__item nps-score__item--passives">
+        <span class="nps-score__dot"></span>
+        {{ 'results.per_question.nps.passives' | translate }}: {{ passivesPct() }}%
+      </div>
+      <div class="nps-score__item nps-score__item--detractors">
+        <span class="nps-score__dot"></span>
+        {{ 'results.per_question.nps.detractors' | translate }}: {{ detractorsPct() }}%
+      </div>
+    </div>
+  </div>
+}

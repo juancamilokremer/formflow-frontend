@@ -1,6 +1,8 @@
-:host { display: block; }
+:host { display: block; height: 100%; }
 
 .card {
+  height: 100%;
+  box-sizing: border-box;
   background: var(--ff-white);
   border: 1px solid var(--ff-border);
   border-radius: var(--ff-radius-xl);

@@ -14,4 +14,14 @@
   &__section {
     display: block;
   }
+
+  &__questions-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+
+    @media (min-width: 700px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
 }

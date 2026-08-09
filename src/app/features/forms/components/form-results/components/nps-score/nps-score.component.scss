@@ -1,0 +1,31 @@
+:host { display: block; }
+
+.nps-score {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  &__breakdown {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--ff-text-primary);
+  }
+
+  &__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+
+  &__item--promoters &__dot { background: var(--ff-success); }
+  &__item--passives &__dot { background: var(--ff-text-muted); }
+  &__item--detractors &__dot { background: var(--ff-error); }
+}

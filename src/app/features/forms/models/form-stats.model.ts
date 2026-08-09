@@ -34,6 +34,7 @@ export interface QuestionStats {
   median: number | null;
   npsScore: number | null;
   matrixRows: MatrixRowStats[] | null;
+  sampleAnswers: string[];
 }
 
 export interface FormStats {
