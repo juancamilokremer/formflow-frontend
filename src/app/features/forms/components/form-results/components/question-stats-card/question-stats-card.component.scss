@@ -1,5 +1,12 @@
-.qsc {
+:host {
   display: block;
+  height: 100%;
+}
+
+.qsc {
+  min-height: 320px;
+  box-sizing: border-box;
+  height: 100%;
 
   &__title {
     font-size: 14px;
