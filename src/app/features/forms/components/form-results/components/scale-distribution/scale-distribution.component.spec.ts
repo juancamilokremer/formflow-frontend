@@ -8,6 +8,10 @@ class ResizeObserverStub {
   disconnect(): void {}
 }
 globalThis.ResizeObserver ??= ResizeObserverStub as unknown as typeof ResizeObserver;
+const svgTextProto = Object.getPrototypeOf(document.createElementNS('http://www.w3.org/2000/svg', 'text'));
+if (typeof svgTextProto.getBBox !== 'function') {
+  svgTextProto.getBBox = () => ({ x: 0, y: 0, width: 0, height: 0 });
+}
 
 const DISTRIBUTIONS: OptionDistribution[] = [
   { optionId: '1', label: '1', count: 1, percentage: 10 },
@@ -29,16 +33,21 @@ function buildComponent(distributions = DISTRIBUTIONS, average: number | null = 
 describe('ScaleDistributionComponent', () => {
   afterEach(() => TestBed.resetTestingModule());
 
-  it('builds numeric {x, y} points from the distributions', () => {
+  it('builds a plain count series matched positionally against category labels', () => {
     const { component } = buildComponent();
-    expect(component['series']()[0].data).toEqual([
-      { x: 1, y: 1 }, { x: 2, y: 2 }, { x: 3, y: 3 }, { x: 4, y: 3 }, { x: 5, y: 1 },
-    ]);
+    expect(component['series']()[0].data).toEqual([1, 2, 3, 3, 1]);
+    expect(component['xaxis']().categories).toEqual(['1', '2', '3', '4', '5']);
   });
 
-  it('places the average annotation at the exact fractional x position', () => {
-    const { component } = buildComponent();
-    expect(component['annotations']().xaxis?.[0].x).toBe(3.2);
+  it('snaps the average annotation to the nearest category label', () => {
+    const { component } = buildComponent(DISTRIBUTIONS, 3.2);
+    expect(component['annotations']().xaxis?.[0].x).toBe('3');
+  });
+
+  it('keeps the precise average in the annotation label text', () => {
+    const { component } = buildComponent(DISTRIBUTIONS, 3.6);
+    expect(component['annotations']().xaxis?.[0].x).toBe('4');
+    expect(component['annotations']().xaxis?.[0].label?.text).toBe('Promedio: 3.6');
   });
 
   it('returns no annotations when average is null', () => {

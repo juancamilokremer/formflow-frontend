@@ -73,7 +73,9 @@ export class NpsScoreComponent {
       radialBar: {
         hollow: { size: '60%' },
         dataLabels: {
+          name: { show: false },
           value: {
+            offsetY: 8,
             formatter: () => (score === null ? '—' : score.toFixed(0)),
             fontSize: '24px',
           },

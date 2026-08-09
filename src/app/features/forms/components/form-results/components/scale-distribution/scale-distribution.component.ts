@@ -16,25 +16,28 @@ export class ScaleDistributionComponent {
   readonly distributions = input.required<OptionDistribution[]>();
   readonly average = input<number | null>(null);
 
-  // El eje debe ser numérico (no de categorías) para que la anotación del promedio
-  // se ubique en su posición fraccionaria real, no en la categoría más cercana.
+  // Eje de categorías (mismo patrón que BarChartComponent) — un eje numérico con
+  // datos {x,y} no renderiza las barras de forma confiable en ApexCharts. La
+  // anotación del promedio se snapea a la categoría más cercana (pierde precisión
+  // sub-entero en la posición de la línea, pero el label sigue mostrando el valor
+  // exacto) a cambio de que las barras sí se vean.
   protected readonly series = computed<ApexAxisChartSeries>(() => [{
     name: 'Respuestas',
-    data: this.distributions().map((d) => ({ x: Number(d.label), y: d.count })),
+    data: this.distributions().map((d) => d.count),
   }]);
 
   protected readonly xaxis = computed<ApexXAxis>(() => ({
-    type: 'numeric',
-    tickAmount: this.distributions().length - 1,
-    labels: { formatter: (val: string) => Math.round(Number(val)).toString() },
+    categories: this.distributions().map((d) => d.label),
   }));
 
   protected readonly annotations = computed<ApexAnnotations>(() => {
     const avg = this.average();
     if (avg === null) return {};
+    const nearestLabel = this.nearestCategoryLabel(avg);
+    if (nearestLabel === null) return {};
     return {
       xaxis: [{
-        x: avg,
+        x: nearestLabel,
         borderColor: FORMFLOW_WARNING,
         label: {
           text: `Promedio: ${avg.toFixed(1)}`,
@@ -44,6 +47,14 @@ export class ScaleDistributionComponent {
       }],
     };
   });
+
+  private nearestCategoryLabel(avg: number): string | null {
+    const distributions = this.distributions();
+    if (distributions.length === 0) return null;
+    return distributions.reduce((closest, d) =>
+      Math.abs(Number(d.label) - avg) < Math.abs(Number(closest.label) - avg) ? d : closest,
+    ).label;
+  }
 
   protected readonly chart: ApexChart = { type: 'bar', height: 240, toolbar: { show: false } };
   protected readonly plotOptions: ApexPlotOptions = {
