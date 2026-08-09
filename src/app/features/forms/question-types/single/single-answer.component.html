@@ -2,15 +2,15 @@
   @for (opt of options(); track opt.id) {
     <div
       class="qa__option"
-      [class.qa__option--selected]="selected() === opt.label"
+      [class.qa__option--selected]="selected() === opt.id"
       tabindex="0"
       role="radio"
-      [attr.aria-checked]="selected() === opt.label"
-      (click)="select(opt.label)"
-      (keydown.enter)="select(opt.label)"
-      (keydown.space)="select(opt.label)"
+      [attr.aria-checked]="selected() === opt.id"
+      (click)="select(opt.id)"
+      (keydown.enter)="select(opt.id)"
+      (keydown.space)="select(opt.id)"
     >
-      <input type="radio" [checked]="selected() === opt.label" tabindex="-1" />
+      <input type="radio" [checked]="selected() === opt.id" tabindex="-1" />
       <span class="qa__option-label">{{ opt.label }}</span>
     </div>
   }

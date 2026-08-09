@@ -17,14 +17,14 @@ export class MultipleAnswerComponent implements PublicQuestionComponent {
 
   protected readonly selected = signal<Set<string>>(new Set());
 
-  protected toggle(label: string): void {
+  protected toggle(id: string): void {
     const next = new Set(this.selected());
-    if (next.has(label)) { next.delete(label); } else { next.add(label); }
+    if (next.has(id)) { next.delete(id); } else { next.add(id); }
     this.selected.set(next);
     this.answered.emit([...next]);
   }
 
-  protected isChecked(label: string): boolean {
-    return this.selected().has(label);
+  protected isChecked(id: string): boolean {
+    return this.selected().has(id);
   }
 }

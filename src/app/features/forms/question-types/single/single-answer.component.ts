@@ -17,8 +17,8 @@ export class SingleAnswerComponent implements PublicQuestionComponent {
 
   protected readonly selected = signal<string>('');
 
-  protected select(label: string): void {
-    this.selected.set(label);
-    this.answered.emit(label);
+  protected select(id: string): void {
+    this.selected.set(id);
+    this.answered.emit(id);
   }
 }

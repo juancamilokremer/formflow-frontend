@@ -61,7 +61,12 @@ export class ConditionalLogicDrawerComponent {
       if (!refQ) return null;
       const opLabel  = t(OPERATOR_LABEL_KEYS[c.operator as ConditionOperator]);
       const needsVal = operatorNeedsValue(c.operator as ConditionOperator);
-      const valueStr = needsVal && c.value ? ` "${c.value}"` : '';
+      // c.value is an option id for single/multiple source questions (see
+      // getOptionsForQuestion) — resolve it back to its label for display. Other
+      // types (scale/nps) store a plain, already-readable value with no options.
+      const matchedOption = this.getOptionsForQuestion(c.questionId).find((o) => o.id === c.value);
+      const displayValue  = matchedOption?.label ?? c.value;
+      const valueStr = needsVal && c.value ? ` "${displayValue}"` : '';
       return `"${refQ.title}" ${opLabel}${valueStr}`;
     }).filter((p): p is string => p !== null);
 
