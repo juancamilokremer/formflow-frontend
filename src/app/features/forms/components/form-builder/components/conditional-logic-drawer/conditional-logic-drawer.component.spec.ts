@@ -98,6 +98,20 @@ describe('ConditionalLogicDrawerComponent', () => {
     expect(c['naturalLanguageText']()).toBe('');
   });
 
+  it('naturalLanguageText resolves an option id to its label, not the raw id', () => {
+    const c = create(Q_TARGET);
+    c['conditions'].set([{ id: '1', questionId: 'q1', operator: 'EQUALS', value: 'o1' }]);
+    const text = c['naturalLanguageText']();
+    expect(text).toContain('Sí');
+    expect(text).not.toContain('o1');
+  });
+
+  it('naturalLanguageText falls back to the raw value when it matches no option (e.g. scale/nps)', () => {
+    const c = create(Q_TARGET);
+    c['conditions'].set([{ id: '1', questionId: 'q2', operator: 'EQUALS', value: '5' }]);
+    expect(c['naturalLanguageText']()).toContain('5');
+  });
+
   it('onSave emits null when conditions are empty', () => {
     const c = create(Q_TARGET);
     const emitted: unknown[] = [];
