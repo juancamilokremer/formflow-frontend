@@ -12,7 +12,7 @@ import { MatrixHeatmapComponent } from '../matrix-heatmap/matrix-heatmap.compone
 const PIE_MAX_OPTIONS = 6;
 const CHOICE_TYPES = ['single', 'multiple'];
 
-export type QuestionDisplayMode = 'no-options' | 'pie' | 'bar' | 'scale' | 'nps' | 'matrix' | 'text' | 'none';
+export type QuestionDisplayMode = 'no-options' | 'pie' | 'bar' | 'scale' | 'nps' | 'matrix' | 'text' | 'no-preview';
 
 export function resolveDisplayMode(question: QuestionStats): QuestionDisplayMode {
   const optionCount = question.distributions?.length ?? 0;
@@ -29,7 +29,11 @@ export function resolveDisplayMode(question: QuestionStats): QuestionDisplayMode
   if (question.type === 'nps') return 'nps';
   if (question.type === 'matrix') return 'matrix';
   if (question.type === 'text') return 'text';
-  return 'none';
+  // DATE/FILE only have a count today (no date histogram / no file list from the
+  // backend) — show an explicit message instead of an empty-looking card. INFO
+  // never reaches here — it's filtered out of the grid entirely in
+  // FormResultsComponent since it never collects answers at all.
+  return 'no-preview';
 }
 
 @Component({

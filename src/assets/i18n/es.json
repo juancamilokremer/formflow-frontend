@@ -398,6 +398,7 @@
       "no_answers": "Todavía no hay respuestas para esta pregunta.",
       "no_questions": "Este formulario no tiene preguntas con estadísticas.",
       "no_options": "Esta pregunta todavía no tiene opciones configuradas.",
+      "no_preview": "Sin vista previa disponible para este tipo de pregunta.",
       "nps": {
         "promoters": "Promotores (9-10)",
         "passives": "Pasivos (7-8)",
