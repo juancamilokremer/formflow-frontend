@@ -1,11 +1,12 @@
 import { Component, computed, input } from '@angular/core';
-import { ApexChart, ApexDataLabels, ApexLegend, ApexNonAxisChartSeries, NgApexchartsModule } from 'ng-apexcharts';
+import { ApexChart, ApexDataLabels, ApexLegend, ApexNonAxisChartSeries } from 'ng-apexcharts';
+import { ChartComponent } from '../../../../../../shared/components/chart/chart.component';
 import { OptionDistribution } from '../../../../models/form-stats.model';
 import { CATEGORICAL_PALETTE } from '../chart-colors';
 
 @Component({
   selector: 'app-pie-chart',
-  imports: [NgApexchartsModule],
+  imports: [ChartComponent],
   templateUrl: './pie-chart.component.html',
   styleUrl: './pie-chart.component.scss',
 })
@@ -18,7 +19,7 @@ export class PieChartComponent {
   protected readonly labels = computed(() =>
     this.distributions().map((d) => d.label));
 
-  // Orden fijo por posición de la opción — nunca reordenado por valor/conteo.
+  // Fixed order by option position — never reordered by value/count.
   protected readonly colors = computed(() =>
     this.distributions().map((_, i) => CATEGORICAL_PALETTE[i % CATEGORICAL_PALETTE.length]));
 

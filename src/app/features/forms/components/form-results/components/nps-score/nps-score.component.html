@@ -3,7 +3,7 @@
     [title]="'results.per_question.no_answers' | translate" />
 } @else {
   <div class="nps-score">
-    <apx-chart [series]="series()" [chart]="chart" [plotOptions]="plotOptions" [colors]="colors" />
+    <app-chart [series]="series()" [chart]="chart" [plotOptions]="plotOptions" [colors]="colors" />
 
     <div class="nps-score__breakdown">
       <div class="nps-score__item nps-score__item--promoters">

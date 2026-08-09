@@ -1,8 +1,8 @@
 import { Component, computed, input } from '@angular/core';
 import {
   ApexAxisChartSeries, ApexChart, ApexDataLabels, ApexPlotOptions, ApexXAxis,
-  NgApexchartsModule,
 } from 'ng-apexcharts';
+import { ChartComponent } from '../../../../../../shared/components/chart/chart.component';
 import { OptionDistribution } from '../../../../models/form-stats.model';
 import { FORMFLOW_PRIMARY } from '../chart-colors';
 
@@ -11,7 +11,7 @@ const HEIGHT_PER_BAR = 40;
 
 @Component({
   selector: 'app-bar-chart',
-  imports: [NgApexchartsModule],
+  imports: [ChartComponent],
   templateUrl: './bar-chart.component.html',
   styleUrl: './bar-chart.component.scss',
 })
@@ -30,7 +30,6 @@ export class BarChartComponent {
   protected readonly chart = computed<ApexChart>(() => ({
     type: 'bar',
     height: Math.max(MIN_HEIGHT, this.distributions().length * HEIGHT_PER_BAR),
-    toolbar: { show: false },
   }));
 
   protected readonly plotOptions: ApexPlotOptions = {

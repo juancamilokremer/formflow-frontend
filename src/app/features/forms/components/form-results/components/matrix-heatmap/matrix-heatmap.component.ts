@@ -1,11 +1,12 @@
 import { Component, computed, input } from '@angular/core';
-import { ApexChart, ApexDataLabels, ApexPlotOptions, NgApexchartsModule } from 'ng-apexcharts';
+import { ApexChart, ApexDataLabels, ApexPlotOptions } from 'ng-apexcharts';
+import { ChartComponent } from '../../../../../../shared/components/chart/chart.component';
 import { MatrixRowStats } from '../../../../models/form-stats.model';
 import { SEQUENTIAL_BLUE_STEPS } from '../chart-colors';
 
 @Component({
   selector: 'app-matrix-heatmap',
-  imports: [NgApexchartsModule],
+  imports: [ChartComponent],
   templateUrl: './matrix-heatmap.component.html',
   styleUrl: './matrix-heatmap.component.scss',
 })
@@ -21,7 +22,6 @@ export class MatrixHeatmapComponent {
   protected readonly chart = computed<ApexChart>(() => ({
     type: 'heatmap',
     height: Math.max(160, this.matrixRows().length * 50),
-    toolbar: { show: false },
   }));
 
   protected readonly dataLabels: ApexDataLabels = {

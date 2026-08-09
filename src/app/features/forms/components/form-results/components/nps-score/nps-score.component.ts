@@ -1,6 +1,7 @@
 import { Component, computed, input } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { ApexChart, ApexPlotOptions, NgApexchartsModule } from 'ng-apexcharts';
+import { ApexChart, ApexPlotOptions } from 'ng-apexcharts';
+import { ChartComponent } from '../../../../../../shared/components/chart/chart.component';
 import { EmptyStateComponent } from '../../../../../../shared/components/empty-state/empty-state.component';
 import { OptionDistribution } from '../../../../models/form-stats.model';
 import { FORMFLOW_ERROR, FORMFLOW_SUCCESS, FORMFLOW_WARNING } from '../chart-colors';
@@ -26,7 +27,7 @@ export function computeNpsBreakdown(distributions: OptionDistribution[]): NpsBre
 
 @Component({
   selector: 'app-nps-score',
-  imports: [TranslatePipe, NgApexchartsModule, EmptyStateComponent],
+  imports: [TranslatePipe, ChartComponent, EmptyStateComponent],
   templateUrl: './nps-score.component.html',
   styleUrl: './nps-score.component.scss',
 })
@@ -50,7 +51,7 @@ export class NpsScoreComponent {
     return total === 0 ? 0 : Math.round((count / total) * 100);
   }
 
-  // El relleno del gauge necesita 0-100; el score real va de -100 a 100.
+  // The gauge fill needs 0-100; the real score ranges from -100 to 100.
   protected readonly gaugeValue = computed(() => {
     const score = this.npsScore();
     return score === null ? 0 : Math.round((score + 100) / 2);

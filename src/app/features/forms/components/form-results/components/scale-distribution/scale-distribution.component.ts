@@ -1,14 +1,15 @@
 import { Component, computed, input } from '@angular/core';
 import {
   ApexAnnotations, ApexAxisChartSeries, ApexChart, ApexDataLabels, ApexPlotOptions,
-  ApexXAxis, NgApexchartsModule,
+  ApexXAxis,
 } from 'ng-apexcharts';
+import { ChartComponent } from '../../../../../../shared/components/chart/chart.component';
 import { OptionDistribution } from '../../../../models/form-stats.model';
 import { FORMFLOW_PRIMARY, FORMFLOW_WARNING } from '../chart-colors';
 
 @Component({
   selector: 'app-scale-distribution',
-  imports: [NgApexchartsModule],
+  imports: [ChartComponent],
   templateUrl: './scale-distribution.component.html',
   styleUrl: './scale-distribution.component.scss',
 })
@@ -16,11 +17,11 @@ export class ScaleDistributionComponent {
   readonly distributions = input.required<OptionDistribution[]>();
   readonly average = input<number | null>(null);
 
-  // Eje de categorías (mismo patrón que BarChartComponent) — un eje numérico con
-  // datos {x,y} no renderiza las barras de forma confiable en ApexCharts. La
-  // anotación del promedio se snapea a la categoría más cercana (pierde precisión
-  // sub-entero en la posición de la línea, pero el label sigue mostrando el valor
-  // exacto) a cambio de que las barras sí se vean.
+  // Category axis (same pattern as BarChartComponent) — a numeric axis with {x,y}
+  // data doesn't render bars reliably in ApexCharts. The average annotation snaps
+  // to the nearest category (loses sub-integer precision in the line's position,
+  // but the label text still shows the exact value) in exchange for the bars
+  // actually being visible.
   protected readonly series = computed<ApexAxisChartSeries>(() => [{
     name: 'Respuestas',
     data: this.distributions().map((d) => d.count),
@@ -56,7 +57,7 @@ export class ScaleDistributionComponent {
     ).label;
   }
 
-  protected readonly chart: ApexChart = { type: 'bar', height: 240, toolbar: { show: false } };
+  protected readonly chart: ApexChart = { type: 'bar', height: 240 };
   protected readonly plotOptions: ApexPlotOptions = {
     bar: { borderRadius: 4, borderRadiusApplication: 'end', columnWidth: '50%' },
   };

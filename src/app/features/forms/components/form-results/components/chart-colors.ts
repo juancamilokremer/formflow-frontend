@@ -1,9 +1,9 @@
-// Colores para las gráficas de "Por pregunta". FormFlow no tiene una rampa
-// categórica propia validada (solo tokens semánticos en styles.scss), así que las
-// series categóricas usan la paleta de referencia ya validada de la skill dataviz
-// (orden fijo, nunca reordenada por valor). Los semánticos SI reflejan los tokens
-// --ff-primary/success/warning/error de styles.scss — mantener en sync manualmente,
-// ApexCharts no puede resolver custom properties CSS al construir las opciones.
+// Colors for the "Per question" charts. FormFlow has no validated categorical ramp
+// of its own (only semantic tokens in styles.scss), so categorical series use the
+// dataviz skill's validated reference palette (fixed order, never reordered by
+// value). The semantic ones DO mirror the --ff-primary/success/warning/error tokens
+// in styles.scss — keep them in sync manually, ApexCharts can't resolve CSS custom
+// properties when building chart options.
 
 export const CATEGORICAL_PALETTE: string[] = [
   '#2a78d6', // azul
@@ -14,7 +14,7 @@ export const CATEGORICAL_PALETTE: string[] = [
   '#008300', // verde
 ];
 
-// Rampa secuencial de un solo hue (azul), pasos claro→oscuro, para el heatmap de MATRIX.
+// Single-hue sequential ramp (blue), light→dark steps, for the MATRIX heatmap.
 export const SEQUENTIAL_BLUE_STEPS: { threshold: number; color: string }[] = [
   { threshold: 20, color: '#cde2fb' },
   { threshold: 40, color: '#9ec5f4' },
