@@ -40,11 +40,16 @@
         }
         @case ('responses') {
           <app-card class="fr__section">
-            <app-empty-state icon="inbox" [compact]="true"
-              [title]="'results.tabs.responses_soon' | translate" />
+            <app-individual-responses [formId]="formId" (responseSelected)="openResponse($event)" />
           </app-card>
         }
       }
     }
   </div>
+
+  <app-response-detail-drawer
+    [formId]="formId"
+    [responseId]="selectedResponseId()"
+    (closed)="closeResponseDrawer()"
+  />
 }

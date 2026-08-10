@@ -45,6 +45,27 @@
     tbody tr:last-child td { border-bottom: none; }
 
     tbody tr:hover { background: var(--ff-bg); }
+
+    tbody tr.ff-table__row--clickable { cursor: pointer; }
+  }
+
+  &__pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 20px;
+    border-top: 1px solid var(--ff-border);
+  }
+
+  &__pagination-summary {
+    font-size: 13px;
+    color: var(--ff-text-secondary);
+  }
+
+  &__pagination-controls {
+    display: flex;
+    gap: 4px;
   }
 }
 
