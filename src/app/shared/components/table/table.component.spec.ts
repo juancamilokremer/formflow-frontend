@@ -3,14 +3,14 @@ import { provideTranslateService } from '@ngx-translate/core';
 import { AppTableComponent } from './table.component';
 import { TableColumn } from './table.component';
 
-type TestableTable = {
+interface TestableTable {
   totalPages(): number;
   rangeStart(): number;
   rangeEnd(): number;
   onRowClick(row: unknown): void;
   goToPreviousPage(): void;
   goToNextPage(): void;
-};
+}
 
 function buildComponent(overrides: {
   rows?: unknown[]; totalElements?: number | null; pageIndex?: number; pageSize?: number; clickableRows?: boolean;
