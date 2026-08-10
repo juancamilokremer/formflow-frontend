@@ -13,6 +13,8 @@ import { FormsService } from '../../services/forms.service';
 import { FormStats } from '../../models/form-stats.model';
 import { ResultsSummaryComponent } from './components/results-summary/results-summary.component';
 import { QuestionStatsCardComponent } from './components/question-stats-card/question-stats-card.component';
+import { IndividualResponsesComponent } from './components/individual-responses/individual-responses.component';
+import { ResponseDetailDrawerComponent } from './components/response-detail-drawer/response-detail-drawer.component';
 
 type ResultsTab = 'summary' | 'per-question' | 'responses';
 
@@ -22,6 +24,7 @@ type ResultsTab = 'summary' | 'per-question' | 'responses';
     TranslatePipe,
     ButtonComponent, CardComponent, PageHeaderComponent, LoadingSpinnerComponent,
     EmptyStateComponent, TabsComponent, ResultsSummaryComponent, QuestionStatsCardComponent,
+    IndividualResponsesComponent, ResponseDetailDrawerComponent,
   ],
   templateUrl: './form-results.component.html',
   styleUrl: './form-results.component.scss',
@@ -32,12 +35,13 @@ export class FormResultsComponent implements OnInit {
   private readonly formsService = inject(FormsService);
   private readonly destroyRef = inject(DestroyRef);
 
-  private readonly formId = this.route.snapshot.paramMap.get('id')!;
+  protected readonly formId = this.route.snapshot.paramMap.get('id')!;
 
   protected readonly loading = signal(true);
   protected readonly loadError = signal(false);
   protected readonly stats = signal<FormStats | null>(null);
   protected readonly activeTab = signal<ResultsTab>('summary');
+  protected readonly selectedResponseId = signal<string | null>(null);
 
   protected readonly tabs: TabItem[] = [
     { id: 'summary', label: 'results.tabs.summary' },
@@ -68,6 +72,14 @@ export class FormResultsComponent implements OnInit {
 
   protected setActiveTab(tabId: string): void {
     this.activeTab.set(tabId as ResultsTab);
+  }
+
+  protected openResponse(responseId: string): void {
+    this.selectedResponseId.set(responseId);
+  }
+
+  protected closeResponseDrawer(): void {
+    this.selectedResponseId.set(null);
   }
 
   protected goToPreview(): void {

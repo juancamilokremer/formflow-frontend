@@ -1,0 +1,63 @@
+<app-drawer
+  [title]="'results.responses.drawer_title' | translate"
+  [isOpen]="isOpen()"
+  (closed)="closed.emit()"
+>
+  @if (loading()) {
+    <app-loading-spinner />
+  } @else if (loadError()) {
+    <app-empty-state icon="alert-circle" [title]="'results.error.load' | translate" />
+  } @else if (detail(); as d) {
+    <div class="rdd__meta">
+      <span>{{ d.submittedAt | date : 'd MMM y, HH:mm' }}</span>
+      @if (durationLabel(); as duration) {
+        <span>{{ duration }}</span>
+      }
+    </div>
+
+    @if (d.totalScore !== null || d.categoryScores) {
+      <div class="rdd__scores">
+        @if (d.totalScore !== null) {
+          <app-stat-card [label]="'results.responses.total_score' | translate" [value]="d.totalScore" color="success" />
+        }
+        @if (d.categoryScores; as scores) {
+          @for (score of scores; track score.categoryId) {
+            <app-stat-card [label]="score.categoryName" [value]="score.score" />
+          }
+        }
+      </div>
+    }
+
+    <div class="rdd__answers">
+      @for (answer of d.answers; track answer.questionId) {
+        <div class="rdd__answer">
+          <p class="rdd__question">{{ answer.questionTitle }}</p>
+          @switch (answer.questionType) {
+            @case ('date') {
+              @if (answer.value) {
+                <p class="rdd__value">{{ $any(answer.value) | date : 'd MMM y' }}</p>
+              } @else {
+                <p class="rdd__value rdd__value--empty">{{ 'results.responses.no_answer' | translate }}</p>
+              }
+            }
+            @case ('file') {
+              @if (answer.value) {
+                <a class="rdd__file-link" [href]="$any(answer.value)" target="_blank" rel="noopener">
+                  <app-icon name="paperclip" [size]="14" />
+                  {{ 'results.responses.download_file' | translate }}
+                </a>
+              } @else {
+                <p class="rdd__value rdd__value--empty">{{ 'results.responses.no_answer' | translate }}</p>
+              }
+            }
+            @default {
+              <p class="rdd__value" [class.rdd__value--empty]="!answer.displayValue">
+                {{ answer.displayValue ?? ('results.responses.no_answer' | translate) }}
+              </p>
+            }
+          }
+        </div>
+      }
+    </div>
+  }
+</app-drawer>

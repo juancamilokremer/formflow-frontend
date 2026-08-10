@@ -9,6 +9,7 @@ import {
   AddQuestionRequest, UpdateQuestionRequest,
 } from '../models/form.model';
 import { FormStats } from '../models/form-stats.model';
+import { ResponseDetail, ResponsePage } from '../models/form-response.model';
 
 @Injectable({ providedIn: 'root' })
 export class FormsService {
@@ -57,6 +58,18 @@ export class FormsService {
 
   remove(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  getResponses(formId: string, page: number, size: number): Observable<ResponsePage> {
+    return this.http
+      .get<ApiResponse<ResponsePage>>(`${this.apiUrl}/${formId}/responses`, { params: { page, size } })
+      .pipe(map((r) => r.data!));
+  }
+
+  getResponseDetail(formId: string, responseId: string): Observable<ResponseDetail> {
+    return this.http
+      .get<ApiResponse<ResponseDetail>>(`${this.apiUrl}/${formId}/responses/${responseId}`)
+      .pipe(map((r) => r.data!));
   }
 
   createSection(formId: string, req: CreateSectionRequest): Observable<FormSection> {

@@ -1,0 +1,30 @@
+<app-table
+  [columns]="tableColumns"
+  [rows]="responses()"
+  [loading]="loading()"
+  [loadError]="loadError()"
+  [loadingMessage]="'common.loading' | translate"
+  [errorTitle]="'results.error.load' | translate"
+  emptyIcon="inbox"
+  [emptyTitle]="'results.responses.empty_title' | translate"
+  [clickableRows]="true"
+  [totalElements]="totalElements()"
+  [pageIndex]="pageIndex()"
+  [pageSize]="pageSize"
+  (pageChange)="onPageChange($event)"
+  (rowClick)="onRowClick($event)"
+>
+
+  <ng-template appTableCell [column]="'submittedAt'" let-row>
+    {{ $any(row).submittedAt | date : 'd MMM y, HH:mm' }}
+  </ng-template>
+
+  <ng-template appTableCell [column]="'duration'" let-row>
+    {{ duration($any(row)) }}
+  </ng-template>
+
+  <ng-template appTableCell [column]="'totalScore'" let-row>
+    {{ $any(row).totalScore ?? '—' }}
+  </ng-template>
+
+</app-table>

@@ -37,7 +37,10 @@
         </thead>
         <tbody>
           @for (row of rows(); track $index; let i = $index) {
-            <tr>
+            <tr
+              [class.ff-table__row--clickable]="clickableRows()"
+              (click)="onRowClick(row)"
+            >
               @for (col of columns(); track col.key) {
                 <td [style.text-align]="col.align ?? 'left'">
                   @if (getCellTemplate(col.key); as tpl) {
@@ -55,6 +58,24 @@
         </tbody>
       </table>
     </div>
+
+    @if (totalElements(); as total) {
+      <div class="ff-table__pagination">
+        <span class="ff-table__pagination-summary">
+          {{ 'common.pagination_range' | translate : { start: rangeStart(), end: rangeEnd(), total } }}
+        </span>
+        <div class="ff-table__pagination-controls">
+          <app-button variant="ghost" [iconOnly]="true" type="button"
+            [disabled]="pageIndex() === 0" (click)="goToPreviousPage()">
+            <app-icon name="arrow-left" [size]="16" />
+          </app-button>
+          <app-button variant="ghost" [iconOnly]="true" type="button"
+            [disabled]="pageIndex() >= totalPages() - 1" (click)="goToNextPage()">
+            <app-icon name="arrow-right" [size]="16" />
+          </app-button>
+        </div>
+      </div>
+    }
   }
 
 </div>

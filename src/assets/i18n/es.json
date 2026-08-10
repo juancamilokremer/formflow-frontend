@@ -16,7 +16,8 @@
     "never": "—",
     "ago_minutes": "hace {{n}} min",
     "ago_hours": "hace {{n}}h",
-    "ago_days": "hace {{n}}d"
+    "ago_days": "hace {{n}}d",
+    "pagination_range": "{{start}}–{{end}} de {{total}}"
   },
   "auth": {
     "login": {
@@ -378,8 +379,17 @@
     "tabs": {
       "summary": "Resumen",
       "per_question": "Por pregunta",
-      "responses": "Respuestas individuales",
-      "responses_soon": "El detalle de respuestas individuales llega en una próxima entrega."
+      "responses": "Respuestas individuales"
+    },
+    "responses": {
+      "empty_title": "Todavía no hay respuestas individuales para mostrar.",
+      "column_submitted": "Fecha de envío",
+      "column_duration": "Tiempo de completado",
+      "column_score": "Puntaje",
+      "drawer_title": "Detalle de la respuesta",
+      "total_score": "Puntaje total",
+      "no_answer": "Sin respuesta",
+      "download_file": "Descargar archivo"
     },
     "summary": {
       "total": "Total respuestas",
