@@ -8,8 +8,6 @@ import { FormsService } from '../../../../services/forms.service';
 import { ResponseSummary } from '../../../../models/form-response.model';
 import { formatDurationSeconds } from '../results-summary/results-summary.component';
 
-const PAGE_SIZE = 20;
-
 @Component({
   selector: 'app-individual-responses',
   imports: [DatePipe, TranslatePipe, AppTableComponent, TableCellDirective],
@@ -28,7 +26,9 @@ export class IndividualResponsesComponent implements OnInit {
   protected readonly pageIndex = signal(0);
   protected readonly loading = signal(true);
   protected readonly loadError = signal(false);
-  protected readonly pageSize = PAGE_SIZE;
+  // Placeholder for the very first render only — overwritten by the backend's
+  // own default (echoed back as result.size) as soon as the first page loads.
+  protected readonly pageSize = signal(20);
 
   protected readonly tableColumns: TableColumn[] = [
     { key: 'submittedAt', header: 'results.responses.column_submitted' },
@@ -55,13 +55,14 @@ export class IndividualResponsesComponent implements OnInit {
   private load(page: number): void {
     this.loading.set(true);
     this.loadError.set(false);
-    this.formsService.getResponses(this.formId(), page, this.pageSize)
+    this.formsService.getResponses(this.formId(), page)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (result) => {
           this.responses.set(result.items);
           this.totalElements.set(result.totalElements);
           this.pageIndex.set(result.page);
+          this.pageSize.set(result.size);
           this.loading.set(false);
         },
         error: () => {

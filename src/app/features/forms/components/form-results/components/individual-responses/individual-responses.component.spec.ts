@@ -38,9 +38,10 @@ function buildComponent(overrides: { getResponsesImpl?: unknown } = {}) {
 describe('IndividualResponsesComponent', () => {
   it('loads the first page of responses on init', () => {
     const { component, mockFormsService } = buildComponent();
-    expect(mockFormsService.getResponses).toHaveBeenCalledWith('f1', 0, 20);
+    expect(mockFormsService.getResponses).toHaveBeenCalledWith('f1', 0);
     expect(component['responses']()).toEqual(MOCK_PAGE.items);
     expect(component['totalElements']()).toBe(1);
+    expect(component['pageSize']()).toBe(20);
     expect(component['loading']()).toBe(false);
   });
 
@@ -56,7 +57,7 @@ describe('IndividualResponsesComponent', () => {
     it('reloads with the requested page', () => {
       const { component, mockFormsService } = buildComponent();
       component['onPageChange'](2);
-      expect(mockFormsService.getResponses).toHaveBeenCalledWith('f1', 2, 20);
+      expect(mockFormsService.getResponses).toHaveBeenCalledWith('f1', 2);
     });
   });
 

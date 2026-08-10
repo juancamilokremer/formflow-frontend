@@ -60,9 +60,11 @@ export class FormsService {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
-  getResponses(formId: string, page: number, size: number): Observable<ResponsePage> {
+  getResponses(formId: string, page: number, size?: number): Observable<ResponsePage> {
+    const params: Record<string, number> = { page };
+    if (size !== undefined) params['size'] = size;
     return this.http
-      .get<ApiResponse<ResponsePage>>(`${this.apiUrl}/${formId}/responses`, { params: { page, size } })
+      .get<ApiResponse<ResponsePage>>(`${this.apiUrl}/${formId}/responses`, { params })
       .pipe(map((r) => r.data!));
   }
 

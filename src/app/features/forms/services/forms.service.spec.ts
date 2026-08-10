@@ -4,6 +4,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { FormsService } from './forms.service';
 import { Form } from '../models/form.model';
 import { FormStats } from '../models/form-stats.model';
+import { ResponseDetail, ResponsePage } from '../models/form-response.model';
 
 const mockForm: Form = {
   id: 'f1',
@@ -110,5 +111,43 @@ describe('FormsService', () => {
 
     http.expectOne((r) => r.method === 'DELETE' && r.url.includes('/f1')).flush(null);
     expect(called).toBe(true);
+  });
+
+  it('getResponses() should omit the size param when not provided, letting the backend default apply', () => {
+    const mockPage: ResponsePage = { items: [], totalElements: 0, totalPages: 0, page: 0, size: 20 };
+
+    let result: ResponsePage | undefined;
+    service.getResponses('f1', 0).subscribe((r) => (result = r));
+
+    const req = http.expectOne((r) => r.method === 'GET' && r.url.includes('/f1/responses'));
+    expect(req.request.params.has('size')).toBe(false);
+    expect(req.request.params.get('page')).toBe('0');
+    req.flush({ success: true, data: mockPage });
+
+    expect(result).toEqual(mockPage);
+  });
+
+  it('getResponses() should include the size param when explicitly provided', () => {
+    service.getResponses('f1', 1, 50).subscribe();
+
+    const req = http.expectOne((r) => r.method === 'GET' && r.url.includes('/f1/responses'));
+    expect(req.request.params.get('size')).toBe('50');
+    req.flush({ success: true, data: { items: [], totalElements: 0, totalPages: 0, page: 1, size: 50 } });
+  });
+
+  it('getResponseDetail() should GET the response detail and return the data', () => {
+    const mockDetail: ResponseDetail = {
+      id: 'r1', formId: 'f1', respondentToken: 't1', convocatoriaId: null, candidateId: null,
+      totalScore: null, categoryScores: null, answers: [],
+      submittedAt: '2026-08-01T10:00:00Z', startedAt: null,
+    };
+
+    let result: ResponseDetail | undefined;
+    service.getResponseDetail('f1', 'r1').subscribe((d) => (result = d));
+
+    const req = http.expectOne((r) => r.method === 'GET' && r.url.includes('/f1/responses/r1'));
+    req.flush({ success: true, data: mockDetail });
+
+    expect(result).toEqual(mockDetail);
   });
 });
