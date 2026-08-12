@@ -6,7 +6,22 @@
   </div>
 } @else if (stats(); as data) {
   <div class="fr">
-    <app-page-header [title]="data.formName" [subtitle]="'results.subtitle' | translate" />
+    <app-page-header [title]="data.formName" [subtitle]="'results.subtitle' | translate">
+      @if (data.totalResponses > 0) {
+        <div class="fr__export-actions">
+          <app-button variant="secondary" type="button" [loading]="exportingExcel()" (click)="exportResponses('excel')">
+            {{ 'results.export.excel' | translate }}
+          </app-button>
+          <app-button variant="secondary" type="button" [loading]="exportingCsv()" (click)="exportResponses('csv')">
+            {{ 'results.export.csv' | translate }}
+          </app-button>
+        </div>
+      }
+    </app-page-header>
+
+    @if (exportError()) {
+      <p class="fr__export-error">{{ 'results.export.error' | translate }}</p>
+    }
 
     @if (data.totalResponses === 0) {
       <app-empty-state icon="bar-chart-2" [title]="'results.empty.title' | translate"

@@ -9,7 +9,7 @@ import {
   AddQuestionRequest, UpdateQuestionRequest,
 } from '../models/form.model';
 import { FormStats } from '../models/form-stats.model';
-import { ResponseDetail, ResponsePage } from '../models/form-response.model';
+import { ExportFormat, ExportedFile, ResponseDetail, ResponsePage } from '../models/form-response.model';
 
 @Injectable({ providedIn: 'root' })
 export class FormsService {
@@ -74,6 +74,15 @@ export class FormsService {
       .pipe(map((r) => r.data!));
   }
 
+  exportResponses(formId: string, format: ExportFormat): Observable<ExportedFile> {
+    return this.http
+      .get(`${this.apiUrl}/${formId}/export/${format}`, { responseType: 'blob', observe: 'response' })
+      .pipe(map((response) => ({
+        blob: response.body!,
+        filename: filenameFromContentDisposition(response.headers.get('content-disposition')) ?? `export.${format}`,
+      })));
+  }
+
   createSection(formId: string, req: CreateSectionRequest): Observable<FormSection> {
     return this.http.post<ApiResponse<FormSection>>(`${this.apiUrl}/${formId}/sections`, req).pipe(
       map((r) => r.data!),
@@ -126,4 +135,10 @@ export class FormsService {
       { orderedQuestionIds },
     );
   }
+}
+
+export function filenameFromContentDisposition(header: string | null): string | null {
+  if (!header) return null;
+  const match = header.match(/filename="?([^";]+)"?/);
+  return match ? match[1] : null;
 }

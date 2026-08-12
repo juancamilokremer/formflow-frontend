@@ -42,3 +42,10 @@ export interface ResponseDetail {
   submittedAt: string;
   startedAt: string | null;
 }
+
+export type ExportFormat = 'excel' | 'csv';
+
+export interface ExportedFile {
+  blob: Blob;
+  filename: string;
+}

@@ -24,4 +24,15 @@
       grid-template-columns: repeat(2, 1fr);
     }
   }
+
+  &__export-actions {
+    display: flex;
+    gap: 8px;
+  }
+
+  &__export-error {
+    font-size: 13px;
+    color: var(--ff-error-text);
+    margin: 0;
+  }
 }
