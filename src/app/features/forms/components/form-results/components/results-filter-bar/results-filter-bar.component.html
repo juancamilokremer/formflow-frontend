@@ -1,0 +1,23 @@
+<div class="rfb">
+  <div class="rfb__controls">
+    <div class="rfb__presets">
+      @for (preset of presets; track preset.id) {
+        <button
+          type="button"
+          class="rfb__chip"
+          [class.rfb__chip--active]="activePreset() === preset.id"
+          (click)="selectPreset(preset.id)"
+        >
+          {{ preset.labelKey | translate }}
+        </button>
+      }
+    </div>
+
+    <div class="rfb__dates" [formGroup]="form">
+      <app-input type="date" [label]="'results.filter.from' | translate" formControlName="from" />
+      <app-input type="date" [label]="'results.filter.to' | translate" formControlName="to" />
+    </div>
+  </div>
+
+  <p class="rfb__hint">{{ 'results.filter.hint' | translate }}</p>
+</div>

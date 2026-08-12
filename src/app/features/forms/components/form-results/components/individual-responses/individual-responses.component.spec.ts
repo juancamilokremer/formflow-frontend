@@ -32,13 +32,13 @@ function buildComponent(overrides: { getResponsesImpl?: unknown } = {}) {
   const fixture = TestBed.createComponent(IndividualResponsesComponent);
   fixture.componentRef.setInput('formId', 'f1');
   fixture.detectChanges();
-  return { component: fixture.componentInstance, mockFormsService };
+  return { component: fixture.componentInstance, mockFormsService, fixture };
 }
 
 describe('IndividualResponsesComponent', () => {
   it('loads the first page of responses on init', () => {
     const { component, mockFormsService } = buildComponent();
-    expect(mockFormsService.getResponses).toHaveBeenCalledWith('f1', 0);
+    expect(mockFormsService.getResponses).toHaveBeenCalledWith('f1', 0, undefined, undefined, undefined);
     expect(component['responses']()).toEqual(MOCK_PAGE.items);
     expect(component['totalElements']()).toBe(1);
     expect(component['pageSize']()).toBe(20);
@@ -57,7 +57,19 @@ describe('IndividualResponsesComponent', () => {
     it('reloads with the requested page', () => {
       const { component, mockFormsService } = buildComponent();
       component['onPageChange'](2);
-      expect(mockFormsService.getResponses).toHaveBeenCalledWith('f1', 2);
+      expect(mockFormsService.getResponses).toHaveBeenCalledWith('f1', 2, undefined, undefined, undefined);
+    });
+  });
+
+  describe('from/to inputs', () => {
+    it('reloads page 0 when the date range changes', () => {
+      const { component, mockFormsService, fixture } = buildComponent();
+      (mockFormsService.getResponses as any).mockClear();
+      fixture.componentRef.setInput('from', '2026-08-01T00:00:00.000Z');
+      fixture.componentRef.setInput('to', '2026-08-06T23:59:59.999Z');
+      fixture.detectChanges();
+      expect(mockFormsService.getResponses).toHaveBeenCalledWith(
+        'f1', 0, undefined, '2026-08-01T00:00:00.000Z', '2026-08-06T23:59:59.999Z');
     });
   });
 

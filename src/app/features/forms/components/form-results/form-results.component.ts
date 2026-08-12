@@ -11,12 +11,13 @@ import { EmptyStateComponent } from '../../../../shared/components/empty-state/e
 import { TabItem, TabsComponent } from '../../../../shared/components/tabs/tabs.component';
 import { FormsService } from '../../services/forms.service';
 import { FormStats } from '../../models/form-stats.model';
-import { ExportFormat } from '../../models/form-response.model';
+import { DateRangeFilter, ExportFormat, dateInputToIsoStart, resolvePresetDateFrom } from '../../models/form-response.model';
 import { FileDownloadService } from '../../../../core/services/file-download.service';
 import { ResultsSummaryComponent } from './components/results-summary/results-summary.component';
 import { QuestionStatsCardComponent } from './components/question-stats-card/question-stats-card.component';
 import { IndividualResponsesComponent } from './components/individual-responses/individual-responses.component';
 import { ResponseDetailDrawerComponent } from './components/response-detail-drawer/response-detail-drawer.component';
+import { ResultsFilterBarComponent } from './components/results-filter-bar/results-filter-bar.component';
 
 type ResultsTab = 'summary' | 'per-question' | 'responses';
 
@@ -26,7 +27,7 @@ type ResultsTab = 'summary' | 'per-question' | 'responses';
     TranslatePipe,
     ButtonComponent, CardComponent, PageHeaderComponent, LoadingSpinnerComponent,
     EmptyStateComponent, TabsComponent, ResultsSummaryComponent, QuestionStatsCardComponent,
-    IndividualResponsesComponent, ResponseDetailDrawerComponent,
+    IndividualResponsesComponent, ResponseDetailDrawerComponent, ResultsFilterBarComponent,
   ],
   templateUrl: './form-results.component.html',
   styleUrl: './form-results.component.scss',
@@ -48,6 +49,14 @@ export class FormResultsComponent implements OnInit {
   protected readonly exportingExcel = signal(false);
   protected readonly exportingCsv = signal(false);
   protected readonly exportError = signal(false);
+  protected readonly range = signal<DateRangeFilter>({
+    from: dateInputToIsoStart(resolvePresetDateFrom('7d')), to: undefined,
+  });
+  protected readonly isAllTimeRange = computed(() => {
+    const r = this.range();
+    return r.from === undefined && r.to === undefined;
+  });
+  private statsRequestId = 0;
 
   protected readonly tabs: TabItem[] = [
     { id: 'summary', label: 'results.tabs.summary' },
@@ -62,14 +71,32 @@ export class FormResultsComponent implements OnInit {
     this.stats()?.questions.filter((q) => q.type !== 'info') ?? []);
 
   ngOnInit(): void {
-    this.formsService.getStats(this.formId)
+    this.loadStats();
+  }
+
+  protected onRangeChange(range: DateRangeFilter): void {
+    const current = this.range();
+    if (range.from === current.from && range.to === current.to) return;
+    this.range.set(range);
+    this.loadStats();
+  }
+
+  // A user editing the two date fields fires two overlapping requests in quick
+  // succession — without this guard, whichever response arrives last wins, even
+  // if it's the one for the range the user has since moved away from.
+  private loadStats(): void {
+    const requestId = ++this.statsRequestId;
+    const { from, to } = this.range();
+    this.formsService.getStats(this.formId, from, to)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (stats) => {
+          if (requestId !== this.statsRequestId) return;
           this.stats.set(stats);
           this.loading.set(false);
         },
         error: () => {
+          if (requestId !== this.statsRequestId) return;
           this.loadError.set(true);
           this.loading.set(false);
         },
@@ -96,7 +123,8 @@ export class FormResultsComponent implements OnInit {
     const exporting = format === 'excel' ? this.exportingExcel : this.exportingCsv;
     exporting.set(true);
     this.exportError.set(false);
-    this.formsService.exportResponses(this.formId, format)
+    const { from, to } = this.range();
+    this.formsService.exportResponses(this.formId, format, from, to)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (file) => {

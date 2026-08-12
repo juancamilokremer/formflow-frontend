@@ -19,17 +19,24 @@
       }
     </app-page-header>
 
+    <app-results-filter-bar (rangeChange)="onRangeChange($event)" />
+
     @if (exportError()) {
       <p class="fr__export-error">{{ 'results.export.error' | translate }}</p>
     }
 
     @if (data.totalResponses === 0) {
-      <app-empty-state icon="bar-chart-2" [title]="'results.empty.title' | translate"
-        [subtitle]="'results.empty.subtitle' | translate">
-        <app-button variant="secondary" type="button" (click)="goToPreview()">
-          {{ 'results.empty.cta' | translate }}
-        </app-button>
-      </app-empty-state>
+      @if (isAllTimeRange()) {
+        <app-empty-state icon="bar-chart-2" [title]="'results.empty.title' | translate"
+          [subtitle]="'results.empty.subtitle' | translate">
+          <app-button variant="secondary" type="button" (click)="goToPreview()">
+            {{ 'results.empty.cta' | translate }}
+          </app-button>
+        </app-empty-state>
+      } @else {
+        <app-empty-state icon="bar-chart-2" [title]="'results.empty.range_title' | translate"
+          [subtitle]="'results.empty.range_subtitle' | translate" />
+      }
     } @else {
       <app-tabs [tabs]="tabs" [activeTabId]="activeTab()" (tabChange)="setActiveTab($event)" />
 
@@ -55,7 +62,8 @@
         }
         @case ('responses') {
           <app-card class="fr__section">
-            <app-individual-responses [formId]="formId" (responseSelected)="openResponse($event)" />
+            <app-individual-responses [formId]="formId" [from]="range().from" [to]="range().to"
+              (responseSelected)="openResponse($event)" />
           </app-card>
         }
       }

@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit, inject, input, output, signal } from '@angular/core';
+import { Component, DestroyRef, effect, inject, input, output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DatePipe } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -14,8 +14,10 @@ import { formatDurationSeconds } from '../results-summary/results-summary.compon
   templateUrl: './individual-responses.component.html',
   styleUrl: './individual-responses.component.scss',
 })
-export class IndividualResponsesComponent implements OnInit {
+export class IndividualResponsesComponent {
   readonly formId = input.required<string>();
+  readonly from = input<string | undefined>(undefined);
+  readonly to = input<string | undefined>(undefined);
   readonly responseSelected = output<string>();
 
   private readonly formsService = inject(FormsService);
@@ -29,6 +31,7 @@ export class IndividualResponsesComponent implements OnInit {
   // Placeholder for the very first render only — overwritten by the backend's
   // own default (echoed back as result.size) as soon as the first page loads.
   protected readonly pageSize = signal(20);
+  private loadRequestId = 0;
 
   protected readonly tableColumns: TableColumn[] = [
     { key: 'submittedAt', header: 'results.responses.column_submitted' },
@@ -36,8 +39,14 @@ export class IndividualResponsesComponent implements OnInit {
     { key: 'totalScore', header: 'results.responses.column_score', align: 'right' },
   ];
 
-  ngOnInit(): void {
-    this.load(0);
+  constructor() {
+    // Reads from()/to() to establish the reactive dependency, and also runs
+    // once on init (both start undefined) — this is what triggers the first load.
+    effect(() => {
+      this.from();
+      this.to();
+      this.load(0);
+    });
   }
 
   protected onPageChange(page: number): void {
@@ -52,13 +61,17 @@ export class IndividualResponsesComponent implements OnInit {
     return responseDurationLabel(row);
   }
 
+  // A range edit and a page click can both be in flight at once — without this
+  // guard, whichever response arrives last wins, even if it's stale.
   private load(page: number): void {
+    const requestId = ++this.loadRequestId;
     this.loading.set(true);
     this.loadError.set(false);
-    this.formsService.getResponses(this.formId(), page)
+    this.formsService.getResponses(this.formId(), page, undefined, this.from(), this.to())
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (result) => {
+          if (requestId !== this.loadRequestId) return;
           this.responses.set(result.items);
           this.totalElements.set(result.totalElements);
           this.pageIndex.set(result.page);
@@ -66,6 +79,7 @@ export class IndividualResponsesComponent implements OnInit {
           this.loading.set(false);
         },
         error: () => {
+          if (requestId !== this.loadRequestId) return;
           this.loadError.set(true);
           this.loading.set(false);
         },

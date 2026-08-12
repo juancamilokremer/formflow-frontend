@@ -50,18 +50,20 @@ export class FormsService {
     );
   }
 
-  getStats(id: string): Observable<FormStats> {
-    return this.http.get<ApiResponse<FormStats>>(`${this.apiUrl}/${id}/stats`).pipe(
-      map((r) => r.data!),
-    );
+  getStats(id: string, from?: string, to?: string): Observable<FormStats> {
+    return this.http
+      .get<ApiResponse<FormStats>>(`${this.apiUrl}/${id}/stats`, { params: dateRangeParams(from, to) })
+      .pipe(map((r) => r.data!));
   }
 
   remove(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
-  getResponses(formId: string, page: number, size?: number): Observable<ResponsePage> {
-    const params: Record<string, number> = { page };
+  getResponses(
+    formId: string, page: number, size?: number, from?: string, to?: string,
+  ): Observable<ResponsePage> {
+    const params: Record<string, string | number> = { page, ...dateRangeParams(from, to) };
     if (size !== undefined) params['size'] = size;
     return this.http
       .get<ApiResponse<ResponsePage>>(`${this.apiUrl}/${formId}/responses`, { params })
@@ -74,9 +76,11 @@ export class FormsService {
       .pipe(map((r) => r.data!));
   }
 
-  exportResponses(formId: string, format: ExportFormat): Observable<ExportedFile> {
+  exportResponses(formId: string, format: ExportFormat, from?: string, to?: string): Observable<ExportedFile> {
     return this.http
-      .get(`${this.apiUrl}/${formId}/export/${format}`, { responseType: 'blob', observe: 'response' })
+      .get(`${this.apiUrl}/${formId}/export/${format}`, {
+        params: dateRangeParams(from, to), responseType: 'blob', observe: 'response',
+      })
       .pipe(map((response) => ({
         blob: response.body!,
         filename: filenameFromContentDisposition(response.headers.get('content-disposition')) ?? `export.${format}`,
@@ -141,4 +145,11 @@ export function filenameFromContentDisposition(header: string | null): string | 
   if (!header) return null;
   const match = header.match(/filename="?([^";]+)"?/);
   return match ? match[1] : null;
+}
+
+function dateRangeParams(from?: string, to?: string): Record<string, string> {
+  const params: Record<string, string> = {};
+  if (from !== undefined) params['submittedAtFrom'] = from;
+  if (to !== undefined) params['submittedAtTo'] = to;
+  return params;
 }

@@ -374,7 +374,14 @@
     "empty": {
       "title": "Todavía no hay respuestas",
       "subtitle": "Comparte el formulario para empezar a recibir respuestas.",
-      "cta": "Compartir formulario"
+      "cta": "Compartir formulario",
+      "range_title": "No hay respuestas en este rango",
+      "range_subtitle": "Ajusta el filtro de fechas para ver otro período."
+    },
+    "filter": {
+      "hint": "Este filtro aplica a las tres pestañas y a la exportación.",
+      "from": "Desde",
+      "to": "Hasta"
     },
     "tabs": {
       "summary": "Resumen",
