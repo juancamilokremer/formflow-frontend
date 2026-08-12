@@ -4,7 +4,9 @@ import { provideTranslateService } from '@ngx-translate/core';
 import { of, throwError } from 'rxjs';
 import { FormResultsComponent } from './form-results.component';
 import { FormsService } from '../../services/forms.service';
+import { FileDownloadService } from '../../../../core/services/file-download.service';
 import { FormStats, QuestionStats } from '../../models/form-stats.model';
+import { ExportedFile } from '../../models/form-response.model';
 
 // jsdom doesn't implement ResizeObserver; the Resumen tab renders a real apx-chart.
 class ResizeObserverStub {
@@ -32,11 +34,16 @@ function question(overrides: Partial<QuestionStats>): QuestionStats {
   };
 }
 
-function buildComponent(overrides: { getStatsImpl?: unknown; stats?: FormStats } = {}) {
+function buildComponent(overrides: {
+  getStatsImpl?: unknown; stats?: FormStats; exportResponsesImpl?: unknown;
+} = {}) {
   const mockFormsService = {
     getStats: overrides.getStatsImpl ?? vi.fn().mockReturnValue(of(overrides.stats ?? MOCK_STATS)),
+    exportResponses: overrides.exportResponsesImpl ?? vi.fn().mockReturnValue(
+      of({ blob: new Blob(['x']), filename: 'export.xlsx' } as ExportedFile)),
   };
   const mockRouter = { navigate: vi.fn() };
+  const mockFileDownload = { download: vi.fn() };
 
   TestBed.configureTestingModule({
     imports: [FormResultsComponent],
@@ -44,6 +51,7 @@ function buildComponent(overrides: { getStatsImpl?: unknown; stats?: FormStats }
       provideTranslateService({ lang: 'es' }),
       { provide: FormsService, useValue: mockFormsService },
       { provide: Router, useValue: mockRouter },
+      { provide: FileDownloadService, useValue: mockFileDownload },
       {
         provide: ActivatedRoute,
         useValue: { snapshot: { paramMap: convertToParamMap({ id: 'f1' }) } },
@@ -53,7 +61,7 @@ function buildComponent(overrides: { getStatsImpl?: unknown; stats?: FormStats }
 
   const fixture = TestBed.createComponent(FormResultsComponent);
   fixture.detectChanges();
-  return { component: fixture.componentInstance, mockFormsService, mockRouter };
+  return { component: fixture.componentInstance, mockFormsService, mockRouter, mockFileDownload };
 }
 
 describe('FormResultsComponent', () => {
@@ -101,6 +109,47 @@ describe('FormResultsComponent', () => {
       const { component, mockRouter } = buildComponent();
       component['goToPreview']();
       expect(mockRouter.navigate).toHaveBeenCalledWith(['/', 'forms', 'f1', 'preview']);
+    });
+  });
+
+  describe('exportResponses', () => {
+    it('calls the service with the requested format and triggers the download', () => {
+      const file: ExportedFile = { blob: new Blob(['x']), filename: 'evaluacion.xlsx' };
+      const { component, mockFormsService, mockFileDownload } = buildComponent({
+        exportResponsesImpl: vi.fn().mockReturnValue(of(file)),
+      });
+
+      component['exportResponses']('excel');
+
+      expect(mockFormsService.exportResponses).toHaveBeenCalledWith('f1', 'excel');
+      expect(mockFileDownload.download).toHaveBeenCalledWith(file.blob, file.filename);
+      expect(component['exportingExcel']()).toBe(false);
+    });
+
+    it('sets exportingExcel while the excel export is in flight', () => {
+      const { component } = buildComponent({ exportResponsesImpl: vi.fn().mockReturnValue(of()) });
+      component['exportResponses']('excel');
+      expect(component['exportingExcel']()).toBe(true);
+      expect(component['exportingCsv']()).toBe(false);
+    });
+
+    it('sets exportingCsv while the csv export is in flight', () => {
+      const { component } = buildComponent({ exportResponsesImpl: vi.fn().mockReturnValue(of()) });
+      component['exportResponses']('csv');
+      expect(component['exportingCsv']()).toBe(true);
+      expect(component['exportingExcel']()).toBe(false);
+    });
+
+    it('sets exportError on failure and clears the loading state', () => {
+      const { component, mockFileDownload } = buildComponent({
+        exportResponsesImpl: vi.fn().mockReturnValue(throwError(() => new Error('boom'))),
+      });
+
+      component['exportResponses']('csv');
+
+      expect(component['exportError']()).toBe(true);
+      expect(component['exportingCsv']()).toBe(false);
+      expect(mockFileDownload.download).not.toHaveBeenCalled();
     });
   });
 });

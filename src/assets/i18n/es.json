@@ -381,6 +381,11 @@
       "per_question": "Por pregunta",
       "responses": "Respuestas individuales"
     },
+    "export": {
+      "excel": "Exportar Excel",
+      "csv": "Exportar CSV",
+      "error": "No se pudo generar el archivo. Intenta de nuevo."
+    },
     "responses": {
       "empty_title": "Todavía no hay respuestas individuales para mostrar.",
       "column_submitted": "Fecha de envío",

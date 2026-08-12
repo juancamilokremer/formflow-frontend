@@ -1,10 +1,10 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideHttpClient } from '@angular/common/http';
-import { FormsService } from './forms.service';
+import { FormsService, filenameFromContentDisposition } from './forms.service';
 import { Form } from '../models/form.model';
 import { FormStats } from '../models/form-stats.model';
-import { ResponseDetail, ResponsePage } from '../models/form-response.model';
+import { ExportedFile, ResponseDetail, ResponsePage } from '../models/form-response.model';
 
 const mockForm: Form = {
   id: 'f1',
@@ -149,5 +149,48 @@ describe('FormsService', () => {
     req.flush({ success: true, data: mockDetail });
 
     expect(result).toEqual(mockDetail);
+  });
+
+  it('exportResponses() should GET the blob and extract the filename from Content-Disposition', () => {
+    const blob = new Blob(['contenido']);
+
+    let result: ExportedFile | undefined;
+    service.exportResponses('f1', 'excel').subscribe((f) => (result = f));
+
+    const req = http.expectOne((r) => r.method === 'GET' && r.url.includes('/f1/export/excel'));
+    expect(req.request.responseType).toBe('blob');
+    req.flush(blob, {
+      headers: { 'Content-Disposition': 'attachment; filename="evaluacion_20260812.xlsx"' },
+    });
+
+    expect(result?.blob).toEqual(blob);
+    expect(result?.filename).toBe('evaluacion_20260812.xlsx');
+  });
+
+  it('exportResponses() should fall back to a generic filename when the header is missing', () => {
+    let result: ExportedFile | undefined;
+    service.exportResponses('f1', 'csv').subscribe((f) => (result = f));
+
+    http.expectOne((r) => r.url.includes('/f1/export/csv')).flush(new Blob(['x']));
+
+    expect(result?.filename).toBe('export.csv');
+  });
+});
+
+describe('filenameFromContentDisposition', () => {
+  it('extracts a quoted filename', () => {
+    expect(filenameFromContentDisposition('attachment; filename="evaluacion.xlsx"')).toBe('evaluacion.xlsx');
+  });
+
+  it('extracts an unquoted filename', () => {
+    expect(filenameFromContentDisposition('attachment; filename=evaluacion.xlsx')).toBe('evaluacion.xlsx');
+  });
+
+  it('returns null when there is no header', () => {
+    expect(filenameFromContentDisposition(null)).toBeNull();
+  });
+
+  it('returns null when the header has no filename', () => {
+    expect(filenameFromContentDisposition('attachment')).toBeNull();
   });
 });
