@@ -187,6 +187,14 @@ describe('FormsService', () => {
     expect(result?.filename).toBe('evaluacion_20260812.xlsx');
   });
 
+  it('exportResponses() should send the caller\'s own IANA timezone', () => {
+    service.exportResponses('f1', 'excel').subscribe();
+
+    const req = http.expectOne((r) => r.method === 'GET' && r.url.includes('/f1/export/excel'));
+    expect(req.request.params.get('timezone')).toBe(Intl.DateTimeFormat().resolvedOptions().timeZone);
+    req.flush(new Blob(['x']));
+  });
+
   it('exportResponses() should fall back to a generic filename when the header is missing', () => {
     let result: ExportedFile | undefined;
     service.exportResponses('f1', 'csv').subscribe((f) => (result = f));

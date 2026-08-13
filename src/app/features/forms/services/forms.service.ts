@@ -77,9 +77,13 @@ export class FormsService {
   }
 
   exportResponses(formId: string, format: ExportFormat, from?: string, to?: string): Observable<ExportedFile> {
+    // The export is generated server-side (no browser involved there), so the
+    // caller's IANA zone travels with the request — otherwise "Fecha de envío"
+    // would be rendered in the server's zone instead of the viewer's own.
+    const params = { ...dateRangeParams(from, to), timezone: Intl.DateTimeFormat().resolvedOptions().timeZone };
     return this.http
       .get(`${this.apiUrl}/${formId}/export/${format}`, {
-        params: dateRangeParams(from, to), responseType: 'blob', observe: 'response',
+        params, responseType: 'blob', observe: 'response',
       })
       .pipe(map((response) => ({
         blob: response.body!,
