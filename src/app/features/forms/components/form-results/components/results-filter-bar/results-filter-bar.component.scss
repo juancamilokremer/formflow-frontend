@@ -1,0 +1,75 @@
+:host { display: block; }
+
+.rfb {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px 16px;
+  background: var(--ff-bg);
+  border: 1px solid var(--ff-border);
+  border-radius: var(--ff-radius-lg);
+
+  &__controls {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  &__presets-wrap {
+    display: flex;
+    flex-direction: column;
+  }
+
+  // Chips have no label above them like the date inputs do — this invisible
+  // spacer mirrors app-input's label box exactly so both rows' controls line
+  // up on the same baseline instead of the chips floating below the inputs.
+  &__spacer-label {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    visibility: hidden;
+    line-height: normal;
+  }
+
+  &__presets {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    min-height: 40px;
+  }
+
+  &__chip {
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--ff-border);
+    background: var(--ff-white);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ff-text-secondary);
+    cursor: pointer;
+    transition: all 0.15s;
+
+    &:hover { border-color: var(--ff-primary); color: var(--ff-primary); }
+
+    &--active {
+      background: var(--ff-primary);
+      border-color: var(--ff-primary);
+      color: var(--ff-white);
+
+      &:hover { background: var(--ff-primary); color: var(--ff-white); }
+    }
+  }
+
+  &__dates {
+    display: flex;
+    gap: 12px;
+  }
+
+  &__hint {
+    font-size: 12px;
+    color: var(--ff-text-secondary);
+    margin: 0;
+  }
+}

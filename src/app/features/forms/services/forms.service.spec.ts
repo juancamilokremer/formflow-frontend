@@ -100,9 +100,20 @@ describe('FormsService', () => {
     service.getStats('f1').subscribe((s) => (result = s));
 
     const req = http.expectOne((r) => r.method === 'GET' && r.url.includes('/f1/stats'));
+    expect(req.request.params.has('submittedAtFrom')).toBe(false);
+    expect(req.request.params.has('submittedAtTo')).toBe(false);
     req.flush({ success: true, data: mockStats });
 
     expect(result).toEqual(mockStats);
+  });
+
+  it('getStats() should include submittedAtFrom/submittedAtTo when a range is provided', () => {
+    service.getStats('f1', '2026-08-01T00:00:00.000Z', '2026-08-06T23:59:59.999Z').subscribe();
+
+    const req = http.expectOne((r) => r.method === 'GET' && r.url.includes('/f1/stats'));
+    expect(req.request.params.get('submittedAtFrom')).toBe('2026-08-01T00:00:00.000Z');
+    expect(req.request.params.get('submittedAtTo')).toBe('2026-08-06T23:59:59.999Z');
+    req.flush({ success: true, data: { formId: 'f1', formName: 'Test Form', totalResponses: 0, completionRate: null, avgResponseTimeSeconds: null, timeline: [], questions: [] } });
   });
 
   it('remove() should send DELETE request', () => {
@@ -133,6 +144,15 @@ describe('FormsService', () => {
     const req = http.expectOne((r) => r.method === 'GET' && r.url.includes('/f1/responses'));
     expect(req.request.params.get('size')).toBe('50');
     req.flush({ success: true, data: { items: [], totalElements: 0, totalPages: 0, page: 1, size: 50 } });
+  });
+
+  it('getResponses() should include submittedAtFrom/submittedAtTo when a range is provided', () => {
+    service.getResponses('f1', 0, undefined, '2026-08-01T00:00:00.000Z', '2026-08-06T23:59:59.999Z').subscribe();
+
+    const req = http.expectOne((r) => r.method === 'GET' && r.url.includes('/f1/responses'));
+    expect(req.request.params.get('submittedAtFrom')).toBe('2026-08-01T00:00:00.000Z');
+    expect(req.request.params.get('submittedAtTo')).toBe('2026-08-06T23:59:59.999Z');
+    req.flush({ success: true, data: { items: [], totalElements: 0, totalPages: 0, page: 0, size: 20 } });
   });
 
   it('getResponseDetail() should GET the response detail and return the data', () => {
@@ -167,6 +187,14 @@ describe('FormsService', () => {
     expect(result?.filename).toBe('evaluacion_20260812.xlsx');
   });
 
+  it('exportResponses() should send the caller\'s own IANA timezone', () => {
+    service.exportResponses('f1', 'excel').subscribe();
+
+    const req = http.expectOne((r) => r.method === 'GET' && r.url.includes('/f1/export/excel'));
+    expect(req.request.params.get('timezone')).toBe(Intl.DateTimeFormat().resolvedOptions().timeZone);
+    req.flush(new Blob(['x']));
+  });
+
   it('exportResponses() should fall back to a generic filename when the header is missing', () => {
     let result: ExportedFile | undefined;
     service.exportResponses('f1', 'csv').subscribe((f) => (result = f));
@@ -174,6 +202,15 @@ describe('FormsService', () => {
     http.expectOne((r) => r.url.includes('/f1/export/csv')).flush(new Blob(['x']));
 
     expect(result?.filename).toBe('export.csv');
+  });
+
+  it('exportResponses() should include submittedAtFrom/submittedAtTo when a range is provided', () => {
+    service.exportResponses('f1', 'excel', '2026-08-01T00:00:00.000Z', '2026-08-06T23:59:59.999Z').subscribe();
+
+    const req = http.expectOne((r) => r.method === 'GET' && r.url.includes('/f1/export/excel'));
+    expect(req.request.params.get('submittedAtFrom')).toBe('2026-08-01T00:00:00.000Z');
+    expect(req.request.params.get('submittedAtTo')).toBe('2026-08-06T23:59:59.999Z');
+    req.flush(new Blob(['x']));
   });
 });
 

@@ -6,7 +6,7 @@ import { FormResultsComponent } from './form-results.component';
 import { FormsService } from '../../services/forms.service';
 import { FileDownloadService } from '../../../../core/services/file-download.service';
 import { FormStats, QuestionStats } from '../../models/form-stats.model';
-import { ExportedFile } from '../../models/form-response.model';
+import { DateRangeFilter, ExportedFile } from '../../models/form-response.model';
 
 // jsdom doesn't implement ResizeObserver; the Resumen tab renders a real apx-chart.
 class ResizeObserverStub {
@@ -67,9 +67,9 @@ function buildComponent(overrides: {
 describe('FormResultsComponent', () => {
   afterEach(() => TestBed.resetTestingModule());
 
-  it('loads stats for the form id from the route on init', () => {
+  it('loads stats for the form id from the route on init, defaulting to the last 7 days', () => {
     const { component, mockFormsService } = buildComponent();
-    expect(mockFormsService.getStats).toHaveBeenCalledWith('f1');
+    expect(mockFormsService.getStats).toHaveBeenCalledWith('f1', expect.any(String), expect.any(String));
     expect(component['stats']()).toEqual(MOCK_STATS);
     expect(component['loading']()).toBe(false);
   });
@@ -104,6 +104,43 @@ describe('FormResultsComponent', () => {
     });
   });
 
+  describe('onRangeChange', () => {
+    it('re-fetches stats with the new range', () => {
+      const { component, mockFormsService } = buildComponent();
+      (mockFormsService.getStats as any).mockClear();
+      const newRange: DateRangeFilter = { from: '2026-07-01T00:00:00.000Z', to: '2026-07-31T23:59:59.999Z' };
+
+      component['onRangeChange'](newRange);
+
+      expect(mockFormsService.getStats).toHaveBeenCalledWith(
+        'f1', '2026-07-01T00:00:00.000Z', '2026-07-31T23:59:59.999Z');
+      expect(component['range']()).toEqual(newRange);
+    });
+
+    it('skips re-fetching when the range is unchanged', () => {
+      const { component, mockFormsService } = buildComponent();
+      const currentRange = component['range']();
+      (mockFormsService.getStats as any).mockClear();
+
+      component['onRangeChange']({ ...currentRange });
+
+      expect(mockFormsService.getStats).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('isAllTimeRange', () => {
+    it('is false for the default 7-day range', () => {
+      const { component } = buildComponent();
+      expect(component['isAllTimeRange']()).toBe(false);
+    });
+
+    it('is true once the range is cleared to "all"', () => {
+      const { component } = buildComponent();
+      component['onRangeChange']({ from: undefined, to: undefined });
+      expect(component['isAllTimeRange']()).toBe(true);
+    });
+  });
+
   describe('goToPreview', () => {
     it('navigates to the form preview path', () => {
       const { component, mockRouter } = buildComponent();
@@ -121,7 +158,8 @@ describe('FormResultsComponent', () => {
 
       component['exportResponses']('excel');
 
-      expect(mockFormsService.exportResponses).toHaveBeenCalledWith('f1', 'excel');
+      expect(mockFormsService.exportResponses).toHaveBeenCalledWith(
+        'f1', 'excel', expect.any(String), expect.any(String));
       expect(mockFileDownload.download).toHaveBeenCalledWith(file.blob, file.filename);
       expect(component['exportingExcel']()).toBe(false);
     });

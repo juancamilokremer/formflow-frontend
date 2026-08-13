@@ -49,3 +49,45 @@ export interface ExportedFile {
   blob: Blob;
   filename: string;
 }
+
+export type ResponsePreset = '7d' | '30d' | 'all';
+
+export interface DateRangeFilter {
+  from: string | undefined;
+  to: string | undefined;
+}
+
+/** Formats a Date as a local yyyy-mm-dd string — the native <input type="date"> format. */
+export function formatLocalDate(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+/**
+ * Local yyyy-mm-dd (the native <input type="date"> format), not an ISO instant —
+ * converting to an ISO bound happens later, once, from that string, so presets and
+ * hand-typed custom dates go through the exact same from-date-string-to-instant path
+ * and neither can drift a day off local midnight the way pre-converting here would.
+ */
+export function resolvePresetDateFrom(preset: ResponsePreset, referenceDate = new Date()): string | undefined {
+  if (preset === 'all') return undefined;
+
+  const days = preset === '7d' ? 7 : 30;
+  const cutoff = new Date(referenceDate);
+  cutoff.setDate(cutoff.getDate() - (days - 1));
+  return formatLocalDate(cutoff);
+}
+
+/** Converts a yyyy-mm-dd date-input value to an ISO instant at local midnight (inclusive lower bound). */
+export function dateInputToIsoStart(value: string | null | undefined): string | undefined {
+  if (!value) return undefined;
+  return new Date(`${value}T00:00:00`).toISOString();
+}
+
+/** Converts a yyyy-mm-dd date-input value to an ISO instant at local end-of-day (inclusive upper bound). */
+export function dateInputToIsoEnd(value: string | null | undefined): string | undefined {
+  if (!value) return undefined;
+  return new Date(`${value}T23:59:59.999`).toISOString();
+}
