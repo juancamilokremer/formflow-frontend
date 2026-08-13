@@ -1,16 +1,19 @@
 <div class="rfb">
   <div class="rfb__controls">
-    <div class="rfb__presets">
-      @for (preset of presets; track preset.id) {
-        <button
-          type="button"
-          class="rfb__chip"
-          [class.rfb__chip--active]="activePreset() === preset.id"
-          (click)="selectPreset(preset.id)"
-        >
-          {{ preset.labelKey | translate }}
-        </button>
-      }
+    <div class="rfb__presets-wrap">
+      <span class="rfb__spacer-label" aria-hidden="true">&nbsp;</span>
+      <div class="rfb__presets">
+        @for (preset of presets; track preset.id) {
+          <button
+            type="button"
+            class="rfb__chip"
+            [class.rfb__chip--active]="activePreset() === preset.id"
+            (click)="selectPreset(preset.id)"
+          >
+            {{ preset.labelKey | translate }}
+          </button>
+        }
+      </div>
     </div>
 
     <div class="rfb__dates" [formGroup]="form">

@@ -4,7 +4,7 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { InputComponent } from '../../../../../../shared/components/input/input.component';
 import {
-  DateRangeFilter, ResponsePreset, dateInputToIsoEnd, dateInputToIsoStart, resolvePresetDateFrom,
+  DateRangeFilter, ResponsePreset, dateInputToIsoEnd, dateInputToIsoStart, formatLocalDate, resolvePresetDateFrom,
 } from '../../../../models/form-response.model';
 
 interface PresetOption {
@@ -56,8 +56,12 @@ export class ResultsFilterBarComponent implements OnInit {
   protected selectPreset(preset: ResponsePreset): void {
     this.activePreset.set(preset);
     const from = resolvePresetDateFrom(preset);
-    this.form.setValue({ from: from ?? '', to: '' }, { emitEvent: false });
-    this.rangeChange.emit({ from: dateInputToIsoStart(from), to: undefined });
+    // 'all' leaves both fields empty (no bounds); 7d/30d show today as the
+    // upper bound too — otherwise "Hasta" reads as unset even though a range
+    // is clearly active, which looks like a bug rather than "up to now".
+    const to = preset === 'all' ? undefined : formatLocalDate(new Date());
+    this.form.setValue({ from: from ?? '', to: to ?? '' }, { emitEvent: false });
+    this.rangeChange.emit({ from: dateInputToIsoStart(from), to: dateInputToIsoEnd(to) });
   }
 
   private emitCustomRange(): void {

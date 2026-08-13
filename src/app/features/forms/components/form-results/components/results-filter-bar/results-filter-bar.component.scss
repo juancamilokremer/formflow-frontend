@@ -11,15 +11,33 @@
 
   &__controls {
     display: flex;
-    align-items: flex-end;
+    align-items: flex-start;
     gap: 20px;
     flex-wrap: wrap;
   }
 
+  &__presets-wrap {
+    display: flex;
+    flex-direction: column;
+  }
+
+  // Chips have no label above them like the date inputs do — this invisible
+  // spacer mirrors app-input's label box exactly so both rows' controls line
+  // up on the same baseline instead of the chips floating below the inputs.
+  &__spacer-label {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    visibility: hidden;
+    line-height: normal;
+  }
+
   &__presets {
     display: flex;
+    align-items: center;
     gap: 8px;
     flex-wrap: wrap;
+    min-height: 40px;
   }
 
   &__chip {

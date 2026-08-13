@@ -57,6 +57,14 @@ export interface DateRangeFilter {
   to: string | undefined;
 }
 
+/** Formats a Date as a local yyyy-mm-dd string — the native <input type="date"> format. */
+export function formatLocalDate(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
 /**
  * Local yyyy-mm-dd (the native <input type="date"> format), not an ISO instant —
  * converting to an ISO bound happens later, once, from that string, so presets and
@@ -69,11 +77,7 @@ export function resolvePresetDateFrom(preset: ResponsePreset, referenceDate = ne
   const days = preset === '7d' ? 7 : 30;
   const cutoff = new Date(referenceDate);
   cutoff.setDate(cutoff.getDate() - (days - 1));
-
-  const year = cutoff.getFullYear();
-  const month = String(cutoff.getMonth() + 1).padStart(2, '0');
-  const day = String(cutoff.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
+  return formatLocalDate(cutoff);
 }
 
 /** Converts a yyyy-mm-dd date-input value to an ISO instant at local midnight (inclusive lower bound). */

@@ -23,12 +23,12 @@ describe('ResultsFilterBarComponent', () => {
     return emitted;
   }
 
-  it('emits the 7d preset on init', () => {
+  it('emits the 7d preset on init, with "to" defaulting to today', () => {
     const emitted = emissions();
     fixture.detectChanges();
     expect(emitted).toHaveLength(1);
-    expect(emitted[0].to).toBeUndefined();
     expect(emitted[0].from).toBeDefined();
+    expect(emitted[0].to).toBeDefined();
     expect((component as any).activePreset()).toBe('7d');
   });
 
@@ -41,12 +41,12 @@ describe('ResultsFilterBarComponent', () => {
       expect(emitted[emitted.length - 1]).toEqual({ from: undefined, to: undefined });
     });
 
-    it('switches to "30d" and fills the from field', () => {
+    it('switches to "30d" and fills both the from and to fields', () => {
       fixture.detectChanges();
       (component as any).selectPreset('30d');
       expect((component as any).activePreset()).toBe('30d');
       expect((component as any).form.value.from).not.toBe('');
-      expect((component as any).form.value.to).toBe('');
+      expect((component as any).form.value.to).not.toBe('');
     });
   });
 

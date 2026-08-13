@@ -69,7 +69,7 @@ describe('FormResultsComponent', () => {
 
   it('loads stats for the form id from the route on init, defaulting to the last 7 days', () => {
     const { component, mockFormsService } = buildComponent();
-    expect(mockFormsService.getStats).toHaveBeenCalledWith('f1', expect.any(String), undefined);
+    expect(mockFormsService.getStats).toHaveBeenCalledWith('f1', expect.any(String), expect.any(String));
     expect(component['stats']()).toEqual(MOCK_STATS);
     expect(component['loading']()).toBe(false);
   });
@@ -158,7 +158,8 @@ describe('FormResultsComponent', () => {
 
       component['exportResponses']('excel');
 
-      expect(mockFormsService.exportResponses).toHaveBeenCalledWith('f1', 'excel', expect.any(String), undefined);
+      expect(mockFormsService.exportResponses).toHaveBeenCalledWith(
+        'f1', 'excel', expect.any(String), expect.any(String));
       expect(mockFileDownload.download).toHaveBeenCalledWith(file.blob, file.filename);
       expect(component['exportingExcel']()).toBe(false);
     });

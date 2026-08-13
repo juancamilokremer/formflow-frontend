@@ -11,7 +11,9 @@ import { EmptyStateComponent } from '../../../../shared/components/empty-state/e
 import { TabItem, TabsComponent } from '../../../../shared/components/tabs/tabs.component';
 import { FormsService } from '../../services/forms.service';
 import { FormStats } from '../../models/form-stats.model';
-import { DateRangeFilter, ExportFormat, dateInputToIsoStart, resolvePresetDateFrom } from '../../models/form-response.model';
+import {
+  DateRangeFilter, ExportFormat, dateInputToIsoEnd, dateInputToIsoStart, formatLocalDate, resolvePresetDateFrom,
+} from '../../models/form-response.model';
 import { FileDownloadService } from '../../../../core/services/file-download.service';
 import { ResultsSummaryComponent } from './components/results-summary/results-summary.component';
 import { QuestionStatsCardComponent } from './components/question-stats-card/question-stats-card.component';
@@ -49,8 +51,11 @@ export class FormResultsComponent implements OnInit {
   protected readonly exportingExcel = signal(false);
   protected readonly exportingCsv = signal(false);
   protected readonly exportError = signal(false);
+  // Mirrors ResultsFilterBarComponent's own default emission for the 7d preset
+  // (including "to" = today) so the guard in onRangeChange correctly treats
+  // that initial emission as a no-op instead of firing a redundant refetch.
   protected readonly range = signal<DateRangeFilter>({
-    from: dateInputToIsoStart(resolvePresetDateFrom('7d')), to: undefined,
+    from: dateInputToIsoStart(resolvePresetDateFrom('7d')), to: dateInputToIsoEnd(formatLocalDate(new Date())),
   });
   protected readonly isAllTimeRange = computed(() => {
     const r = this.range();
