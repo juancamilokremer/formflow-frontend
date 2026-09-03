@@ -66,6 +66,13 @@
     &:hover &-desc { max-height: 30px; opacity: 1; }
 
     &:active { background: var(--ff-primary-light); }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+
+      &:hover { background: transparent; app-icon { color: var(--ff-text-secondary); } }
+    }
   }
 
   &__chip-row {

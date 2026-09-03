@@ -15,6 +15,7 @@ export class MatrixCanvasComponent implements CanvasQuestionComponent {
 
   readonly question = input.required<FormQuestion>();
   readonly selected = input<boolean>(false);
+  readonly locked   = input<boolean>(false);
 
   protected readonly rows = computed<QuestionOption[]>(
     () => (this.question().config['rows'] as QuestionOption[]) ?? [],
@@ -34,6 +35,7 @@ export class MatrixCanvasComponent implements CanvasQuestionComponent {
   });
 
   protected onColumnScoreBlur(colId: string, event: FocusEvent): void {
+    if (this.locked()) return;
     const score = Number((event.target as HTMLInputElement).value) || 0;
     const updatedCols = this.columns().map((col) => col.id === colId ? { ...col, score } : col);
     this.canvasEditSvc?.emit(this.question().id, {

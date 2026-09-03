@@ -13,6 +13,7 @@ import { QuestionOption } from '../../../models/form.model';
 export class OptionListEditorComponent {
   readonly options     = input.required<QuestionOption[]>();
   readonly showScoring = input<boolean>(false);
+  readonly disabled    = input<boolean>(false);
 
   readonly optionsChanged = output<QuestionOption[]>();
 
@@ -25,6 +26,7 @@ export class OptionListEditorComponent {
   }
 
   protected onDrop(event: CdkDragDrop<QuestionOption[]>): void {
+    if (this.disabled()) return;
     const reordered = [...this.localOptions()];
     moveItemInArray(reordered, event.previousIndex, event.currentIndex);
     this.localOptions.set(reordered);

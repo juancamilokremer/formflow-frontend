@@ -28,7 +28,7 @@
         }
       </button>
 
-      @if (formSections().length > 1) {
+      @if (formSections().length > 1 && !locked()) {
         <div class="pp__section-row">
           <app-icon name="layers" [size]="13" class="pp__section-icon" />
           <span class="pp__section-label">{{ 'builder.move_to_section' | translate }}</span>

@@ -18,6 +18,7 @@ export class PropertiesPanelComponent implements OnDestroy {
   readonly formSections            = input<FormSection[]>([]);
   readonly currentSectionId        = input<string | null>(null);
   readonly categories              = input<Category[]>([]);
+  readonly locked                  = input<boolean>(false);
   readonly questionChanged         = output<Partial<FormQuestion>>();
   readonly conditionalLogicClicked = output<void>();
   readonly sectionChanged          = output<string>();
@@ -49,12 +50,14 @@ export class PropertiesPanelComponent implements OnDestroy {
       const q          = this.question();
       const formType   = this.formType();
       const categories = this.categories();
-      this.updateDynamicComponent(outlet, q, formType, categories);
+      const locked     = this.locked();
+      this.updateDynamicComponent(outlet, q, formType, categories, locked);
     });
   }
 
   private updateDynamicComponent(
-    outlet: ViewContainerRef, q: FormQuestion | null, formType: FormType | undefined, categories: Category[],
+    outlet: ViewContainerRef, q: FormQuestion | null, formType: FormType | undefined,
+    categories: Category[], locked: boolean,
   ): void {
     const def = q ? getQuestionTypeDef(q.type) : undefined;
 
@@ -78,6 +81,7 @@ export class PropertiesPanelComponent implements OnDestroy {
     this.compRef?.setInput('question', q);
     this.compRef?.setInput('formType', formType);
     this.compRef?.setInput('categories', categories);
+    this.compRef?.setInput('locked', locked);
   }
 
   private destroyDynamicComponent(outlet?: ViewContainerRef): void {

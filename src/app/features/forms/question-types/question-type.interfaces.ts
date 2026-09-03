@@ -5,6 +5,7 @@ import { FormQuestion, FormType } from '../models/form.model';
 export interface CanvasQuestionComponent {
   readonly question: InputSignal<FormQuestion>;
   readonly selected: InputSignal<boolean>;
+  readonly locked?: InputSignal<boolean>;
   readonly questionChanged?: OutputEmitterRef<Partial<FormQuestion>>;
 }
 
@@ -18,5 +19,6 @@ export interface PropertiesQuestionComponent {
   readonly changed: OutputEmitterRef<Partial<FormQuestion>>;
   readonly formType?: InputSignal<FormType | undefined>;
   readonly categories?: InputSignal<Category[]>;
+  readonly locked?: InputSignal<boolean>;
   readonly categoryCreated?: OutputEmitterRef<Category>;
 }

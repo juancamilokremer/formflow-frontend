@@ -49,6 +49,18 @@
       background: var(--ff-border);
       margin: 0 -16px;
     }
+
+    &__locked-group {
+      // A real flex box (mirroring the parent .qp gap) instead of display:contents,
+      // so the fieldset still participates in layout as one predictable box.
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      min-width: 0;
+      border: 0;
+      margin: 0;
+      padding: 0;
+    }
   }
 }
 

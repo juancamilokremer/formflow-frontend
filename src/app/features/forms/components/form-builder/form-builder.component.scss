@@ -31,6 +31,16 @@
 
 .fb__error { color: var(--ff-error-text); }
 
+.fb__action-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 20px;
+  background: var(--ff-error-bg);
+  color: var(--ff-error-text);
+  font-size: 13px;
+}
+
 .fb__mobile-block {
   display: flex;
   flex-direction: column;

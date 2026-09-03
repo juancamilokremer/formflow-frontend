@@ -22,35 +22,39 @@
 
   <div class="qp__divider"></div>
 
-  <div class="qp__field">
-    <span class="qp__label">{{ 'builder.prop.matrix_rows' | translate }}</span>
-    <app-option-list-editor
-      [options]="currentRows()"
-      [showScoring]="false"
-      (optionsChanged)="onRowsChanged($event)"
-    />
-  </div>
+  <fieldset class="qp__locked-group" [disabled]="locked()">
+    <div class="qp__field">
+      <span class="qp__label">{{ 'builder.prop.matrix_rows' | translate }}</span>
+      <app-option-list-editor
+        [options]="currentRows()"
+        [showScoring]="false"
+        [disabled]="locked()"
+        (optionsChanged)="onRowsChanged($event)"
+      />
+    </div>
 
-  <div class="qp__divider"></div>
-
-  <div class="qp__field">
-    <span class="qp__label">{{ 'builder.prop.matrix_columns' | translate }}</span>
-    <app-option-list-editor
-      [options]="currentColumns()"
-      [showScoring]="showScoring() && scoringType() === 'manual'"
-      (optionsChanged)="onColumnsChanged($event)"
-    />
-  </div>
-
-  @if (showScoring()) {
     <div class="qp__divider"></div>
 
     <div class="qp__field">
-      <label class="qp__label" for="qp-scoring-type">{{ 'builder.prop.scoring_type' | translate }}</label>
-      <select id="qp-scoring-type" class="qp__select" (change)="onScoringTypeChange($event)">
-        <option value="none"   [selected]="scoringType() === 'none'">{{ 'builder.prop.scoring_none' | translate }}</option>
-        <option value="manual" [selected]="scoringType() === 'manual'">{{ 'builder.prop.scoring_manual' | translate }}</option>
-      </select>
+      <span class="qp__label">{{ 'builder.prop.matrix_columns' | translate }}</span>
+      <app-option-list-editor
+        [options]="currentColumns()"
+        [showScoring]="showScoring() && scoringType() === 'manual'"
+        [disabled]="locked()"
+        (optionsChanged)="onColumnsChanged($event)"
+      />
     </div>
-  }
+
+    @if (showScoring()) {
+      <div class="qp__divider"></div>
+
+      <div class="qp__field">
+        <label class="qp__label" for="qp-scoring-type">{{ 'builder.prop.scoring_type' | translate }}</label>
+        <select id="qp-scoring-type" class="qp__select" (change)="onScoringTypeChange($event)">
+          <option value="none"   [selected]="scoringType() === 'none'">{{ 'builder.prop.scoring_none' | translate }}</option>
+          <option value="manual" [selected]="scoringType() === 'manual'">{{ 'builder.prop.scoring_manual' | translate }}</option>
+        </select>
+      </div>
+    }
+  </fieldset>
 </div>

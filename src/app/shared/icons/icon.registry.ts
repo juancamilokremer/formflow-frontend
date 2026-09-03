@@ -39,7 +39,8 @@ export type IconName =
   | 'layers'
   | 'mail'
   | 'upload'
-  | 'tag';
+  | 'tag'
+  | 'lock';
 
 /**
  * Inner SVG markup (paths/shapes only, no <svg> wrapper) per icon name.
@@ -88,4 +89,5 @@ export const ICON_PATHS: Record<IconName, string> = {
   mail: `<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22 6 12 13 2 6"/>`,
   upload: `<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>`,
   tag: `<path d="M20.59 13.41 13.42 20.59a2 2 0 0 1-2.83 0L2 12.5V2h10.5l8.09 8.09a2 2 0 0 1 0 2.83z"/><line x1="7" y1="7" x2="7.01" y2="7"/>`,
+  lock: `<rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>`,
 };

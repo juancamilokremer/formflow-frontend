@@ -22,6 +22,7 @@ export class BuilderCanvasComponent {
   readonly activeSectionId     = input<string | null>(null);
   readonly formType            = input<FormType | undefined>(undefined);
   readonly categories          = input<Category[]>([]);
+  readonly locked              = input<boolean>(false);
 
   readonly sectionAdded      = output<string>();
   readonly sectionUpdated    = output<{ id: string; title: string }>();
@@ -34,10 +35,11 @@ export class BuilderCanvasComponent {
   readonly questionChanged   = output<CanvasQuestionChangedEvent>();
 
   protected readonly questionListIds = computed(() =>
-    this.form().sections.map((s) => s.id),
+    this.locked() ? [] : this.form().sections.map((s) => s.id),
   );
 
   protected onAddSection(): void {
+    if (this.locked()) return;
     this.sectionAdded.emit(this.translateSvc.instant('builder.section_default_name'));
   }
 

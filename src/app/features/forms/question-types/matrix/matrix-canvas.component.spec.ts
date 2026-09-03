@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { provideTranslateService } from '@ngx-translate/core';
 import { FormQuestion, QuestionOption } from '../../models/form.model';
+import { CanvasEditService } from '../../services/canvas-edit.service';
 import { MatrixCanvasComponent } from './matrix-canvas.component';
 
 const ROWS: QuestionOption[]    = [{ id: 'r1', label: 'Row 1' }, { id: 'r2', label: 'Row 2' }];
@@ -44,5 +45,25 @@ describe('MatrixCanvasComponent', () => {
     const comp = fixture.componentInstance as any;
     expect(comp.rows()).toEqual([]);
     expect(comp.columns()).toEqual([]);
+  });
+
+  it('onColumnScoreBlur does not emit when locked', () => {
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+      imports: [MatrixCanvasComponent],
+      providers: [provideTranslateService({ lang: 'es' })],
+    });
+    TestBed.overrideComponent(MatrixCanvasComponent, { add: { providers: [CanvasEditService] } });
+    const fixture = TestBed.createComponent(MatrixCanvasComponent);
+    fixture.componentRef.setInput('question', MOCK_Q);
+    fixture.componentRef.setInput('locked', true);
+    fixture.detectChanges();
+    const canvasEditSvc = fixture.debugElement.injector.get(CanvasEditService);
+    const emitSpy = vi.spyOn(canvasEditSvc, 'emit');
+
+    const fakeEvent = { target: { value: '5' } } as unknown as FocusEvent;
+    (fixture.componentInstance as any).onColumnScoreBlur('c1', fakeEvent);
+
+    expect(emitSpy).not.toHaveBeenCalled();
   });
 });

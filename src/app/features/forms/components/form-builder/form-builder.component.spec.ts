@@ -8,13 +8,18 @@ import { CategoryService } from '../../../../core/services/category.service';
 import { FormsService } from '../../services/forms.service';
 import { ConvocatoriaService } from '../../../convocatorias/services/convocatoria.service';
 import { ConvocatoriaDetail } from '../../../convocatorias/models/convocatoria.model';
-import { FormDetail, FormSection } from '../../models/form.model';
+import { FormDetail, FormQuestion, FormSection } from '../../models/form.model';
 
 const MOCK_CATEGORIES: Category[] = [
   { id: 'cat-1', name: 'Técnicas', color: '#4F46E5', description: null, createdAt: '', updatedAt: '' },
 ];
 
 const MOCK_SECTION: FormSection = { id: 's1', title: 'Sección 1', position: 1, questions: [] };
+
+const MOCK_QUESTION: FormQuestion = {
+  id: 'q1', type: 'text', title: 'Q', description: null,
+  position: 0, required: false, categoryId: null, config: {},
+};
 
 const MOCK_FORM: FormDetail = {
   id: 'f1',
@@ -46,6 +51,11 @@ function buildComponent(formResult: 'ok' | 'error' = 'ok', convocatoriaDetail: C
     createSection: vi.fn().mockReturnValue(of({ id: 's2', title: 'Nueva sección', position: 2, questions: [] } satisfies FormSection)),
     updateSection: vi.fn().mockReturnValue(of({ ...MOCK_SECTION, title: 'Renombrada' } satisfies FormSection)),
     deleteSection: vi.fn().mockReturnValue(of(undefined)),
+    addQuestion: vi.fn().mockReturnValue(of(MOCK_QUESTION)),
+    deleteQuestion: vi.fn().mockReturnValue(of(undefined)),
+    updateQuestion: vi.fn().mockReturnValue(of(MOCK_QUESTION)),
+    reorderQuestions: vi.fn().mockReturnValue(of(undefined)),
+    reorderSections: vi.fn().mockReturnValue(of(undefined)),
     remove: vi.fn().mockReturnValue(of(undefined)),
   };
 
@@ -150,6 +160,98 @@ describe('FormBuilderComponent', () => {
     (component as any).onSectionDeleted('s1');
     expect(mockFormsService.deleteSection).toHaveBeenCalledWith('f1', 's1');
     expect((component as any).form()!.sections.length).toBe(0);
+  });
+
+  describe('isLocked', () => {
+    it('is true for an ACTIVE CANDIDATES form', () => {
+      const { component } = buildComponent();
+      (component as any).form.update((f: FormDetail) => ({ ...f, status: 'ACTIVE', type: 'CANDIDATES' }));
+      expect((component as any).isLocked()).toBe(true);
+    });
+
+    it('is true for an ARCHIVED DIAGNOSTIC form', () => {
+      const { component } = buildComponent();
+      (component as any).form.update((f: FormDetail) => ({ ...f, status: 'ARCHIVED', type: 'DIAGNOSTIC' }));
+      expect((component as any).isLocked()).toBe(true);
+    });
+
+    it('is false for a DRAFT form regardless of type', () => {
+      const { component } = buildComponent();
+      (component as any).form.update((f: FormDetail) => ({ ...f, status: 'DRAFT', type: 'CANDIDATES' }));
+      expect((component as any).isLocked()).toBe(false);
+    });
+
+    it('is false for a REGISTRATION form regardless of status', () => {
+      const { component } = buildComponent();
+      (component as any).form.update((f: FormDetail) => ({ ...f, status: 'ACTIVE', type: 'REGISTRATION' }));
+      expect((component as any).isLocked()).toBe(false);
+      (component as any).form.update((f: FormDetail) => ({ ...f, status: 'ARCHIVED', type: 'REGISTRATION' }));
+      expect((component as any).isLocked()).toBe(false);
+    });
+  });
+
+  describe('locked guards', () => {
+    function lockForm(component: any): void {
+      component.form.update((f: FormDetail) => ({ ...f, status: 'ACTIVE', type: 'CANDIDATES' }));
+    }
+
+    it('onSectionAdded does not call createSection when locked', () => {
+      const { component, mockFormsService } = buildComponent();
+      lockForm(component);
+      (component as any).onSectionAdded('Nueva sección');
+      expect(mockFormsService.createSection).not.toHaveBeenCalled();
+    });
+
+    it('onSectionDeleted does not call deleteSection when locked', () => {
+      const { component, mockFormsService } = buildComponent();
+      lockForm(component);
+      (component as any).onSectionDeleted('s1');
+      expect(mockFormsService.deleteSection).not.toHaveBeenCalled();
+    });
+
+    it('onTypeSelected does not call addQuestion when locked', () => {
+      const { component, mockFormsService } = buildComponent();
+      lockForm(component);
+      (component as any).onTypeSelected('text');
+      expect(mockFormsService.addQuestion).not.toHaveBeenCalled();
+    });
+
+    it('onQuestionDeleted does not call deleteQuestion when locked', () => {
+      const { component, mockFormsService } = buildComponent();
+      lockForm(component);
+      (component as any).onQuestionDeleted({ sectionId: 's1', questionId: 'q1' });
+      expect(mockFormsService.deleteQuestion).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('actionError', () => {
+    it('is set when createSection fails', () => {
+      const { component, mockFormsService } = buildComponent();
+      mockFormsService.createSection.mockReturnValue(throwError(() => new Error()));
+      (component as any).onSectionAdded('Nueva sección');
+      expect((component as any).actionError()).toBe('builder.error.section_create');
+    });
+
+    it('is set when deleteSection fails', () => {
+      const { component, mockFormsService } = buildComponent();
+      mockFormsService.deleteSection.mockReturnValue(throwError(() => new Error()));
+      (component as any).onSectionDeleted('s1');
+      expect((component as any).actionError()).toBe('builder.error.section_delete');
+    });
+
+    it('is set when addQuestion fails', () => {
+      const { component, mockFormsService } = buildComponent();
+      mockFormsService.addQuestion.mockReturnValue(throwError(() => new Error()));
+      (component as any).onTypeSelected('text');
+      expect((component as any).actionError()).toBe('builder.error.question_create');
+    });
+
+    it('is set when deleteQuestion fails', () => {
+      const { component, mockFormsService } = buildComponent();
+      mockFormsService.deleteQuestion.mockReturnValue(throwError(() => new Error()));
+      (component as any).onQuestionDeleted({ sectionId: 's1', questionId: 'q1' });
+      expect((component as any).actionError()).toBe('builder.error.question_delete');
+    });
   });
 });
 

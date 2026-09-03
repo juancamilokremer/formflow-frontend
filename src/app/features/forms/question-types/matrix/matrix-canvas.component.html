@@ -15,6 +15,7 @@
                     type="number"
                     min="0"
                     [value]="col.score ?? 0"
+                    [disabled]="locked()"
                     (click)="$event.stopPropagation()"
                     (blur)="onColumnScoreBlur(col.id, $event)"
                   />

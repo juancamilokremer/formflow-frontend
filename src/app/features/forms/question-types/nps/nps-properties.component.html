@@ -22,27 +22,29 @@
 
   <div class="qp__divider"></div>
 
-  <div class="qp__field">
-    <label class="qp__label" for="qp-min-label">{{ 'builder.prop.nps_min_label' | translate }}</label>
-    <input
-      id="qp-min-label"
-      class="qp__input"
-      type="text"
-      [value]="question().config['minLabel'] ?? ''"
-      [placeholder]="'builder.prop.nps_min_placeholder' | translate"
-      (blur)="onMinLabelBlur($event)"
-    />
-  </div>
+  <fieldset class="qp__locked-group" [disabled]="locked()">
+    <div class="qp__field">
+      <label class="qp__label" for="qp-min-label">{{ 'builder.prop.nps_min_label' | translate }}</label>
+      <input
+        id="qp-min-label"
+        class="qp__input"
+        type="text"
+        [value]="question().config['minLabel'] ?? ''"
+        [placeholder]="'builder.prop.nps_min_placeholder' | translate"
+        (blur)="onMinLabelBlur($event)"
+      />
+    </div>
 
-  <div class="qp__field">
-    <label class="qp__label" for="qp-max-label">{{ 'builder.prop.nps_max_label' | translate }}</label>
-    <input
-      id="qp-max-label"
-      class="qp__input"
-      type="text"
-      [value]="question().config['maxLabel'] ?? ''"
-      [placeholder]="'builder.prop.nps_max_placeholder' | translate"
-      (blur)="onMaxLabelBlur($event)"
-    />
-  </div>
+    <div class="qp__field">
+      <label class="qp__label" for="qp-max-label">{{ 'builder.prop.nps_max_label' | translate }}</label>
+      <input
+        id="qp-max-label"
+        class="qp__input"
+        type="text"
+        [value]="question().config['maxLabel'] ?? ''"
+        [placeholder]="'builder.prop.nps_max_placeholder' | translate"
+        (blur)="onMaxLabelBlur($event)"
+      />
+    </div>
+  </fieldset>
 </div>

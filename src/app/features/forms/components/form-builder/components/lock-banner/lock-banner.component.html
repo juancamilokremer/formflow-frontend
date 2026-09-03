@@ -1,0 +1,27 @@
+<div class="lb">
+  <app-icon class="lb__icon" name="lock" [size]="16" />
+
+  <span class="lb__message">
+    {{
+      'builder.locked.banner_message'
+        | translate: { status: ('forms.status.' + (status() | lowercase) | translate) }
+    }}
+  </span>
+
+  <div class="lb__actions">
+    <app-button
+      variant="secondary"
+      [disabled]="true"
+      [title]="'builder.locked.coming_soon_tooltip' | translate"
+    >
+      {{ 'builder.locked.generate_version_action' | translate }}
+    </app-button>
+    <app-button
+      variant="ghost"
+      [disabled]="true"
+      [title]="'builder.locked.coming_soon_tooltip' | translate"
+    >
+      {{ 'builder.locked.duplicate_action' | translate }}
+    </app-button>
+  </div>
+</div>

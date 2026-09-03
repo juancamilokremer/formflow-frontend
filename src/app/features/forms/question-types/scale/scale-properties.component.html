@@ -22,56 +22,58 @@
 
   <div class="qp__divider"></div>
 
-  <div class="qp__field">
-    <label class="qp__label" for="qp-scale-size">{{ 'builder.prop.scale_size' | translate }}</label>
-    <select id="qp-scale-size" class="qp__select" (change)="onScaleSizeChange($event)">
-      <option [value]="5" [selected]="scaleMax() === 5">1 — 5</option>
-      <option [value]="10" [selected]="scaleMax() === 10">1 — 10</option>
-    </select>
-  </div>
-
-  <div class="qp__field">
-    <label class="qp__label" for="qp-min-label">{{ 'builder.prop.min_label' | translate }}</label>
-    <input
-      id="qp-min-label"
-      class="qp__input"
-      type="text"
-      [value]="minLabel()"
-      (blur)="onMinLabelBlur($event)"
-    />
-  </div>
-
-  <div class="qp__field">
-    <label class="qp__label" for="qp-max-label">{{ 'builder.prop.max_label' | translate }}</label>
-    <input
-      id="qp-max-label"
-      class="qp__input"
-      type="text"
-      [value]="maxLabel()"
-      (blur)="onMaxLabelBlur($event)"
-    />
-  </div>
-
-  @if (showScoring()) {
-    <div class="qp__divider"></div>
-
+  <fieldset class="qp__locked-group" [disabled]="locked()">
     <div class="qp__field">
-      <label class="qp__label" for="qp-scoring-type">{{ 'builder.prop.scoring_type' | translate }}</label>
-      <select id="qp-scoring-type" class="qp__select" (change)="onScoringTypeChange($event)">
-        <option value="none" [selected]="scoringType() === 'none'">{{ 'builder.prop.scoring_none' | translate }}</option>
-        <option value="auto" [selected]="scoringType() === 'auto'">{{ 'builder.prop.scoring_auto' | translate }}</option>
+      <label class="qp__label" for="qp-scale-size">{{ 'builder.prop.scale_size' | translate }}</label>
+      <select id="qp-scale-size" class="qp__select" (change)="onScaleSizeChange($event)">
+        <option [value]="5" [selected]="scaleMax() === 5">1 — 5</option>
+        <option [value]="10" [selected]="scaleMax() === 10">1 — 10</option>
       </select>
     </div>
 
-    @if (scoringType() === 'auto') {
-      <div class="qp__info-box">{{ 'builder.prop.scoring_auto_info' | translate }}</div>
-    }
+    <div class="qp__field">
+      <label class="qp__label" for="qp-min-label">{{ 'builder.prop.min_label' | translate }}</label>
+      <input
+        id="qp-min-label"
+        class="qp__input"
+        type="text"
+        [value]="minLabel()"
+        (blur)="onMinLabelBlur($event)"
+      />
+    </div>
 
-    <app-category-selector
-      [categories]="categories()"
-      [selectedCategoryId]="question().categoryId"
-      (categoryChange)="onCategoryChange($event)"
-      (categoryCreated)="onCategoryCreated($event)"
-    />
-  }
+    <div class="qp__field">
+      <label class="qp__label" for="qp-max-label">{{ 'builder.prop.max_label' | translate }}</label>
+      <input
+        id="qp-max-label"
+        class="qp__input"
+        type="text"
+        [value]="maxLabel()"
+        (blur)="onMaxLabelBlur($event)"
+      />
+    </div>
+
+    @if (showScoring()) {
+      <div class="qp__divider"></div>
+
+      <div class="qp__field">
+        <label class="qp__label" for="qp-scoring-type">{{ 'builder.prop.scoring_type' | translate }}</label>
+        <select id="qp-scoring-type" class="qp__select" (change)="onScoringTypeChange($event)">
+          <option value="none" [selected]="scoringType() === 'none'">{{ 'builder.prop.scoring_none' | translate }}</option>
+          <option value="auto" [selected]="scoringType() === 'auto'">{{ 'builder.prop.scoring_auto' | translate }}</option>
+        </select>
+      </div>
+
+      @if (scoringType() === 'auto') {
+        <div class="qp__info-box">{{ 'builder.prop.scoring_auto_info' | translate }}</div>
+      }
+
+      <app-category-selector
+        [categories]="categories()"
+        [selectedCategoryId]="question().categoryId"
+        (categoryChange)="onCategoryChange($event)"
+        (categoryCreated)="onCategoryCreated($event)"
+      />
+    }
+  </fieldset>
 </div>

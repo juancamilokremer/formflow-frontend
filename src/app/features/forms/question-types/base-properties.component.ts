@@ -9,6 +9,7 @@ export abstract class BasePropertiesComponent implements PropertiesQuestionCompo
   readonly changed  = output<Partial<FormQuestion>>();
   readonly formType = input<FormType | undefined>(undefined);
   readonly categories = input<Category[]>([]);
+  readonly locked = input<boolean>(false);
   readonly categoryCreated = output<Category>();
 
   protected onTitleBlur(event: FocusEvent): void {
