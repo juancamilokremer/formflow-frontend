@@ -12,6 +12,7 @@
               type="number"
               min="0"
               [value]="opt.score ?? 0"
+              [disabled]="locked()"
               (click)="$event.stopPropagation()"
               (blur)="onScoreBlur(opt.id, $event)"
             />

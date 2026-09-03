@@ -35,6 +35,7 @@ export class SectionCardComponent {
   readonly connectedListIds    = input<string[]>([]);
   readonly formType            = input<FormType | undefined>(undefined);
   readonly categories          = input<Category[]>([]);
+  readonly locked              = input<boolean>(false);
 
   readonly sectionUpdated    = output<{ id: string; title: string }>();
   readonly sectionDeleted    = output<string>();
@@ -77,7 +78,7 @@ export class SectionCardComponent {
 
   protected getCanvasInputs(questionId: string): Record<string, unknown> {
     const question = this.section().questions.find((q) => q.id === questionId)!;
-    return { question, selected: this.selectedQuestionId() === questionId };
+    return { question, selected: this.selectedQuestionId() === questionId, locked: this.locked() };
   }
 
   protected onQuestionClick(id: string): void {
@@ -85,6 +86,7 @@ export class SectionCardComponent {
   }
 
   protected onDeleteQuestion(event: MouseEvent, questionId: string): void {
+    if (this.locked()) return;
     event.stopPropagation();
     this.questionDeleted.emit({ sectionId: this.section().id, questionId });
   }
@@ -140,7 +142,10 @@ export class SectionCardComponent {
     if (event.key === 'Escape') { this.cancelEdit(); }
   }
 
-  protected confirmDelete(): void  { this.showDeleteConfirm.set(true); }
+  protected confirmDelete(): void  {
+    if (this.locked()) return;
+    this.showDeleteConfirm.set(true);
+  }
   protected cancelDelete(): void   { this.showDeleteConfirm.set(false); }
 
   protected doDelete(): void {

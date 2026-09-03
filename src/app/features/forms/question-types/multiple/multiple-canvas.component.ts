@@ -15,6 +15,7 @@ export class MultipleCanvasComponent implements CanvasQuestionComponent {
 
   readonly question = input.required<FormQuestion>();
   readonly selected = input<boolean>(false);
+  readonly locked   = input<boolean>(false);
 
   protected readonly options = computed<QuestionOption[]>(
     () => (this.question().config['options'] as QuestionOption[]) ?? [],
@@ -29,6 +30,7 @@ export class MultipleCanvasComponent implements CanvasQuestionComponent {
   );
 
   protected onScoreBlur(optionId: string, event: FocusEvent): void {
+    if (this.locked()) return;
     const score = Number((event.target as HTMLInputElement).value) || 0;
     const updatedOptions = this.options().map((option) =>
       option.id === optionId ? { ...option, score } : option,

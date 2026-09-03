@@ -1,0 +1,30 @@
+:host { display: block; }
+
+.lb {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 20px;
+  background: var(--ff-warning-bg);
+  border-bottom: 1px solid #fde68a;
+  font-size: 13px;
+  flex-wrap: wrap;
+}
+
+.lb__icon {
+  color: var(--ff-warning);
+  flex-shrink: 0;
+}
+
+.lb__message {
+  flex: 1;
+  color: var(--ff-warning);
+  line-height: 1.5;
+}
+
+.lb__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}

@@ -27,9 +27,20 @@
       (returnToConvocatoriaClicked)="onReturnToConvocatoria()"
     />
 
+    @if (isLocked()) {
+      <app-lock-banner [status]="form()!.status" />
+    }
+
+    @if (actionError()) {
+      <div class="fb__action-error">
+        <app-icon name="alert-circle" [size]="14" />
+        <span>{{ actionError()! | translate }}</span>
+      </div>
+    }
+
     <div class="fb__body">
       <div class="fb__left">
-        <app-field-types-panel (typeSelected)="onTypeSelected($event)" />
+        <app-field-types-panel [locked]="isLocked()" (typeSelected)="onTypeSelected($event)" />
       </div>
 
       <app-builder-canvas
@@ -38,6 +49,7 @@
         [activeSectionId]="activeSectionId()"
         [formType]="form()!.type"
         [categories]="categories()"
+        [locked]="isLocked()"
         (sectionAdded)="onSectionAdded($event)"
         (sectionUpdated)="onSectionUpdated($event)"
         (sectionDeleted)="onSectionDeleted($event)"
@@ -64,6 +76,7 @@
             [formSections]="form()!.sections"
             [currentSectionId]="activeSectionId()"
             [categories]="categories()"
+            [locked]="isLocked()"
             (questionChanged)="onQuestionChanged($event)"
             (conditionalLogicClicked)="drawerOpen.set(true)"
             (sectionChanged)="onMoveQuestionToSection($event)"

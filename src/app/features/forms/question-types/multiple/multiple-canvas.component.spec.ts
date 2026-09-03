@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { provideTranslateService } from '@ngx-translate/core';
 import { FormQuestion } from '../../models/form.model';
+import { CanvasEditService } from '../../services/canvas-edit.service';
 import { MultipleCanvasComponent } from './multiple-canvas.component';
 
 const MOCK_Q: FormQuestion = {
@@ -26,5 +27,20 @@ describe('MultipleCanvasComponent', () => {
     fixture.componentRef.setInput('question', MOCK_Q);
     fixture.detectChanges();
     expect((fixture.componentInstance as any).options()).toHaveLength(2);
+  });
+
+  it('onScoreBlur does not emit when locked', () => {
+    TestBed.overrideComponent(MultipleCanvasComponent, { add: { providers: [CanvasEditService] } });
+    const fixture = TestBed.createComponent(MultipleCanvasComponent);
+    fixture.componentRef.setInput('question', MOCK_Q);
+    fixture.componentRef.setInput('locked', true);
+    fixture.detectChanges();
+    const canvasEditSvc = fixture.debugElement.injector.get(CanvasEditService);
+    const emitSpy = vi.spyOn(canvasEditSvc, 'emit');
+
+    const fakeEvent = { target: { value: '5' } } as unknown as FocusEvent;
+    (fixture.componentInstance as any).onScoreBlur('a', fakeEvent);
+
+    expect(emitSpy).not.toHaveBeenCalled();
   });
 });

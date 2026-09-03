@@ -133,4 +133,25 @@ describe('SectionCardComponent', () => {
     fixture.componentRef.setInput('categories', []);
     expect((component as any).categoryFor(MOCK_QUESTION)).toBeUndefined();
   });
+
+  it('confirmDelete does not open the confirm dialog when locked', () => {
+    fixture.componentRef.setInput('locked', true);
+    (component as any).confirmDelete();
+    expect((component as any).showDeleteConfirm()).toBe(false);
+  });
+
+  it('onDeleteQuestion does not emit questionDeleted when locked', () => {
+    fixture.componentRef.setInput('locked', true);
+    let emitted: unknown;
+    component.questionDeleted.subscribe((v) => (emitted = v));
+    const event = { stopPropagation: vi.fn() } as unknown as MouseEvent;
+    (component as any).onDeleteQuestion(event, 'q1');
+    expect(emitted).toBeUndefined();
+  });
+
+  it('getCanvasInputs includes the locked flag', () => {
+    fixture.componentRef.setInput('section', { ...MOCK_SECTION, questions: [MOCK_QUESTION] });
+    fixture.componentRef.setInput('locked', true);
+    expect((component as any).getCanvasInputs('q1')['locked']).toBe(true);
+  });
 });

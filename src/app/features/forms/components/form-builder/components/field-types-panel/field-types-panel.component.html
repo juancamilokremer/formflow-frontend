@@ -13,6 +13,8 @@
             <button
               class="ftp__chip"
               type="button"
+              [disabled]="locked()"
+              [title]="locked() ? ('builder.locked.chip_tooltip' | translate) : null"
               (click)="typeSelected.emit(entry.type)"
             >
               <div class="ftp__chip-row">

@@ -68,4 +68,23 @@ describe('BuilderCanvasComponent', () => {
     component.sectionDeleted.emit('s1');
     expect(emitted).toBe('s1');
   });
+
+  it('questionListIds returns section ids when not locked', () => {
+    fixture.componentRef.setInput('form', { ...MOCK_FORM, sections: [{ id: 's1', title: 'S1', position: 1, questions: [] }] });
+    expect((component as any).questionListIds()).toEqual(['s1']);
+  });
+
+  it('questionListIds returns an empty array when locked', () => {
+    fixture.componentRef.setInput('form', { ...MOCK_FORM, sections: [{ id: 's1', title: 'S1', position: 1, questions: [] }] });
+    fixture.componentRef.setInput('locked', true);
+    expect((component as any).questionListIds()).toEqual([]);
+  });
+
+  it('onAddSection does not emit when locked', () => {
+    fixture.componentRef.setInput('locked', true);
+    let emitted: string | undefined;
+    component.sectionAdded.subscribe((v) => (emitted = v));
+    (component as any).onAddSection();
+    expect(emitted).toBeUndefined();
+  });
 });

@@ -21,6 +21,7 @@ import { FieldTypesPanelComponent } from './components/field-types-panel/field-t
 import { BuilderCanvasComponent } from './components/builder-canvas/builder-canvas.component';
 import { PropertiesPanelComponent } from './components/properties-panel/properties-panel.component';
 import { ConditionalLogicDrawerComponent } from './components/conditional-logic-drawer/conditional-logic-drawer.component';
+import { LockBannerComponent } from './components/lock-banner/lock-banner.component';
 
 @Component({
   selector: 'app-form-builder',
@@ -32,6 +33,7 @@ import { ConditionalLogicDrawerComponent } from './components/conditional-logic-
     BuilderCanvasComponent,
     PropertiesPanelComponent,
     ConditionalLogicDrawerComponent,
+    LockBannerComponent,
   ],
   templateUrl: './form-builder.component.html',
   styleUrl: './form-builder.component.scss',
@@ -64,6 +66,12 @@ export class FormBuilderComponent implements OnInit {
   protected readonly activeSectionId    = signal<string | null>(null);
   protected readonly drawerOpen         = signal(false);
   protected readonly categories         = signal<Category[]>([]);
+  protected readonly actionError        = signal<string | null>(null);
+
+  protected readonly isLocked = computed(() => {
+    const f = this.form();
+    return !!f && f.status !== 'DRAFT' && (f.type === 'CANDIDATES' || f.type === 'DIAGNOSTIC');
+  });
 
   protected readonly selectedQuestion = computed<FormQuestion | null>(() => {
     const questionId  = this.selectedQuestionId();
@@ -140,6 +148,7 @@ export class FormBuilderComponent implements OnInit {
   // ---------------------------------------------------------------------------
 
   protected onSectionAdded(title: string): void {
+    if (this.isLocked()) return;
     const formId = this.form()!.id;
     this.formsService.createSection(formId, { title }).subscribe({
       next: (section) => {
@@ -148,6 +157,7 @@ export class FormBuilderComponent implements OnInit {
         );
         this.activeSectionId.set(section.id);
       },
+      error: () => this.actionError.set('builder.error.section_create'),
     });
   }
 
@@ -155,10 +165,12 @@ export class FormBuilderComponent implements OnInit {
     const formId = this.form()!.id;
     this.formsService.updateSection(formId, update.id, { title: update.title }).subscribe({
       next: () => this.mapSection(update.id, (section) => ({ ...section, title: update.title })),
+      error: () => this.actionError.set('builder.error.section_update'),
     });
   }
 
   protected onSectionDeleted(sectionId: string): void {
+    if (this.isLocked()) return;
     const formId = this.form()!.id;
     this.formsService.deleteSection(formId, sectionId).subscribe({
       next: () => {
@@ -172,6 +184,7 @@ export class FormBuilderComponent implements OnInit {
             : current,
         );
       },
+      error: () => this.actionError.set('builder.error.section_delete'),
     });
   }
 
@@ -190,6 +203,7 @@ export class FormBuilderComponent implements OnInit {
   // ---------------------------------------------------------------------------
 
   protected onTypeSelected(type: QuestionType): void {
+    if (this.isLocked()) return;
     const currentForm = this.form();
     if (!currentForm) return;
 
@@ -213,6 +227,7 @@ export class FormBuilderComponent implements OnInit {
         this.selectedQuestionId.set(question.id);
         this.activeSectionId.set(sectionId);
       },
+      error: () => this.actionError.set('builder.error.question_create'),
     });
   }
 
@@ -230,6 +245,7 @@ export class FormBuilderComponent implements OnInit {
   }
 
   protected onQuestionDeleted(event: { sectionId: string; questionId: string }): void {
+    if (this.isLocked()) return;
     const currentForm = this.form();
     if (!currentForm) return;
 
@@ -243,6 +259,7 @@ export class FormBuilderComponent implements OnInit {
           questions: section.questions.filter((question) => question.id !== event.questionId),
         }));
       },
+      error: () => this.actionError.set('builder.error.question_delete'),
     });
   }
 
@@ -256,7 +273,9 @@ export class FormBuilderComponent implements OnInit {
           section.questions.find((question) => question.id === questionId)!,
         ),
       }));
-      this.formsService.reorderQuestions(currentForm.id, event.fromSectionId, event.orderedToIds).subscribe();
+      this.formsService.reorderQuestions(currentForm.id, event.fromSectionId, event.orderedToIds).subscribe({
+        error: () => this.actionError.set('builder.error.question_update'),
+      });
     } else {
       const movedQuestion = currentForm.sections
         .find((section) => section.id === event.fromSectionId)!
@@ -304,6 +323,7 @@ export class FormBuilderComponent implements OnInit {
           this.replaceQuestion(event.toSectionId, event.questionId, newQuestion);
           this.formsService.deleteQuestion(currentForm.id, event.fromSectionId, event.questionId).subscribe();
         },
+        error: () => this.actionError.set('builder.error.question_update'),
       });
     }
   }
@@ -350,6 +370,7 @@ export class FormBuilderComponent implements OnInit {
           orderedToIds.map((id) => (id === questionId ? newQuestion.id : id)),
         ).subscribe();
       },
+      error: () => this.actionError.set('builder.error.question_update'),
     });
   }
 
@@ -430,6 +451,7 @@ export class FormBuilderComponent implements OnInit {
 
     this.formsService.updateQuestion(formId, sectionId, questionId, request).subscribe({
       next: (updatedQuestion) => this.replaceQuestion(sectionId, questionId, updatedQuestion),
+      error: () => this.actionError.set('builder.error.question_update'),
     });
   }
 }

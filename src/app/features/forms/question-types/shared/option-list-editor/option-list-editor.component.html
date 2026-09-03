@@ -1,6 +1,6 @@
-<div class="ole__list" cdkDropList (cdkDropListDropped)="onDrop($event)">
+<div class="ole__list" cdkDropList [cdkDropListDisabled]="disabled()" (cdkDropListDropped)="onDrop($event)">
   @for (option of localOptions(); track option.id) {
-    <div class="ole__row" cdkDrag>
+    <div class="ole__row" cdkDrag [cdkDragDisabled]="disabled()">
       <button class="ole__grip" cdkDragHandle type="button" aria-label="Reordenar">
         <app-icon name="grip-vertical" [size]="14" />
       </button>

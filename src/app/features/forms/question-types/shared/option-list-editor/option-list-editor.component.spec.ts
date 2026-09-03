@@ -11,12 +11,13 @@ const OPTION_B: QuestionOption = { id: 'b', label: 'Option B' };
 const OPTION_C: QuestionOption = { id: 'c', label: 'Option C' };
 
 @Component({
-  template: `<app-option-list-editor [options]="options" [showScoring]="showScoring" (optionsChanged)="last = $event" />`,
+  template: `<app-option-list-editor [options]="options" [showScoring]="showScoring" [disabled]="disabled" (optionsChanged)="last = $event" />`,
   imports: [OptionListEditorComponent],
 })
 class HostComponent {
   options: QuestionOption[] = [OPTION_A, OPTION_B, OPTION_C];
   showScoring = false;
+  disabled = false;
   last?: QuestionOption[];
 }
 
@@ -96,5 +97,23 @@ describe('OptionListEditorComponent', () => {
     const fakeEvent = { target: { value: '-5' } } as unknown as FocusEvent;
     editor['onScoreBlur']('a', fakeEvent);
     expect(editor['localOptions']()[0].score).toBe(0);
+  });
+
+  it('onDrop does not reorder or emit when disabled', () => {
+    TestBed.configureTestingModule({
+      imports: [HostComponent],
+      providers: [provideTranslateService({ lang: 'es' })],
+    });
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.componentInstance.disabled = true;
+    fixture.detectChanges();
+    const editorEl = fixture.debugElement.query(By.directive(OptionListEditorComponent));
+    const editor   = editorEl.componentInstance as OptionListEditorComponent;
+
+    const drop = { previousIndex: 0, currentIndex: 2 } as CdkDragDrop<QuestionOption[]>;
+    editor['onDrop'](drop);
+
+    expect(editor['localOptions']().map((o: QuestionOption) => o.id)).toEqual(['a', 'b', 'c']);
+    expect(fixture.componentInstance.last).toBeUndefined();
   });
 });

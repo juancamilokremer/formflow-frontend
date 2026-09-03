@@ -22,31 +22,34 @@
 
   <div class="qp__divider"></div>
 
-  <div class="qp__field">
-    <span class="qp__label">{{ 'builder.prop.options' | translate }}</span>
-    <app-option-list-editor
-      [options]="currentOptions()"
-      [showScoring]="showScoring() && scoringType() === 'manual'"
-      (optionsChanged)="onOptionsChanged($event)"
-    />
-  </div>
-
-  @if (showScoring()) {
-    <div class="qp__divider"></div>
-
+  <fieldset class="qp__locked-group" [disabled]="locked()">
     <div class="qp__field">
-      <label class="qp__label" for="qp-scoring-type">{{ 'builder.prop.scoring_type' | translate }}</label>
-      <select id="qp-scoring-type" class="qp__select" (change)="onScoringTypeChange($event)">
-        <option value="none"   [selected]="scoringType() === 'none'">{{ 'builder.prop.scoring_none' | translate }}</option>
-        <option value="manual" [selected]="scoringType() === 'manual'">{{ 'builder.prop.scoring_manual' | translate }}</option>
-      </select>
+      <span class="qp__label">{{ 'builder.prop.options' | translate }}</span>
+      <app-option-list-editor
+        [options]="currentOptions()"
+        [showScoring]="showScoring() && scoringType() === 'manual'"
+        [disabled]="locked()"
+        (optionsChanged)="onOptionsChanged($event)"
+      />
     </div>
 
-    <app-category-selector
-      [categories]="categories()"
-      [selectedCategoryId]="question().categoryId"
-      (categoryChange)="onCategoryChange($event)"
-      (categoryCreated)="onCategoryCreated($event)"
-    />
-  }
+    @if (showScoring()) {
+      <div class="qp__divider"></div>
+
+      <div class="qp__field">
+        <label class="qp__label" for="qp-scoring-type">{{ 'builder.prop.scoring_type' | translate }}</label>
+        <select id="qp-scoring-type" class="qp__select" (change)="onScoringTypeChange($event)">
+          <option value="none"   [selected]="scoringType() === 'none'">{{ 'builder.prop.scoring_none' | translate }}</option>
+          <option value="manual" [selected]="scoringType() === 'manual'">{{ 'builder.prop.scoring_manual' | translate }}</option>
+        </select>
+      </div>
+
+      <app-category-selector
+        [categories]="categories()"
+        [selectedCategoryId]="question().categoryId"
+        (categoryChange)="onCategoryChange($event)"
+        (categoryCreated)="onCategoryCreated($event)"
+      />
+    }
+  </fieldset>
 </div>
