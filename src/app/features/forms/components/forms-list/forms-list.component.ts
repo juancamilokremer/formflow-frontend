@@ -50,6 +50,7 @@ export class FormsListComponent {
   readonly editRequested        = output<string>();
   readonly viewResultsRequested = output<string>();
   readonly deleted              = output<string>();
+  readonly versionGenerated     = output<Form>();
 
   protected readonly searchQuery    = signal('');
   protected readonly statusFilter   = signal<string>('ALL');
@@ -92,6 +93,16 @@ export class FormsListComponent {
         this.deleted.emit(id);
         this.pendingDeleteId.set(null);
       },
+    });
+  }
+
+  protected isLocked(form: Form): boolean {
+    return form.status !== 'DRAFT' && (form.type === 'CANDIDATES' || form.type === 'DIAGNOSTIC');
+  }
+
+  protected generateVersion(id: string): void {
+    this.formsService.generateVersion(id).subscribe({
+      next: (form) => this.versionGenerated.emit(form),
     });
   }
 

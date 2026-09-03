@@ -74,6 +74,17 @@ describe('FormsService', () => {
     expect(result).toEqual({ ...mockForm, id: 'f2', name: 'Test Form (copia)' });
   });
 
+  it('generateVersion() should POST to /versions and return the new form', () => {
+    let result: Form | undefined;
+    service.generateVersion('f1').subscribe((f) => (result = f));
+
+    const req = http.expectOne((r) => r.method === 'POST' && r.url.includes('/f1/versions'));
+    expect(req.request.body).toEqual({});
+    req.flush({ success: true, data: { ...mockForm, id: 'f3', status: 'DRAFT', version: 2 } });
+
+    expect(result).toEqual({ ...mockForm, id: 'f3', status: 'DRAFT', version: 2 });
+  });
+
   it('updateStatus() should PATCH the status and return the updated form', () => {
     let result: Form | undefined;
     service.updateStatus('f1', 'ACTIVE').subscribe((f) => (result = f));

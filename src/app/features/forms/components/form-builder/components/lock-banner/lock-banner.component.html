@@ -11,8 +11,7 @@
   <div class="lb__actions">
     <app-button
       variant="secondary"
-      [disabled]="true"
-      [title]="'builder.locked.coming_soon_tooltip' | translate"
+      (click)="generateVersionClicked.emit()"
     >
       {{ 'builder.locked.generate_version_action' | translate }}
     </app-button>

@@ -63,6 +63,11 @@ export class FormsComponent {
     this.forms.update((list) => list.filter((f) => f.id !== id));
   }
 
+  protected onVersionGenerated(form: Form): void {
+    this.forms.update((list) => [form, ...list]);
+    this.router.navigate(formBuilderPath(form.id));
+  }
+
   protected editForm(id: string): void {
     this.router.navigate(formBuilderPath(id));
   }

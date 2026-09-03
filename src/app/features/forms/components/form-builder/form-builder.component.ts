@@ -1,10 +1,10 @@
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, effect, inject, input, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map, of, switchMap } from 'rxjs';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { RouteConstants, convocatoriaDetailPath } from '../../../../core/constants/route.constants';
+import { RouteConstants, convocatoriaDetailPath, formBuilderPath } from '../../../../core/constants/route.constants';
 import { Category } from '../../../../core/models/category.model';
 import { CategoryService } from '../../../../core/services/category.service';
 import { IconComponent } from '../../../../shared/icons/icon.component';
@@ -49,6 +49,13 @@ export class FormBuilderComponent implements OnInit {
 
   protected readonly convocatoriaId = this.route.snapshot.queryParamMap.get(RouteConstants.QUERY_CONVOCATORIA_ID);
 
+  // Bound automatically from the `:id` route param via withComponentInputBinding().
+  // Angular reuses this component's instance across navigations between two
+  // /forms/:id/edit URLs (same route config, only the param differs) — reading the
+  // id as a reactive input (instead of route.snapshot in ngOnInit) is what lets the
+  // effect below reload the right form when the id changes without a full destroy.
+  protected readonly id = input.required<string>();
+
   protected readonly isMobile = toSignal(
     this.breakpointObserver.observe('(max-width: 767px)').pipe(map((state) => state.matches)),
     { initialValue: false },
@@ -84,18 +91,27 @@ export class FormBuilderComponent implements OnInit {
     return null;
   });
 
+  constructor() {
+    effect(() => {
+      const formId = this.id();
+      this.loading.set(true);
+      this.loadError.set(false);
+      this.selectedQuestionId.set(null);
+      this.drawerOpen.set(false);
+      this.actionError.set(null);
+      this.formsService.getById(formId).subscribe({
+        next: (form) => {
+          this.form.set(form);
+          this.activeSectionId.set(form.sections[0]?.id ?? null);
+          this.loading.set(false);
+        },
+        error: () => { this.loadError.set(true); this.loading.set(false); },
+      });
+    });
+  }
+
   ngOnInit(): void {
     this.categoryService.getAll().subscribe((categories) => this.categories.set(categories));
-
-    const formId = this.route.snapshot.paramMap.get('id')!;
-    this.formsService.getById(formId).subscribe({
-      next: (form) => {
-        this.form.set(form);
-        this.activeSectionId.set(form.sections[0]?.id ?? null);
-        this.loading.set(false);
-      },
-      error: () => { this.loadError.set(true); this.loading.set(false); },
-    });
   }
 
   // ---------------------------------------------------------------------------
@@ -140,6 +156,13 @@ export class FormBuilderComponent implements OnInit {
     const nextStatus: FormStatus = currentForm.status === 'ACTIVE' ? 'ARCHIVED' : 'ACTIVE';
     this.formsService.updateStatus(currentForm.id, nextStatus).subscribe({
       next: () => this.form.update((current) => (current ? { ...current, status: nextStatus } : current)),
+    });
+  }
+
+  protected onGenerateVersion(): void {
+    this.formsService.generateVersion(this.form()!.id).subscribe({
+      next: (newForm) => this.router.navigate(formBuilderPath(newForm.id)),
+      error: () => this.actionError.set('builder.error.version_generate'),
     });
   }
 

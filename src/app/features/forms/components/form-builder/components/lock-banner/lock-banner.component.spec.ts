@@ -25,4 +25,11 @@ describe('LockBannerComponent', () => {
   it('accepts the status input', () => {
     expect(component.status()).toBe('ACTIVE');
   });
+
+  it('emits generateVersionClicked', () => {
+    let emitted = false;
+    component.generateVersionClicked.subscribe(() => (emitted = true));
+    component.generateVersionClicked.emit();
+    expect(emitted).toBe(true);
+  });
 });

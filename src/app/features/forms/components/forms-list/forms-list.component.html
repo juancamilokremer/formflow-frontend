@@ -52,6 +52,11 @@
           {{ 'forms.actions.results' | translate }}
         </app-button>
       }
+      @if (isLocked($any(row))) {
+        <app-button variant="secondary" (click)="generateVersion($any(row).id)">
+          {{ 'forms.actions.generate_version' | translate }}
+        </app-button>
+      }
       <app-button variant="secondary" (click)="editRequested.emit($any(row).id)">
         {{ 'forms.actions.edit' | translate }}
       </app-button>
