@@ -179,14 +179,14 @@ Ningún string visible al usuario hardcodeado — todo en `es.json` con `| trans
 | Milestone | Issues |
 |-----------|--------|
 | M1 ✅ | #9 ✅ #10 ✅ #11 ✅ #18 ✅ #19 ✅ |
-| M2 🔄 | sub-issues: #32 ✅ #33 ✅ #34 ✅ #35 ✅ #36 ✅ #39 ✅ · originales: #2 ✅ #3 ✅ #4 ⏳ · extras: #43 ✅ #46 ✅ #47 ✅ |
-| M3 | #12 #13 #14 #15 #16 #20 |
+| M2 ✅ | sub-issues: #32 ✅ #33 ✅ #34 ✅ #35 ✅ #36 ✅ #39 ✅ · originales: #2 ✅ #3 ✅ #4 ✅ · extras: #43 ✅ #46 ✅ #47 ✅ |
+| M3 🔄 16/24 | #12 ✅ #13 ✅ #14 ✅ #16 ✅ #52–#59 ✅ #66 ✅ #67 ✅ #69 ✅ #76–#82 ✅ #101 ✅ · abiertos: #15 #20 #71–#75 #84 |
+| M3b ✅ | #85 #86 #87 #88 |
+| M3c ✅ | #54 #55 #56 #101 (ver también M3) |
+| M3d 🔄 iniciando | #89 #90 #91 #92 (abiertos) |
 | M4 | #5 #6 |
 | M5 | #7 #8 #21 #22 #23 |
 | M6 | #17 |
-
-## Pendiente M2 (jun 2026)
-1. **#4**  — Preview en tiempo real (motor de condiciones + 8 answer components reutilizados en M3 #12)
 
 ## Patrones establecidos en M2
 
@@ -212,6 +212,21 @@ Todos extienden `BasePropertiesComponent` (`question-types/base-properties.compo
 - Preguntas: `cdkDrag` en el div de la pregunta, `cdkDragHandle` en `.sc__q-grip` (mismo template ✅)
 - Cross-section: `cdkDropListConnectedTo` con IDs de secciones; el move hace `addQuestion` + `deleteQuestion`
 - El ID del drop list de preguntas = `section.id` (UUID de la sección)
+
+## Patrones establecidos en M3
+
+### Dashboard de resultados (M3c)
+- 3 tabs: Resumen (KPIs + timeline), Por pregunta (ApexCharts, dispatch por `switch` sobre `QuestionType` en `QuestionStatsCard`), Respuestas individuales (tabla + `ResponseDetailDrawer`).
+- Preguntas `INFO` se excluyen de "Por pregunta"; `DATE`/`FILE` muestran mensaje explícito en vez de gráfica (no hay agregación útil para esos tipos).
+- Filtros de rango de fechas y exportación son transversales al dashboard, no por tab.
+
+### Convocatoria como borrador temprano (épica #77–#82)
+- La convocatoria se puede crear sin formulario asociado y completarse por pasos (persistencia incremental) — cada paso del wizard guarda contra backend, no solo al final.
+- Ruta con `:id` desde el primer paso; hidratación desde backend si se retoma un borrador.
+- El wizard puede crear un formulario nuevo desde dentro (ida y vuelta al constructor) sin perder el estado del borrador.
+
+### Testing
+- `AppTableComponent`: usar `interface` (no `type`) para el helper de test — `type` rompe la inferencia de generics en el TestBed.
 
 ## Links
 - Issues: https://github.com/juancamilokremer/formflow-frontend/issues
