@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { LowerCasePipe } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 import { IconComponent } from '../../../../../../shared/icons/icon.component';
@@ -13,4 +13,5 @@ import { FormStatus } from '../../../../models/form.model';
 })
 export class LockBannerComponent {
   readonly status = input.required<FormStatus>();
+  readonly generateVersionClicked = output<void>();
 }

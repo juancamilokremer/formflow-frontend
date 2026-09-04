@@ -57,6 +57,7 @@ function buildComponent(formResult: 'ok' | 'error' = 'ok', convocatoriaDetail: C
     reorderQuestions: vi.fn().mockReturnValue(of(undefined)),
     reorderSections: vi.fn().mockReturnValue(of(undefined)),
     remove: vi.fn().mockReturnValue(of(undefined)),
+    generateVersion: vi.fn().mockReturnValue(of({ ...MOCK_FORM, id: 'f2', status: 'DRAFT' })),
   };
 
   const mockCategoryService = {
@@ -74,6 +75,7 @@ function buildComponent(formResult: 'ok' | 'error' = 'ok', convocatoriaDetail: C
   TestBed.overrideProvider(CategoryService, { useValue: mockCategoryService });
   TestBed.overrideProvider(ConvocatoriaService, { useValue: mockConvocatoriaService });
   const fixture = TestBed.createComponent(FormBuilderComponent);
+  fixture.componentRef.setInput('id', 'f1');
   fixture.detectChanges();
   return { fixture, component: fixture.componentInstance, mockFormsService, mockCategoryService, mockConvocatoriaService };
 }
@@ -251,6 +253,51 @@ describe('FormBuilderComponent', () => {
       mockFormsService.deleteQuestion.mockReturnValue(throwError(() => new Error()));
       (component as any).onQuestionDeleted({ sectionId: 's1', questionId: 'q1' });
       expect((component as any).actionError()).toBe('builder.error.question_delete');
+    });
+  });
+
+  describe('reloading when the id input changes (Angular reuses this component across /forms/:id/edit navigations)', () => {
+    it('re-fetches the form and resets selection state when id() changes', () => {
+      const { fixture, component, mockFormsService } = buildComponent();
+      expect(mockFormsService.getById).toHaveBeenCalledWith('f1');
+      expect((component as any).form()!.id).toBe('f1');
+
+      (component as any).selectedQuestionId.set('q1');
+      (component as any).drawerOpen.set(true);
+      (component as any).actionError.set('builder.error.load');
+
+      const otherForm = { ...MOCK_FORM, id: 'f9', status: 'ARCHIVED' as const };
+      mockFormsService.getById.mockReturnValue(of(otherForm));
+      fixture.componentRef.setInput('id', 'f9');
+      fixture.detectChanges();
+
+      expect(mockFormsService.getById).toHaveBeenCalledWith('f9');
+      expect((component as any).form()!.id).toBe('f9');
+      expect((component as any).selectedQuestionId()).toBeNull();
+      expect((component as any).drawerOpen()).toBe(false);
+      expect((component as any).actionError()).toBeNull();
+    });
+  });
+
+  describe('onGenerateVersion', () => {
+    it('calls generateVersion and navigates to the new form builder on success', () => {
+      const { component, mockFormsService } = buildComponent();
+      const router = TestBed.inject(Router);
+      const navigateSpy = vi.spyOn(router, 'navigate').mockResolvedValue(true);
+
+      (component as any).onGenerateVersion();
+
+      expect(mockFormsService.generateVersion).toHaveBeenCalledWith('f1');
+      expect(navigateSpy).toHaveBeenCalledWith(['forms', 'f2', 'edit']);
+    });
+
+    it('sets actionError when generateVersion fails', () => {
+      const { component, mockFormsService } = buildComponent();
+      mockFormsService.generateVersion.mockReturnValue(throwError(() => new Error()));
+
+      (component as any).onGenerateVersion();
+
+      expect((component as any).actionError()).toBe('builder.error.version_generate');
     });
   });
 });

@@ -39,10 +39,11 @@ const mockTranslate = {
 
 function setup() {
   const mockRemove = vi.fn();
+  const mockGenerateVersion = vi.fn();
   TestBed.configureTestingModule({
     providers: [
       provideHttpClient(), provideHttpClientTesting(),
-      { provide: FormsService,    useValue: { remove: mockRemove } },
+      { provide: FormsService,    useValue: { remove: mockRemove, generateVersion: mockGenerateVersion } },
       { provide: TranslateService, useValue: mockTranslate },
     ],
   });
@@ -50,7 +51,7 @@ function setup() {
   (component as any).forms     = () => mockForms;
   (component as any).loading   = () => false;
   (component as any).loadError = () => false;
-  return { component, mockRemove };
+  return { component, mockRemove, mockGenerateVersion };
 }
 
 describe('FormsListComponent', () => {
@@ -132,6 +133,31 @@ describe('FormsListComponent', () => {
     const { component, mockRemove } = setup();
     component['deleteForm']();
     expect(mockRemove).not.toHaveBeenCalled();
+  });
+
+  it('isLocked() is true for an ACTIVE/ARCHIVED CANDIDATES or DIAGNOSTIC form', () => {
+    const { component } = setup();
+    expect(component['isLocked']({ ...mockForms[0], status: 'ACTIVE', type: 'CANDIDATES' })).toBe(true);
+    expect(component['isLocked']({ ...mockForms[0], status: 'ARCHIVED', type: 'DIAGNOSTIC' })).toBe(true);
+  });
+
+  it('isLocked() is false for a DRAFT form or a REGISTRATION form', () => {
+    const { component } = setup();
+    expect(component['isLocked']({ ...mockForms[0], status: 'DRAFT', type: 'CANDIDATES' })).toBe(false);
+    expect(component['isLocked']({ ...mockForms[0], status: 'ACTIVE', type: 'REGISTRATION' })).toBe(false);
+  });
+
+  it('generateVersion() calls the service and emits versionGenerated', () => {
+    const { component, mockGenerateVersion } = setup();
+    const newForm: Form = { ...mockForms[0], id: 'v2', status: 'DRAFT' };
+    mockGenerateVersion.mockReturnValue(of(newForm));
+
+    let emitted: Form | undefined;
+    component.versionGenerated.subscribe((f) => (emitted = f));
+    component['generateVersion']('f1');
+
+    expect(mockGenerateVersion).toHaveBeenCalledWith('f1');
+    expect(emitted).toEqual(newForm);
   });
 
   it('formatDate() should return a string containing the year', () => {

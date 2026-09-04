@@ -90,4 +90,12 @@ describe('FormsComponent', () => {
     expect(component['forms']().find((f) => f.id === 'f1')).toBeUndefined();
     expect(component['forms']()).toHaveLength(1);
   });
+
+  it('onVersionGenerated() should prepend the new form and navigate to its builder', () => {
+    const { component, mockNavigate } = setup();
+    const newForm: Form = { ...mockForms[0], id: 'v2', status: 'DRAFT' };
+    component['onVersionGenerated'](newForm);
+    expect(component['forms']()[0].id).toBe('v2');
+    expect(mockNavigate).toHaveBeenCalled();
+  });
 });

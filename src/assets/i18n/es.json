@@ -156,6 +156,7 @@
     "actions": {
       "edit": "Editar",
       "results": "Ver resultados",
+      "generate_version": "Generar nueva versión",
       "confirm_delete": "¿Eliminar este formulario?",
       "delete_yes": "Sí, eliminar"
     },
@@ -318,7 +319,8 @@
       "section_delete": "No se pudo eliminar la sección.",
       "question_create": "No se pudo agregar la pregunta.",
       "question_update": "No se pudo guardar los cambios.",
-      "question_delete": "No se pudo eliminar la pregunta."
+      "question_delete": "No se pudo eliminar la pregunta.",
+      "version_generate": "No se pudo generar la nueva versión. Intenta de nuevo."
     },
     "locked": {
       "banner_message": "Este formulario está {{status}} y no admite cambios de estructura (secciones, preguntas, opciones o configuración) — puedes seguir editando textos y reordenando. Para cambiar la estructura, genera una nueva versión o duplica el formulario.",
