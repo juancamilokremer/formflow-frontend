@@ -51,43 +51,10 @@ describe('TextPropertiesComponent', () => {
     expect(emitted).toEqual({ config: { placeholder: 'Escribe aquí' } });
   });
 
-  describe('time limit', () => {
-    it('timeLimitDisplayValue is null when timeLimitSeconds is null', () => {
-      expect((component as any).timeLimitDisplayValue).toBeNull();
-    });
-
-    it('onTimeLimitBlur emits seconds when unit is seconds', () => {
-      let emitted: Partial<FormQuestion> | undefined;
-      component.changed.subscribe((v) => (emitted = v));
-      (component as any).onTimeLimitBlur({ target: { value: '45' } } as unknown as FocusEvent);
-      expect(emitted).toEqual({ timeLimitSeconds: 45 });
-    });
-
-    it('onTimeLimitBlur converts to seconds when unit is minutes', () => {
-      (component as any).onTimeLimitUnitChange({ target: { value: 'minutes' } } as unknown as Event);
-      let emitted: Partial<FormQuestion> | undefined;
-      component.changed.subscribe((v) => (emitted = v));
-      (component as any).onTimeLimitBlur({ target: { value: '2' } } as unknown as FocusEvent);
-      expect(emitted).toEqual({ timeLimitSeconds: 120 });
-    });
-
-    it('onTimeLimitBlur with empty value emits null when a limit was previously set', () => {
-      const fixture = TestBed.createComponent(TextPropertiesComponent);
-      fixture.componentRef.setInput('question', { ...MOCK_Q, timeLimitSeconds: 90 });
-      const comp = fixture.componentInstance;
-      let emitted: Partial<FormQuestion> | undefined;
-      comp.changed.subscribe((v) => (emitted = v));
-      (comp as any).onTimeLimitBlur({ target: { value: '' } } as unknown as FocusEvent);
-      expect(emitted).toEqual({ timeLimitSeconds: null });
-    });
-
-    it('timeLimitDisplayValue reflects the auto-detected unit once the effect runs', () => {
-      const fixture = TestBed.createComponent(TextPropertiesComponent);
-      fixture.componentRef.setInput('question', { ...MOCK_Q, timeLimitSeconds: 120 });
-      fixture.detectChanges();
-      const comp = fixture.componentInstance as any;
-      expect(comp.timeLimitUnit()).toBe('minutes');
-      expect(comp.timeLimitDisplayValue).toBe(2);
-    });
+  it('onTimeLimitChanged (from BasePropertiesComponent, wired to app-time-limit-field) emits timeLimitSeconds', () => {
+    let emitted: Partial<FormQuestion> | undefined;
+    component.changed.subscribe((v) => (emitted = v));
+    (component as any).onTimeLimitChanged(45);
+    expect(emitted).toEqual({ timeLimitSeconds: 45 });
   });
 });

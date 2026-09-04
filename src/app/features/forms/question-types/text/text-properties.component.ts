@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { BasePropertiesComponent } from '../base-properties.component';
+import { TimeLimitFieldComponent } from '../shared/time-limit-field/time-limit-field.component';
 
 @Component({
   selector: 'app-text-properties',
-  imports: [TranslatePipe],
+  imports: [TranslatePipe, TimeLimitFieldComponent],
   templateUrl: './text-properties.component.html',
   styleUrl: './text-properties.component.scss',
 })
