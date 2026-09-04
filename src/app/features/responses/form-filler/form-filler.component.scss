@@ -96,6 +96,10 @@
   }
 
   &__progress {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: #fff;
     margin-bottom: 24px;
     padding-bottom: 20px;
     border-bottom: 1px solid var(--ff-border);
@@ -236,4 +240,14 @@
 
 @media (max-width: 600px) {
   .ff__card { padding: 20px 16px; }
+
+  .ff__header {
+    flex-wrap: wrap;
+    row-gap: 6px;
+    padding: 12px 16px;
+  }
+
+  .ff__candidate-name { margin-left: 0; }
+
+  .ff__nav { flex-direction: column; }
 }

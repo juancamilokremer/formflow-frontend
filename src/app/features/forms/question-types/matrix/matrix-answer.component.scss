@@ -40,18 +40,29 @@
   }
 
   &__matrix-radio {
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    border: 2px solid var(--ff-border);
-    background: var(--ff-white);
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: none;
+    background: transparent;
     cursor: pointer;
-    transition: all 0.15s;
-    display: inline-block;
 
-    &:hover { border-color: var(--ff-primary); }
+    &::before {
+      content: '';
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 2px solid var(--ff-border);
+      background: var(--ff-white);
+      transition: all 0.15s;
+    }
 
-    &--selected {
+    &:hover::before { border-color: var(--ff-primary); }
+
+    &--selected::before {
       border-color: var(--ff-primary);
       background: var(--ff-primary);
       box-shadow: inset 0 0 0 3px #fff;

@@ -56,3 +56,9 @@
   white-space: nowrap;
   border: 0;
 }
+
+@media (max-width: 600px) {
+  .tlc { font-size: 11px; gap: 6px; }
+  .tlc__track { width: 44px; }
+  .tlc--global .tlc__track { width: 56px; }
+}
