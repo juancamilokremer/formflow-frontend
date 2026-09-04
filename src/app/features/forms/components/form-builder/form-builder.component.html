@@ -25,6 +25,15 @@
       (nameChanged)="onNameChanged($event)"
       (publishClicked)="onPublishClicked()"
       (returnToConvocatoriaClicked)="onReturnToConvocatoria()"
+      (historyClicked)="onHistoryClicked()"
+    />
+
+    <app-version-history-drawer
+      [isOpen]="historyDrawerOpen()"
+      [versions]="versionHistory()"
+      [currentFormId]="form()!.id"
+      (closed)="historyDrawerOpen.set(false)"
+      (versionSelected)="onVersionSelected($event)"
     />
 
     @if (isLocked()) {

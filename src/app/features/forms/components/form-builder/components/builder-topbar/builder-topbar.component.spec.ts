@@ -115,4 +115,13 @@ describe('BuilderTopbarComponent', () => {
 
     expect(emitted).toBe(true);
   });
+
+  it('emits historyClicked when the history button is clicked', () => {
+    let emitted = false;
+    component.historyClicked.subscribe(() => (emitted = true));
+
+    component.historyClicked.emit();
+
+    expect(emitted).toBe(true);
+  });
 });

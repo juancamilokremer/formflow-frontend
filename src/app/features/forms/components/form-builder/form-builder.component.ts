@@ -11,7 +11,7 @@ import { IconComponent } from '../../../../shared/icons/icon.component';
 import { FormsService } from '../../services/forms.service';
 import { ConvocatoriaService } from '../../../convocatorias/services/convocatoria.service';
 import {
-  FormDetail, FormSection, FormQuestion, FormStatus, QuestionType,
+  FormDetail, FormSection, FormQuestion, FormStatus, FormVersion, QuestionType,
   AddQuestionRequest, UpdateQuestionRequest, QuestionMovedEvent, CanvasQuestionChangedEvent,
   ConditionalLogicConfig,
 } from '../../models/form.model';
@@ -22,6 +22,7 @@ import { BuilderCanvasComponent } from './components/builder-canvas/builder-canv
 import { PropertiesPanelComponent } from './components/properties-panel/properties-panel.component';
 import { ConditionalLogicDrawerComponent } from './components/conditional-logic-drawer/conditional-logic-drawer.component';
 import { LockBannerComponent } from './components/lock-banner/lock-banner.component';
+import { VersionHistoryDrawerComponent } from './components/version-history-drawer/version-history-drawer.component';
 
 @Component({
   selector: 'app-form-builder',
@@ -34,6 +35,7 @@ import { LockBannerComponent } from './components/lock-banner/lock-banner.compon
     PropertiesPanelComponent,
     ConditionalLogicDrawerComponent,
     LockBannerComponent,
+    VersionHistoryDrawerComponent,
   ],
   templateUrl: './form-builder.component.html',
   styleUrl: './form-builder.component.scss',
@@ -74,6 +76,8 @@ export class FormBuilderComponent implements OnInit {
   protected readonly drawerOpen         = signal(false);
   protected readonly categories         = signal<Category[]>([]);
   protected readonly actionError        = signal<string | null>(null);
+  protected readonly historyDrawerOpen  = signal(false);
+  protected readonly versionHistory     = signal<FormVersion[]>([]);
 
   protected readonly isLocked = computed(() => {
     const f = this.form();
@@ -171,6 +175,21 @@ export class FormBuilderComponent implements OnInit {
       next: (newForm) => this.router.navigate(formBuilderPath(newForm.id)),
       error: () => this.actionError.set('builder.error.duplicate'),
     });
+  }
+
+  protected onHistoryClicked(): void {
+    this.formsService.getVersionHistory(this.form()!.id).subscribe({
+      next: (versions) => {
+        this.versionHistory.set(versions);
+        this.historyDrawerOpen.set(true);
+      },
+      error: () => this.actionError.set('builder.error.history_load'),
+    });
+  }
+
+  protected onVersionSelected(formId: string): void {
+    this.historyDrawerOpen.set(false);
+    this.router.navigate(formBuilderPath(formId));
   }
 
   // ---------------------------------------------------------------------------

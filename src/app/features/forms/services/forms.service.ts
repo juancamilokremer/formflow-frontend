@@ -4,7 +4,7 @@ import { Observable, map } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ApiResponse } from '../../../core/models/api-response.model';
 import {
-  Form, FormDetail, FormSection, FormQuestion, FormStatus,
+  Form, FormDetail, FormSection, FormQuestion, FormStatus, FormVersion,
   CreateFormRequest, CreateSectionRequest, UpdateSectionRequest,
   AddQuestionRequest, UpdateQuestionRequest,
 } from '../models/form.model';
@@ -47,6 +47,12 @@ export class FormsService {
   generateVersion(id: string): Observable<Form> {
     return this.http.post<ApiResponse<Form>>(`${this.apiUrl}/${id}/versions`, {}).pipe(
       map((r) => r.data!),
+    );
+  }
+
+  getVersionHistory(id: string): Observable<FormVersion[]> {
+    return this.http.get<ApiResponse<FormVersion[]>>(`${this.apiUrl}/${id}/versions`).pipe(
+      map((r) => r.data ?? []),
     );
   }
 
