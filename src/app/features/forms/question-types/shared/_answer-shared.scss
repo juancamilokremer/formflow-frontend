@@ -10,7 +10,7 @@
       padding: 11px 14px;
       border: 1.5px solid var(--ff-border);
       border-radius: var(--ff-radius-md);
-      font-size: 14px;
+      font-size: 16px;
       font-family: inherit;
       color: var(--ff-text-primary);
       background: var(--ff-white);
@@ -30,6 +30,7 @@
       display: flex;
       align-items: center;
       gap: 10px;
+      min-height: 44px;
       padding: 12px 14px;
       border: 1.5px solid var(--ff-border);
       border-radius: var(--ff-radius-md);
@@ -60,11 +61,12 @@
       display: flex;
       gap: 6px;
       width: 100%;
+      overflow-x: auto;
     }
 
     &__scale-btn {
       flex: 1;
-      min-width: 0;
+      min-width: 44px;
       height: 44px;
       display: flex;
       align-items: center;

@@ -119,17 +119,17 @@
         </div>
 
         <div class="ff__nav">
-          <app-button variant="secondary" [disabled]="!canGoBack()" (click)="prevStep()">
+          <app-button variant="secondary" [fullWidth]="true" [disabled]="!canGoBack()" (click)="prevStep()">
             <app-icon name="arrow-left" [size]="14" />
             {{ 'responder.prev' | translate }}
           </app-button>
 
           @if (isLastSection() && isLastBlockOfSection() && isCurrentBlockResolved()) {
-            <app-button variant="primary" [loading]="submitting()" (click)="submit()">
+            <app-button variant="primary" [fullWidth]="true" [loading]="submitting()" (click)="submit()">
               {{ 'responder.submit' | translate }}
             </app-button>
           } @else {
-            <app-button variant="primary" (click)="nextStep()">
+            <app-button variant="primary" [fullWidth]="true" (click)="nextStep()">
               {{ 'responder.next' | translate }}
               <app-icon name="arrow-right" [size]="14" />
             </app-button>
