@@ -9,7 +9,11 @@
         class="vhd__row"
         [class.vhd__row--viewing]="v.id === currentFormId()"
         [class.vhd__row--clickable]="v.id !== currentFormId()"
+        [attr.role]="v.id !== currentFormId() ? 'button' : null"
+        [attr.tabindex]="v.id !== currentFormId() ? 0 : null"
         (click)="onRowClick(v)"
+        (keydown.enter)="onRowClick(v)"
+        (keydown.space)="onRowClick(v)"
       >
         <div class="vhd__main">
           <span class="vhd__version">{{ 'builder.history.version_label' | translate: { n: v.version } }}</span>
