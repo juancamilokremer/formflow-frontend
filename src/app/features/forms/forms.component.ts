@@ -68,6 +68,12 @@ export class FormsComponent {
     this.router.navigate(formBuilderPath(form.id));
   }
 
+  protected onFormDuplicated(form: Form): void {
+    // Unlike generating a version, duplicating stays on /forms — it's meant to be
+    // usable repeatedly in a row without navigating away each time.
+    this.forms.update((list) => [form, ...list]);
+  }
+
   protected editForm(id: string): void {
     this.router.navigate(formBuilderPath(id));
   }

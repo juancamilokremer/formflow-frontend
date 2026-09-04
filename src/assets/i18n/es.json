@@ -157,6 +157,7 @@
       "edit": "Editar",
       "results": "Ver resultados",
       "generate_version": "Generar nueva versión",
+      "duplicate": "Duplicar",
       "confirm_delete": "¿Eliminar este formulario?",
       "delete_yes": "Sí, eliminar"
     },
@@ -320,13 +321,13 @@
       "question_create": "No se pudo agregar la pregunta.",
       "question_update": "No se pudo guardar los cambios.",
       "question_delete": "No se pudo eliminar la pregunta.",
-      "version_generate": "No se pudo generar la nueva versión. Intenta de nuevo."
+      "version_generate": "No se pudo generar la nueva versión. Intenta de nuevo.",
+      "duplicate": "No se pudo duplicar el formulario. Intenta de nuevo."
     },
     "locked": {
       "banner_message": "Este formulario está {{status}} y no admite cambios de estructura (secciones, preguntas, opciones o configuración) — puedes seguir editando textos y reordenando. Para cambiar la estructura, genera una nueva versión o duplica el formulario.",
       "generate_version_action": "Generar nueva versión",
       "duplicate_action": "Duplicar formulario",
-      "coming_soon_tooltip": "Disponible próximamente",
       "chip_tooltip": "No disponible mientras el formulario está en uso"
     }
   },

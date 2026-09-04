@@ -17,8 +17,7 @@
     </app-button>
     <app-button
       variant="ghost"
-      [disabled]="true"
-      [title]="'builder.locked.coming_soon_tooltip' | translate"
+      (click)="duplicateClicked.emit()"
     >
       {{ 'builder.locked.duplicate_action' | translate }}
     </app-button>

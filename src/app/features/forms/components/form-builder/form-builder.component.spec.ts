@@ -58,6 +58,7 @@ function buildComponent(formResult: 'ok' | 'error' = 'ok', convocatoriaDetail: C
     reorderSections: vi.fn().mockReturnValue(of(undefined)),
     remove: vi.fn().mockReturnValue(of(undefined)),
     generateVersion: vi.fn().mockReturnValue(of({ ...MOCK_FORM, id: 'f2', status: 'DRAFT' })),
+    duplicate: vi.fn().mockReturnValue(of({ ...MOCK_FORM, id: 'f3', status: 'DRAFT' })),
   };
 
   const mockCategoryService = {
@@ -298,6 +299,28 @@ describe('FormBuilderComponent', () => {
       (component as any).onGenerateVersion();
 
       expect((component as any).actionError()).toBe('builder.error.version_generate');
+    });
+  });
+
+  describe('onDuplicate', () => {
+    it('calls duplicate and navigates to the new form builder on success', () => {
+      const { component, mockFormsService } = buildComponent();
+      const router = TestBed.inject(Router);
+      const navigateSpy = vi.spyOn(router, 'navigate').mockResolvedValue(true);
+
+      (component as any).onDuplicate();
+
+      expect(mockFormsService.duplicate).toHaveBeenCalledWith('f1');
+      expect(navigateSpy).toHaveBeenCalledWith(['forms', 'f3', 'edit']);
+    });
+
+    it('sets actionError when duplicate fails', () => {
+      const { component, mockFormsService } = buildComponent();
+      mockFormsService.duplicate.mockReturnValue(throwError(() => new Error()));
+
+      (component as any).onDuplicate();
+
+      expect((component as any).actionError()).toBe('builder.error.duplicate');
     });
   });
 });

@@ -14,4 +14,5 @@ import { FormStatus } from '../../../../models/form.model';
 export class LockBannerComponent {
   readonly status = input.required<FormStatus>();
   readonly generateVersionClicked = output<void>();
+  readonly duplicateClicked = output<void>();
 }
