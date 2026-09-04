@@ -91,7 +91,7 @@ describe('FormFillerComponent', () => {
     });
   });
 
-  describe('nextSection', () => {
+  describe('nextStep — untimed (group) blocks', () => {
     const twoSections: Partial<PublicForm> = {
       sections: [
         { id: 's1', title: 'S1', description: null, position: 1, questions: [mockQuestion] },
@@ -101,7 +101,7 @@ describe('FormFillerComponent', () => {
 
     it('blocks advance when required question unanswered', async () => {
       const { component } = await createFiller({ formOverride: twoSections });
-      component['nextSection']();
+      component['nextStep']();
       expect(component['currentSectionIndex']()).toBe(0);
       expect(component['invalidIds']().has('q1')).toBe(true);
     });
@@ -109,8 +109,140 @@ describe('FormFillerComponent', () => {
     it('advances when required question is answered', async () => {
       const { component } = await createFiller({ formOverride: twoSections });
       component['onAnswered']('q1', 'nombre');
-      component['nextSection']();
+      component['nextStep']();
       expect(component['currentSectionIndex']()).toBe(1);
+      expect(component['currentBlockIndex']()).toBe(0);
+    });
+  });
+
+  describe('blocks — partitioning timed vs. untimed questions', () => {
+    const untimedA:  FormQuestion = { ...mockQuestion, id: 'a', required: false };
+    const timedB:     FormQuestion = { ...mockQuestion, id: 'b', required: false, timeLimitSeconds: 10 };
+    const untimedC:  FormQuestion = { ...mockQuestion, id: 'c', required: false };
+    const timedD:     FormQuestion = { ...mockQuestion, id: 'd', required: false, timeLimitSeconds: 20 };
+    const mixedSection: Partial<PublicForm> = {
+      sections: [
+        { id: 's1', title: 'S1', description: null, position: 1, questions: [untimedA, timedB, untimedC, timedD] },
+      ],
+    };
+
+    it('groups consecutive untimed questions and isolates each timed one, in position order', async () => {
+      const { component } = await createFiller({ formOverride: mixedSection });
+      const blocks = component['blocks']();
+      expect(blocks).toEqual([
+        { kind: 'group', questions: [untimedA] },
+        { kind: 'timed', question: timedB },
+        { kind: 'group', questions: [untimedC] },
+        { kind: 'timed', question: timedD },
+      ]);
+    });
+
+    it('a form with no timed questions produces a single group block', async () => {
+      const { component } = await createFiller();
+      expect(component['blocks']()).toEqual([{ kind: 'group', questions: [mockQuestion] }]);
+    });
+
+    it('currentBlockQuestions reflects only the current block', async () => {
+      const { component } = await createFiller({ formOverride: mixedSection });
+      expect(component['currentBlockQuestions']()).toEqual([untimedA]);
+      component['currentBlockIndex'].set(1);
+      expect(component['currentBlockQuestions']()).toEqual([timedB]);
+    });
+  });
+
+  describe('timed blocks — manual advance', () => {
+    const requiredTimed: FormQuestion = { ...mockQuestion, id: 'q1', required: true, timeLimitSeconds: 10 };
+    const timedOnly: Partial<PublicForm> = {
+      sections: [{ id: 's1', title: 'S1', description: null, position: 1, questions: [requiredTimed] }],
+    };
+
+    it('nextStep blocks advance on an unanswered required timed question', async () => {
+      const { component } = await createFiller({ formOverride: timedOnly });
+      component['nextStep']();
+      expect(component['currentBlockIndex']()).toBe(0);
+      expect(component['invalidIds']().has('q1')).toBe(true);
+      expect(component['completedTimedBlocks']().has('q1')).toBe(false);
+    });
+
+    it('nextStep advances and marks the block as manually completed once answered', async () => {
+      const { component } = await createFiller({ formOverride: timedOnly });
+      component['onAnswered']('q1', 'resp');
+      component['nextStep']();
+      expect(component['completedTimedBlocks']().get('q1')).toBe('manual');
+    });
+
+    it('answering the question alone does not advance the block', async () => {
+      const { component } = await createFiller({ formOverride: timedOnly });
+      component['onAnswered']('q1', 'resp');
+      expect(component['completedTimedBlocks']().has('q1')).toBe(false);
+    });
+  });
+
+  describe('onTimedBlockExpired', () => {
+    const requiredTimed: FormQuestion = { ...mockQuestion, id: 'q1', required: true, timeLimitSeconds: 10 };
+    const untimedNext:    FormQuestion = { ...mockQuestion, id: 'q2', required: false, timeLimitSeconds: null };
+    const twoBlockSection: Partial<PublicForm> = {
+      sections: [{ id: 's1', title: 'S1', description: null, position: 1, questions: [requiredTimed, untimedNext] }],
+    };
+
+    it('force-advances past a required, unanswered timed question, ignoring validation', async () => {
+      const { component } = await createFiller({ formOverride: twoBlockSection });
+      component['onTimedBlockExpired'](requiredTimed);
+      expect(component['completedTimedBlocks']().get('q1')).toBe('timeout');
+      expect(component['currentBlockIndex']()).toBe(1);
+      expect(component['invalidIds']().has('q1')).toBe(false);
+    });
+
+    it('leaves the answer null when the candidate never responded', async () => {
+      const { component } = await createFiller({ formOverride: twoBlockSection });
+      component['onTimedBlockExpired'](requiredTimed);
+      expect(component['answers']().has('q1')).toBe(false);
+    });
+  });
+
+  describe('prevStep — skipping completed timed blocks', () => {
+    const untimedA:  FormQuestion = { ...mockQuestion, id: 'a', required: false, timeLimitSeconds: null };
+    const timedB:     FormQuestion = { ...mockQuestion, id: 'b', required: false, timeLimitSeconds: 10 };
+    const untimedC:  FormQuestion = { ...mockQuestion, id: 'c', required: false, timeLimitSeconds: null };
+    const threeBlocks: Partial<PublicForm> = {
+      sections: [{ id: 's1', title: 'S1', description: null, position: 1, questions: [untimedA, timedB, untimedC] }],
+    };
+
+    it('is disabled while sitting on a still-running timed block', async () => {
+      const { component } = await createFiller({ formOverride: threeBlocks });
+      component['currentBlockIndex'].set(1);
+      expect(component['canGoBack']()).toBe(false);
+      component['prevStep']();
+      expect(component['currentBlockIndex']()).toBe(1);
+    });
+
+    it('skips back over an already-completed timed block to the previous group', async () => {
+      const { component } = await createFiller({ formOverride: threeBlocks });
+      component['currentBlockIndex'].set(2);
+      component['onTimedBlockExpired'](timedB);
+      component['currentBlockIndex'].set(2);
+      component['prevStep']();
+      expect(component['currentBlockIndex']()).toBe(0);
+    });
+  });
+
+  describe('submit gating on the last block', () => {
+    const requiredTimed: FormQuestion = { ...mockQuestion, id: 'q1', required: true, timeLimitSeconds: 10 };
+    const timedOnly: Partial<PublicForm> = {
+      sections: [{ id: 's1', title: 'S1', description: null, position: 1, questions: [requiredTimed] }],
+    };
+
+    it('isCurrentBlockResolved is false while a timed last block is still running', async () => {
+      const { component } = await createFiller({ formOverride: timedOnly });
+      expect(component['isCurrentBlockResolved']()).toBe(false);
+    });
+
+    it('submit succeeds once the required timed last block has timed out with no answer', async () => {
+      const { component, submitFn } = await createFiller({ formOverride: timedOnly });
+      component['onTimedBlockExpired'](requiredTimed);
+      expect(component['isCurrentBlockResolved']()).toBe(true);
+      component['submit']();
+      expect(submitFn).toHaveBeenCalled();
     });
   });
 

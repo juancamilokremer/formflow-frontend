@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit, computed, inject, input, signal } from '@angular/core';
+import { Component, DestroyRef, OnInit, computed, inject, input, output, signal } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 const PREVIEW_SECONDS = 3;
@@ -20,6 +20,8 @@ export class TimeLimitCountdownComponent implements OnInit {
   readonly totalSeconds = input.required<number>();
   readonly variant = input<'question' | 'global'>('question');
 
+  readonly expired = output<void>();
+
   protected readonly phase = signal<Phase>('preview');
   protected readonly remaining = signal<number>(0);
   protected readonly announcement = signal<string>('');
@@ -40,13 +42,15 @@ export class TimeLimitCountdownComponent implements OnInit {
 
   protected readonly showSecondsCountdown = computed(() => this.remaining() <= 10);
 
+  private intervalId?: ReturnType<typeof setInterval>;
+
   ngOnInit(): void {
     this.remaining.set(this.totalSeconds());
 
     const previewTimeout = setTimeout(() => {
       this.phase.set('running');
-      const intervalId = setInterval(() => this.tick(), TICK_MS);
-      this.destroyRef.onDestroy(() => clearInterval(intervalId));
+      this.intervalId = setInterval(() => this.tick(), TICK_MS);
+      this.destroyRef.onDestroy(() => clearInterval(this.intervalId));
     }, PREVIEW_SECONDS * 1000);
 
     this.destroyRef.onDestroy(() => clearTimeout(previewTimeout));
@@ -57,9 +61,11 @@ export class TimeLimitCountdownComponent implements OnInit {
     const next = this.remaining() - 1;
 
     if (next <= 0) {
+      clearInterval(this.intervalId);
       this.remaining.set(0);
       this.phase.set('expired');
       this.announcement.set(this.translateSvc.instant('responder.time_limit.aria_expired'));
+      this.expired.emit();
       return;
     }
 

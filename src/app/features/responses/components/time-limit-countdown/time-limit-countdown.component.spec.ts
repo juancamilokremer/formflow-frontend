@@ -86,4 +86,16 @@ describe('TimeLimitCountdownComponent', () => {
     const { fixture } = create(30);
     expect(() => fixture.destroy()).not.toThrow();
   });
+
+  it('emits expired exactly once when reaching zero', () => {
+    const { component } = create(2);
+    let emitCount = 0;
+    component.expired.subscribe(() => emitCount++);
+
+    vi.advanceTimersByTime(3000 + 2000);
+    expect(emitCount).toBe(1);
+
+    vi.advanceTimersByTime(5000);
+    expect(emitCount).toBe(1);
+  });
 });
