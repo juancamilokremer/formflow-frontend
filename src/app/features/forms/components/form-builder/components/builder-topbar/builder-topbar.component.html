@@ -26,6 +26,15 @@
     </span>
   }
 
+  <app-button
+    variant="ghost"
+    [iconOnly]="true"
+    [title]="'builder.version_history' | translate"
+    (click)="historyClicked.emit()"
+  >
+    <app-icon name="clock" [size]="15" />
+  </app-button>
+
   <div class="topbar__actions">
     <app-button variant="secondary" (click)="onPreviewClick()">
       {{ 'builder.preview' | translate }}

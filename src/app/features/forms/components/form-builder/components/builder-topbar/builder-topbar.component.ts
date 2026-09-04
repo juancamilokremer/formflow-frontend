@@ -22,6 +22,7 @@ export class BuilderTopbarComponent {
   readonly nameChanged = output<string>();
   readonly publishClicked = output<void>();
   readonly returnToConvocatoriaClicked = output<void>();
+  readonly historyClicked = output<void>();
 
   protected readonly formsRoute = `/${RouteConstants.FORMS}`;
 

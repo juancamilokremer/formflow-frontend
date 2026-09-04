@@ -10,6 +10,7 @@
   [class.btn--danger]="variant() === 'danger' || danger()"
   [type]="type()"
   [disabled]="disabled() || loading()"
+  [attr.title]="title()"
 >
   @if (loading()) {
     <span class="btn-spinner"></span>

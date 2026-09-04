@@ -64,6 +64,14 @@ export interface FormDetail extends Form {
   timeLimitSeconds: number | null;
 }
 
+export interface FormVersion {
+  id: string;
+  version: number;
+  status: FormStatus;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface CreateFormRequest {
   name: string;
   type: FormType;

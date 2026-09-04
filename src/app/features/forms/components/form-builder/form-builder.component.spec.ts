@@ -59,6 +59,9 @@ function buildComponent(formResult: 'ok' | 'error' = 'ok', convocatoriaDetail: C
     remove: vi.fn().mockReturnValue(of(undefined)),
     generateVersion: vi.fn().mockReturnValue(of({ ...MOCK_FORM, id: 'f2', status: 'DRAFT' })),
     duplicate: vi.fn().mockReturnValue(of({ ...MOCK_FORM, id: 'f3', status: 'DRAFT' })),
+    getVersionHistory: vi.fn().mockReturnValue(of([
+      { id: 'f1', version: 1, status: 'DRAFT', createdAt: '2026-01-01T00:00:00Z', updatedAt: '2026-01-01T00:00:00Z' },
+    ])),
   };
 
   const mockCategoryService = {
@@ -321,6 +324,40 @@ describe('FormBuilderComponent', () => {
       (component as any).onDuplicate();
 
       expect((component as any).actionError()).toBe('builder.error.duplicate');
+    });
+  });
+
+  describe('version history', () => {
+    it('onHistoryClicked loads the history and opens the drawer', () => {
+      const { component, mockFormsService } = buildComponent();
+
+      (component as any).onHistoryClicked();
+
+      expect(mockFormsService.getVersionHistory).toHaveBeenCalledWith('f1');
+      expect((component as any).versionHistory()).toHaveLength(1);
+      expect((component as any).historyDrawerOpen()).toBe(true);
+    });
+
+    it('onHistoryClicked sets actionError when the request fails', () => {
+      const { component, mockFormsService } = buildComponent();
+      mockFormsService.getVersionHistory.mockReturnValue(throwError(() => new Error()));
+
+      (component as any).onHistoryClicked();
+
+      expect((component as any).actionError()).toBe('builder.error.history_load');
+      expect((component as any).historyDrawerOpen()).toBe(false);
+    });
+
+    it('onVersionSelected closes the drawer and navigates to the selected form', () => {
+      const { component } = buildComponent();
+      const router = TestBed.inject(Router);
+      const navigateSpy = vi.spyOn(router, 'navigate').mockResolvedValue(true);
+      (component as any).historyDrawerOpen.set(true);
+
+      (component as any).onVersionSelected('f9');
+
+      expect((component as any).historyDrawerOpen()).toBe(false);
+      expect(navigateSpy).toHaveBeenCalledWith(['forms', 'f9', 'edit']);
     });
   });
 });

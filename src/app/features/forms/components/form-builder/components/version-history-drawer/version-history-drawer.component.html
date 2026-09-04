@@ -1,0 +1,34 @@
+<app-drawer
+  [title]="'builder.version_history' | translate"
+  [isOpen]="isOpen()"
+  (closed)="closed.emit()"
+>
+  <div class="vhd">
+    @for (v of sortedVersions(); track v.id) {
+      <div
+        class="vhd__row"
+        [class.vhd__row--viewing]="v.id === currentFormId()"
+        [class.vhd__row--clickable]="v.id !== currentFormId()"
+        [attr.role]="v.id !== currentFormId() ? 'button' : null"
+        [attr.tabindex]="v.id !== currentFormId() ? 0 : null"
+        (click)="onRowClick(v)"
+        (keydown.enter)="onRowClick(v)"
+        (keydown.space)="onRowClick(v)"
+      >
+        <div class="vhd__main">
+          <span class="vhd__version">{{ 'builder.history.version_label' | translate: { n: v.version } }}</span>
+          <span class="vhd__status vhd__status--{{ v.status | lowercase }}">
+            {{ 'forms.status.' + (v.status | lowercase) | translate }}
+          </span>
+          @if (isCurrentVersion(v)) {
+            <span class="vhd__badge vhd__badge--current">{{ 'builder.history.current_badge' | translate }}</span>
+          }
+          @if (v.id === currentFormId()) {
+            <span class="vhd__badge vhd__badge--viewing">{{ 'builder.history.viewing_badge' | translate }}</span>
+          }
+        </div>
+        <span class="vhd__date">{{ formatDate(v.createdAt) }}</span>
+      </div>
+    }
+  </div>
+</app-drawer>

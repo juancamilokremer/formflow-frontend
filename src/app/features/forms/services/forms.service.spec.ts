@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { FormsService, filenameFromContentDisposition } from './forms.service';
-import { Form } from '../models/form.model';
+import { Form, FormVersion } from '../models/form.model';
 import { FormStats } from '../models/form-stats.model';
 import { ExportedFile, ResponseDetail, ResponsePage } from '../models/form-response.model';
 
@@ -83,6 +83,20 @@ describe('FormsService', () => {
     req.flush({ success: true, data: { ...mockForm, id: 'f3', status: 'DRAFT', version: 2 } });
 
     expect(result).toEqual({ ...mockForm, id: 'f3', status: 'DRAFT', version: 2 });
+  });
+
+  it('getVersionHistory() should GET /versions and return the family list', () => {
+    const versions: FormVersion[] = [
+      { id: 'f1', version: 1, status: 'ARCHIVED', createdAt: '2026-01-01T00:00:00Z', updatedAt: '2026-01-01T00:00:00Z' },
+      { id: 'f3', version: 2, status: 'DRAFT', createdAt: '2026-02-01T00:00:00Z', updatedAt: '2026-02-01T00:00:00Z' },
+    ];
+    let result: FormVersion[] | undefined;
+    service.getVersionHistory('f1').subscribe((v) => (result = v));
+
+    const req = http.expectOne((r) => r.method === 'GET' && r.url.includes('/f1/versions'));
+    req.flush({ success: true, data: versions });
+
+    expect(result).toEqual(versions);
   });
 
   it('updateStatus() should PATCH the status and return the updated form', () => {
