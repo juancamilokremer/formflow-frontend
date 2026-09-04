@@ -5,7 +5,7 @@ import { FormQuestion } from '../../models/form.model';
 const QUESTION: FormQuestion = {
   id: 'q1', type: 'single', title: '¿Tienes experiencia?', required: false,
   description: null, position: 0, categoryId: null,
-  config: { options: [{ id: 'opt-a', label: 'Sí' }, { id: 'opt-b', label: 'No' }] },
+  config: { options: [{ id: 'opt-a', label: 'Sí' }, { id: 'opt-b', label: 'No' }] }, timeLimitSeconds: null,
 };
 
 function buildComponent() {

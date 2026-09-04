@@ -6,7 +6,7 @@ import { ScalePropertiesComponent } from './scale-properties.component';
 const MOCK_Q: FormQuestion = {
   id: '1', type: 'scale', title: 'Q', description: null,
   position: 0, required: false, categoryId: null,
-  config: { min: 1, max: 5, minLabel: '', maxLabel: '', scoringType: 'none' },
+  config: { min: 1, max: 5, minLabel: '', maxLabel: '', scoringType: 'none' }, timeLimitSeconds: null,
 };
 
 describe('ScalePropertiesComponent', () => {

@@ -6,7 +6,7 @@ import { MultiplePropertiesComponent } from './multiple-properties.component';
 const MOCK_Q: FormQuestion = {
   id: '1', type: 'multiple', title: 'Q', description: null,
   position: 0, required: false, categoryId: null,
-  config: { options: [{ id: 'a', label: 'A' }, { id: 'b', label: 'B' }], scoringType: 'none' },
+  config: { options: [{ id: 'a', label: 'A' }, { id: 'b', label: 'B' }], scoringType: 'none' }, timeLimitSeconds: null,
 };
 
 describe('MultiplePropertiesComponent', () => {

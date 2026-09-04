@@ -1,4 +1,4 @@
-import { Component, inject, input, output } from '@angular/core';
+import { Component, computed, inject, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Router, RouterLink } from '@angular/router';
 import { LowerCasePipe } from '@angular/common';
@@ -23,8 +23,27 @@ export class BuilderTopbarComponent {
   readonly publishClicked = output<void>();
   readonly returnToConvocatoriaClicked = output<void>();
   readonly historyClicked = output<void>();
+  readonly timeLimitChanged = output<number | null>();
 
   protected readonly formsRoute = `/${RouteConstants.FORMS}`;
+
+  protected readonly hasQuestionTimeLimits = computed(() =>
+    this.form().sections.some((s) => s.questions.some((q) => q.timeLimitSeconds != null)),
+  );
+
+  protected readonly timeLimitMinutes = computed(() => {
+    const seconds = this.form().timeLimitSeconds;
+    return seconds == null ? null : Math.round(seconds / 60);
+  });
+
+  protected onTimeLimitBlur(event: FocusEvent): void {
+    const raw = (event.target as HTMLInputElement).value.trim();
+    const minutes = raw === '' ? null : Number(raw);
+    const seconds = minutes == null || Number.isNaN(minutes) || minutes <= 0 ? null : minutes * 60;
+    if (seconds !== this.form().timeLimitSeconds) {
+      this.timeLimitChanged.emit(seconds);
+    }
+  }
 
   protected onPreviewClick(): void {
     this.router.navigate(formPreviewPath(this.form().id));

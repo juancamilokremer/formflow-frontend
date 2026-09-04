@@ -11,6 +11,9 @@
         {{ 'responder.candidate.greeting' | translate : { candidateName: candidateName() } }}
       </span>
     }
+    @if (view() === 'form' && form().timeLimitSeconds; as formTimeLimit) {
+      <app-time-limit-countdown [totalSeconds]="formTimeLimit" variant="global" />
+    }
   </header>
 
   @switch (view()) {
@@ -84,6 +87,9 @@
                     </p>
                     @if (q.description) {
                       <p class="ff__q-desc">{{ q.description }}</p>
+                    }
+                    @if (q.timeLimitSeconds) {
+                      <app-time-limit-countdown [totalSeconds]="q.timeLimitSeconds" variant="question" />
                     }
                   </div>
                 }

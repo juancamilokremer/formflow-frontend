@@ -50,6 +50,15 @@
       margin: 0 -16px;
     }
 
+    &__time-limit-group {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    &__time-limit-input { flex: 1; min-width: 0; }
+    &__time-limit-unit  { flex-shrink: 0; width: auto; }
+
     &__locked-group {
       // A real flex box (mirroring the parent .qp gap) instead of display:contents,
       // so the fieldset still participates in layout as one predictable box.

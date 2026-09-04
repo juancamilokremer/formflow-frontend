@@ -4,7 +4,7 @@ import { FormDetail, FormQuestion, FormSection } from '../../forms/models/form.m
 function question(id: string, categoryId: string | null): FormQuestion {
   return {
     id, type: 'text', title: id, description: null, position: 0, required: false,
-    categoryId, config: {},
+    categoryId, config: {}, timeLimitSeconds: null,
   };
 }
 

@@ -13,6 +13,7 @@ import { CanvasQuestionComponent } from '../question-type.interfaces';
 export class NpsCanvasComponent implements CanvasQuestionComponent {
   readonly question = input.required<FormQuestion>();
   readonly selected = input<boolean>(false);
+  readonly locked   = input<boolean>(false);
 
   protected readonly minLabel = computed<string>(() => (this.question().config['minLabel'] as string) ?? '');
   protected readonly maxLabel = computed<string>(() => (this.question().config['maxLabel'] as string) ?? '');

@@ -5,7 +5,7 @@ import { FormQuestion } from '../../models/form.model';
 
 const BASE_Q: FormQuestion = {
   id: '1', type: 'info', title: 'Aviso', required: false,
-  description: null, position: 0, categoryId: null, config: { content: 'Texto inicial' },
+  description: null, position: 0, categoryId: null, config: { content: 'Texto inicial' }, timeLimitSeconds: null,
 };
 
 describe('InfoPropertiesComponent', () => {

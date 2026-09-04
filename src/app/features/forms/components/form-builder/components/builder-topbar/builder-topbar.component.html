@@ -35,6 +35,28 @@
     <app-icon name="clock" [size]="15" />
   </app-button>
 
+  <div class="topbar__time-limit" [title]="'builder.form_time_limit_label' | translate">
+    <app-icon name="clock" [size]="13" class="topbar__time-limit-icon" />
+    <input
+      class="topbar__time-limit-input"
+      type="number"
+      min="1"
+      [placeholder]="'builder.form_time_limit_placeholder' | translate"
+      [value]="timeLimitMinutes()"
+      (blur)="onTimeLimitBlur($event)"
+      [attr.aria-label]="'builder.form_time_limit_label' | translate"
+    />
+    <span class="topbar__time-limit-unit">{{ 'builder.prop.time_limit_minutes_short' | translate }}</span>
+    @if (hasQuestionTimeLimits()) {
+      <app-icon
+        name="alert-triangle"
+        [size]="13"
+        class="topbar__time-limit-warning"
+        [title]="'builder.form_time_limit_warning' | translate"
+      />
+    }
+  </div>
+
   <div class="topbar__actions">
     <app-button variant="secondary" (click)="onPreviewClick()">
       {{ 'builder.preview' | translate }}

@@ -133,6 +133,13 @@ export class FormBuilderComponent implements OnInit {
     });
   }
 
+  protected onFormTimeLimitChanged(timeLimitSeconds: number | null): void {
+    const currentForm = this.form()!;
+    this.formsService.update(currentForm.id, currentForm.name, currentForm.description, timeLimitSeconds).subscribe({
+      next: () => this.form.update((current) => (current ? { ...current, timeLimitSeconds } : current)),
+    });
+  }
+
   protected onReturnToConvocatoria(): void {
     const convocatoriaId = this.convocatoriaId;
     const currentForm = this.form();
@@ -496,6 +503,7 @@ export class FormBuilderComponent implements OnInit {
       categoryId:       merged.categoryId       ?? null,
       config:           merged.config,
       conditionalLogic: merged.conditionalLogic ?? null,
+      timeLimitSeconds: merged.timeLimitSeconds  ?? null,
     };
 
     this.formsService.updateQuestion(formId, sectionId, questionId, request).subscribe({

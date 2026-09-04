@@ -1,7 +1,7 @@
 import { Component, DestroyRef, computed, inject, input, output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgComponentOutlet } from '@angular/common';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
   CdkDropList, CdkDrag, CdkDragHandle,
   CdkDragDrop, moveItemInArray,
@@ -28,6 +28,7 @@ import { CanvasEditService } from '../../../../services/canvas-edit.service';
 export class SectionCardComponent {
   private readonly canvasEditSvc = inject(CanvasEditService);
   private readonly destroyRef    = inject(DestroyRef);
+  private readonly translateSvc  = inject(TranslateService);
 
   readonly section             = input.required<FormSection>();
   readonly selectedQuestionId  = input<string | null>(null);
@@ -60,6 +61,13 @@ export class SectionCardComponent {
 
   protected categoryFor(question: FormQuestion): Category | undefined {
     return this.categories().find((c) => c.id === question.categoryId);
+  }
+
+  protected formatTimeLimit(seconds: number): string {
+    if (seconds >= 60 && seconds % 60 === 0) {
+      return `${seconds / 60}${this.translateSvc.instant('builder.prop.time_limit_minutes_short')}`;
+    }
+    return `${seconds}${this.translateSvc.instant('builder.prop.time_limit_seconds_short')}`;
   }
 
   constructor() {

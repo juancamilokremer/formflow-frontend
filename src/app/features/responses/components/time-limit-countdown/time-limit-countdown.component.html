@@ -1,0 +1,25 @@
+<div class="tlc tlc--{{ variant() }} tlc--{{ colorState() }}" [class.tlc--expired]="phase() === 'expired'">
+  <div
+    class="tlc__track"
+    role="progressbar"
+    [attr.aria-valuenow]="remaining()"
+    aria-valuemin="0"
+    [attr.aria-valuemax]="totalSeconds()"
+  >
+    <div class="tlc__fill" [style.width.%]="progressPercent()"></div>
+  </div>
+
+  <span class="tlc__label">
+    @if (phase() === 'preview') {
+      {{ 'responder.time_limit.preview' | translate: { seconds: totalSeconds() } }}
+    } @else if (phase() === 'expired') {
+      {{ 'responder.time_limit.expired' | translate }}
+    } @else if (showSecondsCountdown()) {
+      {{ 'responder.time_limit.seconds_left' | translate: { seconds: remaining() } }}
+    } @else {
+      {{ 'responder.time_limit.running' | translate }}
+    }
+  </span>
+
+  <span class="tlc__sr-only" aria-live="polite">{{ announcement() }}</span>
+</div>

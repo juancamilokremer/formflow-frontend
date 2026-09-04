@@ -5,7 +5,7 @@ import { DatePropertiesComponent } from './date-properties.component';
 
 const MOCK_Q: FormQuestion = {
   id: '1', type: 'date', title: 'Q', description: null,
-  position: 0, required: false, categoryId: null, config: {},
+  position: 0, required: false, categoryId: null, config: {}, timeLimitSeconds: null,
 };
 
 describe('DatePropertiesComponent', () => {

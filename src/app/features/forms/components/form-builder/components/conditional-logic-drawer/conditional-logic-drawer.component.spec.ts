@@ -6,17 +6,17 @@ import { FormQuestion, FormSection } from '../../../../models/form.model';
 const Q_SINGLE: FormQuestion = {
   id: 'q1', type: 'single', title: '¿Tienes experiencia?', required: false,
   description: null, position: 0, categoryId: null,
-  config: { options: [{ id: 'o1', label: 'Sí' }, { id: 'o2', label: 'No' }] },
+  config: { options: [{ id: 'o1', label: 'Sí' }, { id: 'o2', label: 'No' }] }, timeLimitSeconds: null,
 };
 
 const Q_TEXT: FormQuestion = {
   id: 'q2', type: 'text', title: '¿Cuántos años?', required: false,
-  description: null, position: 1, categoryId: null, config: {},
+  description: null, position: 1, categoryId: null, config: {}, timeLimitSeconds: null,
 };
 
 const Q_TARGET: FormQuestion = {
   id: 'q3', type: 'text', title: 'Detalles', required: false,
-  description: null, position: 2, categoryId: null, config: {},
+  description: null, position: 2, categoryId: null, config: {}, timeLimitSeconds: null,
 };
 
 const SECTIONS: FormSection[] = [
@@ -44,7 +44,7 @@ describe('ConditionalLogicDrawerComponent', () => {
   it('previousQuestions excludes info type', () => {
     const INFO: FormQuestion = {
       id: 'qi', type: 'info', title: 'Info', required: false,
-      description: null, position: 0, categoryId: null, config: {},
+      description: null, position: 0, categoryId: null, config: {}, timeLimitSeconds: null,
     };
     const sections: FormSection[] = [
       { id: 's1', title: 'S1', position: 0, questions: [INFO, Q_TARGET] },

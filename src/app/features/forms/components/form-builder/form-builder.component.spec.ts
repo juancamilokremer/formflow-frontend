@@ -18,7 +18,7 @@ const MOCK_SECTION: FormSection = { id: 's1', title: 'Sección 1', position: 1, 
 
 const MOCK_QUESTION: FormQuestion = {
   id: 'q1', type: 'text', title: 'Q', description: null,
-  position: 0, required: false, categoryId: null, config: {},
+  position: 0, required: false, categoryId: null, config: {}, timeLimitSeconds: null,
 };
 
 const MOCK_FORM: FormDetail = {
@@ -257,6 +257,33 @@ describe('FormBuilderComponent', () => {
       mockFormsService.deleteQuestion.mockReturnValue(throwError(() => new Error()));
       (component as any).onQuestionDeleted({ sectionId: 's1', questionId: 'q1' });
       expect((component as any).actionError()).toBe('builder.error.question_delete');
+    });
+  });
+
+  describe('time limit', () => {
+    it('saveQuestionChange (via onQuestionChanged) includes timeLimitSeconds in the update request', () => {
+      const { component, mockFormsService } = buildComponent();
+      (component as any).form.update((f: FormDetail) => ({
+        ...f,
+        sections: [{ ...f.sections[0], questions: [MOCK_QUESTION] }],
+      }));
+      (component as any).selectedQuestionId.set('q1');
+
+      (component as any).onQuestionChanged({ timeLimitSeconds: 30 });
+
+      expect(mockFormsService.updateQuestion).toHaveBeenCalledWith(
+        'f1', 's1', 'q1',
+        expect.objectContaining({ timeLimitSeconds: 30 }),
+      );
+    });
+
+    it('onFormTimeLimitChanged calls formsService.update with the new value', () => {
+      const { component, mockFormsService } = buildComponent();
+
+      (component as any).onFormTimeLimitChanged(600);
+
+      expect(mockFormsService.update).toHaveBeenCalledWith('f1', 'Mi formulario', null, 600);
+      expect((component as any).form()!.timeLimitSeconds).toBe(600);
     });
   });
 

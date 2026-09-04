@@ -6,7 +6,7 @@ import { NpsPropertiesComponent } from './nps-properties.component';
 const MOCK_Q: FormQuestion = {
   id: '1', type: 'nps', title: 'NPS', description: null,
   position: 0, required: false, categoryId: null,
-  config: { minLabel: '', maxLabel: '' },
+  config: { minLabel: '', maxLabel: '' }, timeLimitSeconds: null,
 };
 
 describe('NpsPropertiesComponent', () => {

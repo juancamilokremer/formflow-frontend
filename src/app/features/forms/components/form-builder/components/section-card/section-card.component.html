@@ -78,6 +78,9 @@
           @if (categoryFor(q); as category) {
             <app-badge variant="neutral" [dotColor]="category.color">{{ category.name }}</app-badge>
           }
+          @if (q.timeLimitSeconds) {
+            <app-badge variant="neutral" icon="clock">{{ formatTimeLimit(q.timeLimitSeconds) }}</app-badge>
+          }
           <span class="sc__q-spacer"></span>
           @if (!locked()) {
             <button

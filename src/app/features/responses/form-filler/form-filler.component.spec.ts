@@ -16,6 +16,7 @@ const mockQuestion: FormQuestion = {
   categoryId:       null,
   config:           {},
   conditionalLogic: null,
+  timeLimitSeconds: null,
 };
 
 const mockForm: PublicForm = {

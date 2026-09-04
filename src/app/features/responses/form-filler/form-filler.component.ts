@@ -5,6 +5,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { IconComponent } from '../../../shared/icons/icon.component';
 import { ButtonComponent } from '../../../shared/components/button/button.component';
 import { PublicQuestionOutletComponent } from '../../forms/components/form-preview/components/public-question-outlet/public-question-outlet.component';
+import { TimeLimitCountdownComponent } from '../components/time-limit-countdown/time-limit-countdown.component';
 import { ConditionEngineService } from '../../forms/services/condition-engine.service';
 import {
   AnswerPayload,
@@ -19,7 +20,7 @@ type FillerView = 'form' | 'confirmation';
 
 @Component({
   selector: 'app-form-filler',
-  imports: [TranslatePipe, IconComponent, ButtonComponent, PublicQuestionOutletComponent],
+  imports: [TranslatePipe, IconComponent, ButtonComponent, PublicQuestionOutletComponent, TimeLimitCountdownComponent],
   templateUrl: './form-filler.component.html',
   styleUrl: './form-filler.component.scss',
 })

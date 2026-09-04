@@ -20,6 +20,25 @@
     ></textarea>
   </div>
 
+  <div class="qp__field">
+    <label class="qp__label" for="qp-time-limit">{{ 'builder.prop.time_limit' | translate }}</label>
+    <div class="qp__time-limit-group">
+      <input
+        id="qp-time-limit"
+        class="qp__input qp__time-limit-input"
+        type="number"
+        min="1"
+        [placeholder]="'builder.prop.time_limit_placeholder' | translate"
+        [value]="timeLimitDisplayValue"
+        (blur)="onTimeLimitBlur($event)"
+      />
+      <select class="qp__select qp__time-limit-unit" (change)="onTimeLimitUnitChange($event)">
+        <option value="seconds" [selected]="timeLimitUnit() === 'seconds'">{{ 'builder.prop.time_limit_seconds' | translate }}</option>
+        <option value="minutes" [selected]="timeLimitUnit() === 'minutes'">{{ 'builder.prop.time_limit_minutes' | translate }}</option>
+      </select>
+    </div>
+  </div>
+
   <div class="qp__divider"></div>
 
   <fieldset class="qp__locked-group" [disabled]="locked()">

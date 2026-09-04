@@ -1,6 +1,7 @@
 import { FormQuestion } from '../../forms/models/form.model';
 
-export type PublicQuestion = FormQuestion & { timeLimitSeconds?: number | null };
+// FormQuestion.timeLimitSeconds already covers what this used to redeclare.
+export type PublicQuestion = FormQuestion;
 
 export interface PublicSection {
   id: string;

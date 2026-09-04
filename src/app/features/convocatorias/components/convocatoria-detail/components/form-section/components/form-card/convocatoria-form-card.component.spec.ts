@@ -17,7 +17,7 @@ const CONV_FORM: ConvocatoriaForm = {
 const MOCK_SECTION: FormSection = {
   id: 's1', title: 'Sección 1', position: 1,
   questions: [
-    { id: 'q1', type: 'text', title: 'P1', description: null, position: 1, required: false, categoryId: 'cat-1', config: {} },
+    { id: 'q1', type: 'text', title: 'P1', description: null, position: 1, required: false, categoryId: 'cat-1', config: {}, timeLimitSeconds: null },
   ],
 };
 

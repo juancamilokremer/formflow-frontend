@@ -1,4 +1,4 @@
-import { Directive, input, output } from '@angular/core';
+import { Directive, effect, input, output, signal } from '@angular/core';
 import { Category } from '../../../core/models/category.model';
 import { FormQuestion, FormType } from '../models/form.model';
 import { PropertiesQuestionComponent } from './question-type.interfaces';
@@ -11,6 +11,36 @@ export abstract class BasePropertiesComponent implements PropertiesQuestionCompo
   readonly categories = input<Category[]>([]);
   readonly locked = input<boolean>(false);
   readonly categoryCreated = output<Category>();
+
+  protected readonly timeLimitUnit = signal<'seconds' | 'minutes'>('seconds');
+
+  constructor() {
+    effect(() => {
+      const secs = this.question().timeLimitSeconds;
+      this.timeLimitUnit.set(secs != null && secs >= 60 && secs % 60 === 0 ? 'minutes' : 'seconds');
+    });
+  }
+
+  protected get timeLimitDisplayValue(): number | null {
+    const secs = this.question().timeLimitSeconds;
+    if (secs == null) return null;
+    return this.timeLimitUnit() === 'minutes' ? Math.round(secs / 60) : secs;
+  }
+
+  protected onTimeLimitBlur(event: FocusEvent): void {
+    const raw = (event.target as HTMLInputElement).value.trim();
+    const num = raw === '' ? null : Number(raw);
+    const timeLimitSeconds = num == null || Number.isNaN(num) || num <= 0
+      ? null
+      : (this.timeLimitUnit() === 'minutes' ? num * 60 : num);
+    if (timeLimitSeconds !== this.question().timeLimitSeconds) {
+      this.changed.emit({ timeLimitSeconds });
+    }
+  }
+
+  protected onTimeLimitUnitChange(event: Event): void {
+    this.timeLimitUnit.set((event.target as HTMLSelectElement).value as 'seconds' | 'minutes');
+  }
 
   protected onTitleBlur(event: FocusEvent): void {
     const title = (event.target as HTMLInputElement).value.trim();
