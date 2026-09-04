@@ -29,4 +29,8 @@ describe('ButtonComponent', () => {
     expect(component.loading()).toBe(false);
     expect(component.disabled()).toBe(false);
   });
+
+  it('title defaults to null', () => {
+    expect(component.title()).toBeNull();
+  });
 });
