@@ -166,6 +166,13 @@ export class FormBuilderComponent implements OnInit {
     });
   }
 
+  protected onDuplicate(): void {
+    this.formsService.duplicate(this.form()!.id).subscribe({
+      next: (newForm) => this.router.navigate(formBuilderPath(newForm.id)),
+      error: () => this.actionError.set('builder.error.duplicate'),
+    });
+  }
+
   // ---------------------------------------------------------------------------
   // Section handlers
   // ---------------------------------------------------------------------------

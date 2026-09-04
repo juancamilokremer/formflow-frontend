@@ -98,4 +98,12 @@ describe('FormsComponent', () => {
     expect(component['forms']()[0].id).toBe('v2');
     expect(mockNavigate).toHaveBeenCalled();
   });
+
+  it('onFormDuplicated() should prepend the new form and NOT navigate away', () => {
+    const { component, mockNavigate } = setup();
+    const newForm: Form = { ...mockForms[0], id: 'd2', name: 'Evaluación 2026 (copia)', status: 'DRAFT' };
+    component['onFormDuplicated'](newForm);
+    expect(component['forms']()[0].id).toBe('d2');
+    expect(mockNavigate).not.toHaveBeenCalled();
+  });
 });

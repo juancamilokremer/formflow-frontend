@@ -40,10 +40,11 @@ const mockTranslate = {
 function setup() {
   const mockRemove = vi.fn();
   const mockGenerateVersion = vi.fn();
+  const mockDuplicate = vi.fn();
   TestBed.configureTestingModule({
     providers: [
       provideHttpClient(), provideHttpClientTesting(),
-      { provide: FormsService,    useValue: { remove: mockRemove, generateVersion: mockGenerateVersion } },
+      { provide: FormsService,    useValue: { remove: mockRemove, generateVersion: mockGenerateVersion, duplicate: mockDuplicate } },
       { provide: TranslateService, useValue: mockTranslate },
     ],
   });
@@ -51,7 +52,7 @@ function setup() {
   (component as any).forms     = () => mockForms;
   (component as any).loading   = () => false;
   (component as any).loadError = () => false;
-  return { component, mockRemove, mockGenerateVersion };
+  return { component, mockRemove, mockGenerateVersion, mockDuplicate };
 }
 
 describe('FormsListComponent', () => {
@@ -157,6 +158,19 @@ describe('FormsListComponent', () => {
     component['generateVersion']('f1');
 
     expect(mockGenerateVersion).toHaveBeenCalledWith('f1');
+    expect(emitted).toEqual(newForm);
+  });
+
+  it('duplicateForm() calls the service and emits formDuplicated', () => {
+    const { component, mockDuplicate } = setup();
+    const newForm: Form = { ...mockForms[0], id: 'd2', name: 'Evaluación 2026 (copia)', status: 'DRAFT' };
+    mockDuplicate.mockReturnValue(of(newForm));
+
+    let emitted: Form | undefined;
+    component.formDuplicated.subscribe((f) => (emitted = f));
+    component['duplicateForm']('f1');
+
+    expect(mockDuplicate).toHaveBeenCalledWith('f1');
     expect(emitted).toEqual(newForm);
   });
 

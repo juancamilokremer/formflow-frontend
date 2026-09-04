@@ -60,6 +60,9 @@
       <app-button variant="secondary" (click)="editRequested.emit($any(row).id)">
         {{ 'forms.actions.edit' | translate }}
       </app-button>
+      <app-button variant="ghost" (click)="duplicateForm($any(row).id)">
+        {{ 'forms.actions.duplicate' | translate }}
+      </app-button>
       <app-button variant="ghost" [danger]="true" (click)="confirmDelete($any(row).id)">
         <app-icon name="trash-2" [size]="14" />
       </app-button>

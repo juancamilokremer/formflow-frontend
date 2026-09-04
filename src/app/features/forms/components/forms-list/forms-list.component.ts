@@ -51,6 +51,7 @@ export class FormsListComponent {
   readonly viewResultsRequested = output<string>();
   readonly deleted              = output<string>();
   readonly versionGenerated     = output<Form>();
+  readonly formDuplicated       = output<Form>();
 
   protected readonly searchQuery    = signal('');
   protected readonly statusFilter   = signal<string>('ALL');
@@ -103,6 +104,12 @@ export class FormsListComponent {
   protected generateVersion(id: string): void {
     this.formsService.generateVersion(id).subscribe({
       next: (form) => this.versionGenerated.emit(form),
+    });
+  }
+
+  protected duplicateForm(id: string): void {
+    this.formsService.duplicate(id).subscribe({
+      next: (form) => this.formDuplicated.emit(form),
     });
   }
 

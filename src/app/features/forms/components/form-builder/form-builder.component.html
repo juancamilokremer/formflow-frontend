@@ -28,7 +28,11 @@
     />
 
     @if (isLocked()) {
-      <app-lock-banner [status]="form()!.status" (generateVersionClicked)="onGenerateVersion()" />
+      <app-lock-banner
+        [status]="form()!.status"
+        (generateVersionClicked)="onGenerateVersion()"
+        (duplicateClicked)="onDuplicate()"
+      />
     }
 
     @if (actionError()) {
