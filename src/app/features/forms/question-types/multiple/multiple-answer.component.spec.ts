@@ -5,7 +5,7 @@ import { FormQuestion } from '../../models/form.model';
 const QUESTION: FormQuestion = {
   id: 'q1', type: 'multiple', title: '¿Qué idiomas hablas?', required: false,
   description: null, position: 0, categoryId: null,
-  config: { options: [{ id: 'opt-a', label: 'Español' }, { id: 'opt-b', label: 'Inglés' }] },
+  config: { options: [{ id: 'opt-a', label: 'Español' }, { id: 'opt-b', label: 'Inglés' }] }, timeLimitSeconds: null,
 };
 
 function buildComponent() {

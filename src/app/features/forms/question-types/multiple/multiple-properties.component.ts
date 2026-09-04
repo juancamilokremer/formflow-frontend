@@ -4,10 +4,11 @@ import { QuestionOption } from '../../models/form.model';
 import { BasePropertiesComponent } from '../base-properties.component';
 import { CategorySelectorComponent } from '../shared/category-selector/category-selector.component';
 import { OptionListEditorComponent } from '../shared/option-list-editor/option-list-editor.component';
+import { TimeLimitFieldComponent } from '../shared/time-limit-field/time-limit-field.component';
 
 @Component({
   selector: 'app-multiple-properties',
-  imports: [TranslatePipe, OptionListEditorComponent, CategorySelectorComponent],
+  imports: [TranslatePipe, OptionListEditorComponent, CategorySelectorComponent, TimeLimitFieldComponent],
   templateUrl: './multiple-properties.component.html',
   styleUrl: './multiple-properties.component.scss',
 })

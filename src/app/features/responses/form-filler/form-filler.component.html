@@ -11,6 +11,9 @@
         {{ 'responder.candidate.greeting' | translate : { candidateName: candidateName() } }}
       </span>
     }
+    @if (view() === 'form' && form().timeLimitSeconds; as formTimeLimit) {
+      <app-time-limit-countdown [totalSeconds]="formTimeLimit" variant="global" />
+    }
   </header>
 
   @switch (view()) {
@@ -74,7 +77,7 @@
           }
 
           <div class="ff__questions">
-            @for (q of visibleQuestions(); track q.id) {
+            @for (q of currentBlockQuestions(); track q.id) {
               <div class="ff__question" [class.ff__question--invalid]="isInvalid(q.id)">
                 @if (q.type !== 'info') {
                   <div class="ff__q-header">
@@ -84,6 +87,13 @@
                     </p>
                     @if (q.description) {
                       <p class="ff__q-desc">{{ q.description }}</p>
+                    }
+                    @if (q.timeLimitSeconds) {
+                      <app-time-limit-countdown
+                        [totalSeconds]="q.timeLimitSeconds"
+                        variant="question"
+                        (expired)="onTimedBlockExpired(q)"
+                      />
                     }
                   </div>
                 }
@@ -109,17 +119,17 @@
         </div>
 
         <div class="ff__nav">
-          <app-button variant="secondary" [disabled]="isFirstSection()" (click)="prevSection()">
+          <app-button variant="secondary" [disabled]="!canGoBack()" (click)="prevStep()">
             <app-icon name="arrow-left" [size]="14" />
             {{ 'responder.prev' | translate }}
           </app-button>
 
-          @if (isLastSection()) {
+          @if (isLastSection() && isLastBlockOfSection() && isCurrentBlockResolved()) {
             <app-button variant="primary" [loading]="submitting()" (click)="submit()">
               {{ 'responder.submit' | translate }}
             </app-button>
           } @else {
-            <app-button variant="primary" (click)="nextSection()">
+            <app-button variant="primary" (click)="nextStep()">
               {{ 'responder.next' | translate }}
               <app-icon name="arrow-right" [size]="14" />
             </app-button>

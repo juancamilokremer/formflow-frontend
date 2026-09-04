@@ -1,0 +1,4 @@
+@use '../properties-shared' as p;
+@include p.base();
+
+:host { display: contents; }

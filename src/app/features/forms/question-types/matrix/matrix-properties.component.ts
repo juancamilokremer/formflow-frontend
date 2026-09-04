@@ -3,10 +3,11 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { QuestionOption } from '../../models/form.model';
 import { BasePropertiesComponent } from '../base-properties.component';
 import { OptionListEditorComponent } from '../shared/option-list-editor/option-list-editor.component';
+import { TimeLimitFieldComponent } from '../shared/time-limit-field/time-limit-field.component';
 
 @Component({
   selector: 'app-matrix-properties',
-  imports: [TranslatePipe, OptionListEditorComponent],
+  imports: [TranslatePipe, OptionListEditorComponent, TimeLimitFieldComponent],
   templateUrl: './matrix-properties.component.html',
   styleUrl: './matrix-properties.component.scss',
 })

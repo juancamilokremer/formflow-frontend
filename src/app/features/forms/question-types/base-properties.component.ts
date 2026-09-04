@@ -12,6 +12,10 @@ export abstract class BasePropertiesComponent implements PropertiesQuestionCompo
   readonly locked = input<boolean>(false);
   readonly categoryCreated = output<Category>();
 
+  protected onTimeLimitChanged(timeLimitSeconds: number | null): void {
+    this.changed.emit({ timeLimitSeconds });
+  }
+
   protected onTitleBlur(event: FocusEvent): void {
     const title = (event.target as HTMLInputElement).value.trim();
     if (title && title !== this.question().title) this.changed.emit({ title });

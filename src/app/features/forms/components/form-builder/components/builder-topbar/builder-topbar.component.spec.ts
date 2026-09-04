@@ -124,4 +124,51 @@ describe('BuilderTopbarComponent', () => {
 
     expect(emitted).toBe(true);
   });
+
+  describe('form time limit', () => {
+    it('onTimeLimitBlur converts minutes to seconds and emits', () => {
+      let emitted: number | null | undefined;
+      component.timeLimitChanged.subscribe((v) => (emitted = v));
+      (component as any).onTimeLimitBlur({ target: { value: '5' } } as unknown as FocusEvent);
+      expect(emitted).toBe(300);
+    });
+
+    it('onTimeLimitBlur with empty value emits null', () => {
+      fixture.componentRef.setInput('form', { ...MOCK_FORM, timeLimitSeconds: 300 });
+      fixture.detectChanges();
+      let emitted: number | null | undefined;
+      component.timeLimitChanged.subscribe((v) => (emitted = v));
+      (component as any).onTimeLimitBlur({ target: { value: '' } } as unknown as FocusEvent);
+      expect(emitted).toBeNull();
+    });
+
+    it('onTimeLimitBlur does not emit when the value is unchanged', () => {
+      fixture.componentRef.setInput('form', { ...MOCK_FORM, timeLimitSeconds: 300 });
+      fixture.detectChanges();
+      let emitted: number | null | undefined;
+      component.timeLimitChanged.subscribe((v) => (emitted = v));
+      (component as any).onTimeLimitBlur({ target: { value: '5' } } as unknown as FocusEvent);
+      expect(emitted).toBeUndefined();
+    });
+
+    it('hasQuestionTimeLimits is false when no question has a time limit', () => {
+      expect((component as any).hasQuestionTimeLimits()).toBe(false);
+    });
+
+    it('hasQuestionTimeLimits is true when a question has a time limit', () => {
+      const formWithLimit: FormDetail = {
+        ...MOCK_FORM,
+        sections: [{
+          id: 's1', title: 'S1', position: 0,
+          questions: [{
+            id: 'q1', type: 'text', title: 'Q', description: null, position: 0,
+            required: false, categoryId: null, config: {}, timeLimitSeconds: 30,
+          }],
+        }],
+      };
+      fixture.componentRef.setInput('form', formWithLimit);
+      fixture.detectChanges();
+      expect((component as any).hasQuestionTimeLimits()).toBe(true);
+    });
+  });
 });

@@ -13,6 +13,7 @@ import { CanvasQuestionComponent } from '../question-type.interfaces';
 export class InfoCanvasComponent implements CanvasQuestionComponent {
   readonly question = input.required<FormQuestion>();
   readonly selected = input<boolean>(false);
+  readonly locked   = input<boolean>(false);
 
   protected readonly content = computed<string>(
     () => (this.question().config['content'] as string) ?? '',

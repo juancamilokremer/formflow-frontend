@@ -11,6 +11,7 @@ const MOCK_Q: FormQuestion = {
     columns: [{ id: 'c1', label: 'Col A' }] as QuestionOption[],
     scoringType: 'none',
   },
+  timeLimitSeconds: null,
 };
 
 describe('MatrixPropertiesComponent', () => {

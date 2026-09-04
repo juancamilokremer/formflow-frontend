@@ -50,6 +50,7 @@ export interface FormQuestion {
   categoryId: string | null;
   config: Record<string, unknown>;
   conditionalLogic?: ConditionalLogicConfig | null;
+  timeLimitSeconds: number | null;
 }
 
 export interface FormSection {

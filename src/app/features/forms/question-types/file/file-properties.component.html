@@ -19,4 +19,6 @@
       (blur)="onDescriptionBlur($event)"
     ></textarea>
   </div>
+
+  <app-time-limit-field [seconds]="question().timeLimitSeconds" (secondsChange)="onTimeLimitChanged($event)" />
 </div>

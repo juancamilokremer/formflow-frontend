@@ -18,7 +18,7 @@ const MOCK_CATEGORIES: Category[] = [
 
 const MOCK_QUESTION: FormQuestion = {
   id: 'q1', type: 'single', title: 'Q', description: null,
-  position: 0, required: false, categoryId: 'cat-1', config: {},
+  position: 0, required: false, categoryId: 'cat-1', config: {}, timeLimitSeconds: null,
 };
 
 describe('SectionCardComponent', () => {
@@ -132,6 +132,14 @@ describe('SectionCardComponent', () => {
   it('categoryFor returns undefined when no category matches', () => {
     fixture.componentRef.setInput('categories', []);
     expect((component as any).categoryFor(MOCK_QUESTION)).toBeUndefined();
+  });
+
+  it('formatTimeLimit shows minutes for a clean multiple of 60', () => {
+    expect((component as any).formatTimeLimit(120)).toMatch(/^2/);
+  });
+
+  it('formatTimeLimit shows seconds when not a clean multiple of 60', () => {
+    expect((component as any).formatTimeLimit(45)).toMatch(/^45/);
   });
 
   it('confirmDelete does not open the confirm dialog when locked', () => {

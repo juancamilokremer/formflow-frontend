@@ -5,7 +5,7 @@ import { FormQuestion } from '../../../../models/form.model';
 
 const MOCK_QUESTION: FormQuestion = {
   id: 'q1', type: 'text', title: 'Q', description: null,
-  position: 0, required: false, categoryId: null, config: {},
+  position: 0, required: false, categoryId: null, config: {}, timeLimitSeconds: null,
 };
 
 describe('PropertiesPanelComponent', () => {

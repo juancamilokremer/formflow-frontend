@@ -6,7 +6,7 @@ import { SinglePropertiesComponent } from './single-properties.component';
 const MOCK_Q: FormQuestion = {
   id: '1', type: 'single', title: 'Q', description: null,
   position: 0, required: false, categoryId: null,
-  config: { options: [{ id: 'a', label: 'Opción A' }], scoringType: 'none' },
+  config: { options: [{ id: 'a', label: 'Opción A' }], scoringType: 'none' }, timeLimitSeconds: null,
 };
 
 describe('SinglePropertiesComponent', () => {

@@ -7,7 +7,7 @@ import { SingleCanvasComponent } from './single-canvas.component';
 const MOCK_Q: FormQuestion = {
   id: '1', type: 'single', title: 'Q', description: null,
   position: 0, required: false, categoryId: null,
-  config: { options: [{ id: 'a', label: 'Opción A' }] },
+  config: { options: [{ id: 'a', label: 'Opción A' }] }, timeLimitSeconds: null,
 };
 
 describe('SingleCanvasComponent', () => {

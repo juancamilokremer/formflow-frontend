@@ -5,7 +5,7 @@ import { TextPropertiesComponent } from './text-properties.component';
 
 const MOCK_Q: FormQuestion = {
   id: '1', type: 'text', title: 'Q original', description: null,
-  position: 0, required: false, categoryId: null, config: { placeholder: '' },
+  position: 0, required: false, categoryId: null, config: { placeholder: '' }, timeLimitSeconds: null,
 };
 
 describe('TextPropertiesComponent', () => {
@@ -49,5 +49,12 @@ describe('TextPropertiesComponent', () => {
     component.changed.subscribe((v) => (emitted = v));
     (component as any).onPlaceholderBlur({ target: { value: 'Escribe aquí' } } as unknown as FocusEvent);
     expect(emitted).toEqual({ config: { placeholder: 'Escribe aquí' } });
+  });
+
+  it('onTimeLimitChanged (from BasePropertiesComponent, wired to app-time-limit-field) emits timeLimitSeconds', () => {
+    let emitted: Partial<FormQuestion> | undefined;
+    component.changed.subscribe((v) => (emitted = v));
+    (component as any).onTimeLimitChanged(45);
+    expect(emitted).toEqual({ timeLimitSeconds: 45 });
   });
 });

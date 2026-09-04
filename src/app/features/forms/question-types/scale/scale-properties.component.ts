@@ -2,10 +2,11 @@ import { Component, computed, effect, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { BasePropertiesComponent } from '../base-properties.component';
 import { CategorySelectorComponent } from '../shared/category-selector/category-selector.component';
+import { TimeLimitFieldComponent } from '../shared/time-limit-field/time-limit-field.component';
 
 @Component({
   selector: 'app-scale-properties',
-  imports: [TranslatePipe, CategorySelectorComponent],
+  imports: [TranslatePipe, CategorySelectorComponent, TimeLimitFieldComponent],
   templateUrl: './scale-properties.component.html',
   styleUrl: './scale-properties.component.scss',
 })

@@ -6,7 +6,7 @@ import { NpsCanvasComponent } from './nps-canvas.component';
 const MOCK_Q: FormQuestion = {
   id: '1', type: 'nps', title: 'NPS', description: null,
   position: 0, required: false, categoryId: null,
-  config: { minLabel: 'Nada probable', maxLabel: 'Muy probable' },
+  config: { minLabel: 'Nada probable', maxLabel: 'Muy probable' }, timeLimitSeconds: null,
 };
 
 describe('NpsCanvasComponent', () => {

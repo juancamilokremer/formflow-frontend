@@ -7,7 +7,7 @@ import { MultipleCanvasComponent } from './multiple-canvas.component';
 const MOCK_Q: FormQuestion = {
   id: '1', type: 'multiple', title: 'Q', description: null,
   position: 0, required: false, categoryId: null,
-  config: { options: [{ id: 'a', label: 'A' }, { id: 'b', label: 'B' }] },
+  config: { options: [{ id: 'a', label: 'A' }, { id: 'b', label: 'B' }] }, timeLimitSeconds: null,
 };
 
 describe('MultipleCanvasComponent', () => {

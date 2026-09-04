@@ -20,6 +20,8 @@
     ></textarea>
   </div>
 
+  <app-time-limit-field [seconds]="question().timeLimitSeconds" (secondsChange)="onTimeLimitChanged($event)" />
+
   <div class="qp__divider"></div>
 
   <fieldset class="qp__locked-group" [disabled]="locked()">

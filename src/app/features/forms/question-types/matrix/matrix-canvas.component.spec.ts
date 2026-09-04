@@ -10,7 +10,7 @@ const COLUMNS: QuestionOption[] = [{ id: 'c1', label: 'Col A' }, { id: 'c2', lab
 const MOCK_Q: FormQuestion = {
   id: '1', type: 'matrix', title: 'Matrix', description: null,
   position: 0, required: false, categoryId: null,
-  config: { rows: ROWS, columns: COLUMNS, scoringType: 'none' },
+  config: { rows: ROWS, columns: COLUMNS, scoringType: 'none' }, timeLimitSeconds: null,
 };
 
 describe('MatrixCanvasComponent', () => {

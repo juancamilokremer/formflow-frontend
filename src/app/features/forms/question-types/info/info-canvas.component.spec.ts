@@ -5,7 +5,7 @@ import { FormQuestion } from '../../models/form.model';
 
 const BASE_Q: FormQuestion = {
   id: '1', type: 'info', title: '', required: false,
-  description: null, position: 0, categoryId: null, config: { content: '' },
+  description: null, position: 0, categoryId: null, config: { content: '' }, timeLimitSeconds: null,
 };
 
 describe('InfoCanvasComponent', () => {
