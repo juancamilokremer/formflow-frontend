@@ -1,5 +1,6 @@
 export type FormType   = 'CANDIDATES' | 'DIAGNOSTIC' | 'REGISTRATION';
 export type FormStatus = 'DRAFT' | 'ACTIVE' | 'ARCHIVED';
+export type FormsTypeFilterOption = 'ALL' | 'SURVEY' | 'EVALUATION';
 export type QuestionType = 'text' | 'single' | 'multiple' | 'scale' | 'date' | 'file' | 'matrix' | 'nps' | 'info';
 
 export type LogicOperator    = 'AND' | 'OR';

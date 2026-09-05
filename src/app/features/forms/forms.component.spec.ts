@@ -23,6 +23,13 @@ const mockForms: Form[] = [
     lastResponseAt: null,
     createdAt: '2026-06-02T00:00:00Z', updatedAt: '2026-06-11T00:00:00Z',
   },
+  {
+    id: 'f3', name: 'Encuesta de satisfacción', description: null,
+    type: 'REGISTRATION', status: 'ACTIVE', version: 1,
+    sectionCount: 1, responseCount: 5,
+    lastResponseAt: '2026-06-15T00:00:00Z',
+    createdAt: '2026-06-03T00:00:00Z', updatedAt: '2026-06-12T00:00:00Z',
+  },
 ];
 
 function setup(formsResult: Form[] | 'error' = mockForms) {
@@ -61,12 +68,12 @@ describe('FormsComponent', () => {
 
   it('totalResponses() should sum responseCount across all forms', () => {
     const { component } = setup();
-    expect(component['totalResponses']()).toBe(10);
+    expect(component['totalResponses']()).toBe(15);
   });
 
   it('activeCount() should count forms with status ACTIVE', () => {
     const { component } = setup();
-    expect(component['activeCount']()).toBe(1);
+    expect(component['activeCount']()).toBe(2);
   });
 
   it('draftCount() should count forms with status DRAFT', () => {
@@ -88,7 +95,7 @@ describe('FormsComponent', () => {
     const { component } = setup();
     component['onFormDeleted']('f1');
     expect(component['forms']().find((f) => f.id === 'f1')).toBeUndefined();
-    expect(component['forms']()).toHaveLength(1);
+    expect(component['forms']()).toHaveLength(2);
   });
 
   it('onVersionGenerated() should prepend the new form and navigate to its builder', () => {
@@ -105,5 +112,24 @@ describe('FormsComponent', () => {
     component['onFormDuplicated'](newForm);
     expect(component['forms']()[0].id).toBe('d2');
     expect(mockNavigate).not.toHaveBeenCalled();
+  });
+
+  describe('typeFilteredForms', () => {
+    it('returns every form when the filter is ALL', () => {
+      const { component } = setup();
+      expect(component['typeFilteredForms']()).toEqual(mockForms);
+    });
+
+    it('returns only REGISTRATION forms when the filter is SURVEY', () => {
+      const { component } = setup();
+      component['onTypeFilterChanged']('SURVEY');
+      expect(component['typeFilteredForms']().map((f) => f.id)).toEqual(['f3']);
+    });
+
+    it('returns only CANDIDATES/DIAGNOSTIC forms when the filter is EVALUATION', () => {
+      const { component } = setup();
+      component['onTypeFilterChanged']('EVALUATION');
+      expect(component['typeFilteredForms']().map((f) => f.id)).toEqual(['f1', 'f2']);
+    });
   });
 });

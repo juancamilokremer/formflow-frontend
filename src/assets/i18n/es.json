@@ -138,6 +138,11 @@
       "draft": "Borradores",
       "archived": "Archivados"
     },
+    "type_filter": {
+      "all": "Todos",
+      "survey": "Encuestas",
+      "evaluation": "Evaluación"
+    },
     "type": {
       "candidates": "Candidatos",
       "candidates_desc": "Evalúa aspirantes con scoring automático por categoría",
@@ -148,6 +153,7 @@
     },
     "table": {
       "name": "Formulario",
+      "type": "Tipo",
       "status": "Estado",
       "responses": "Respuestas",
       "last_response": "Última resp.",

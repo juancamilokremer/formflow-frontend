@@ -21,6 +21,7 @@ const STATUS_FILTER_OPTIONS: SelectOption[] = [
 
 const TABLE_COLUMNS: TableColumn[] = [
   { key: 'name',           header: 'forms.table.name' },
+  { key: 'type',           header: 'forms.table.type' },
   { key: 'status',         header: 'forms.table.status' },
   { key: 'responseCount',  header: 'forms.table.responses', align: 'center' },
   { key: 'lastResponseAt', header: 'forms.table.last_response' },
