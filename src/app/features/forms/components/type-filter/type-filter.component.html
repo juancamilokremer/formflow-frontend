@@ -1,0 +1,11 @@
+<div class="type-filter">
+  @for (chip of chips; track chip.value) {
+    <button
+      class="type-filter__chip"
+      [class.type-filter__chip--active]="selected() === chip.value"
+      (click)="select(chip.value)"
+      type="button">
+      {{ chip.labelKey | translate }}
+    </button>
+  }
+</div>

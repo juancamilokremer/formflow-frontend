@@ -31,6 +31,12 @@
     </div>
   </ng-template>
 
+  <ng-template appTableCell [column]="'type'" let-row>
+    <span class="fl__type-badge fl__type-badge--{{ $any(row).type | lowercase }}">
+      {{ 'forms.type.' + ($any(row).type | lowercase) | translate }}
+    </span>
+  </ng-template>
+
   <ng-template appTableCell [column]="'status'" let-row>
     <span class="fl__status-badge fl__status-badge--{{ $any(row).status | lowercase }}">
       {{ 'forms.status.' + ($any(row).status | lowercase) | translate }}

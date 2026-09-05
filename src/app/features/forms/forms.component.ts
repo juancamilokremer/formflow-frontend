@@ -9,8 +9,9 @@ import { StatCardComponent } from '../../shared/components/stat-card/stat-card.c
 import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state.component';
 import { CreateFormDialogComponent } from './components/create-form-dialog/create-form-dialog.component';
 import { FormsListComponent } from './components/forms-list/forms-list.component';
+import { TypeFilterComponent } from './components/type-filter/type-filter.component';
 import { FormsService } from './services/forms.service';
-import { Form } from './models/form.model';
+import { Form, FormsTypeFilterOption } from './models/form.model';
 
 @Component({
   selector: 'app-forms',
@@ -18,7 +19,7 @@ import { Form } from './models/form.model';
     TranslatePipe,
     ButtonComponent, IconComponent,
     PageHeaderComponent, StatCardComponent, EmptyStateComponent,
-    CreateFormDialogComponent, FormsListComponent,
+    CreateFormDialogComponent, FormsListComponent, TypeFilterComponent,
   ],
   templateUrl: './forms.component.html',
   styleUrl: './forms.component.scss',
@@ -31,6 +32,7 @@ export class FormsComponent {
   protected readonly loading   = signal(true);
   protected readonly loadError = signal(false);
   protected readonly showCreateDialog = signal(false);
+  protected readonly typeFilter = signal<FormsTypeFilterOption>('ALL');
 
   protected readonly totalResponses = computed(() =>
     this.forms().reduce((acc, f) => acc + f.responseCount, 0),
@@ -41,6 +43,14 @@ export class FormsComponent {
   protected readonly draftCount = computed(
     () => this.forms().filter((f) => f.status === 'DRAFT').length,
   );
+
+  protected readonly typeFilteredForms = computed(() => {
+    const filter = this.typeFilter();
+    const all    = this.forms();
+    if (filter === 'ALL')    return all;
+    if (filter === 'SURVEY') return all.filter((f) => f.type === 'REGISTRATION');
+    return all.filter((f) => f.type === 'CANDIDATES' || f.type === 'DIAGNOSTIC');
+  });
 
   constructor() {
     this.loadForms();
@@ -80,5 +90,9 @@ export class FormsComponent {
 
   protected viewResults(id: string): void {
     this.router.navigate(formResultsPath(id));
+  }
+
+  protected onTypeFilterChanged(value: FormsTypeFilterOption): void {
+    this.typeFilter.set(value);
   }
 }

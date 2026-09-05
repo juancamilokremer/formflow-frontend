@@ -1,0 +1,27 @@
+.type-filter {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+
+  &__chip {
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--ff-border);
+    background: #fff;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ff-text-secondary);
+    cursor: pointer;
+    transition: all 0.15s;
+
+    &:hover { border-color: var(--ff-primary); color: var(--ff-primary); }
+
+    &--active {
+      background: var(--ff-primary);
+      border-color: var(--ff-primary);
+      color: #fff;
+
+      &:hover { background: var(--ff-primary-dark, #4338ca); border-color: var(--ff-primary-dark, #4338ca); color: #fff; }
+    }
+  }
+}

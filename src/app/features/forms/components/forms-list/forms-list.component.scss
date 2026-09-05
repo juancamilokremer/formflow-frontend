@@ -17,6 +17,19 @@
     color: var(--ff-text-muted);
   }
 
+  &__type-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 10px;
+    border-radius: 99px;
+    font-size: 12px;
+    font-weight: 600;
+
+    &--candidates  { background: #EDE9FE; color: #6D28D9; }
+    &--diagnostic  { background: #DBEAFE; color: #1D4ED8; }
+    &--registration { background: #FFEDD5; color: #C2410C; }
+  }
+
   &__status-badge {
     display: inline-flex;
     align-items: center;

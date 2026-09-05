@@ -29,8 +29,12 @@
       </app-button>
     </app-empty-state>
   } @else {
+    <app-type-filter
+      [selected]="typeFilter()"
+      (changed)="onTypeFilterChanged($event)"
+    />
     <app-forms-list
-      [forms]="forms()"
+      [forms]="typeFilteredForms()"
       [loading]="loading()"
       [loadError]="loadError()"
       (editRequested)="editForm($event)"
