@@ -180,13 +180,16 @@ Ningún string visible al usuario hardcodeado — todo en `es.json` con `| trans
 |-----------|--------|
 | M1 ✅ | #9 ✅ #10 ✅ #11 ✅ #18 ✅ #19 ✅ |
 | M2 ✅ | sub-issues: #32 ✅ #33 ✅ #34 ✅ #35 ✅ #36 ✅ #39 ✅ · originales: #2 ✅ #3 ✅ #4 ✅ · extras: #43 ✅ #46 ✅ #47 ✅ |
-| M3 🔄 16/24 | #12 ✅ #13 ✅ #14 ✅ #16 ✅ #52–#59 ✅ #66 ✅ #67 ✅ #69 ✅ #76–#82 ✅ #101 ✅ · abiertos: #15 #20 #71–#75 #84 |
+| M3 ✅ 24/24 | #12 ✅ #13 ✅ #14 ✅ #16 ✅ #52–#59 ✅ #66 ✅ #67 ✅ #69 ✅ #71–#75 ✅ #76–#82 ✅ #84 ✅ #101 ✅ #15 ✅ #20 ✅ |
 | M3b ✅ | #85 #86 #87 #88 |
 | M3c ✅ | #54 #55 #56 #101 (ver también M3) |
-| M3d 🔄 iniciando | #89 #90 #91 #92 (abiertos) |
+| M3d 🔄 bloqueado en BE | #89 #90 #91 #92 (abiertos, depende de backend#90) |
+| M3e 🔄 iniciando | #106 #107 #108 #109 (abiertos) |
 | M4 | #5 #6 |
 | M5 | #7 #8 #21 #22 #23 |
 | M6 | #17 |
+
+Nota: #116 (refactor bloque título/obligatorio/descripción duplicado) y #119 (badge de origen convocatoria en /forms, bloqueado en backend#123) están abiertos sin milestone asignado.
 
 ## Patrones establecidos en M2
 
@@ -227,6 +230,24 @@ Todos extienden `BasePropertiesComponent` (`question-types/base-properties.compo
 
 ### Testing
 - `AppTableComponent`: usar `interface` (no `type`) para el helper de test — `type` rompe la inferencia de generics en el TestBed.
+
+### Versionado de formularios en UI (épica #71–#75)
+- Bloqueo de edición estructural (`locked` input) se propaga a los 8 canvas components — si se agrega un tipo de pregunta nuevo, hay que declarar `locked` en su canvas aunque no lo use directamente (`ngComponentOutletInputs` lo pasa a todos sin excepción, y omitirlo lanza `NG0303` en runtime, no en build).
+- Navegación dentro del mismo route config (`/forms/:id/edit` → otro `:id`) NO re-ejecuta `ngOnInit` — Angular reusa la instancia del componente. Usar `input.required<string>()` (con `withComponentInputBinding()`, ya activado en `app.config.ts`) + un `effect()` en el constructor que reaccione al cambio de id, no un read de `route.snapshot` en `ngOnInit`.
+
+### Preguntas con tiempo límite (#15, rediseñado tras pruebas manuales)
+- `FormFillerComponent` particiona las preguntas visibles de una sección en "bloques": corridas de preguntas sin tiempo se agrupan (se ven juntas, como antes), cada pregunta con tiempo límite es su propio bloque aislado.
+- Al expirar el timer de un bloque, el formulario avanza solo con respuesta nula si no hubo respuesta (ignora "requerido" solo en ese caso); el avance manual con "Siguiente" sí respeta esa validación. "Anterior" se deshabilita mientras el timer corre.
+- `TimeLimitCountdownComponent`: el `setInterval` debe limpiarse explícitamente al llegar a 0 — si no, sigue disparando tick() cada segundo indefinidamente (bug real encontrado por un test nuevo del output `expired`).
+
+### Responsividad mobile del formulario público (#20)
+- No hay mixin/variable de breakpoint compartido en el proyecto — cada SCSS declara su propio `@media (max-width: Npx)`.
+- Cambios de tamaño/touch-target (font-size 16px en inputs, min-height 44px en opciones/botones) se aplican SIN media query — son mejoras válidas en cualquier viewport. Solo cambios de layout (header que envuelve, nav apilado) van dentro del breakpoint.
+- Patrón de "hit-slop" para touch targets sin agrandar el elemento visual: el elemento clicable real crece a 44×44 (`display:flex` centrando), el contenido visual pequeño pasa a un `::before`/`::after` — usado en los radios de la tabla de matriz (18px visual, 44px de tap real).
+
+### Filtros de tipo/estado en listas (convocatorias vs. forms)
+- `StatusFilterComponent` (convocatorias) es un chip-picker puramente presentacional (`selected` input + `changed` output, sin lógica propia) — el filtrado real vive en el padre vía `computed()`.
+- En `forms`, a diferencia de convocatorias, el filtro de búsqueda/estado vive DENTRO de `forms-list.component` (su propio `filteredForms` computed) — al agregar el filtro de tipo (#84) se puso en el padre (`forms.component`), componiendo con el filtro del hijo en vez de moverlo todo a un solo lugar. Tenerlo presente si se agrega un filtro nuevo a `/forms`: hay DOS niveles de filtrado, no uno.
 
 ## Links
 - Issues: https://github.com/juancamilokremer/formflow-frontend/issues
