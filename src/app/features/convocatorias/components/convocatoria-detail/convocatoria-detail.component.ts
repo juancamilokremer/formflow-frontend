@@ -23,10 +23,11 @@ import { ConvocatoriaCandidatesSectionComponent } from './components/candidates-
 import { ConvocatoriaLaunchBarComponent } from './components/launch-bar/convocatoria-launch-bar.component';
 import { ConvocatoriaRankingSectionComponent } from './components/ranking-section/convocatoria-ranking-section.component';
 import { ConvocatoriaStatsSectionComponent } from './components/stats-section/convocatoria-stats-section.component';
+import { ConvocatoriaQuestionStatsSectionComponent } from './components/question-stats-section/convocatoria-question-stats-section.component';
 
-type ConvocatoriaDetailTab = 'ranking' | 'stats' | 'formularios';
+type ConvocatoriaDetailTab = 'ranking' | 'stats' | 'per-question' | 'formularios';
 
-const DETAIL_TAB_IDS: ConvocatoriaDetailTab[] = ['ranking', 'stats', 'formularios'];
+const DETAIL_TAB_IDS: ConvocatoriaDetailTab[] = ['ranking', 'stats', 'per-question', 'formularios'];
 
 function isDetailTab(value: string | null): value is ConvocatoriaDetailTab {
   return DETAIL_TAB_IDS.includes(value as ConvocatoriaDetailTab);
@@ -40,7 +41,7 @@ function isDetailTab(value: string | null): value is ConvocatoriaDetailTab {
     LoadingSpinnerComponent, EmptyStateComponent,
     ConvocatoriaFormSectionComponent, ConvocatoriaThresholdsSectionComponent,
     ConvocatoriaCandidatesSectionComponent, ConvocatoriaLaunchBarComponent,
-    ConvocatoriaRankingSectionComponent, ConvocatoriaStatsSectionComponent,
+    ConvocatoriaRankingSectionComponent, ConvocatoriaStatsSectionComponent, ConvocatoriaQuestionStatsSectionComponent,
     TabsComponent,
   ],
   templateUrl: './convocatoria-detail.component.html',
@@ -73,6 +74,7 @@ export class ConvocatoriaDetailComponent {
   protected readonly detailTabs: TabItem[] = [
     { id: 'ranking', label: 'convocatorias.detail.tabs.ranking' },
     { id: 'stats', label: 'convocatorias.detail.tabs.stats' },
+    { id: 'per-question', label: 'convocatorias.detail.tabs.per_question' },
     { id: 'formularios', label: 'convocatorias.detail.tabs.formularios' },
   ];
 

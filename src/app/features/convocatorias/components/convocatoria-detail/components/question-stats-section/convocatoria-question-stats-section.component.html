@@ -1,0 +1,27 @@
+@if (loading()) {
+  <div class="cqs__center"><app-loading-spinner /></div>
+} @else if (loadError()) {
+  <app-empty-state icon="alert-circle" [compact]="true"
+    [title]="'convocatorias.detail.question_stats.error_title' | translate" />
+} @else if (data(); as d) {
+  @if (d.forms.length === 0) {
+    <app-empty-state icon="bar-chart-2" [compact]="true"
+      [title]="'convocatorias.detail.question_stats.no_forms' | translate" />
+  } @else {
+    @if (formOptions().length > 1) {
+      <app-select class="cqs__form-select" [options]="formOptions()" [value]="selectedFormId() ?? ''"
+        (changed)="onFormSelected($event)" />
+    }
+
+    @if (chartableQuestions().length === 0) {
+      <app-empty-state icon="bar-chart-2" [compact]="true"
+        [title]="'results.per_question.no_questions' | translate" />
+    } @else {
+      <div class="cqs__questions-grid">
+        @for (q of chartableQuestions(); track q.questionId) {
+          <app-question-stats-card [question]="q" />
+        }
+      </div>
+    }
+  }
+}
