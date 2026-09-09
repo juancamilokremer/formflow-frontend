@@ -591,6 +591,7 @@
       "tabs": {
         "ranking": "Ranking",
         "stats": "Estadísticas",
+        "per_question": "Por pregunta",
         "formularios": "Formularios"
       },
       "ranking": {
@@ -613,6 +614,10 @@
         "revisar": "A revisar",
         "no_apto": "No aptos",
         "error_title": "No se pudieron cargar las estadísticas"
+      },
+      "question_stats": {
+        "error_title": "No se pudieron cargar las estadísticas por pregunta",
+        "no_forms": "Esta convocatoria todavía no tiene formularios asociados."
       },
       "form": {
         "title": "Formularios",

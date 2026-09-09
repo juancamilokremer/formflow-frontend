@@ -1,4 +1,5 @@
 import { Form } from '../../forms/models/form.model';
+import { QuestionStats } from '../../forms/models/form-stats.model';
 
 export type ConvocatoriaStatus = 'DRAFT' | 'ACTIVE' | 'CLOSED';
 export type ProcessType = 'CANDIDATES' | 'DIAGNOSTIC';
@@ -162,4 +163,17 @@ export interface ConvocatoriaStats {
   revisarCount: number;
   noAptoCount: number;
   participationPct: number;
+}
+
+export interface ConvocatoriaFormQuestionStats {
+  formId: string;
+  formName: string;
+  totalResponses: number;
+  questions: QuestionStats[];
+}
+
+export interface ConvocatoriaQuestionStats {
+  convocatoriaId: string;
+  convocatoriaName: string;
+  forms: ConvocatoriaFormQuestionStats[];
 }

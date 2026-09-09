@@ -90,6 +90,9 @@
           @case ('stats') {
             <app-convocatoria-stats-section [convocatoriaId]="conv.id" />
           }
+          @case ('per-question') {
+            <app-convocatoria-question-stats-section [convocatoriaId]="conv.id" />
+          }
           @case ('formularios') {
             <app-convocatoria-form-section
               [convocatoriaId]="conv.id"
