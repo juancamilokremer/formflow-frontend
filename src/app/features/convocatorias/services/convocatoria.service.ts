@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ApiResponse } from '../../../core/models/api-response.model';
@@ -126,6 +126,19 @@ export class ConvocatoriaService {
       .pipe(map((response) => ({
         blob: response.body!,
         filename: filenameFromContentDisposition(response.headers.get('content-disposition')) ?? 'respuesta.pdf',
+      })));
+  }
+
+  exportRankingExcel(id: string, candidateIds?: string[]): Observable<ExportedFile> {
+    let params = new HttpParams();
+    for (const candidateId of candidateIds ?? []) {
+      params = params.append('candidateIds', candidateId);
+    }
+    return this.http
+      .get(`${this.base}/${id}/export/excel`, { params, responseType: 'blob', observe: 'response' })
+      .pipe(map((response) => ({
+        blob: response.body!,
+        filename: filenameFromContentDisposition(response.headers.get('content-disposition')) ?? 'ranking.xlsx',
       })));
   }
 }

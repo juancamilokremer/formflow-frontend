@@ -4,6 +4,9 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe } from '@ngx-translate/core';
 import { LoadingSpinnerComponent } from '../../../../../../shared/components/loading-spinner/loading-spinner.component';
 import { EmptyStateComponent } from '../../../../../../shared/components/empty-state/empty-state.component';
+import { CheckboxComponent } from '../../../../../../shared/components/checkbox/checkbox.component';
+import { ButtonComponent } from '../../../../../../shared/components/button/button.component';
+import { FileDownloadService } from '../../../../../../core/services/file-download.service';
 import { ConvocatoriaService } from '../../../../services/convocatoria.service';
 import { RankingEntry } from '../../../../models/convocatoria.model';
 import { CandidateResponseDrawerComponent } from './components/candidate-response-drawer/candidate-response-drawer.component';
@@ -18,12 +21,16 @@ const RANK_MEDALS: Record<number, string> = { 1: '🥇', 2: '🥈' };
 
 @Component({
   selector: 'app-convocatoria-ranking-section',
-  imports: [TranslatePipe, DecimalPipe, LoadingSpinnerComponent, EmptyStateComponent, CandidateResponseDrawerComponent],
+  imports: [
+    TranslatePipe, DecimalPipe, LoadingSpinnerComponent, EmptyStateComponent, CheckboxComponent,
+    ButtonComponent, CandidateResponseDrawerComponent,
+  ],
   templateUrl: './convocatoria-ranking-section.component.html',
   styleUrl: './convocatoria-ranking-section.component.scss',
 })
 export class ConvocatoriaRankingSectionComponent implements OnInit {
   private readonly convocatoriaService = inject(ConvocatoriaService);
+  private readonly fileDownload = inject(FileDownloadService);
   private readonly destroyRef = inject(DestroyRef);
 
   readonly convocatoriaId = input.required<string>();
@@ -32,6 +39,9 @@ export class ConvocatoriaRankingSectionComponent implements OnInit {
   protected readonly loadError = signal(false);
   protected readonly entries = signal<RankingEntry[]>([]);
   protected readonly selectedCandidateId = signal<string | null>(null);
+  protected readonly selectedCandidateIds = signal<ReadonlySet<string>>(new Set());
+  protected readonly exporting = signal(false);
+  protected readonly exportError = signal(false);
 
   protected readonly formColumns = computed<RankingFormColumn[]>(() =>
     (this.entries()[0]?.formScores ?? []).map((formScore) => ({
@@ -39,6 +49,9 @@ export class ConvocatoriaRankingSectionComponent implements OnInit {
       formName: formScore.formName,
       weight: formScore.weight,
     })));
+
+  protected readonly allSelected = computed(() =>
+    this.entries().length > 0 && this.entries().every((entry) => this.selectedCandidateIds().has(entry.candidateId)));
 
   ngOnInit(): void {
     this.convocatoriaService.getRanking(this.convocatoriaId())
@@ -73,5 +86,41 @@ export class ConvocatoriaRankingSectionComponent implements OnInit {
 
   protected closeCandidateDrawer(): void {
     this.selectedCandidateId.set(null);
+  }
+
+  protected toggleCandidate(candidateId: string): void {
+    const next = new Set(this.selectedCandidateIds());
+    if (next.has(candidateId)) {
+      next.delete(candidateId);
+    } else {
+      next.add(candidateId);
+    }
+    this.selectedCandidateIds.set(next);
+  }
+
+  protected toggleAll(): void {
+    this.selectedCandidateIds.set(
+      this.allSelected() ? new Set() : new Set(this.entries().map((entry) => entry.candidateId)));
+  }
+
+  protected exportExcel(): void {
+    if (this.exporting()) return;
+
+    const candidateIds = this.selectedCandidateIds();
+    this.exporting.set(true);
+    this.exportError.set(false);
+    this.convocatoriaService.exportRankingExcel(
+      this.convocatoriaId(), candidateIds.size > 0 ? [...candidateIds] : undefined)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (file) => {
+          this.fileDownload.download(file.blob, file.filename);
+          this.exporting.set(false);
+        },
+        error: () => {
+          this.exportError.set(true);
+          this.exporting.set(false);
+        },
+      });
   }
 }

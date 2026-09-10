@@ -8,10 +8,28 @@
     [title]="'convocatorias.detail.ranking.empty_title' | translate"
     [subtitle]="'convocatorias.detail.ranking.empty_subtitle' | translate" />
 } @else {
+  <div class="convocatoria-ranking__toolbar">
+    @if (exportError()) {
+      <span class="convocatoria-ranking__export-error">
+        {{ 'convocatorias.detail.ranking.export_error' | translate }}
+      </span>
+    }
+    <app-button variant="secondary" [loading]="exporting()" (click)="exportExcel()">
+      {{ (selectedCandidateIds().size > 0
+        ? 'convocatorias.detail.ranking.export_selected'
+        : 'convocatorias.detail.ranking.export_all')
+        | translate: { count: selectedCandidateIds().size } }}
+    </app-button>
+  </div>
   <div class="convocatoria-ranking__scroll">
     <table class="convocatoria-ranking__table">
       <thead>
         <tr>
+          <th class="convocatoria-ranking__col-select">
+            <app-checkbox [checked]="allSelected()"
+              [ariaLabel]="'convocatorias.detail.ranking.select_all_label' | translate"
+              (changed)="toggleAll()" />
+          </th>
           <th class="convocatoria-ranking__col-rank">#</th>
           <th>{{ 'convocatorias.detail.ranking.col_candidate' | translate }}</th>
           @for (column of formColumns(); track column.formId) {
@@ -29,6 +47,10 @@
       <tbody>
         @for (entry of entries(); track entry.candidateId) {
           <tr class="convocatoria-ranking__row" (click)="openCandidate(entry.candidateId)">
+            <td class="convocatoria-ranking__col-select">
+              <app-checkbox [checked]="selectedCandidateIds().has(entry.candidateId)"
+                (changed)="toggleCandidate(entry.candidateId)" />
+            </td>
             <td class="convocatoria-ranking__col-rank">{{ medal(entry.rank) ?? (entry.rank ?? '—') }}</td>
             <td>
               <p class="convocatoria-ranking__name">{{ entry.name }}</p>
