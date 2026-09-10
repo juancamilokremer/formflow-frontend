@@ -61,8 +61,15 @@
     <app-button variant="secondary" (click)="onPreviewClick()">
       {{ 'builder.preview' | translate }}
     </app-button>
-    <app-button (click)="publishClicked.emit()">
-      {{ (form().status === 'ACTIVE' ? 'builder.archive' : 'builder.publish') | translate }}
-    </app-button>
+    @if (convocatoriaId() && form().status === 'DRAFT') {
+      <span class="topbar__auto-publish-hint" [title]="'builder.auto_publish_hint' | translate">
+        <app-icon name="info" [size]="13" />
+        {{ 'builder.auto_publish_hint' | translate }}
+      </span>
+    } @else {
+      <app-button (click)="publishClicked.emit()">
+        {{ (form().status === 'ACTIVE' ? 'builder.archive' : 'builder.publish') | translate }}
+      </app-button>
+    }
   </div>
 </div>

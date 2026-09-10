@@ -91,7 +91,17 @@
 
   &__actions {
     display: flex;
+    align-items: center;
     gap: 10px;
     margin-left: auto;
+  }
+
+  &__auto-publish-hint {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    color: var(--ff-text-secondary);
+    white-space: nowrap;
   }
 }
