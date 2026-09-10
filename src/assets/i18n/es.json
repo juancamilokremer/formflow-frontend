@@ -607,7 +607,11 @@
         "download_pdf": "Descargar PDF",
         "download_error": "No se pudo descargar el PDF. Intenta de nuevo.",
         "form_score": "Puntaje del formulario",
-        "no_responses": "Este candidato todavía no respondió ningún formulario."
+        "no_responses": "Este candidato todavía no respondió ningún formulario.",
+        "export_selected": "Exportar seleccionados ({{count}})",
+        "export_all": "Exportar todos",
+        "export_error": "No se pudo exportar. Intenta de nuevo.",
+        "select_all_label": "Seleccionar todos los candidatos"
       },
       "stats": {
         "total": "Total candidatos",

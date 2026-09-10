@@ -7,6 +7,19 @@
     padding: 24px 0;
   }
 
+  &__toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  &__export-error {
+    font-size: 13px;
+    color: var(--ff-error-text, #b91c1c);
+  }
+
   &__scroll {
     overflow-x: auto;
   }
@@ -38,6 +51,11 @@
 
       &:hover td { background: var(--ff-bg-secondary); }
     }
+  }
+
+  &__col-select {
+    width: 32px;
+    text-align: center !important;
   }
 
   &__col-rank {

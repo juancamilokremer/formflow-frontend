@@ -3,6 +3,7 @@ import { provideTranslateService } from '@ngx-translate/core';
 import { of, throwError } from 'rxjs';
 import { ConvocatoriaRankingSectionComponent } from './convocatoria-ranking-section.component';
 import { ConvocatoriaService } from '../../../../services/convocatoria.service';
+import { FileDownloadService } from '../../../../../../core/services/file-download.service';
 import { RankingEntry } from '../../../../models/convocatoria.model';
 
 const RESPONDED_ENTRY: RankingEntry = {
@@ -25,9 +26,12 @@ const PENDING_ENTRY: RankingEntry = {
   ],
 };
 
-function buildComponent(overrides: { getRankingImpl?: unknown } = {}) {
+function buildComponent(overrides: { getRankingImpl?: unknown; exportRankingExcelImpl?: unknown } = {}) {
+  const mockFileDownload = { download: vi.fn() };
   const mockConvocatoriaService = {
     getRanking: overrides.getRankingImpl ?? vi.fn().mockReturnValue(of([RESPONDED_ENTRY, PENDING_ENTRY])),
+    exportRankingExcel: overrides.exportRankingExcelImpl
+      ?? vi.fn().mockReturnValue(of({ blob: new Blob(), filename: 'ranking.xlsx' })),
   };
 
   TestBed.configureTestingModule({
@@ -35,13 +39,14 @@ function buildComponent(overrides: { getRankingImpl?: unknown } = {}) {
     providers: [
       provideTranslateService({ lang: 'es' }),
       { provide: ConvocatoriaService, useValue: mockConvocatoriaService },
+      { provide: FileDownloadService, useValue: mockFileDownload },
     ],
   }).compileComponents();
 
   const fixture = TestBed.createComponent(ConvocatoriaRankingSectionComponent);
   fixture.componentRef.setInput('convocatoriaId', 'conv1');
   fixture.detectChanges();
-  return { component: fixture.componentInstance, mockConvocatoriaService };
+  return { component: fixture.componentInstance, mockConvocatoriaService, mockFileDownload };
 }
 
 describe('ConvocatoriaRankingSectionComponent', () => {
@@ -110,6 +115,64 @@ describe('ConvocatoriaRankingSectionComponent', () => {
       expect(component['medal'](2)).toBe('🥈');
       expect(component['medal'](3)).toBeNull();
       expect(component['medal'](null)).toBeNull();
+    });
+  });
+
+  describe('toggleCandidate', () => {
+    it('adds a candidate that was not selected', () => {
+      const { component } = buildComponent();
+      component['toggleCandidate']('cand1');
+      expect(component['selectedCandidateIds']()).toEqual(new Set(['cand1']));
+    });
+
+    it('removes a candidate that was already selected', () => {
+      const { component } = buildComponent();
+      component['toggleCandidate']('cand1');
+      component['toggleCandidate']('cand1');
+      expect(component['selectedCandidateIds']()).toEqual(new Set());
+    });
+  });
+
+  describe('toggleAll / allSelected', () => {
+    it('selects every candidate when none are selected', () => {
+      const { component } = buildComponent();
+      component['toggleAll']();
+      expect(component['selectedCandidateIds']()).toEqual(new Set(['cand1', 'cand2']));
+      expect(component['allSelected']()).toBe(true);
+    });
+
+    it('clears the selection when all are already selected', () => {
+      const { component } = buildComponent();
+      component['toggleAll']();
+      component['toggleAll']();
+      expect(component['selectedCandidateIds']()).toEqual(new Set());
+      expect(component['allSelected']()).toBe(false);
+    });
+  });
+
+  describe('exportExcel', () => {
+    it('exports with undefined candidateIds when there is no selection', () => {
+      const { component, mockConvocatoriaService, mockFileDownload } = buildComponent();
+      component['exportExcel']();
+      expect(mockConvocatoriaService.exportRankingExcel).toHaveBeenCalledWith('conv1', undefined);
+      expect(mockFileDownload.download).toHaveBeenCalled();
+      expect(component['exporting']()).toBe(false);
+    });
+
+    it('exports only the selected candidateIds', () => {
+      const { component, mockConvocatoriaService } = buildComponent();
+      component['toggleCandidate']('cand1');
+      component['exportExcel']();
+      expect(mockConvocatoriaService.exportRankingExcel).toHaveBeenCalledWith('conv1', ['cand1']);
+    });
+
+    it('sets exportError on failure', () => {
+      const { component } = buildComponent({
+        exportRankingExcelImpl: vi.fn().mockReturnValue(throwError(() => new Error('boom'))),
+      });
+      component['exportExcel']();
+      expect(component['exportError']()).toBe(true);
+      expect(component['exporting']()).toBe(false);
     });
   });
 });
