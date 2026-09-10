@@ -4,10 +4,12 @@ import { Observable, map } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ApiResponse } from '../../../core/models/api-response.model';
 import {
-  AddCandidateRequest, AddConvocatoriaFormRequest, Candidate, ConvocatoriaDetail, ConvocatoriaForm,
-  ConvocatoriaQuestionStats, ConvocatoriaStats, ConvocatoriaSummary, CreateConvocatoriaRequest,
-  ImportResponse, RankingEntry, UpdateConvocatoriaFormRequest, UpdateConvocatoriaRequest,
+  AddCandidateRequest, AddConvocatoriaFormRequest, Candidate, CandidateConvocatoriaResponseDetail,
+  ConvocatoriaDetail, ConvocatoriaForm, ConvocatoriaQuestionStats, ConvocatoriaStats, ConvocatoriaSummary,
+  CreateConvocatoriaRequest, ImportResponse, RankingEntry, UpdateConvocatoriaFormRequest, UpdateConvocatoriaRequest,
 } from '../models/convocatoria.model';
+import { ExportedFile } from '../../forms/models/form-response.model';
+import { filenameFromContentDisposition } from '../../forms/services/forms.service';
 
 @Injectable({ providedIn: 'root' })
 export class ConvocatoriaService {
@@ -110,5 +112,20 @@ export class ConvocatoriaService {
     return this.http
       .get<ApiResponse<ConvocatoriaQuestionStats>>(`${this.base}/${id}/question-stats`)
       .pipe(map((response) => response.data!));
+  }
+
+  getCandidateResponseDetail(id: string, candidateId: string): Observable<CandidateConvocatoriaResponseDetail> {
+    return this.http
+      .get<ApiResponse<CandidateConvocatoriaResponseDetail>>(`${this.base}/${id}/candidates/${candidateId}/response-detail`)
+      .pipe(map((response) => response.data!));
+  }
+
+  exportCandidatePdf(id: string, candidateId: string): Observable<ExportedFile> {
+    return this.http
+      .get(`${this.base}/${id}/candidates/${candidateId}/export/pdf`, { responseType: 'blob', observe: 'response' })
+      .pipe(map((response) => ({
+        blob: response.body!,
+        filename: filenameFromContentDisposition(response.headers.get('content-disposition')) ?? 'respuesta.pdf',
+      })));
   }
 }

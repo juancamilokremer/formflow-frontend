@@ -32,6 +32,12 @@
       color: var(--ff-text-primary);
       vertical-align: middle;
     }
+
+    tbody tr {
+      cursor: pointer;
+
+      &:hover td { background: var(--ff-bg-secondary); }
+    }
   }
 
   &__col-rank {

@@ -6,6 +6,7 @@ import { LoadingSpinnerComponent } from '../../../../../../shared/components/loa
 import { EmptyStateComponent } from '../../../../../../shared/components/empty-state/empty-state.component';
 import { ConvocatoriaService } from '../../../../services/convocatoria.service';
 import { RankingEntry } from '../../../../models/convocatoria.model';
+import { CandidateResponseDrawerComponent } from './components/candidate-response-drawer/candidate-response-drawer.component';
 
 interface RankingFormColumn {
   formId: string;
@@ -17,7 +18,7 @@ const RANK_MEDALS: Record<number, string> = { 1: '🥇', 2: '🥈' };
 
 @Component({
   selector: 'app-convocatoria-ranking-section',
-  imports: [TranslatePipe, DecimalPipe, LoadingSpinnerComponent, EmptyStateComponent],
+  imports: [TranslatePipe, DecimalPipe, LoadingSpinnerComponent, EmptyStateComponent, CandidateResponseDrawerComponent],
   templateUrl: './convocatoria-ranking-section.component.html',
   styleUrl: './convocatoria-ranking-section.component.scss',
 })
@@ -30,6 +31,7 @@ export class ConvocatoriaRankingSectionComponent implements OnInit {
   protected readonly loading = signal(true);
   protected readonly loadError = signal(false);
   protected readonly entries = signal<RankingEntry[]>([]);
+  protected readonly selectedCandidateId = signal<string | null>(null);
 
   protected readonly formColumns = computed<RankingFormColumn[]>(() =>
     (this.entries()[0]?.formScores ?? []).map((formScore) => ({
@@ -63,5 +65,13 @@ export class ConvocatoriaRankingSectionComponent implements OnInit {
 
   protected medal(rank: number | null): string | null {
     return rank !== null ? (RANK_MEDALS[rank] ?? null) : null;
+  }
+
+  protected openCandidate(candidateId: string): void {
+    this.selectedCandidateId.set(candidateId);
+  }
+
+  protected closeCandidateDrawer(): void {
+    this.selectedCandidateId.set(null);
   }
 }

@@ -1,5 +1,6 @@
 import { Form } from '../../forms/models/form.model';
 import { QuestionStats } from '../../forms/models/form-stats.model';
+import { AnswerDetail, CategoryScoreDetail } from '../../forms/models/form-response.model';
 
 export type ConvocatoriaStatus = 'DRAFT' | 'ACTIVE' | 'CLOSED';
 export type ProcessType = 'CANDIDATES' | 'DIAGNOSTIC';
@@ -176,4 +177,20 @@ export interface ConvocatoriaQuestionStats {
   convocatoriaId: string;
   convocatoriaName: string;
   forms: ConvocatoriaFormQuestionStats[];
+}
+
+export interface CandidateFormResponseDetail {
+  formName: string;
+  formScore: number | null;
+  categoryScores: CategoryScoreDetail[] | null;
+  answers: AnswerDetail[];
+}
+
+export interface CandidateConvocatoriaResponseDetail {
+  candidateName: string;
+  candidateEmail: string;
+  convocatoriaName: string;
+  totalScore: number | null;
+  classification: CandidateClassification | null;
+  forms: CandidateFormResponseDetail[];
 }
