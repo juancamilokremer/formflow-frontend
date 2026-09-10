@@ -28,7 +28,7 @@
       </thead>
       <tbody>
         @for (entry of entries(); track entry.candidateId) {
-          <tr class="convocatoria-ranking__row">
+          <tr class="convocatoria-ranking__row" (click)="openCandidate(entry.candidateId)">
             <td class="convocatoria-ranking__col-rank">{{ medal(entry.rank) ?? (entry.rank ?? '—') }}</td>
             <td>
               <p class="convocatoria-ranking__name">{{ entry.name }}</p>
@@ -67,3 +67,9 @@
     </table>
   </div>
 }
+
+<app-candidate-response-drawer
+  [convocatoriaId]="convocatoriaId()"
+  [candidateId]="selectedCandidateId()"
+  (closed)="closeCandidateDrawer()"
+/>

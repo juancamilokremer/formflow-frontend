@@ -602,7 +602,12 @@
         "progress": "{{completed}}/{{total}} formularios",
         "empty_title": "Todavía no hay candidatos respondiendo",
         "empty_subtitle": "El ranking aparecerá aquí cuando los candidatos empiecen a responder.",
-        "error_title": "No se pudo cargar el ranking"
+        "error_title": "No se pudo cargar el ranking",
+        "drawer_title": "Respuesta del candidato",
+        "download_pdf": "Descargar PDF",
+        "download_error": "No se pudo descargar el PDF. Intenta de nuevo.",
+        "form_score": "Puntaje del formulario",
+        "no_responses": "Este candidato todavía no respondió ningún formulario."
       },
       "stats": {
         "total": "Total candidatos",
