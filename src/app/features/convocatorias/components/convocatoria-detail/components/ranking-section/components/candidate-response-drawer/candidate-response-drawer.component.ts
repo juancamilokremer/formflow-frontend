@@ -2,7 +2,8 @@ import { Component, DestroyRef, computed, effect, inject, input, output, signal 
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DatePipe } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
-import { DrawerComponent } from '../../../../../../../../shared/components/drawer/drawer.component';
+import { DialogComponent } from '../../../../../../../../shared/components/dialog/dialog.component';
+import { TabsComponent, TabItem } from '../../../../../../../../shared/components/tabs/tabs.component';
 import { ButtonComponent } from '../../../../../../../../shared/components/button/button.component';
 import { LoadingSpinnerComponent } from '../../../../../../../../shared/components/loading-spinner/loading-spinner.component';
 import { EmptyStateComponent } from '../../../../../../../../shared/components/empty-state/empty-state.component';
@@ -15,7 +16,7 @@ import { CandidateConvocatoriaResponseDetail } from '../../../../../../models/co
 @Component({
   selector: 'app-candidate-response-drawer',
   imports: [
-    DatePipe, TranslatePipe, DrawerComponent, ButtonComponent, LoadingSpinnerComponent,
+    DatePipe, TranslatePipe, DialogComponent, TabsComponent, ButtonComponent, LoadingSpinnerComponent,
     EmptyStateComponent, StatCardComponent, IconComponent,
   ],
   templateUrl: './candidate-response-drawer.component.html',
@@ -35,8 +36,15 @@ export class CandidateResponseDrawerComponent {
   protected readonly loadError = signal(false);
   protected readonly downloading = signal(false);
   protected readonly downloadError = signal(false);
+  protected readonly activeTabId = signal('0');
 
   protected readonly isOpen = computed(() => this.candidateId() !== null);
+
+  protected readonly formTabs = computed<TabItem[]>(() =>
+    (this.detail()?.forms ?? []).map((form, index) => ({ id: String(index), label: form.formName })));
+
+  protected readonly activeForm = computed(() =>
+    this.detail()?.forms?.[Number(this.activeTabId())] ?? null);
 
   constructor() {
     effect(() => {
@@ -78,6 +86,7 @@ export class CandidateResponseDrawerComponent {
       .subscribe({
         next: (detail) => {
           this.detail.set(detail);
+          this.activeTabId.set('0');
           this.loading.set(false);
         },
         error: () => {
