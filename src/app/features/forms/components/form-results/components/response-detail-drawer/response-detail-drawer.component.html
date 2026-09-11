@@ -1,6 +1,7 @@
-<app-drawer
+<app-dialog
   [title]="'results.responses.drawer_title' | translate"
   [isOpen]="isOpen()"
+  [maxWidth]="'900px'"
   (closed)="closed.emit()"
 >
   @if (loading()) {
@@ -60,4 +61,4 @@
       }
     </div>
   }
-</app-drawer>
+</app-dialog>
