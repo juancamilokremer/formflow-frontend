@@ -2,7 +2,7 @@ import { Component, DestroyRef, computed, effect, inject, input, output, signal 
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DatePipe } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
-import { DrawerComponent } from '../../../../../../shared/components/drawer/drawer.component';
+import { DialogComponent } from '../../../../../../shared/components/dialog/dialog.component';
 import { LoadingSpinnerComponent } from '../../../../../../shared/components/loading-spinner/loading-spinner.component';
 import { EmptyStateComponent } from '../../../../../../shared/components/empty-state/empty-state.component';
 import { StatCardComponent } from '../../../../../../shared/components/stat-card/stat-card.component';
@@ -14,7 +14,7 @@ import { formatDurationSeconds } from '../results-summary/results-summary.compon
 @Component({
   selector: 'app-response-detail-drawer',
   imports: [
-    DatePipe, TranslatePipe, DrawerComponent, LoadingSpinnerComponent,
+    DatePipe, TranslatePipe, DialogComponent, LoadingSpinnerComponent,
     EmptyStateComponent, StatCardComponent, IconComponent,
   ],
   templateUrl: './response-detail-drawer.component.html',
