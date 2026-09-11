@@ -15,6 +15,21 @@ const MOCK_DETAIL: CandidateConvocatoriaResponseDetail = {
   }],
 };
 
+const MOCK_DETAIL_TWO_FORMS: CandidateConvocatoriaResponseDetail = {
+  candidateName: 'Bruno Diaz', candidateEmail: 'bruno@test.com', convocatoriaName: 'RRHH',
+  totalScore: 70.0, classification: 'REVISAR',
+  forms: [
+    {
+      formName: 'Evaluación técnica', formScore: 75.0, categoryScores: null,
+      answers: [{ questionId: 'q1', questionTitle: '¿Años?', questionType: 'single', value: 'opt1', displayValue: '0-1 años' }],
+    },
+    {
+      formName: 'Perfil cultural', formScore: 65.0, categoryScores: null,
+      answers: [{ questionId: 'q2', questionTitle: '¿Disponibilidad?', questionType: 'single', value: 'opt1', displayValue: 'Sí' }],
+    },
+  ],
+};
+
 function buildComponent(overrides: { getDetailImpl?: unknown; exportPdfImpl?: unknown } = {}) {
   const mockConvocatoriaService = {
     getCandidateResponseDetail: overrides.getDetailImpl ?? vi.fn().mockReturnValue(of(MOCK_DETAIL)),
@@ -92,5 +107,56 @@ describe('CandidateResponseDrawerComponent', () => {
 
     expect(component['downloadError']()).toBe(true);
     expect(component['downloading']()).toBe(false);
+  });
+
+  describe('form tabs', () => {
+    it('derives one tab per form using the form name as label', () => {
+      const { fixture, component } = buildComponent({
+        getDetailImpl: vi.fn().mockReturnValue(of(MOCK_DETAIL_TWO_FORMS)),
+      });
+      fixture.componentRef.setInput('candidateId', 'cand1');
+      fixture.detectChanges();
+
+      expect(component['formTabs']()).toEqual([
+        { id: '0', label: 'Evaluación técnica' },
+        { id: '1', label: 'Perfil cultural' },
+      ]);
+    });
+
+    it('activeForm defaults to the first form', () => {
+      const { fixture, component } = buildComponent({
+        getDetailImpl: vi.fn().mockReturnValue(of(MOCK_DETAIL_TWO_FORMS)),
+      });
+      fixture.componentRef.setInput('candidateId', 'cand1');
+      fixture.detectChanges();
+
+      expect(component['activeForm']()?.formName).toBe('Evaluación técnica');
+    });
+
+    it('switching activeTabId changes activeForm', () => {
+      const { fixture, component } = buildComponent({
+        getDetailImpl: vi.fn().mockReturnValue(of(MOCK_DETAIL_TWO_FORMS)),
+      });
+      fixture.componentRef.setInput('candidateId', 'cand1');
+      fixture.detectChanges();
+
+      component['activeTabId'].set('1');
+
+      expect(component['activeForm']()?.formName).toBe('Perfil cultural');
+    });
+
+    it('resets activeTabId to the first tab when a new candidate loads', () => {
+      const { fixture, component } = buildComponent({
+        getDetailImpl: vi.fn().mockReturnValue(of(MOCK_DETAIL_TWO_FORMS)),
+      });
+      fixture.componentRef.setInput('candidateId', 'cand1');
+      fixture.detectChanges();
+      component['activeTabId'].set('1');
+
+      fixture.componentRef.setInput('candidateId', 'cand2');
+      fixture.detectChanges();
+
+      expect(component['activeTabId']()).toBe('0');
+    });
   });
 });

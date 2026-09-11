@@ -1,6 +1,7 @@
-<app-drawer
+<app-dialog
   [title]="'convocatorias.detail.ranking.drawer_title' | translate"
   [isOpen]="isOpen()"
+  [maxWidth]="'900px'"
   (closed)="closed.emit()"
 >
   @if (loading()) {
@@ -41,7 +42,9 @@
       <app-empty-state icon="bar-chart-2" [compact]="true"
         [title]="'convocatorias.detail.ranking.no_responses' | translate" />
     } @else {
-      @for (form of d.forms; track form.formName) {
+      <app-tabs [tabs]="formTabs()" [activeTabId]="activeTabId()" (tabChange)="activeTabId.set($event)" />
+
+      @if (activeForm(); as form) {
         <div class="crd__form-block">
           <h3 class="crd__form-title">{{ form.formName }}</h3>
 
@@ -93,4 +96,4 @@
       }
     }
   }
-</app-drawer>
+</app-dialog>

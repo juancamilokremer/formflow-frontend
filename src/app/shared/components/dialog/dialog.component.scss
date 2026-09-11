@@ -15,9 +15,11 @@
   background: var(--ff-white);
   border-radius: var(--ff-radius-xl);
   width: 100%;
+  max-height: calc(100vh - 32px); // respects the overlay's 16px padding on each side
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
+  overflow: hidden; // clip so scrolling stays confined to the body
 
   &__header {
     display: flex;
@@ -25,6 +27,7 @@
     justify-content: space-between;
     padding: 20px 24px 16px;
     border-bottom: 1px solid var(--ff-border);
+    flex-shrink: 0;
   }
 
   &__title {
@@ -39,6 +42,7 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
+    overflow-y: auto;
   }
 
   &__footer {
@@ -47,6 +51,7 @@
     gap: 10px;
     padding: 16px 24px 20px;
     border-top: 1px solid var(--ff-border);
+    flex-shrink: 0;
 
     &:empty { display: none; }
   }
