@@ -25,4 +25,13 @@
       border-bottom-color: var(--ff-primary);
     }
   }
+
+  &__badge {
+    display: inline-flex;
+    vertical-align: middle;
+    margin-left: 5px;
+
+    &--complete { color: var(--ff-success, #15803d); }
+    &--pending  { color: var(--ff-warning, #b45309); }
+  }
 }

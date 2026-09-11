@@ -26,6 +26,7 @@ import { ConvocatoriaStatsSectionComponent } from './components/stats-section/co
 import { ConvocatoriaQuestionStatsSectionComponent } from './components/question-stats-section/convocatoria-question-stats-section.component';
 
 type ConvocatoriaDetailTab = 'ranking' | 'stats' | 'per-question' | 'formularios';
+type DraftTab = 'formularios' | 'umbrales' | 'candidatos' | 'lanzar';
 
 const DETAIL_TAB_IDS: ConvocatoriaDetailTab[] = ['ranking', 'stats', 'per-question', 'formularios'];
 
@@ -79,6 +80,22 @@ export class ConvocatoriaDetailComponent {
   ];
 
   protected readonly isDraft = computed(() => this.convocatoria()?.status === 'DRAFT');
+
+  protected readonly draftActiveTab = signal<DraftTab>('formularios');
+
+  protected readonly draftTabs = computed<TabItem[]>(() => {
+    const conv = this.convocatoria();
+    const formsWeightSum = conv?.forms.reduce((sum, form) => sum + form.weight, 0) ?? 0;
+    const formsComplete = (conv?.forms.length ?? 0) > 0 && formsWeightSum === 100;
+    const candidatesComplete = (conv?.candidates.length ?? 0) > 0;
+
+    return [
+      { id: 'formularios', label: 'convocatorias.detail.draft_tabs.formularios', badge: formsComplete ? 'complete' : 'pending' },
+      { id: 'umbrales', label: 'convocatorias.detail.draft_tabs.umbrales' },
+      { id: 'candidatos', label: 'convocatorias.detail.draft_tabs.candidatos', badge: candidatesComplete ? 'complete' : 'pending' },
+      { id: 'lanzar', label: 'convocatorias.detail.draft_tabs.lanzar' },
+    ];
+  });
 
   private readonly thresholdsChange$ = new Subject<void>();
 
@@ -179,6 +196,10 @@ export class ConvocatoriaDetailComponent {
 
   protected setActiveTab(tabId: string): void {
     this.activeTab.set(tabId as ConvocatoriaDetailTab);
+  }
+
+  protected setDraftTab(tabId: string): void {
+    this.draftActiveTab.set(tabId as DraftTab);
   }
 
   private resolveInitialTab(): ConvocatoriaDetailTab {

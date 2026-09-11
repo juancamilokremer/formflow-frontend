@@ -595,6 +595,12 @@
         "per_question": "Por pregunta",
         "formularios": "Formularios"
       },
+      "draft_tabs": {
+        "formularios": "Formularios",
+        "umbrales": "Umbrales",
+        "candidatos": "Candidatos",
+        "lanzar": "Lanzar"
+      },
       "ranking": {
         "col_candidate": "Candidato",
         "col_total": "Total",

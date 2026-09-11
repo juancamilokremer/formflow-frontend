@@ -1,14 +1,16 @@
 import { Component, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
+import { IconComponent } from '../../icons/icon.component';
 
 export interface TabItem {
   id: string;
   label: string;
+  badge?: 'complete' | 'pending';
 }
 
 @Component({
   selector: 'app-tabs',
-  imports: [TranslatePipe],
+  imports: [TranslatePipe, IconComponent],
   templateUrl: './tabs.component.html',
   styleUrl: './tabs.component.scss',
 })

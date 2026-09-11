@@ -18,7 +18,7 @@ function buildComponent(activeTabId = 'ranking') {
   fixture.componentRef.setInput('tabs', TABS);
   fixture.componentRef.setInput('activeTabId', activeTabId);
   fixture.detectChanges();
-  return { component: fixture.componentInstance };
+  return { component: fixture.componentInstance, fixture };
 }
 
 describe('TabsComponent', () => {
@@ -43,6 +43,32 @@ describe('TabsComponent', () => {
       component['onTabClick']('ranking');
 
       expect(emitted).toBeUndefined();
+    });
+  });
+
+  describe('badge', () => {
+    it('does not render a badge when the tab has none', () => {
+      const { fixture } = buildComponent();
+      expect(fixture.nativeElement.querySelector('.tabs__badge')).toBeFalsy();
+    });
+
+    it('renders a badge when the tab has one', () => {
+      TestBed.configureTestingModule({
+        imports: [TabsComponent],
+        providers: [provideTranslateService({ lang: 'es' })],
+      }).compileComponents();
+      const fixture = TestBed.createComponent(TabsComponent);
+      fixture.componentRef.setInput('tabs', [
+        { id: 'a', label: 'A', badge: 'complete' },
+        { id: 'b', label: 'B', badge: 'pending' },
+      ] as TabItem[]);
+      fixture.componentRef.setInput('activeTabId', 'a');
+      fixture.detectChanges();
+
+      const badges = fixture.nativeElement.querySelectorAll('.tabs__badge');
+      expect(badges.length).toBe(2);
+      expect(badges[0].classList).toContain('tabs__badge--complete');
+      expect(badges[1].classList).toContain('tabs__badge--pending');
     });
   });
 });
