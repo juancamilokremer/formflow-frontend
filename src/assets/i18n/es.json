@@ -230,6 +230,7 @@
     "preview": "Vista previa",
     "publish": "Publicar",
     "archive": "Archivar",
+    "auto_publish_hint": "Se publicará automáticamente al lanzar la convocatoria",
     "form_name": "Nombre del formulario",
     "add_section": "Agregar sección",
     "section_default_name": "Nueva sección",

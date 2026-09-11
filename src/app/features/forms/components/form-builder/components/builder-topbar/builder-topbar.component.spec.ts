@@ -125,6 +125,35 @@ describe('BuilderTopbarComponent', () => {
     expect(emitted).toBe(true);
   });
 
+  describe('publish button vs. auto-publish hint', () => {
+    it('shows the publish button for a standalone draft form (no convocatoriaId)', () => {
+      const button = fixture.nativeElement.querySelector('.topbar__actions app-button:last-child');
+      const hint = fixture.nativeElement.querySelector('.topbar__auto-publish-hint');
+      expect(button).toBeTruthy();
+      expect(hint).toBeFalsy();
+    });
+
+    it('shows the auto-publish hint instead of the publish button for a draft form inside a convocatoria', () => {
+      fixture.componentRef.setInput('convocatoriaId', 'conv1');
+      fixture.detectChanges();
+
+      const hint = fixture.nativeElement.querySelector('.topbar__auto-publish-hint');
+      expect(hint).toBeTruthy();
+      expect(hint.textContent).toContain('builder.auto_publish_hint');
+    });
+
+    it('still shows the archive button for an ACTIVE form inside a convocatoria', () => {
+      fixture.componentRef.setInput('convocatoriaId', 'conv1');
+      fixture.componentRef.setInput('form', { ...MOCK_FORM, status: 'ACTIVE' });
+      fixture.detectChanges();
+
+      const button = fixture.nativeElement.querySelector('.topbar__actions app-button:last-child');
+      const hint = fixture.nativeElement.querySelector('.topbar__auto-publish-hint');
+      expect(button).toBeTruthy();
+      expect(hint).toBeFalsy();
+    });
+  });
+
   describe('form time limit', () => {
     it('onTimeLimitBlur converts minutes to seconds and emits', () => {
       let emitted: number | null | undefined;
