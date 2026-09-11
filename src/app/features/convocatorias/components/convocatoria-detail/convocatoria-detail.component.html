@@ -41,42 +41,42 @@
 
     @if (isDraft()) {
       <div class="cd__draft">
-        <app-card class="cd__section">
-          <h2 class="cd__section-title">{{ 'convocatorias.detail.form.title' | translate }}</h2>
-          <app-convocatoria-form-section
-            [convocatoriaId]="conv.id"
-            [convocatoriaName]="conv.name"
-            [processType]="conv.type"
-            [convocatoriaForms]="conv.forms"
-            [forms]="forms()"
-            (formAdded)="onFormAdded($event)"
-            (formUpdated)="onFormUpdated($event)"
-            (formRemoved)="onFormRemoved($event)"
-            (formsReordered)="onFormsReordered($event)" />
-        </app-card>
+        <app-tabs [tabs]="draftTabs()" [activeTabId]="draftActiveTab()" (tabChange)="setDraftTab($event)" />
 
         <app-card class="cd__section">
-          <h2 class="cd__section-title">{{ 'convocatorias.detail.thresholds.title' | translate }}</h2>
-          <app-convocatoria-thresholds-section
-            [aptoMin]="aptoMin()"
-            [revisarMin]="revisarMin()"
-            (thresholdsChanged)="onThresholdsChanged($event)" />
-        </app-card>
-
-        <app-card class="cd__section">
-          <h2 class="cd__section-title">{{ 'convocatorias.detail.candidates.title' | translate }}</h2>
-          <app-convocatoria-candidates-section
-            [convocatoriaId]="conv.id"
-            [candidates]="conv.candidates"
-            (candidateAdded)="onCandidateAdded($event)"
-            (candidatesImported)="onCandidatesImported()" />
-        </app-card>
-
-        <app-card class="cd__section">
-          <app-convocatoria-launch-bar
-            [convocatoriaId]="conv.id"
-            [hasCandidates]="conv.candidates.length > 0"
-            (launched)="onLaunched($event)" />
+          @switch (draftActiveTab()) {
+            @case ('formularios') {
+              <app-convocatoria-form-section
+                [convocatoriaId]="conv.id"
+                [convocatoriaName]="conv.name"
+                [processType]="conv.type"
+                [convocatoriaForms]="conv.forms"
+                [forms]="forms()"
+                (formAdded)="onFormAdded($event)"
+                (formUpdated)="onFormUpdated($event)"
+                (formRemoved)="onFormRemoved($event)"
+                (formsReordered)="onFormsReordered($event)" />
+            }
+            @case ('umbrales') {
+              <app-convocatoria-thresholds-section
+                [aptoMin]="aptoMin()"
+                [revisarMin]="revisarMin()"
+                (thresholdsChanged)="onThresholdsChanged($event)" />
+            }
+            @case ('candidatos') {
+              <app-convocatoria-candidates-section
+                [convocatoriaId]="conv.id"
+                [candidates]="conv.candidates"
+                (candidateAdded)="onCandidateAdded($event)"
+                (candidatesImported)="onCandidatesImported()" />
+            }
+            @case ('lanzar') {
+              <app-convocatoria-launch-bar
+                [convocatoriaId]="conv.id"
+                [hasCandidates]="conv.candidates.length > 0"
+                (launched)="onLaunched($event)" />
+            }
+          }
         </app-card>
       </div>
     } @else {

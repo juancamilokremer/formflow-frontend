@@ -5,6 +5,9 @@
       [attr.aria-selected]="tab.id === activeTabId()"
       (click)="onTabClick(tab.id)">
       {{ tab.label | translate }}
+      @if (tab.badge) {
+        <span class="tabs__badge tabs__badge--{{ tab.badge }}">{{ tab.badge === 'complete' ? '✓' : '⚠' }}</span>
+      }
     </button>
   }
 </div>

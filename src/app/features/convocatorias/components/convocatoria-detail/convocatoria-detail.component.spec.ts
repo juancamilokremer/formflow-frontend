@@ -136,6 +136,62 @@ describe('ConvocatoriaDetailComponent', () => {
     });
   });
 
+  describe('draftTabs', () => {
+    it('marks formularios as pending with no forms', () => {
+      const { component } = buildComponent();
+      const formsTab = component['draftTabs']().find((t) => t.id === 'formularios');
+      expect(formsTab?.badge).toBe('pending');
+    });
+
+    it('marks formularios as pending when weights do not sum to 100', () => {
+      const { component } = buildComponent({
+        convocatoria: { ...DRAFT_CONVOCATORIA, forms: [{ ...CONV_FORM_1, weight: 60 }] },
+      });
+      const formsTab = component['draftTabs']().find((t) => t.id === 'formularios');
+      expect(formsTab?.badge).toBe('pending');
+    });
+
+    it('marks formularios as complete with at least one form and weights summing to 100', () => {
+      const { component } = buildComponent({
+        convocatoria: { ...DRAFT_CONVOCATORIA, forms: [CONV_FORM_1] },
+      });
+      const formsTab = component['draftTabs']().find((t) => t.id === 'formularios');
+      expect(formsTab?.badge).toBe('complete');
+    });
+
+    it('marks candidatos as pending with no candidates and complete with at least one', () => {
+      const { component } = buildComponent();
+      expect(component['draftTabs']().find((t) => t.id === 'candidatos')?.badge).toBe('pending');
+
+      component['onCandidateAdded']({
+        id: 'cand1', convocatoriaId: 'c1', name: 'Ana', email: 'ana@x.com', token: 't',
+        status: 'INVITED', responseId: null, scores: null, invitedAt: null, respondedAt: null, createdAt: '',
+      });
+
+      expect(component['draftTabs']().find((t) => t.id === 'candidatos')?.badge).toBe('complete');
+    });
+
+    it('umbrales and lanzar have no badge', () => {
+      const { component } = buildComponent();
+      expect(component['draftTabs']().find((t) => t.id === 'umbrales')?.badge).toBeUndefined();
+      expect(component['draftTabs']().find((t) => t.id === 'lanzar')?.badge).toBeUndefined();
+    });
+  });
+
+  describe('setDraftTab', () => {
+    it('defaults to formularios and switches on demand', () => {
+      const { component } = buildComponent();
+
+      expect(component['draftActiveTab']()).toBe('formularios');
+
+      component['setDraftTab']('candidatos');
+      expect(component['draftActiveTab']()).toBe('candidatos');
+
+      component['setDraftTab']('lanzar');
+      expect(component['draftActiveTab']()).toBe('lanzar');
+    });
+  });
+
   it('backToListPath points at the convocatorias list', () => {
     const { component } = buildComponent();
     expect(component['backToListPath']).toEqual(['/', 'convocatorias']);

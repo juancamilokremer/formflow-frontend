@@ -4,6 +4,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 export interface TabItem {
   id: string;
   label: string;
+  badge?: 'complete' | 'pending';
 }
 
 @Component({

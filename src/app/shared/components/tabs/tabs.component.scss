@@ -25,4 +25,12 @@
       border-bottom-color: var(--ff-primary);
     }
   }
+
+  &__badge {
+    margin-left: 5px;
+    font-size: 12px;
+
+    &--complete { color: var(--ff-success, #15803d); }
+    &--pending  { color: var(--ff-warning, #b45309); }
+  }
 }
