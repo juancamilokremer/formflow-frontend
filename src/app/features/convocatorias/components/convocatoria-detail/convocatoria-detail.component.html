@@ -80,12 +80,19 @@
         </app-card>
       </div>
     } @else {
-      <app-tabs [tabs]="detailTabs" [activeTabId]="activeTab()" (tabChange)="setActiveTab($event)" />
+      <app-tabs [tabs]="detailTabs()" [activeTabId]="effectiveTab()" (tabChange)="setActiveTab($event)" />
 
       <app-card class="cd__section">
-        @switch (activeTab()) {
+        @switch (effectiveTab()) {
           @case ('ranking') {
             <app-convocatoria-ranking-section [convocatoriaId]="conv.id" />
+          }
+          @case ('respuestas') {
+            @if (conv.forms[0]; as surveyForm) {
+              <app-convocatoria-responses-section
+                [formId]="surveyForm.formId"
+                [candidates]="conv.candidates" />
+            }
           }
           @case ('stats') {
             <app-convocatoria-stats-section [convocatoriaId]="conv.id" />
@@ -100,7 +107,11 @@
               [processType]="conv.type"
               [convocatoriaForms]="conv.forms"
               [forms]="forms()"
-              [readonly]="true" />
+              [readonly]="!isSimpleMode()"
+              (formAdded)="onFormAdded($event)"
+              (formUpdated)="onFormUpdated($event)"
+              (formRemoved)="onFormRemoved($event)"
+              (formsReordered)="onFormsReordered($event)" />
           }
         }
       </app-card>

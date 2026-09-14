@@ -6,6 +6,7 @@
           [convocatoriaId]="convocatoriaId()"
           [convocatoriaForm]="cf"
           [formName]="formName(cf)"
+          [processType]="processType()"
           [readonly]="true" />
       }
     </div>
@@ -17,6 +18,7 @@
           [convocatoriaId]="convocatoriaId()"
           [convocatoriaForm]="cf"
           [formName]="formName(cf)"
+          [processType]="processType()"
           (weightPreview)="onWeightPreview(cf.id, $event)"
           (formUpdated)="onCardUpdated($event)"
           (formRemoved)="onCardRemoved($event)" />
@@ -30,7 +32,7 @@
   }
 }
 
-@if (!readonly()) {
+@if (!readonly() && (!isSimpleMode() || convocatoriaForms().length === 0)) {
   <div class="cfs__cards">
     <div class="cfs__card">
       <app-icon name="file-plus" [size]="20" />

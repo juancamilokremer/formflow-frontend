@@ -6,7 +6,7 @@ import { ConvocatoriaFormCardComponent } from './convocatoria-form-card.componen
 import { FormsService } from '../../../../../../../forms/services/forms.service';
 import { CategoryService } from '../../../../../../../../core/services/category.service';
 import { ConvocatoriaService } from '../../../../../../services/convocatoria.service';
-import { ConvocatoriaForm } from '../../../../../../models/convocatoria.model';
+import { ConvocatoriaForm, ProcessType } from '../../../../../../models/convocatoria.model';
 import { FormDetail, FormSection } from '../../../../../../../forms/models/form.model';
 import { Category } from '../../../../../../../../core/models/category.model';
 
@@ -33,7 +33,7 @@ const MOCK_CATEGORIES: Category[] = [
 
 function buildComponent(overrides: {
   updateFormImpl?: unknown; removeFormImpl?: unknown; getByIdImpl?: unknown;
-  convocatoriaForm?: ConvocatoriaForm;
+  convocatoriaForm?: ConvocatoriaForm; processType?: ProcessType;
 } = {}) {
   const mockConvocatoriaService = {
     updateForm: overrides.updateFormImpl ?? vi.fn().mockReturnValue(of({ ...CONV_FORM, weight: 60 })),
@@ -63,6 +63,7 @@ function buildComponent(overrides: {
   fixture.componentRef.setInput('convocatoriaId', 'c1');
   fixture.componentRef.setInput('convocatoriaForm', overrides.convocatoriaForm ?? CONV_FORM);
   fixture.componentRef.setInput('formName', 'Evaluación técnica');
+  fixture.componentRef.setInput('processType', overrides.processType ?? 'CANDIDATES');
   fixture.detectChanges();
   return { fixture, component: fixture.componentInstance, mockConvocatoriaService, mockFormsService, mockRouter };
 }
@@ -200,6 +201,25 @@ describe('ConvocatoriaFormCardComponent', () => {
       const { fixture, component } = buildComponent();
       fixture.componentRef.setInput('readonly', true);
       expect(component['readonly']()).toBe(true);
+    });
+  });
+
+  describe('preview button visibility', () => {
+    it('is hidden when not readonly and not a REGISTRATION (survey) form', () => {
+      const { fixture } = buildComponent({ processType: 'CANDIDATES' });
+      expect(fixture.nativeElement.querySelector('.cfc__preview-row')).toBeNull();
+    });
+
+    it('is shown for a REGISTRATION form even when not readonly', () => {
+      const { fixture } = buildComponent({ processType: 'REGISTRATION' });
+      expect(fixture.nativeElement.querySelector('.cfc__preview-row')).not.toBeNull();
+    });
+
+    it('is shown when readonly regardless of processType', () => {
+      const { fixture } = buildComponent({ processType: 'CANDIDATES' });
+      fixture.componentRef.setInput('readonly', true);
+      fixture.detectChanges();
+      expect(fixture.nativeElement.querySelector('.cfc__preview-row')).not.toBeNull();
     });
   });
 

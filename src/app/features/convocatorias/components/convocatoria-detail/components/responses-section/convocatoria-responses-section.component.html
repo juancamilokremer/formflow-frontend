@@ -1,0 +1,9 @@
+<div class="crs__kpis">
+  <app-stat-card [label]="'convocatorias.detail.responses.invited' | translate" [value]="invitedCount()" />
+  <app-stat-card [label]="'convocatorias.detail.responses.responded' | translate" [value]="respondedCount()" color="success" />
+  <app-stat-card [label]="'convocatorias.detail.responses.rate' | translate" [value]="responseRatePct() + '%'" color="info" />
+</div>
+
+<app-individual-responses [formId]="formId()" (responseSelected)="onResponseSelected($event)" />
+
+<app-response-detail-drawer [formId]="formId()" [responseId]="selectedResponseId()" (closed)="closeDrawer()" />

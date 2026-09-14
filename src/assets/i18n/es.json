@@ -592,6 +592,7 @@
       "closes_on": "Cierra: {{date}}",
       "tabs": {
         "ranking": "Ranking",
+        "respuestas": "Respuestas",
         "stats": "Estadísticas",
         "per_question": "Por pregunta",
         "formularios": "Formularios"
@@ -600,7 +601,13 @@
         "formularios": "Formularios",
         "umbrales": "Umbrales",
         "candidatos": "Candidatos",
+        "destinatarios": "Destinatarios",
         "lanzar": "Lanzar"
+      },
+      "responses": {
+        "invited": "Invitados",
+        "responded": "Respondieron",
+        "rate": "Tasa de respuesta"
       },
       "ranking": {
         "col_candidate": "Candidato",

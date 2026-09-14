@@ -57,6 +57,7 @@ export class ConvocatoriaFormSectionComponent {
     return this.convocatoriaForms().reduce((sum, convocatoriaForm) => sum + (live[convocatoriaForm.id] ?? convocatoriaForm.weight), 0);
   });
   protected readonly sumValid = computed(() => this.totalWeight() === 100);
+  protected readonly isSimpleMode = computed(() => this.processType() === 'REGISTRATION');
 
   protected formName(convocatoriaForm: ConvocatoriaForm): string {
     return this.forms().find((form) => form.id === convocatoriaForm.formId)?.name ?? '';

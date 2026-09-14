@@ -19,6 +19,10 @@ const CONV_FORM_1: ConvocatoriaForm = {
   id: 'cf1', formId: 'f1', weight: 100, categoryWeights: [], minScore: null, position: 0,
 };
 
+const SURVEY_CONVOCATORIA: ConvocatoriaDetail = {
+  ...DRAFT_CONVOCATORIA, type: 'REGISTRATION',
+};
+
 const FORM_1: Form = {
   id: 'f1', name: 'Evaluación técnica', description: null, type: 'CANDIDATES', status: 'ACTIVE',
   version: 1, sectionCount: 2, responseCount: 0, lastResponseAt: null, createdAt: '', updatedAt: '',
@@ -48,6 +52,8 @@ function buildComponent(options: {
   const mockFormsService = {
     getAll: vi.fn().mockReturnValue(of([] as Form[])),
     getById: vi.fn().mockReturnValue(of(FORM_1_DETAIL)),
+    getResponses: vi.fn().mockReturnValue(of({ items: [], totalElements: 0, totalPages: 0, page: 0, size: 20 })),
+    getResponseDetail: vi.fn().mockReturnValue(of(null)),
   };
   const mockCategoryService = {
     getAll: vi.fn().mockReturnValue(of([])),
@@ -189,6 +195,44 @@ describe('ConvocatoriaDetailComponent', () => {
 
       component['setDraftTab']('lanzar');
       expect(component['draftActiveTab']()).toBe('lanzar');
+    });
+  });
+
+  describe('simple mode (REGISTRATION surveys)', () => {
+    it('detailTabs replaces ranking with respuestas and omits stats', () => {
+      const { component } = buildComponent({
+        convocatoria: { ...SURVEY_CONVOCATORIA, status: 'ACTIVE', forms: [CONV_FORM_1] },
+      });
+      const ids = component['detailTabs']().map((t) => t.id);
+      expect(ids).toEqual(['respuestas', 'per-question', 'formularios']);
+    });
+
+    it('leaves detailTabs unchanged for non-survey types', () => {
+      const { component } = buildComponent({ convocatoria: { ...DRAFT_CONVOCATORIA, status: 'ACTIVE' } });
+      const ids = component['detailTabs']().map((t) => t.id);
+      expect(ids).toEqual(['ranking', 'stats', 'per-question', 'formularios']);
+    });
+
+    it('effectiveTab clamps the ranking fallback to respuestas once a survey loads', () => {
+      const { component } = buildComponent({
+        convocatoria: { ...SURVEY_CONVOCATORIA, status: 'ACTIVE', forms: [CONV_FORM_1] },
+      });
+      expect(component['activeTab']()).toBe('ranking');
+      expect(component['effectiveTab']()).toBe('respuestas');
+    });
+
+    it('draftTabs omits umbrales and relabels candidatos to destinatarios', () => {
+      const { component } = buildComponent({ convocatoria: SURVEY_CONVOCATORIA });
+      const tabs = component['draftTabs']();
+      expect(tabs.find((t) => t.id === 'umbrales')).toBeUndefined();
+      expect(tabs.find((t) => t.id === 'candidatos')?.label).toBe('convocatorias.detail.draft_tabs.destinatarios');
+    });
+
+    it('draftTabs marks formularios complete with one form regardless of weight', () => {
+      const { component } = buildComponent({
+        convocatoria: { ...SURVEY_CONVOCATORIA, forms: [{ ...CONV_FORM_1, weight: 40 }] },
+      });
+      expect(component['draftTabs']().find((t) => t.id === 'formularios')?.badge).toBe('complete');
     });
   });
 
