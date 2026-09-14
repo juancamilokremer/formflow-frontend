@@ -3,11 +3,12 @@ import { QuestionStats } from '../../forms/models/form-stats.model';
 import { AnswerDetail, CategoryScoreDetail } from '../../forms/models/form-response.model';
 
 export type ConvocatoriaStatus = 'DRAFT' | 'ACTIVE' | 'CLOSED';
-export type ProcessType = 'CANDIDATES' | 'DIAGNOSTIC';
+export type ProcessType = 'CANDIDATES' | 'DIAGNOSTIC' | 'REGISTRATION';
 
 export const PROCESS_TYPE_LABEL_KEYS: Record<ProcessType, string> = {
   CANDIDATES: 'convocatorias.create.type_candidates',
   DIAGNOSTIC: 'convocatorias.create.type_diagnostic',
+  REGISTRATION: 'encuestas.type_pill',
 };
 
 export interface CategoryWeight {
@@ -110,6 +111,7 @@ export interface ImportResponse {
 export interface ConvocatoriaSummary {
   id: string;
   name: string;
+  type: ProcessType;
   status: ConvocatoriaStatus;
   candidateCount: number;
   respondedCount: number;

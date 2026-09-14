@@ -1,8 +1,8 @@
 import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
-import { convocatoriaDetailPath } from '../../../../core/constants/route.constants';
+import { convocatoriaDetailPath, encuestaDetailPath } from '../../../../core/constants/route.constants';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
 import { CardComponent } from '../../../../shared/components/card/card.component';
 import { PageHeaderComponent } from '../../../../shared/components/page-header/page-header.component';
@@ -20,9 +20,13 @@ export class ConvocatoriaCreateComponent {
   private readonly convocatoriaService = inject(ConvocatoriaService);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly route = inject(ActivatedRoute);
+
+  protected readonly isSurveyMode = this.route.snapshot.data['fixedType'] === 'REGISTRATION';
+  protected readonly copyPrefix = this.isSurveyMode ? 'encuestas.create' : 'convocatorias.create';
 
   protected readonly name = signal('');
-  protected readonly processType = signal<ProcessType>('CANDIDATES');
+  protected readonly processType = signal<ProcessType>(this.isSurveyMode ? 'REGISTRATION' : 'CANDIDATES');
   protected readonly creating = signal(false);
   protected readonly createError = signal(false);
 
@@ -41,7 +45,8 @@ export class ConvocatoriaCreateComponent {
     this.convocatoriaService.create({ name: this.name().trim(), type: this.processType() })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (detail) => this.router.navigate(convocatoriaDetailPath(detail.id)),
+        next: (detail) => this.router.navigate(
+          this.isSurveyMode ? encuestaDetailPath(detail.id) : convocatoriaDetailPath(detail.id)),
         error: () => {
           this.creating.set(false);
           this.createError.set(true);

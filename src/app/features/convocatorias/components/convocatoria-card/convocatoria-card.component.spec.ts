@@ -6,6 +6,7 @@ import { ConvocatoriaSummary } from '../../models/convocatoria.model';
 const base: ConvocatoriaSummary = {
   id: 'conv-1',
   name: 'Analista de RRHH',
+  type: 'CANDIDATES',
   status: 'ACTIVE',
   candidateCount: 10,
   respondedCount: 7,

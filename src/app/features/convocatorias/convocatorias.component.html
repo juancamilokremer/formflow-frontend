@@ -1,12 +1,12 @@
 <div class="conv">
 
   <app-page-header
-    [title]="'convocatorias.title' | translate"
-    [subtitle]="'convocatorias.subtitle' | translate"
+    [title]="(copyPrefix + '.title') | translate"
+    [subtitle]="(copyPrefix + '.subtitle') | translate"
   >
     <app-button (click)="navigateToNew()">
       <app-icon name="plus" [size]="16" />
-      {{ 'convocatorias.new_button' | translate }}
+      {{ (copyPrefix + '.new_button') | translate }}
     </app-button>
   </app-page-header>
 
@@ -22,7 +22,7 @@
       <div class="conv__center">
         <app-empty-state
           icon="alert-circle"
-          [title]="'convocatorias.error.load' | translate" />
+          [title]="(copyPrefix + '.error.load') | translate" />
       </div>
     }
 
@@ -59,8 +59,8 @@
         } @empty {
           <app-empty-state
             icon="inbox"
-            [title]="'convocatorias.empty.title' | translate"
-            [subtitle]="'convocatorias.empty.subtitle' | translate" />
+            [title]="(copyPrefix + '.empty.title') | translate"
+            [subtitle]="(copyPrefix + '.empty.subtitle') | translate" />
         }
       </div>
     }

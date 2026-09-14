@@ -30,6 +30,9 @@ const PROCESS_TYPE_OPTIONS: ProcessTypeOption[] = [
 export class BasicInfoFormComponent {
   readonly name = input.required<string>();
   readonly processType = input.required<ProcessType>();
+  readonly lockType = input(false);
+  readonly nameLabelKey = input('convocatorias.create.name_label');
+  readonly namePlaceholderKey = input('convocatorias.create.name_placeholder');
   readonly changed = output<{ name: string; processType: ProcessType }>();
 
   protected readonly processTypeOptions = PROCESS_TYPE_OPTIONS;

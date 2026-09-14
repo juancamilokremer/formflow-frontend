@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { provideTranslateService } from '@ngx-translate/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { ConvocatoriaCreateComponent } from './convocatoria-create.component';
 import { ConvocatoriaService } from '../../services/convocatoria.service';
@@ -12,7 +12,7 @@ const MOCK_CONVOCATORIA: ConvocatoriaDetail = {
   startDate: null, endDate: null, createdAt: '', updatedAt: '', candidates: [], forms: [],
 };
 
-function buildComponent(createImpl?: ReturnType<typeof vi.fn>) {
+function buildComponent(createImpl?: ReturnType<typeof vi.fn>, routeData: Record<string, unknown> = {}) {
   const mockConvocatoriaService = { create: createImpl ?? vi.fn().mockReturnValue(of(MOCK_CONVOCATORIA)) };
   const mockRouter = { navigate: vi.fn() };
 
@@ -22,6 +22,7 @@ function buildComponent(createImpl?: ReturnType<typeof vi.fn>) {
       provideTranslateService({ lang: 'es' }),
       { provide: ConvocatoriaService, useValue: mockConvocatoriaService },
       { provide: Router, useValue: mockRouter },
+      { provide: ActivatedRoute, useValue: { snapshot: { data: routeData } } },
     ],
   }).compileComponents();
 
@@ -64,5 +65,24 @@ describe('ConvocatoriaCreateComponent', () => {
 
     expect(component['createError']()).toBe(true);
     expect(component['creating']()).toBe(false);
+  });
+
+  describe('survey mode (entered via /encuestas/new)', () => {
+    it('defaults processType to REGISTRATION and locks it', () => {
+      const { component } = buildComponent(undefined, { fixedType: 'REGISTRATION' });
+      expect(component['isSurveyMode']).toBe(true);
+      expect(component['processType']()).toBe('REGISTRATION');
+    });
+
+    it('navigates to the encuesta detail route after creating', () => {
+      const mockCreate = vi.fn().mockReturnValue(of({ ...MOCK_CONVOCATORIA, type: 'REGISTRATION' as const }));
+      const { component, mockRouter } = buildComponent(mockCreate, { fixedType: 'REGISTRATION' });
+      component['onBasicInfoChanged']({ name: 'Clima laboral', processType: 'REGISTRATION' });
+
+      component['submit']();
+
+      expect(mockCreate).toHaveBeenCalledWith({ name: 'Clima laboral', type: 'REGISTRATION' });
+      expect(mockRouter.navigate).toHaveBeenCalledWith(['/', 'encuestas', 'c1']);
+    });
   });
 });

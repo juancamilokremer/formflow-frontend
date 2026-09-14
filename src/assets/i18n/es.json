@@ -101,6 +101,7 @@
       "forms": "Formularios",
       "categories": "Categorías",
       "convocatorias": "Convocatorias",
+      "encuestas": "Encuestas",
       "users": "Usuarios",
       "settings": "Configuración",
       "billing": "Facturación",
@@ -703,6 +704,26 @@
       "error": {
         "load": "No se pudo cargar la convocatoria."
       }
+    }
+  },
+  "encuestas": {
+    "title": "Encuestas",
+    "subtitle": "Recolecta respuestas de tu equipo o de terceros, sin scoring ni ranking",
+    "type_pill": "Encuesta",
+    "new_button": "Nueva encuesta",
+    "empty": {
+      "title": "No tienes encuestas aún",
+      "subtitle": "Crea tu primera encuesta para recolectar respuestas de tu equipo."
+    },
+    "error": {
+      "load": "No se pudo cargar la lista de encuestas."
+    },
+    "create": {
+      "title": "Nueva encuesta",
+      "subtitle": "Empieza con el nombre — el resto se configura después.",
+      "name_label": "Nombre de la encuesta",
+      "name_placeholder": "Ej: Encuesta de clima laboral 2026",
+      "error": "No se pudo crear la encuesta. Intenta de nuevo."
     }
   },
   "errors": {
