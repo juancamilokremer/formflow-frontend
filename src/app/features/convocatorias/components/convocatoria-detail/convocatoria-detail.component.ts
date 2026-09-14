@@ -4,7 +4,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Subject, debounceTime, switchMap } from 'rxjs';
-import { RouteConstants, convocatoriasListPath } from '../../../../core/constants/route.constants';
+import { RouteConstants, convocatoriasListPath, encuestasListPath } from '../../../../core/constants/route.constants';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
 import { CardComponent } from '../../../../shared/components/card/card.component';
 import { PageHeaderComponent } from '../../../../shared/components/page-header/page-header.component';
@@ -73,7 +73,13 @@ export class ConvocatoriaDetailComponent {
 
   protected readonly activeTab = signal<ConvocatoriaDetailTab>(this.resolveInitialTab());
   protected readonly processTypeLabels = PROCESS_TYPE_LABEL_KEYS;
-  protected readonly backToListPath = convocatoriasListPath();
+
+  // Which list/nav item brought us here — derived from the route, not from the loaded
+  // convocatoria's type, so it's correct even before the load resolves or if it fails
+  // (the "back" link and load-error copy need to work in that state too).
+  protected readonly isEncuestaRoute = this.route.snapshot.data['kind'] === 'encuestas';
+  protected readonly backToListPath = this.isEncuestaRoute ? encuestasListPath() : convocatoriasListPath();
+  protected readonly backToListLabelKey = this.isEncuestaRoute ? 'shell.nav.encuestas' : 'shell.nav.convocatorias';
 
   protected readonly isDraft = computed(() => this.convocatoria()?.status === 'DRAFT');
   protected readonly isSimpleMode = computed(() => this.convocatoria()?.type === 'REGISTRATION');

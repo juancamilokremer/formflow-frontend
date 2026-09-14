@@ -36,6 +36,7 @@ function buildComponent(options: {
   getByIdImpl?: ReturnType<typeof vi.fn>;
   reorderFormsImpl?: ReturnType<typeof vi.fn>;
   queryParams?: Record<string, string>;
+  routeData?: Record<string, unknown>;
 } = {}) {
   const initial = options.convocatoria ?? DRAFT_CONVOCATORIA;
   const mockConvocatoriaService = {
@@ -75,6 +76,7 @@ function buildComponent(options: {
           snapshot: {
             paramMap: { get: () => 'c1' },
             queryParamMap: { get: (key: string) => options.queryParams?.[key] ?? null },
+            data: options.routeData ?? {},
           },
         },
       },
@@ -236,9 +238,16 @@ describe('ConvocatoriaDetailComponent', () => {
     });
   });
 
-  it('backToListPath points at the convocatorias list', () => {
+  it('backToListPath points at the convocatorias list by default', () => {
     const { component } = buildComponent();
     expect(component['backToListPath']).toEqual(['/', 'convocatorias']);
+    expect(component['backToListLabelKey']).toBe('shell.nav.convocatorias');
+  });
+
+  it('backToListPath points at the encuestas list when entered via /encuestas/:id', () => {
+    const { component } = buildComponent({ routeData: { kind: 'encuestas' } });
+    expect(component['backToListPath']).toEqual(['/', 'encuestas']);
+    expect(component['backToListLabelKey']).toBe('shell.nav.encuestas');
   });
 
   it('debounces thresholds changes into a single update() call with name + scoringConfig only', () => {

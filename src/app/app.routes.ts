@@ -142,7 +142,7 @@ export const routes: Routes = [
       },
       {
         path: `${RouteConstants.ENCUESTAS}/:id`,
-        data: { titleKey: 'convocatorias.detail.title' },
+        data: { titleKey: 'encuestas.detail_title', kind: 'encuestas' },
         loadComponent: () =>
           import(
             './features/convocatorias/components/convocatoria-detail/convocatoria-detail.component'
