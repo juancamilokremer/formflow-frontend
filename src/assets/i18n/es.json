@@ -718,6 +718,7 @@
     "subtitle": "Recolecta respuestas de tu equipo o de terceros, sin scoring ni ranking",
     "type_pill": "Encuesta",
     "new_button": "Nueva encuesta",
+    "detail_title": "Encuesta",
     "empty": {
       "title": "No tienes encuestas aún",
       "subtitle": "Crea tu primera encuesta para recolectar respuestas de tu equipo."
@@ -731,6 +732,15 @@
       "name_label": "Nombre de la encuesta",
       "name_placeholder": "Ej: Encuesta de clima laboral 2026",
       "error": "No se pudo crear la encuesta. Intenta de nuevo."
+    },
+    "detail": {
+      "error": {
+        "load": "No se pudo cargar la encuesta."
+      },
+      "name_label": "Nombre de la encuesta",
+      "delete_confirm": {
+        "message": "Se eliminará esta encuesta y su configuración. Esta acción no se puede deshacer."
+      }
     }
   },
   "errors": {
