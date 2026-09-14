@@ -1,18 +1,21 @@
 <div class="cc">
   <app-page-header
-    [title]="'convocatorias.create.title' | translate"
-    [subtitle]="'convocatorias.create.subtitle' | translate"
+    [title]="(copyPrefix + '.title') | translate"
+    [subtitle]="(copyPrefix + '.subtitle') | translate"
   />
 
   <app-card class="cc__body">
     <app-basic-info-form
       [name]="name()"
       [processType]="processType()"
+      [lockType]="isSurveyMode"
+      [nameLabelKey]="copyPrefix + '.name_label'"
+      [namePlaceholderKey]="copyPrefix + '.name_placeholder'"
       (changed)="onBasicInfoChanged($event)" />
   </app-card>
 
   @if (createError()) {
-    <p class="cc__error">{{ 'convocatorias.create.error' | translate }}</p>
+    <p class="cc__error">{{ (copyPrefix + '.error') | translate }}</p>
   }
 
   <div class="cc__nav">

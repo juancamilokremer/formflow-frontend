@@ -123,6 +123,32 @@ export const routes: Routes = [
           ).then((m) => m.ConvocatoriaDetailComponent),
       },
       {
+        path: RouteConstants.ENCUESTAS,
+        data: { titleKey: 'shell.nav.encuestas', kind: 'encuestas' },
+        loadComponent: () =>
+          import('./features/convocatorias/convocatorias.component').then(
+            (m) => m.ConvocatoriasComponent,
+          ),
+      },
+      {
+        // Must stay before `encuestas/:id` below or that route will swallow this path
+        // as an :id param.
+        path: `${RouteConstants.ENCUESTAS}/${RouteConstants.CONVOCATORIA_NEW}`,
+        data: { titleKey: 'encuestas.create.title', fixedType: 'REGISTRATION' },
+        loadComponent: () =>
+          import(
+            './features/convocatorias/components/convocatoria-create/convocatoria-create.component'
+          ).then((m) => m.ConvocatoriaCreateComponent),
+      },
+      {
+        path: `${RouteConstants.ENCUESTAS}/:id`,
+        data: { titleKey: 'convocatorias.detail.title' },
+        loadComponent: () =>
+          import(
+            './features/convocatorias/components/convocatoria-detail/convocatoria-detail.component'
+          ).then((m) => m.ConvocatoriaDetailComponent),
+      },
+      {
         path: RouteConstants.BILLING,
         data: { titleKey: 'shell.nav.billing' },
         loadComponent: () =>

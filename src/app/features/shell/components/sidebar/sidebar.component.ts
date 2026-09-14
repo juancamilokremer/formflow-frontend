@@ -19,6 +19,7 @@ const NAV_ITEMS: NavItem[] = [
   { labelKey: 'shell.nav.forms', icon: 'file-text', route: RouteConstants.FORMS },
   { labelKey: 'shell.nav.categories', icon: 'tag', route: RouteConstants.CATEGORIES },
   { labelKey: 'shell.nav.convocatorias', icon: 'megaphone', route: RouteConstants.CONVOCATORIAS },
+  { labelKey: 'shell.nav.encuestas', icon: 'clipboard', route: RouteConstants.ENCUESTAS },
   { labelKey: 'shell.nav.users', icon: 'users', route: RouteConstants.USERS },
   { labelKey: 'shell.nav.settings', icon: 'settings', route: RouteConstants.SETTINGS },
   { labelKey: 'shell.nav.billing', icon: 'credit-card', route: RouteConstants.BILLING },

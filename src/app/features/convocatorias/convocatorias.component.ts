@@ -1,8 +1,13 @@
 import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
-import { RouteConstants, convocatoriaNewPath } from '../../core/constants/route.constants';
+import {
+  convocatoriaDetailPath,
+  convocatoriaNewPath,
+  encuestaDetailPath,
+  encuestaNewPath,
+} from '../../core/constants/route.constants';
 import { ButtonComponent } from '../../shared/components/button/button.component';
 import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 import { IconComponent } from '../../shared/icons/icon.component';
@@ -35,6 +40,10 @@ export class ConvocatoriasComponent {
   private readonly svc        = inject(ConvocatoriaService);
   private readonly router     = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly route      = inject(ActivatedRoute);
+
+  protected readonly kind = (this.route.snapshot.data['kind'] as 'convocatorias' | 'encuestas') ?? 'convocatorias';
+  protected readonly copyPrefix = this.kind === 'encuestas' ? 'encuestas' : 'convocatorias';
 
   protected readonly view           = signal<ConvocatoriaListView>('loading');
   protected readonly convocatorias  = signal<ConvocatoriaSummary[]>([]);
@@ -42,16 +51,23 @@ export class ConvocatoriasComponent {
   protected readonly pendingAction  = signal<PendingConvocatoriaAction | null>(null);
   protected readonly actionLoading  = signal(false);
 
+  private readonly byKind = computed(() => {
+    const all = this.convocatorias();
+    return this.kind === 'encuestas'
+      ? all.filter((c) => c.type === 'REGISTRATION')
+      : all.filter((c) => c.type !== 'REGISTRATION');
+  });
+
   protected readonly filtered = computed(() => {
     const filter = this.statusFilter();
-    const all    = this.convocatorias();
+    const all    = this.byKind();
     return filter === 'ALL' ? all : all.filter((c) => c.status === filter);
   });
 
-  protected readonly activeCount     = computed(() => this.convocatorias().filter((c) => c.status === 'ACTIVE').length);
-  protected readonly draftCount      = computed(() => this.convocatorias().filter((c) => c.status === 'DRAFT').length);
-  protected readonly totalCandidates = computed(() => this.convocatorias().reduce((acc, c) => acc + c.candidateCount, 0));
-  protected readonly totalResponded  = computed(() => this.convocatorias().reduce((acc, c) => acc + c.respondedCount, 0));
+  protected readonly activeCount     = computed(() => this.byKind().filter((c) => c.status === 'ACTIVE').length);
+  protected readonly draftCount      = computed(() => this.byKind().filter((c) => c.status === 'DRAFT').length);
+  protected readonly totalCandidates = computed(() => this.byKind().reduce((acc, c) => acc + c.candidateCount, 0));
+  protected readonly totalResponded  = computed(() => this.byKind().reduce((acc, c) => acc + c.respondedCount, 0));
 
   constructor() {
     this.load();
@@ -71,11 +87,11 @@ export class ConvocatoriasComponent {
   }
 
   protected navigateToNew(): void {
-    this.router.navigate(convocatoriaNewPath());
+    this.router.navigate(this.kind === 'encuestas' ? encuestaNewPath() : convocatoriaNewPath());
   }
 
   protected navigateToDetail(id: string): void {
-    this.router.navigate(['/', RouteConstants.CONVOCATORIAS, id]);
+    this.router.navigate(this.kind === 'encuestas' ? encuestaDetailPath(id) : convocatoriaDetailPath(id));
   }
 
   protected requestClose(id: string): void {

@@ -9,6 +9,7 @@ export const RouteConstants = {
   FORMS: 'forms',
   CATEGORIES: 'categories',
   CONVOCATORIAS: 'convocatorias',
+  ENCUESTAS: 'encuestas',
   BILLING: 'billing',
   SETTINGS: 'settings',
   USERS: 'users',
@@ -54,4 +55,16 @@ export function convocatoriaNewPath(): string[] {
 
 export function convocatoriaDetailPath(id: string): string[] {
   return ['/', RouteConstants.CONVOCATORIAS, id];
+}
+
+export function encuestasListPath(): string[] {
+  return ['/', RouteConstants.ENCUESTAS];
+}
+
+export function encuestaNewPath(): string[] {
+  return ['/', RouteConstants.ENCUESTAS, RouteConstants.CONVOCATORIA_NEW];
+}
+
+export function encuestaDetailPath(id: string): string[] {
+  return ['/', RouteConstants.ENCUESTAS, id];
 }

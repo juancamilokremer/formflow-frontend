@@ -36,4 +36,19 @@ describe('BasicInfoFormComponent', () => {
 
     expect(emitted).toEqual({ name: 'Analista de RRHH', processType: 'DIAGNOSTIC' });
   });
+
+  it('hides the type selector when lockType is true', async () => {
+    await TestBed.configureTestingModule({
+      imports: [BasicInfoFormComponent],
+      providers: [provideTranslateService({ lang: 'es' })],
+    }).compileComponents();
+
+    const fixture = TestBed.createComponent(BasicInfoFormComponent);
+    fixture.componentRef.setInput('name', '');
+    fixture.componentRef.setInput('processType', 'REGISTRATION');
+    fixture.componentRef.setInput('lockType', true);
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('.bif__type-options')).toBeNull();
+  });
 });
