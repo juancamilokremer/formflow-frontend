@@ -24,11 +24,12 @@ import { ConvocatoriaLaunchBarComponent } from './components/launch-bar/convocat
 import { ConvocatoriaRankingSectionComponent } from './components/ranking-section/convocatoria-ranking-section.component';
 import { ConvocatoriaStatsSectionComponent } from './components/stats-section/convocatoria-stats-section.component';
 import { ConvocatoriaQuestionStatsSectionComponent } from './components/question-stats-section/convocatoria-question-stats-section.component';
+import { ConvocatoriaResponsesSectionComponent } from './components/responses-section/convocatoria-responses-section.component';
 
-type ConvocatoriaDetailTab = 'ranking' | 'stats' | 'per-question' | 'formularios';
+type ConvocatoriaDetailTab = 'ranking' | 'respuestas' | 'stats' | 'per-question' | 'formularios';
 type DraftTab = 'formularios' | 'umbrales' | 'candidatos' | 'lanzar';
 
-const DETAIL_TAB_IDS: ConvocatoriaDetailTab[] = ['ranking', 'stats', 'per-question', 'formularios'];
+const DETAIL_TAB_IDS: ConvocatoriaDetailTab[] = ['ranking', 'respuestas', 'stats', 'per-question', 'formularios'];
 
 function isDetailTab(value: string | null): value is ConvocatoriaDetailTab {
   return DETAIL_TAB_IDS.includes(value as ConvocatoriaDetailTab);
@@ -43,6 +44,7 @@ function isDetailTab(value: string | null): value is ConvocatoriaDetailTab {
     ConvocatoriaFormSectionComponent, ConvocatoriaThresholdsSectionComponent,
     ConvocatoriaCandidatesSectionComponent, ConvocatoriaLaunchBarComponent,
     ConvocatoriaRankingSectionComponent, ConvocatoriaStatsSectionComponent, ConvocatoriaQuestionStatsSectionComponent,
+    ConvocatoriaResponsesSectionComponent,
     TabsComponent,
   ],
   templateUrl: './convocatoria-detail.component.html',
@@ -72,29 +74,58 @@ export class ConvocatoriaDetailComponent {
   protected readonly activeTab = signal<ConvocatoriaDetailTab>(this.resolveInitialTab());
   protected readonly processTypeLabels = PROCESS_TYPE_LABEL_KEYS;
   protected readonly backToListPath = convocatoriasListPath();
-  protected readonly detailTabs: TabItem[] = [
-    { id: 'ranking', label: 'convocatorias.detail.tabs.ranking' },
-    { id: 'stats', label: 'convocatorias.detail.tabs.stats' },
-    { id: 'per-question', label: 'convocatorias.detail.tabs.per_question' },
-    { id: 'formularios', label: 'convocatorias.detail.tabs.formularios' },
-  ];
 
   protected readonly isDraft = computed(() => this.convocatoria()?.status === 'DRAFT');
+  protected readonly isSimpleMode = computed(() => this.convocatoria()?.type === 'REGISTRATION');
+
+  protected readonly detailTabs = computed<TabItem[]>(() => {
+    const simple = this.isSimpleMode();
+    const tabs: TabItem[] = [
+      simple
+        ? { id: 'respuestas', label: 'convocatorias.detail.tabs.respuestas' }
+        : { id: 'ranking', label: 'convocatorias.detail.tabs.ranking' },
+    ];
+    if (!simple) {
+      tabs.push({ id: 'stats', label: 'convocatorias.detail.tabs.stats' });
+    }
+    tabs.push({ id: 'per-question', label: 'convocatorias.detail.tabs.per_question' });
+    tabs.push({ id: 'formularios', label: 'convocatorias.detail.tabs.formularios' });
+    return tabs;
+  });
+
+  // resolveInitialTab() only reads the ?tab query param and always falls back to 'ranking' —
+  // it runs before convocatoria() has loaded, so it can't know the type yet. This clamps the
+  // (possibly wrong) initial value to whatever is actually valid once data + type are known.
+  protected readonly effectiveTab = computed<ConvocatoriaDetailTab>(() => {
+    const requested = this.activeTab();
+    const validIds = this.detailTabs().map((t) => t.id as ConvocatoriaDetailTab);
+    return validIds.includes(requested) ? requested : (validIds[0] ?? 'formularios');
+  });
 
   protected readonly draftActiveTab = signal<DraftTab>('formularios');
 
   protected readonly draftTabs = computed<TabItem[]>(() => {
     const conv = this.convocatoria();
+    const simple = this.isSimpleMode();
     const formsWeightSum = conv?.forms.reduce((sum, form) => sum + form.weight, 0) ?? 0;
-    const formsComplete = (conv?.forms.length ?? 0) > 0 && formsWeightSum === 100;
+    const formsComplete = simple
+      ? (conv?.forms.length ?? 0) > 0
+      : (conv?.forms.length ?? 0) > 0 && formsWeightSum === 100;
     const candidatesComplete = (conv?.candidates.length ?? 0) > 0;
 
-    return [
+    const tabs: TabItem[] = [
       { id: 'formularios', label: 'convocatorias.detail.draft_tabs.formularios', badge: formsComplete ? 'complete' : 'pending' },
-      { id: 'umbrales', label: 'convocatorias.detail.draft_tabs.umbrales' },
-      { id: 'candidatos', label: 'convocatorias.detail.draft_tabs.candidatos', badge: candidatesComplete ? 'complete' : 'pending' },
-      { id: 'lanzar', label: 'convocatorias.detail.draft_tabs.lanzar' },
     ];
+    if (!simple) {
+      tabs.push({ id: 'umbrales', label: 'convocatorias.detail.draft_tabs.umbrales' });
+    }
+    tabs.push({
+      id: 'candidatos',
+      label: simple ? 'convocatorias.detail.draft_tabs.destinatarios' : 'convocatorias.detail.draft_tabs.candidatos',
+      badge: candidatesComplete ? 'complete' : 'pending',
+    });
+    tabs.push({ id: 'lanzar', label: 'convocatorias.detail.draft_tabs.lanzar' });
+    return tabs;
   });
 
   private readonly thresholdsChange$ = new Subject<void>();

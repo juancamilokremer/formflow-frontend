@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit, inject, input, output, signal } from '@angular/core';
+import { Component, DestroyRef, OnInit, computed, inject, input, output, signal } from '@angular/core';
 import { LowerCasePipe } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
@@ -13,7 +13,7 @@ import { Category } from '../../../../../../../../core/models/category.model';
 import { FormsService } from '../../../../../../../forms/services/forms.service';
 import { FormStatus } from '../../../../../../../forms/models/form.model';
 import { ConvocatoriaService } from '../../../../../../services/convocatoria.service';
-import { ConvocatoriaForm } from '../../../../../../models/convocatoria.model';
+import { ConvocatoriaForm, ProcessType } from '../../../../../../models/convocatoria.model';
 import { deriveCategoryIds } from '../../../../../../utils/convocatoria.utils';
 import { ConvocatoriaWeightsSectionComponent } from '../../../weights-section/convocatoria-weights-section.component';
 
@@ -34,7 +34,10 @@ export class ConvocatoriaFormCardComponent implements OnInit {
   readonly convocatoriaId = input.required<string>();
   readonly convocatoriaForm = input.required<ConvocatoriaForm>();
   readonly formName = input.required<string>();
+  readonly processType = input.required<ProcessType>();
   readonly readonly = input(false);
+
+  protected readonly isSimpleMode = computed(() => this.processType() === 'REGISTRATION');
 
   readonly formUpdated = output<ConvocatoriaForm>();
   readonly formRemoved = output<string>();

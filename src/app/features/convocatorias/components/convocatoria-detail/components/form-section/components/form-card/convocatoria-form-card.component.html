@@ -50,7 +50,7 @@
     }
   </div>
 
-  @if (readonly()) {
+  @if (readonly() || isSimpleMode()) {
     <div class="cfc__preview-row">
       <app-button type="button" variant="secondary" (click)="openPreview()">
         {{ 'convocatorias.detail.form.preview_action' | translate }}

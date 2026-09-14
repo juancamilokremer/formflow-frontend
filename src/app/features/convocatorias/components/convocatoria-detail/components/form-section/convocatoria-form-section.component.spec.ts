@@ -25,7 +25,7 @@ const CONV_FORM_1: ConvocatoriaForm = {
 
 function buildComponent(overrides: {
   createImpl?: unknown; duplicateImpl?: unknown; addFormImpl?: unknown;
-  convocatoriaForms?: ConvocatoriaForm[];
+  convocatoriaForms?: ConvocatoriaForm[]; processType?: 'CANDIDATES' | 'DIAGNOSTIC' | 'REGISTRATION';
 } = {}) {
   const mockFormsService = {
     create: overrides.createImpl ?? vi.fn().mockReturnValue(of(NEW_FORM)),
@@ -56,7 +56,7 @@ function buildComponent(overrides: {
   const fixture = TestBed.createComponent(ConvocatoriaFormSectionComponent);
   fixture.componentRef.setInput('convocatoriaId', 'c1');
   fixture.componentRef.setInput('convocatoriaName', 'RRHH');
-  fixture.componentRef.setInput('processType', 'CANDIDATES');
+  fixture.componentRef.setInput('processType', overrides.processType ?? 'CANDIDATES');
   fixture.componentRef.setInput('forms', [ACTIVE_CANDIDATES_FORM, DRAFT_FORM, DIAGNOSTIC_FORM]);
   fixture.componentRef.setInput('convocatoriaForms', overrides.convocatoriaForms ?? []);
   fixture.detectChanges();
@@ -211,6 +211,23 @@ describe('ConvocatoriaFormSectionComponent', () => {
       const { fixture, component } = buildComponent();
       fixture.componentRef.setInput('readonly', true);
       expect(component['readonly']()).toBe(true);
+    });
+  });
+
+  describe('isSimpleMode (REGISTRATION surveys)', () => {
+    it('hides the create/duplicate cards once a form is already attached', () => {
+      const { fixture } = buildComponent({ processType: 'REGISTRATION', convocatoriaForms: [CONV_FORM_1] });
+      expect(fixture.nativeElement.querySelector('.cfs__cards')).toBeNull();
+    });
+
+    it('still shows the create/duplicate cards when no form is attached yet', () => {
+      const { fixture } = buildComponent({ processType: 'REGISTRATION', convocatoriaForms: [] });
+      expect(fixture.nativeElement.querySelector('.cfs__cards')).not.toBeNull();
+    });
+
+    it('does not hide the create/duplicate cards for CANDIDATES even with a form already attached', () => {
+      const { fixture } = buildComponent({ processType: 'CANDIDATES', convocatoriaForms: [CONV_FORM_1] });
+      expect(fixture.nativeElement.querySelector('.cfs__cards')).not.toBeNull();
     });
   });
 });
