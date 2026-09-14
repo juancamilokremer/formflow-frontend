@@ -1,88 +1,91 @@
 import { TestBed } from '@angular/core/testing';
-import { of, throwError } from 'rxjs';
-import { vi } from 'vitest';
-import { provideHttpClient } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideTranslateService } from '@ngx-translate/core';
+import { Router } from '@angular/router';
 import { CreateFormDialogComponent } from './create-form-dialog.component';
-import { FormsService } from '../../services/forms.service';
-import { Form } from '../../models/form.model';
 
-const mockForm: Form = {
-  id: 'new-id', name: 'Test', description: null,
-  type: 'CANDIDATES', status: 'DRAFT', version: 1,
-  sectionCount: 0, responseCount: 0, lastResponseAt: null,
-  createdAt: '2026-06-01T00:00:00Z', updatedAt: '2026-06-01T00:00:00Z',
-};
+function buildComponent() {
+  const mockRouter = { navigate: vi.fn() };
 
-function setup() {
-  const mockCreate = vi.fn();
   TestBed.configureTestingModule({
+    imports: [CreateFormDialogComponent],
     providers: [
-      provideHttpClient(), provideHttpClientTesting(),
-      { provide: FormsService, useValue: { create: mockCreate } },
+      provideTranslateService({ lang: 'es' }),
+      { provide: Router, useValue: mockRouter },
     ],
-  });
-  const component = TestBed.runInInjectionContext(() => new CreateFormDialogComponent());
-  return { component, mockCreate };
+  }).compileComponents();
+
+  const fixture = TestBed.createComponent(CreateFormDialogComponent);
+  fixture.detectChanges();
+  return { component: fixture.componentInstance, mockRouter };
 }
 
 describe('CreateFormDialogComponent', () => {
-  it('should instantiate', () => {
-    const { component } = setup();
-    expect(component).toBeTruthy();
+  afterEach(() => TestBed.resetTestingModule());
+
+  it('does nothing when the name is empty', () => {
+    const { component, mockRouter } = buildComponent();
+    component['submit']();
+    expect(mockRouter.navigate).not.toHaveBeenCalled();
   });
 
-  it('selectType() should update type signal', () => {
-    const { component } = setup();
+  it('redirects to /convocatorias/new with name+type for CANDIDATES (default)', () => {
+    const { component, mockRouter } = buildComponent();
+    component['name'].set('RRHH 2026');
+
+    component['submit']();
+
+    expect(mockRouter.navigate).toHaveBeenCalledWith(
+      ['/', 'convocatorias', 'new'],
+      { queryParams: { name: 'RRHH 2026', type: 'CANDIDATES' } },
+    );
+  });
+
+  it('redirects to /convocatorias/new with name+type for DIAGNOSTIC', () => {
+    const { component, mockRouter } = buildComponent();
+    component['name'].set('Clima laboral');
     component['selectType']('DIAGNOSTIC');
-    expect(component['type']()).toBe('DIAGNOSTIC');
+
+    component['submit']();
+
+    expect(mockRouter.navigate).toHaveBeenCalledWith(
+      ['/', 'convocatorias', 'new'],
+      { queryParams: { name: 'Clima laboral', type: 'DIAGNOSTIC' } },
+    );
   });
 
-  it('submit() should do nothing when name is empty', () => {
-    const { component, mockCreate } = setup();
-    component['name'].set('  ');
+  it('redirects to /encuestas/new with only name for REGISTRATION', () => {
+    const { component, mockRouter } = buildComponent();
+    component['name'].set('Encuesta de satisfacción');
+    component['selectType']('REGISTRATION');
+
     component['submit']();
-    expect(mockCreate).not.toHaveBeenCalled();
+
+    expect(mockRouter.navigate).toHaveBeenCalledWith(
+      ['/', 'encuestas', 'new'],
+      { queryParams: { name: 'Encuesta de satisfacción' } },
+    );
   });
 
-  it('submit() should call service and emit created on success', () => {
-    const { component, mockCreate } = setup();
-    mockCreate.mockReturnValue(of(mockForm));
-    const emitted: Form[] = [];
-    component.created.subscribe((f) => emitted.push(f));
-    component['name'].set('Mi formulario');
+  it('resets name and type back to defaults after submitting', () => {
+    const { component } = buildComponent();
+    component['name'].set('RRHH 2026');
+    component['selectType']('DIAGNOSTIC');
+
     component['submit']();
-    expect(mockCreate).toHaveBeenCalledWith({ name: 'Mi formulario', type: 'CANDIDATES' });
-    expect(emitted).toHaveLength(1);
-    expect(emitted[0].id).toBe('new-id');
-    expect(component['creating']()).toBe(false);
+
     expect(component['name']()).toBe('');
+    expect(component['type']()).toBe('CANDIDATES');
   });
 
-  it('submit() should reset creating on error', () => {
-    const { component, mockCreate } = setup();
-    mockCreate.mockReturnValue(throwError(() => new Error('fail')));
-    component['name'].set('Fallo');
-    component['submit']();
-    expect(component['creating']()).toBe(false);
-  });
+  it('cancel resets and emits cancelled', () => {
+    const { component } = buildComponent();
+    component['name'].set('RRHH 2026');
+    let cancelled = false;
+    component.cancelled.subscribe(() => (cancelled = true));
 
-  it('cancel() should emit cancelled and reset state', () => {
-    const { component } = setup();
-    let emitted = false;
-    component.cancelled.subscribe(() => { emitted = true; });
-    component['name'].set('some text');
     component['cancel']();
-    expect(emitted).toBe(true);
+
     expect(component['name']()).toBe('');
-  });
-
-  it('cancel() should not emit while creating', () => {
-    const { component } = setup();
-    let emitted = false;
-    component.cancelled.subscribe(() => { emitted = true; });
-    component['creating'].set(true);
-    component['cancel']();
-    expect(emitted).toBe(false);
+    expect(cancelled).toBe(true);
   });
 });

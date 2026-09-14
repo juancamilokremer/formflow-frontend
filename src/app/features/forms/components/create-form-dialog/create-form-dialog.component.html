@@ -35,12 +35,11 @@
   </div>
 
   <div dialog-footer>
-    <app-button variant="secondary" type="button" [disabled]="creating()" (click)="cancel()">
+    <app-button variant="secondary" type="button" (click)="cancel()">
       {{ 'common.cancel' | translate }}
     </app-button>
     <app-button
       type="button"
-      [loading]="creating()"
       [disabled]="!name().trim()"
       (click)="submit()"
     >

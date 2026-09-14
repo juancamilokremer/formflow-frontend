@@ -81,16 +81,6 @@ describe('FormsComponent', () => {
     expect(component['draftCount']()).toBe(1);
   });
 
-  it('onFormCreated() should prepend form, close dialog, and navigate to builder', () => {
-    const { component, mockNavigate } = setup();
-    const newForm: Form = { ...mockForms[0], id: 'new-id', name: 'Nuevo' };
-    component['showCreateDialog'].set(true);
-    component['onFormCreated'](newForm);
-    expect(component['forms']()[0].id).toBe('new-id');
-    expect(component['showCreateDialog']()).toBe(false);
-    expect(mockNavigate).toHaveBeenCalled();
-  });
-
   it('onFormDeleted() should remove the form from the list', () => {
     const { component } = setup();
     component['onFormDeleted']('f1');

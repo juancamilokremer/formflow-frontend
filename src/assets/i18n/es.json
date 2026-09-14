@@ -149,8 +149,8 @@
       "candidates_desc": "Evalúa aspirantes con scoring automático por categoría",
       "diagnostic": "Diagnóstico",
       "diagnostic_desc": "Mide clima laboral o dimensiones con escala Likert",
-      "registration": "Registro",
-      "registration_desc": "Recopila información sin puntuación"
+      "registration": "Encuesta",
+      "registration_desc": "Recopila respuestas sin scoring ni ranking"
     },
     "table": {
       "name": "Formulario",
