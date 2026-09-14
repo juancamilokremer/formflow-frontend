@@ -63,12 +63,6 @@ export class FormsComponent {
     });
   }
 
-  protected onFormCreated(form: Form): void {
-    this.forms.update((list) => [form, ...list]);
-    this.showCreateDialog.set(false);
-    this.router.navigate(formBuilderPath(form.id));
-  }
-
   protected onFormDeleted(id: string): void {
     this.forms.update((list) => list.filter((f) => f.id !== id));
   }

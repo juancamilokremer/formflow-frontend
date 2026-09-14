@@ -12,7 +12,11 @@ const MOCK_CONVOCATORIA: ConvocatoriaDetail = {
   startDate: null, endDate: null, createdAt: '', updatedAt: '', candidates: [], forms: [],
 };
 
-function buildComponent(createImpl?: ReturnType<typeof vi.fn>, routeData: Record<string, unknown> = {}) {
+function buildComponent(
+  createImpl?: ReturnType<typeof vi.fn>,
+  routeData: Record<string, unknown> = {},
+  queryParams: Record<string, string> = {},
+) {
   const mockConvocatoriaService = { create: createImpl ?? vi.fn().mockReturnValue(of(MOCK_CONVOCATORIA)) };
   const mockRouter = { navigate: vi.fn() };
 
@@ -22,7 +26,15 @@ function buildComponent(createImpl?: ReturnType<typeof vi.fn>, routeData: Record
       provideTranslateService({ lang: 'es' }),
       { provide: ConvocatoriaService, useValue: mockConvocatoriaService },
       { provide: Router, useValue: mockRouter },
-      { provide: ActivatedRoute, useValue: { snapshot: { data: routeData } } },
+      {
+        provide: ActivatedRoute,
+        useValue: {
+          snapshot: {
+            data: routeData,
+            queryParamMap: { get: (key: string) => queryParams[key] ?? null },
+          },
+        },
+      },
     ],
   }).compileComponents();
 
@@ -65,6 +77,29 @@ describe('ConvocatoriaCreateComponent', () => {
 
     expect(component['createError']()).toBe(true);
     expect(component['creating']()).toBe(false);
+  });
+
+  describe('prefill from query params (arriving from CreateFormDialogComponent)', () => {
+    it('prefills name from the ?name query param', () => {
+      const { component } = buildComponent(undefined, {}, { name: 'RRHH 2026' });
+      expect(component['name']()).toBe('RRHH 2026');
+    });
+
+    it('prefills processType from the ?type query param', () => {
+      const { component } = buildComponent(undefined, {}, { type: 'DIAGNOSTIC' });
+      expect(component['processType']()).toBe('DIAGNOSTIC');
+    });
+
+    it('defaults to empty name and CANDIDATES type without query params', () => {
+      const { component } = buildComponent();
+      expect(component['name']()).toBe('');
+      expect(component['processType']()).toBe('CANDIDATES');
+    });
+
+    it('ignores an invalid ?type value and falls back to CANDIDATES', () => {
+      const { component } = buildComponent(undefined, {}, { type: 'not-a-real-type' });
+      expect(component['processType']()).toBe('CANDIDATES');
+    });
   });
 
   describe('survey mode (entered via /encuestas/new)', () => {

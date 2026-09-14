@@ -1,9 +1,10 @@
 import { Component, inject, input, output, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { DialogComponent } from '../../../../shared/components/dialog/dialog.component';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
-import { FormsService } from '../../services/forms.service';
-import { Form, FormType } from '../../models/form.model';
+import { convocatoriaNewPath, encuestaNewPath } from '../../../../core/constants/route.constants';
+import { FormType } from '../../models/form.model';
 
 interface FormTypeOption {
   value: FormType;
@@ -24,15 +25,13 @@ const FORM_TYPE_OPTIONS: FormTypeOption[] = [
   styleUrl: './create-form-dialog.component.scss',
 })
 export class CreateFormDialogComponent {
-  private readonly formsService = inject(FormsService);
+  private readonly router = inject(Router);
 
   readonly isOpen = input(false);
-  readonly created = output<Form>();
   readonly cancelled = output<void>();
 
   protected readonly name = signal('');
   protected readonly type = signal<FormType>('CANDIDATES');
-  protected readonly creating = signal(false);
   protected readonly formTypeOptions = FORM_TYPE_OPTIONS;
 
   protected selectType(t: FormType): void {
@@ -42,24 +41,17 @@ export class CreateFormDialogComponent {
   protected submit(): void {
     const trimmed = this.name().trim();
     if (!trimmed) return;
-    this.creating.set(true);
-    this.formsService.create({ name: trimmed, type: this.type() }).subscribe({
-      next: (form) => {
-        this.creating.set(false);
-        this.created.emit(form);
-        this.reset();
-      },
-      error: () => {
-        this.creating.set(false);
-      },
-    });
+    if (this.type() === 'REGISTRATION') {
+      this.router.navigate(encuestaNewPath(), { queryParams: { name: trimmed } });
+    } else {
+      this.router.navigate(convocatoriaNewPath(), { queryParams: { name: trimmed, type: this.type() } });
+    }
+    this.reset();
   }
 
   protected cancel(): void {
-    if (!this.creating()) {
-      this.reset();
-      this.cancelled.emit();
-    }
+    this.reset();
+    this.cancelled.emit();
   }
 
   private reset(): void {

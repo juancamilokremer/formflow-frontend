@@ -25,12 +25,17 @@ export class ConvocatoriaCreateComponent {
   protected readonly isSurveyMode = this.route.snapshot.data['fixedType'] === 'REGISTRATION';
   protected readonly copyPrefix = this.isSurveyMode ? 'encuestas.create' : 'convocatorias.create';
 
-  protected readonly name = signal('');
-  protected readonly processType = signal<ProcessType>(this.isSurveyMode ? 'REGISTRATION' : 'CANDIDATES');
+  protected readonly name = signal(this.route.snapshot.queryParamMap.get('name') ?? '');
+  protected readonly processType = signal<ProcessType>(
+    this.isSurveyMode ? 'REGISTRATION' : this.resolveInitialProcessType());
   protected readonly creating = signal(false);
   protected readonly createError = signal(false);
 
   protected readonly isValid = computed(() => this.name().trim().length > 0);
+
+  private resolveInitialProcessType(): ProcessType {
+    return this.route.snapshot.queryParamMap.get('type') === 'DIAGNOSTIC' ? 'DIAGNOSTIC' : 'CANDIDATES';
+  }
 
   protected onBasicInfoChanged(patch: { name: string; processType: ProcessType }): void {
     this.name.set(patch.name);
