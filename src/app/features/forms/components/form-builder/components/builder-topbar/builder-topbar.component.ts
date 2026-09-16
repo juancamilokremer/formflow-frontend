@@ -18,6 +18,10 @@ export class BuilderTopbarComponent {
 
   readonly form = input.required<FormDetail>();
   readonly convocatoriaId = input<string | null>(null);
+  readonly containerKind = input<'convocatorias' | 'encuestas'>('convocatorias');
+
+  protected readonly backToConvocatoriaLabelKey = computed(() =>
+    this.containerKind() === 'encuestas' ? 'builder.back_to_encuesta' : 'builder.back_to_convocatoria');
 
   readonly nameChanged = output<string>();
   readonly publishClicked = output<void>();

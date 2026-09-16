@@ -173,21 +173,39 @@ describe('ConvocatoriaFormCardComponent', () => {
     });
   });
 
-  it('openForm navigates to the builder with the convocatoriaId query param', () => {
+  it('openForm navigates to the builder with the convocatoriaId and kind query params', () => {
     const { component, mockRouter } = buildComponent();
     component['openForm']();
     expect(mockRouter.navigate).toHaveBeenCalledWith(
       ['forms', 'f1', 'edit'],
-      { queryParams: { convocatoriaId: 'c1' } },
+      { queryParams: { convocatoriaId: 'c1', kind: 'convocatorias' } },
     );
   });
 
-  it('openPreview navigates to the preview route with the convocatoriaId and tab query params', () => {
+  it('openForm passes kind=encuestas for a REGISTRATION form', () => {
+    const { component, mockRouter } = buildComponent({ processType: 'REGISTRATION' });
+    component['openForm']();
+    expect(mockRouter.navigate).toHaveBeenCalledWith(
+      ['forms', 'f1', 'edit'],
+      { queryParams: { convocatoriaId: 'c1', kind: 'encuestas' } },
+    );
+  });
+
+  it('openPreview navigates to the preview route with the convocatoriaId, tab, and kind query params', () => {
     const { component, mockRouter } = buildComponent();
     component['openPreview']();
     expect(mockRouter.navigate).toHaveBeenCalledWith(
       ['/', 'forms', 'f1', 'preview'],
-      { queryParams: { convocatoriaId: 'c1', tab: 'formularios' } },
+      { queryParams: { convocatoriaId: 'c1', tab: 'formularios', kind: 'convocatorias' } },
+    );
+  });
+
+  it('openPreview passes kind=encuestas for a REGISTRATION form', () => {
+    const { component, mockRouter } = buildComponent({ processType: 'REGISTRATION' });
+    component['openPreview']();
+    expect(mockRouter.navigate).toHaveBeenCalledWith(
+      ['/', 'forms', 'f1', 'preview'],
+      { queryParams: { convocatoriaId: 'c1', tab: 'formularios', kind: 'encuestas' } },
     );
   });
 

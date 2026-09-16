@@ -228,10 +228,12 @@
   "builder": {
     "back": "Volver a formularios",
     "back_to_convocatoria": "Volver a la convocatoria",
+    "back_to_encuesta": "Volver a la encuesta",
     "preview": "Vista previa",
     "publish": "Publicar",
     "archive": "Archivar",
     "auto_publish_hint": "Se publicará automáticamente al lanzar la convocatoria",
+    "survey_publish_hint": "El estado de esta encuesta se controla desde su pestaña \"Lanzar\"",
     "form_name": "Nombre del formulario",
     "add_section": "Agregar sección",
     "section_default_name": "Nueva sección",

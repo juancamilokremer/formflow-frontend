@@ -107,6 +107,21 @@ describe('BuilderTopbarComponent', () => {
     expect(emitted).toBe(true);
   });
 
+  describe('back link label by container kind', () => {
+    it('shows "back_to_convocatoria" when containerKind is convocatorias (default)', () => {
+      fixture.componentRef.setInput('convocatoriaId', 'conv1');
+      fixture.detectChanges();
+      expect((component as any).backToConvocatoriaLabelKey()).toBe('builder.back_to_convocatoria');
+    });
+
+    it('shows "back_to_encuesta" when containerKind is encuestas', () => {
+      fixture.componentRef.setInput('convocatoriaId', 'conv1');
+      fixture.componentRef.setInput('containerKind', 'encuestas');
+      fixture.detectChanges();
+      expect((component as any).backToConvocatoriaLabelKey()).toBe('builder.back_to_encuesta');
+    });
+  });
+
   it('emits publishClicked when publish button clicked', () => {
     let emitted = false;
     component.publishClicked.subscribe(() => (emitted = true));
@@ -151,6 +166,28 @@ describe('BuilderTopbarComponent', () => {
       const hint = fixture.nativeElement.querySelector('.topbar__auto-publish-hint');
       expect(button).toBeTruthy();
       expect(hint).toBeFalsy();
+    });
+
+    it('shows the survey publish hint (never a button) for a DRAFT REGISTRATION form even without convocatoriaId', () => {
+      fixture.componentRef.setInput('form', { ...MOCK_FORM, type: 'REGISTRATION', status: 'DRAFT' });
+      fixture.detectChanges();
+
+      const button = fixture.nativeElement.querySelector('.topbar__actions app-button:last-child');
+      const hint = fixture.nativeElement.querySelector('.topbar__auto-publish-hint');
+      expect(button).toBeFalsy();
+      expect(hint).toBeTruthy();
+      expect(hint.textContent).toContain('builder.survey_publish_hint');
+    });
+
+    it('shows the survey publish hint (never a button) for an ACTIVE REGISTRATION form too', () => {
+      fixture.componentRef.setInput('form', { ...MOCK_FORM, type: 'REGISTRATION', status: 'ACTIVE' });
+      fixture.detectChanges();
+
+      const button = fixture.nativeElement.querySelector('.topbar__actions app-button:last-child');
+      const hint = fixture.nativeElement.querySelector('.topbar__auto-publish-hint');
+      expect(button).toBeFalsy();
+      expect(hint).toBeTruthy();
+      expect(hint.textContent).toContain('builder.survey_publish_hint');
     });
   });
 

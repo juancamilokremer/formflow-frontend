@@ -72,5 +72,20 @@ describe('FormPreviewComponent', () => {
         { queryParams: { tab: 'formularios' } },
       );
     });
+
+    it('navigates back to the encuesta when kind=encuestas is present in the query params', () => {
+      const { component, mockRouter } = buildComponent({ convocatoriaId: 'conv1', kind: 'encuestas' });
+      component['goBack']();
+      expect(mockRouter.navigate).toHaveBeenCalledWith(['/', 'encuestas', 'conv1']);
+    });
+
+    it('carries the originating tab back to the encuesta when present', () => {
+      const { component, mockRouter } = buildComponent({ convocatoriaId: 'conv1', kind: 'encuestas', tab: 'formularios' });
+      component['goBack']();
+      expect(mockRouter.navigate).toHaveBeenCalledWith(
+        ['/', 'encuestas', 'conv1'],
+        { queryParams: { tab: 'formularios' } },
+      );
+    });
   });
 });

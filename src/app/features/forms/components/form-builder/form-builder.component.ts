@@ -4,7 +4,7 @@ import { BreakpointObserver } from '@angular/cdk/layout';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map, of, switchMap } from 'rxjs';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { RouteConstants, convocatoriaDetailPath, formBuilderPath } from '../../../../core/constants/route.constants';
+import { RouteConstants, convocatoriaDetailPath, encuestaDetailPath, formBuilderPath } from '../../../../core/constants/route.constants';
 import { Category } from '../../../../core/models/category.model';
 import { CategoryService } from '../../../../core/services/category.service';
 import { IconComponent } from '../../../../shared/icons/icon.component';
@@ -50,6 +50,8 @@ export class FormBuilderComponent implements OnInit {
   private readonly breakpointObserver = inject(BreakpointObserver);
 
   protected readonly convocatoriaId = this.route.snapshot.queryParamMap.get(RouteConstants.QUERY_CONVOCATORIA_ID);
+  protected readonly containerKind =
+    this.route.snapshot.queryParamMap.get(RouteConstants.QUERY_KIND) === 'encuestas' ? 'encuestas' : 'convocatorias';
 
   // Bound automatically from the `:id` route param via withComponentInputBinding().
   // Angular reuses this component's instance across navigations between two
@@ -158,7 +160,8 @@ export class FormBuilderComponent implements OnInit {
         });
       }),
     ).subscribe(() => {
-      this.router.navigate(convocatoriaDetailPath(convocatoriaId));
+      this.router.navigate(
+        this.containerKind === 'encuestas' ? encuestaDetailPath(convocatoriaId) : convocatoriaDetailPath(convocatoriaId));
     });
   }
 

@@ -100,7 +100,10 @@ export class ConvocatoriaFormSectionComponent {
       .subscribe({
         next: (form) => {
           this.router.navigate(formBuilderPath(form.id), {
-            queryParams: { [RouteConstants.QUERY_CONVOCATORIA_ID]: this.convocatoriaId() },
+            queryParams: {
+              [RouteConstants.QUERY_CONVOCATORIA_ID]: this.convocatoriaId(),
+              [RouteConstants.QUERY_KIND]: this.isSimpleMode() ? 'encuestas' : 'convocatorias',
+            },
           });
         },
         error: () => {
