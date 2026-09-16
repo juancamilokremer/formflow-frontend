@@ -3,8 +3,7 @@ import { DatePipe } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
-import { Subject, debounceTime, switchMap } from 'rxjs';
-import { RouteConstants, convocatoriasListPath } from '../../../../core/constants/route.constants';
+import { RouteConstants, encuestasListPath } from '../../../../core/constants/route.constants';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
 import { CardComponent } from '../../../../shared/components/card/card.component';
 import { PageHeaderComponent } from '../../../../shared/components/page-header/page-header.component';
@@ -15,40 +14,37 @@ import { EmptyStateComponent } from '../../../../shared/components/empty-state/e
 import { TabItem, TabsComponent } from '../../../../shared/components/tabs/tabs.component';
 import { FormsService } from '../../../forms/services/forms.service';
 import { Form } from '../../../forms/models/form.model';
-import { ConvocatoriaService } from '../../services/convocatoria.service';
-import { Candidate, ConvocatoriaDetail, ConvocatoriaForm, FormAddedEvent, PROCESS_TYPE_LABEL_KEYS } from '../../models/convocatoria.model';
-import { ConvocatoriaFormSectionComponent } from './components/form-section/convocatoria-form-section.component';
-import { ConvocatoriaThresholdsSectionComponent } from './components/thresholds-section/convocatoria-thresholds-section.component';
-import { ConvocatoriaCandidatesSectionComponent } from './components/candidates-section/convocatoria-candidates-section.component';
-import { ConvocatoriaLaunchBarComponent } from './components/launch-bar/convocatoria-launch-bar.component';
-import { ConvocatoriaRankingSectionComponent } from './components/ranking-section/convocatoria-ranking-section.component';
-import { ConvocatoriaStatsSectionComponent } from './components/stats-section/convocatoria-stats-section.component';
-import { ConvocatoriaQuestionStatsSectionComponent } from './components/question-stats-section/convocatoria-question-stats-section.component';
+import { ConvocatoriaService } from '../../../convocatorias/services/convocatoria.service';
+import { Candidate, ConvocatoriaDetail, ConvocatoriaForm, FormAddedEvent, PROCESS_TYPE_LABEL_KEYS } from '../../../convocatorias/models/convocatoria.model';
+import { ConvocatoriaFormSectionComponent } from '../../../convocatorias/components/convocatoria-detail/components/form-section/convocatoria-form-section.component';
+import { ConvocatoriaCandidatesSectionComponent } from '../../../convocatorias/components/convocatoria-detail/components/candidates-section/convocatoria-candidates-section.component';
+import { ConvocatoriaLaunchBarComponent } from '../../../convocatorias/components/convocatoria-detail/components/launch-bar/convocatoria-launch-bar.component';
+import { ConvocatoriaQuestionStatsSectionComponent } from '../../../convocatorias/components/convocatoria-detail/components/question-stats-section/convocatoria-question-stats-section.component';
+import { EncuestaResponsesSectionComponent } from './components/responses-section/encuesta-responses-section.component';
 
-type ConvocatoriaDetailTab = 'ranking' | 'stats' | 'per-question' | 'formularios';
-type DraftTab = 'formularios' | 'umbrales' | 'candidatos' | 'lanzar';
+type EncuestaDetailTab = 'respuestas' | 'per-question' | 'formularios';
+type DraftTab = 'formularios' | 'destinatarios' | 'lanzar';
 
-const DETAIL_TAB_IDS: ConvocatoriaDetailTab[] = ['ranking', 'stats', 'per-question', 'formularios'];
+const DETAIL_TAB_IDS: EncuestaDetailTab[] = ['respuestas', 'per-question', 'formularios'];
 
-function isDetailTab(value: string | null): value is ConvocatoriaDetailTab {
-  return DETAIL_TAB_IDS.includes(value as ConvocatoriaDetailTab);
+function isDetailTab(value: string | null): value is EncuestaDetailTab {
+  return DETAIL_TAB_IDS.includes(value as EncuestaDetailTab);
 }
 
 @Component({
-  selector: 'app-convocatoria-detail',
+  selector: 'app-encuesta-detail',
   imports: [
     TranslatePipe, DatePipe, RouterLink,
     ButtonComponent, CardComponent, PageHeaderComponent, IconComponent, ConfirmDialogComponent,
     LoadingSpinnerComponent, EmptyStateComponent,
-    ConvocatoriaFormSectionComponent, ConvocatoriaThresholdsSectionComponent,
-    ConvocatoriaCandidatesSectionComponent, ConvocatoriaLaunchBarComponent,
-    ConvocatoriaRankingSectionComponent, ConvocatoriaStatsSectionComponent, ConvocatoriaQuestionStatsSectionComponent,
+    ConvocatoriaFormSectionComponent, ConvocatoriaCandidatesSectionComponent, ConvocatoriaLaunchBarComponent,
+    ConvocatoriaQuestionStatsSectionComponent, EncuestaResponsesSectionComponent,
     TabsComponent,
   ],
-  templateUrl: './convocatoria-detail.component.html',
-  styleUrl: './convocatoria-detail.component.scss',
+  templateUrl: './encuesta-detail.component.html',
+  styleUrl: './encuesta-detail.component.scss',
 })
-export class ConvocatoriaDetailComponent {
+export class EncuestaDetailComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly convocatoriaService = inject(ConvocatoriaService);
@@ -63,43 +59,35 @@ export class ConvocatoriaDetailComponent {
 
   protected readonly forms = signal<Form[]>([]);
 
-  protected readonly aptoMin = signal(70);
-  protected readonly revisarMin = signal(50);
-
   protected readonly deleteConfirmOpen = signal(false);
   protected readonly deleting = signal(false);
 
-  protected readonly activeTab = signal<ConvocatoriaDetailTab>(this.resolveInitialTab());
+  protected readonly activeTab = signal<EncuestaDetailTab>(this.resolveInitialTab());
   protected readonly processTypeLabels = PROCESS_TYPE_LABEL_KEYS;
 
-  protected readonly backToListPath = convocatoriasListPath();
+  protected readonly backToListPath = encuestasListPath();
 
   protected readonly isDraft = computed(() => this.convocatoria()?.status === 'DRAFT');
 
   protected readonly detailTabs: TabItem[] = [
-    { id: 'ranking', label: 'convocatorias.detail.tabs.ranking' },
-    { id: 'stats', label: 'convocatorias.detail.tabs.stats' },
-    { id: 'per-question', label: 'convocatorias.detail.tabs.per_question' },
-    { id: 'formularios', label: 'convocatorias.detail.tabs.formularios' },
+    { id: 'respuestas', label: 'encuestas.detail.tabs.respuestas' },
+    { id: 'per-question', label: 'encuestas.detail.tabs.per_question' },
+    { id: 'formularios', label: 'encuestas.detail.tabs.formularios' },
   ];
 
   protected readonly draftActiveTab = signal<DraftTab>('formularios');
 
   protected readonly draftTabs = computed<TabItem[]>(() => {
     const conv = this.convocatoria();
-    const formsWeightSum = conv?.forms.reduce((sum, form) => sum + form.weight, 0) ?? 0;
-    const formsComplete = (conv?.forms.length ?? 0) > 0 && formsWeightSum === 100;
-    const candidatesComplete = (conv?.candidates.length ?? 0) > 0;
+    const formsComplete = (conv?.forms.length ?? 0) > 0;
+    const recipientsComplete = (conv?.candidates.length ?? 0) > 0;
 
     return [
-      { id: 'formularios', label: 'convocatorias.detail.draft_tabs.formularios', badge: formsComplete ? 'complete' : 'pending' },
-      { id: 'umbrales', label: 'convocatorias.detail.draft_tabs.umbrales' },
-      { id: 'candidatos', label: 'convocatorias.detail.draft_tabs.candidatos', badge: candidatesComplete ? 'complete' : 'pending' },
-      { id: 'lanzar', label: 'convocatorias.detail.draft_tabs.lanzar' },
+      { id: 'formularios', label: 'encuestas.detail.draft_tabs.formularios', badge: formsComplete ? 'complete' : 'pending' },
+      { id: 'destinatarios', label: 'encuestas.detail.draft_tabs.destinatarios', badge: recipientsComplete ? 'complete' : 'pending' },
+      { id: 'lanzar', label: 'encuestas.detail.draft_tabs.lanzar' },
     ];
   });
-
-  private readonly thresholdsChange$ = new Subject<void>();
 
   constructor() {
     this.formsService.getAll()
@@ -118,26 +106,15 @@ export class ConvocatoriaDetailComponent {
           this.loading.set(false);
         },
       });
-
-    this.thresholdsChange$.pipe(
-      debounceTime(600),
-      switchMap(() => this.convocatoriaService.update(this.id, this.buildUpdateRequest())),
-      takeUntilDestroyed(this.destroyRef),
-    ).subscribe((detail) => this.applyDetail(detail));
   }
 
   private applyDetail(detail: ConvocatoriaDetail): void {
     this.convocatoria.set(detail);
-    this.aptoMin.set(detail.scoringConfig.aptoMin);
-    this.revisarMin.set(detail.scoringConfig.revisarMin);
   }
 
   private buildUpdateRequest() {
     const current = this.convocatoria();
-    return {
-      name: current?.name ?? '',
-      scoringConfig: { aptoMin: this.aptoMin(), revisarMin: this.revisarMin() },
-    };
+    return { name: current?.name ?? '' };
   }
 
   protected onNameBlur(event: FocusEvent): void {
@@ -176,12 +153,6 @@ export class ConvocatoriaDetailComponent {
       });
   }
 
-  protected onThresholdsChanged(patch: { aptoMin: number; revisarMin: number }): void {
-    this.aptoMin.set(patch.aptoMin);
-    this.revisarMin.set(patch.revisarMin);
-    this.thresholdsChange$.next();
-  }
-
   protected onCandidateAdded(candidate: Candidate): void {
     this.convocatoria.update((c) => (c ? { ...c, candidates: [...c.candidates, candidate] } : c));
   }
@@ -197,16 +168,16 @@ export class ConvocatoriaDetailComponent {
   }
 
   protected setActiveTab(tabId: string): void {
-    this.activeTab.set(tabId as ConvocatoriaDetailTab);
+    this.activeTab.set(tabId as EncuestaDetailTab);
   }
 
   protected setDraftTab(tabId: string): void {
     this.draftActiveTab.set(tabId as DraftTab);
   }
 
-  private resolveInitialTab(): ConvocatoriaDetailTab {
+  private resolveInitialTab(): EncuestaDetailTab {
     const tabFromQuery = this.route.snapshot.queryParamMap.get(RouteConstants.QUERY_TAB);
-    return isDetailTab(tabFromQuery) ? tabFromQuery : 'ranking';
+    return isDetailTab(tabFromQuery) ? tabFromQuery : 'respuestas';
   }
 
   protected requestDelete(): void {
@@ -223,7 +194,7 @@ export class ConvocatoriaDetailComponent {
     this.convocatoriaService.delete(this.id)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: () => this.router.navigate(convocatoriasListPath()),
+        next: () => this.router.navigate(encuestasListPath()),
         error: () => this.deleting.set(false),
       });
   }

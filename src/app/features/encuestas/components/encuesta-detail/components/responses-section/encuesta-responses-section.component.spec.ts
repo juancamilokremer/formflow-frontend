@@ -1,9 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 import { provideTranslateService } from '@ngx-translate/core';
 import { of } from 'rxjs';
-import { ConvocatoriaResponsesSectionComponent } from './convocatoria-responses-section.component';
+import { EncuestaResponsesSectionComponent } from './encuesta-responses-section.component';
 import { FormsService } from '../../../../../forms/services/forms.service';
-import { Candidate } from '../../../../models/convocatoria.model';
+import { Candidate } from '../../../../../convocatorias/models/convocatoria.model';
 import { ResponsePage } from '../../../../../forms/models/form-response.model';
 
 function candidate(status: Candidate['status']): Candidate {
@@ -22,21 +22,21 @@ function buildComponent(candidates: Candidate[]) {
   };
 
   TestBed.configureTestingModule({
-    imports: [ConvocatoriaResponsesSectionComponent],
+    imports: [EncuestaResponsesSectionComponent],
     providers: [
       provideTranslateService({ lang: 'es' }),
       { provide: FormsService, useValue: mockFormsService },
     ],
   }).compileComponents();
 
-  const fixture = TestBed.createComponent(ConvocatoriaResponsesSectionComponent);
+  const fixture = TestBed.createComponent(EncuestaResponsesSectionComponent);
   fixture.componentRef.setInput('formId', 'f1');
   fixture.componentRef.setInput('candidates', candidates);
   fixture.detectChanges();
   return { fixture, component: fixture.componentInstance, mockFormsService };
 }
 
-describe('ConvocatoriaResponsesSectionComponent', () => {
+describe('EncuestaResponsesSectionComponent', () => {
   afterEach(() => TestBed.resetTestingModule());
 
   it('computes invited/responded/rate from the candidates input', () => {

@@ -1,16 +1,16 @@
 @if (loading()) {
-  <div class="cd__center">
+  <div class="ed__center">
     <app-loading-spinner />
   </div>
 } @else if (loadError()) {
-  <div class="cd__center">
-    <app-empty-state icon="alert-circle" [title]="'convocatorias.detail.error.load' | translate" />
+  <div class="ed__center">
+    <app-empty-state icon="alert-circle" [title]="'encuestas.detail.error.load' | translate" />
   </div>
 } @else if (convocatoria(); as conv) {
-  <div class="cd">
-    <a class="cd__back" [routerLink]="backToListPath">
+  <div class="ed">
+    <a class="ed__back" [routerLink]="backToListPath">
       <app-icon name="arrow-left" [size]="15" />
-      {{ 'convocatorias.detail.back_to_list' | translate }}
+      {{ 'encuestas.detail.back_to_list' | translate }}
     </a>
 
     <app-page-header [title]="conv.name">
@@ -21,29 +21,29 @@
       }
     </app-page-header>
 
-    <div class="cd__meta">
-      <span class="cd__status" [class]="'cd__status--' + conv.status.toLowerCase()">
+    <div class="ed__meta">
+      <span class="ed__status" [class]="'ed__status--' + conv.status.toLowerCase()">
         {{ 'convocatorias.status.' + conv.status | translate }}
       </span>
       @if (isDraft()) {
-        <input class="cd__name-input" type="text" [value]="conv.name"
-          [attr.aria-label]="'convocatorias.detail.name_label' | translate"
+        <input class="ed__name-input" type="text" [value]="conv.name"
+          [attr.aria-label]="'encuestas.detail.name_label' | translate"
           (blur)="onNameBlur($event)" />
       } @else {
-        <span class="cd__type-pill">{{ processTypeLabels[conv.type] | translate }}</span>
+        <span class="ed__type-pill">{{ processTypeLabels[conv.type] | translate }}</span>
         @if (conv.endDate) {
-          <span class="cd__meta-text">
-            {{ 'convocatorias.detail.closes_on' | translate : { date: (conv.endDate | date: 'd MMM yyyy') } }}
+          <span class="ed__meta-text">
+            {{ 'encuestas.detail.closes_on' | translate : { date: (conv.endDate | date: 'd MMM yyyy') } }}
           </span>
         }
       }
     </div>
 
     @if (isDraft()) {
-      <div class="cd__draft">
+      <div class="ed__draft">
         <app-tabs [tabs]="draftTabs()" [activeTabId]="draftActiveTab()" (tabChange)="setDraftTab($event)" />
 
-        <app-card class="cd__section">
+        <app-card class="ed__section">
           @switch (draftActiveTab()) {
             @case ('formularios') {
               <app-convocatoria-form-section
@@ -57,13 +57,7 @@
                 (formRemoved)="onFormRemoved($event)"
                 (formsReordered)="onFormsReordered($event)" />
             }
-            @case ('umbrales') {
-              <app-convocatoria-thresholds-section
-                [aptoMin]="aptoMin()"
-                [revisarMin]="revisarMin()"
-                (thresholdsChanged)="onThresholdsChanged($event)" />
-            }
-            @case ('candidatos') {
+            @case ('destinatarios') {
               <app-convocatoria-candidates-section
                 [convocatoriaId]="conv.id"
                 [candidates]="conv.candidates"
@@ -82,13 +76,14 @@
     } @else {
       <app-tabs [tabs]="detailTabs" [activeTabId]="activeTab()" (tabChange)="setActiveTab($event)" />
 
-      <app-card class="cd__section">
+      <app-card class="ed__section">
         @switch (activeTab()) {
-          @case ('ranking') {
-            <app-convocatoria-ranking-section [convocatoriaId]="conv.id" />
-          }
-          @case ('stats') {
-            <app-convocatoria-stats-section [convocatoriaId]="conv.id" />
+          @case ('respuestas') {
+            @if (conv.forms[0]; as surveyForm) {
+              <app-encuesta-responses-section
+                [formId]="surveyForm.formId"
+                [candidates]="conv.candidates" />
+            }
           }
           @case ('per-question') {
             <app-convocatoria-question-stats-section [convocatoriaId]="conv.id" />
@@ -100,7 +95,11 @@
               [processType]="conv.type"
               [convocatoriaForms]="conv.forms"
               [forms]="forms()"
-              [readonly]="true" />
+              [readonly]="false"
+              (formAdded)="onFormAdded($event)"
+              (formUpdated)="onFormUpdated($event)"
+              (formRemoved)="onFormRemoved($event)"
+              (formsReordered)="onFormsReordered($event)" />
           }
         }
       </app-card>
@@ -111,7 +110,7 @@
 <app-confirm-dialog
   [isOpen]="deleteConfirmOpen()"
   title="convocatorias.detail.delete_confirm.title"
-  message="convocatorias.detail.delete_confirm.message"
+  message="encuestas.detail.delete_confirm.message"
   [loading]="deleting()"
   (confirmed)="confirmDelete()"
   (cancelled)="cancelDelete()" />

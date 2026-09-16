@@ -14,7 +14,6 @@ const MOCK_CONVOCATORIA: ConvocatoriaDetail = {
 
 function buildComponent(
   createImpl?: ReturnType<typeof vi.fn>,
-  routeData: Record<string, unknown> = {},
   queryParams: Record<string, string> = {},
 ) {
   const mockConvocatoriaService = { create: createImpl ?? vi.fn().mockReturnValue(of(MOCK_CONVOCATORIA)) };
@@ -30,7 +29,6 @@ function buildComponent(
         provide: ActivatedRoute,
         useValue: {
           snapshot: {
-            data: routeData,
             queryParamMap: { get: (key: string) => queryParams[key] ?? null },
           },
         },
@@ -81,12 +79,12 @@ describe('ConvocatoriaCreateComponent', () => {
 
   describe('prefill from query params (arriving from CreateFormDialogComponent)', () => {
     it('prefills name from the ?name query param', () => {
-      const { component } = buildComponent(undefined, {}, { name: 'RRHH 2026' });
+      const { component } = buildComponent(undefined, { name: 'RRHH 2026' });
       expect(component['name']()).toBe('RRHH 2026');
     });
 
     it('prefills processType from the ?type query param', () => {
-      const { component } = buildComponent(undefined, {}, { type: 'DIAGNOSTIC' });
+      const { component } = buildComponent(undefined, { type: 'DIAGNOSTIC' });
       expect(component['processType']()).toBe('DIAGNOSTIC');
     });
 
@@ -97,27 +95,8 @@ describe('ConvocatoriaCreateComponent', () => {
     });
 
     it('ignores an invalid ?type value and falls back to CANDIDATES', () => {
-      const { component } = buildComponent(undefined, {}, { type: 'not-a-real-type' });
+      const { component } = buildComponent(undefined, { type: 'not-a-real-type' });
       expect(component['processType']()).toBe('CANDIDATES');
-    });
-  });
-
-  describe('survey mode (entered via /encuestas/new)', () => {
-    it('defaults processType to REGISTRATION and locks it', () => {
-      const { component } = buildComponent(undefined, { fixedType: 'REGISTRATION' });
-      expect(component['isSurveyMode']).toBe(true);
-      expect(component['processType']()).toBe('REGISTRATION');
-    });
-
-    it('navigates to the encuesta detail route after creating', () => {
-      const mockCreate = vi.fn().mockReturnValue(of({ ...MOCK_CONVOCATORIA, type: 'REGISTRATION' as const }));
-      const { component, mockRouter } = buildComponent(mockCreate, { fixedType: 'REGISTRATION' });
-      component['onBasicInfoChanged']({ name: 'Clima laboral', processType: 'REGISTRATION' });
-
-      component['submit']();
-
-      expect(mockCreate).toHaveBeenCalledWith({ name: 'Clima laboral', type: 'REGISTRATION' });
-      expect(mockRouter.navigate).toHaveBeenCalledWith(['/', 'encuestas', 'c1']);
     });
   });
 });
