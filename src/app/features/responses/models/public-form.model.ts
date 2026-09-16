@@ -54,6 +54,7 @@ export interface CandidateChecklistFormItem {
 export interface CandidateChecklist {
   candidateName: string;
   convocatoriaName: string;
+  convocatoriaType: string;
   endDate: string | null;
   allCompleted: boolean;
   forms: CandidateChecklistFormItem[];

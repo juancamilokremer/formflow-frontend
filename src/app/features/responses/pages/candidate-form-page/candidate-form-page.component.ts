@@ -43,6 +43,13 @@ export class CandidateFormPageComponent implements OnInit {
     () => this.checklist()?.forms.find((formItem) => formItem.formId === this.selectedFormId())?.name ?? null,
   );
 
+  // False for a single-form encuesta (REGISTRATION) — there's no checklist to go back to,
+  // so the "volver al checklist" affordance would just be a confusing dead end.
+  protected readonly hasChecklist = computed<boolean>(() => {
+    const c = this.checklist();
+    return !!c && !(c.convocatoriaType === 'REGISTRATION' && c.forms.length === 1);
+  });
+
   readonly doSubmit = (payload: SubmitPublicResponsePayload): Observable<SubmitPublicResponseResult> =>
     this.svc.submitCandidateResponse(this.token()!, this.selectedFormId()!, payload);
 
@@ -57,7 +64,12 @@ export class CandidateFormPageComponent implements OnInit {
       .subscribe({
         next: (checklist) => {
           this.checklist.set(checklist);
-          this.view.set('checklist');
+
+          if (this.hasChecklist()) {
+            this.view.set('checklist');
+          } else {
+            this.selectForm(checklist.forms[0]);
+          }
         },
         error: (error) => this.view.set(error?.status === 404 ? 'not_found' : 'closed'),
       });

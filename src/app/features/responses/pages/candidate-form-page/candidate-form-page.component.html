@@ -100,9 +100,11 @@
         <p class="cfp__state-message">
           {{ 'responder.candidate.form_already_done.message' | translate : { formName: selectedFormName() } }}
         </p>
-        <app-button variant="secondary" (click)="onBackToChecklist()">
-          {{ 'responder.candidate.back_to_checklist' | translate }}
-        </app-button>
+        @if (hasChecklist()) {
+          <app-button variant="secondary" (click)="onBackToChecklist()">
+            {{ 'responder.candidate.back_to_checklist' | translate }}
+          </app-button>
+        }
       </div>
     </div>
   }
@@ -113,7 +115,7 @@
       [submitFn]="doSubmit"
       [candidateName]="checklist()!.candidateName"
       [convocatoriaName]="checklist()!.convocatoriaName"
-      [showBackToChecklist]="true"
+      [showBackToChecklist]="hasChecklist()"
       (backToChecklist)="onBackToChecklist()"
     />
   }
