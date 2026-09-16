@@ -124,29 +124,29 @@ export const routes: Routes = [
       },
       {
         path: RouteConstants.ENCUESTAS,
-        data: { titleKey: 'shell.nav.encuestas', kind: 'encuestas' },
+        data: { titleKey: 'shell.nav.encuestas' },
         loadComponent: () =>
-          import('./features/convocatorias/convocatorias.component').then(
-            (m) => m.ConvocatoriasComponent,
+          import('./features/encuestas/encuestas.component').then(
+            (m) => m.EncuestasComponent,
           ),
       },
       {
         // Must stay before `encuestas/:id` below or that route will swallow this path
         // as an :id param.
         path: `${RouteConstants.ENCUESTAS}/${RouteConstants.CONVOCATORIA_NEW}`,
-        data: { titleKey: 'encuestas.create.title', fixedType: 'REGISTRATION' },
+        data: { titleKey: 'encuestas.create.title' },
         loadComponent: () =>
           import(
-            './features/convocatorias/components/convocatoria-create/convocatoria-create.component'
-          ).then((m) => m.ConvocatoriaCreateComponent),
+            './features/encuestas/components/encuesta-create/encuesta-create.component'
+          ).then((m) => m.EncuestaCreateComponent),
       },
       {
         path: `${RouteConstants.ENCUESTAS}/:id`,
-        data: { titleKey: 'encuestas.detail_title', kind: 'encuestas' },
+        data: { titleKey: 'encuestas.detail_title' },
         loadComponent: () =>
           import(
-            './features/convocatorias/components/convocatoria-detail/convocatoria-detail.component'
-          ).then((m) => m.ConvocatoriaDetailComponent),
+            './features/encuestas/components/encuesta-detail/encuesta-detail.component'
+          ).then((m) => m.EncuestaDetailComponent),
       },
       {
         path: RouteConstants.BILLING,

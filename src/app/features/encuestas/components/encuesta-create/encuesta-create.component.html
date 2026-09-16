@@ -1,0 +1,26 @@
+<div class="ecc">
+  <app-page-header
+    [title]="'encuestas.create.title' | translate"
+    [subtitle]="'encuestas.create.subtitle' | translate"
+  />
+
+  <app-card class="ecc__body">
+    <app-basic-info-form
+      [name]="name()"
+      [processType]="'REGISTRATION'"
+      [lockType]="true"
+      nameLabelKey="encuestas.create.name_label"
+      namePlaceholderKey="encuestas.create.name_placeholder"
+      (changed)="onNameChanged($event.name)" />
+  </app-card>
+
+  @if (createError()) {
+    <p class="ecc__error">{{ 'encuestas.create.error' | translate }}</p>
+  }
+
+  <div class="ecc__nav">
+    <app-button type="button" [loading]="creating()" [disabled]="!isValid()" (click)="submit()">
+      {{ 'common.next' | translate }}
+    </app-button>
+  </div>
+</div>

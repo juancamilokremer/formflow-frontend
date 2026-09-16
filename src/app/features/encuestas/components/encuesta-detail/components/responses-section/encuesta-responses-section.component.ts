@@ -3,15 +3,15 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { StatCardComponent } from '../../../../../../shared/components/stat-card/stat-card.component';
 import { IndividualResponsesComponent } from '../../../../../forms/components/form-results/components/individual-responses/individual-responses.component';
 import { ResponseDetailDrawerComponent } from '../../../../../forms/components/form-results/components/response-detail-drawer/response-detail-drawer.component';
-import { Candidate } from '../../../../models/convocatoria.model';
+import { Candidate } from '../../../../../convocatorias/models/convocatoria.model';
 
 @Component({
-  selector: 'app-convocatoria-responses-section',
+  selector: 'app-encuesta-responses-section',
   imports: [TranslatePipe, StatCardComponent, IndividualResponsesComponent, ResponseDetailDrawerComponent],
-  templateUrl: './convocatoria-responses-section.component.html',
-  styleUrl: './convocatoria-responses-section.component.scss',
+  templateUrl: './encuesta-responses-section.component.html',
+  styleUrl: './encuesta-responses-section.component.scss',
 })
-export class ConvocatoriaResponsesSectionComponent {
+export class EncuestaResponsesSectionComponent {
   readonly formId = input.required<string>();
   readonly candidates = input.required<Candidate[]>();
 

@@ -594,7 +594,6 @@
       "closes_on": "Cierra: {{date}}",
       "tabs": {
         "ranking": "Ranking",
-        "respuestas": "Respuestas",
         "stats": "Estadísticas",
         "per_question": "Por pregunta",
         "formularios": "Formularios"
@@ -603,13 +602,7 @@
         "formularios": "Formularios",
         "umbrales": "Umbrales",
         "candidatos": "Candidatos",
-        "destinatarios": "Destinatarios",
         "lanzar": "Lanzar"
-      },
-      "responses": {
-        "invited": "Invitados",
-        "responded": "Respondieron",
-        "rate": "Tasa de respuesta"
       },
       "ranking": {
         "col_candidate": "Candidato",
@@ -728,6 +721,17 @@
     "error": {
       "load": "No se pudo cargar la lista de encuestas."
     },
+    "confirm_close": {
+      "title": "¿Cerrar encuesta?",
+      "message": "La encuesta \"{{name}}\" quedará cerrada. Los destinatarios pendientes ya no podrán responder."
+    },
+    "confirm_delete": {
+      "title": "¿Eliminar encuesta?",
+      "message": "Se eliminará la encuesta \"{{name}}\". Esta acción no se puede deshacer."
+    },
+    "stats": {
+      "total_recipients": "DESTINATARIOS"
+    },
     "create": {
       "title": "Nueva encuesta",
       "subtitle": "Empieza con el nombre — el resto se configura después.",
@@ -736,12 +740,29 @@
       "error": "No se pudo crear la encuesta. Intenta de nuevo."
     },
     "detail": {
+      "back_to_list": "Encuestas",
+      "closes_on": "Cierra: {{date}}",
       "error": {
         "load": "No se pudo cargar la encuesta."
       },
       "name_label": "Nombre de la encuesta",
       "delete_confirm": {
         "message": "Se eliminará esta encuesta y su configuración. Esta acción no se puede deshacer."
+      },
+      "tabs": {
+        "respuestas": "Respuestas",
+        "per_question": "Por pregunta",
+        "formularios": "Formularios"
+      },
+      "draft_tabs": {
+        "formularios": "Formularios",
+        "destinatarios": "Destinatarios",
+        "lanzar": "Lanzar"
+      },
+      "responses": {
+        "invited": "Invitados",
+        "responded": "Respondieron",
+        "rate": "Tasa de respuesta"
       }
     }
   },

@@ -2,15 +2,15 @@ import { TestBed } from '@angular/core/testing';
 import { provideTranslateService } from '@ngx-translate/core';
 import { ActivatedRoute, provideRouter, Router } from '@angular/router';
 import { of } from 'rxjs';
-import { ConvocatoriaDetailComponent } from './convocatoria-detail.component';
-import { ConvocatoriaService } from '../../services/convocatoria.service';
+import { EncuestaDetailComponent } from './encuesta-detail.component';
+import { ConvocatoriaService } from '../../../convocatorias/services/convocatoria.service';
 import { FormsService } from '../../../forms/services/forms.service';
 import { CategoryService } from '../../../../core/services/category.service';
-import { Candidate, ConvocatoriaDetail, ConvocatoriaForm, ConvocatoriaStats, RankingEntry } from '../../models/convocatoria.model';
+import { Candidate, ConvocatoriaDetail, ConvocatoriaForm } from '../../../convocatorias/models/convocatoria.model';
 import { Form, FormDetail } from '../../../forms/models/form.model';
 
-const DRAFT_CONVOCATORIA: ConvocatoriaDetail = {
-  id: 'c1', tenantId: 't1', name: 'RRHH', type: 'CANDIDATES', status: 'DRAFT',
+const DRAFT_ENCUESTA: ConvocatoriaDetail = {
+  id: 'c1', tenantId: 't1', name: 'Clima laboral', type: 'REGISTRATION', status: 'DRAFT',
   scoringConfig: { aptoMin: 70, revisarMin: 50 },
   startDate: null, endDate: null, createdAt: '', updatedAt: '', candidates: [], forms: [],
 };
@@ -20,7 +20,7 @@ const CONV_FORM_1: ConvocatoriaForm = {
 };
 
 const FORM_1: Form = {
-  id: 'f1', name: 'Evaluación técnica', description: null, type: 'CANDIDATES', status: 'ACTIVE',
+  id: 'f1', name: 'Encuesta de clima', description: null, type: 'REGISTRATION', status: 'ACTIVE',
   version: 1, sectionCount: 2, responseCount: 0, lastResponseAt: null, createdAt: '', updatedAt: '',
 };
 
@@ -33,17 +33,12 @@ function buildComponent(options: {
   reorderFormsImpl?: ReturnType<typeof vi.fn>;
   queryParams?: Record<string, string>;
 } = {}) {
-  const initial = options.convocatoria ?? DRAFT_CONVOCATORIA;
+  const initial = options.convocatoria ?? DRAFT_ENCUESTA;
   const mockConvocatoriaService = {
     getById: options.getByIdImpl ?? vi.fn().mockReturnValue(of(initial)),
     update: options.updateImpl ?? vi.fn().mockReturnValue(of(initial)),
     reorderForms: options.reorderFormsImpl ?? vi.fn().mockReturnValue(of([])),
     delete: vi.fn().mockReturnValue(of(undefined)),
-    getRanking: vi.fn().mockReturnValue(of([] as RankingEntry[])),
-    getStats: vi.fn().mockReturnValue(of({
-      convocatoriaId: 'c1', convocatoriaName: 'RRHH', total: 0, notStarted: 0, inProgress: 0,
-      responded: 0, aptoCount: 0, revisarCount: 0, noAptoCount: 0, participationPct: 0,
-    } satisfies ConvocatoriaStats)),
   };
   const mockFormsService = {
     getAll: vi.fn().mockReturnValue(of([] as Form[])),
@@ -57,7 +52,7 @@ function buildComponent(options: {
   const mockRouter = { navigate: vi.fn() };
 
   TestBed.configureTestingModule({
-    imports: [ConvocatoriaDetailComponent],
+    imports: [EncuestaDetailComponent],
     providers: [
       provideRouter([]),
       provideTranslateService({ lang: 'es' }),
@@ -77,112 +72,87 @@ function buildComponent(options: {
     ],
   }).compileComponents();
 
-  const fixture = TestBed.createComponent(ConvocatoriaDetailComponent);
+  const fixture = TestBed.createComponent(EncuestaDetailComponent);
   fixture.detectChanges();
   return { component: fixture.componentInstance, mockConvocatoriaService, mockFormsService, mockRouter };
 }
 
-describe('ConvocatoriaDetailComponent', () => {
+describe('EncuestaDetailComponent', () => {
   afterEach(() => {
     TestBed.resetTestingModule();
-    vi.useRealTimers();
   });
 
-  it('hydrates from getById and seeds thresholds', () => {
-    const withThresholds: ConvocatoriaDetail = {
-      ...DRAFT_CONVOCATORIA,
-      scoringConfig: { aptoMin: 80, revisarMin: 40 },
-    };
-    const { component } = buildComponent({ convocatoria: withThresholds });
-
-    expect(component['convocatoria']()).toEqual(withThresholds);
-    expect(component['aptoMin']()).toBe(80);
-    expect(component['revisarMin']()).toBe(40);
+  it('hydrates from getById', () => {
+    const { component } = buildComponent();
+    expect(component['convocatoria']()).toEqual(DRAFT_ENCUESTA);
     expect(component['loading']()).toBe(false);
   });
 
-  it('isDraft reflects the convocatoria status', () => {
-    const { component } = buildComponent({ convocatoria: { ...DRAFT_CONVOCATORIA, status: 'ACTIVE' } });
+  it('isDraft reflects the encuesta status', () => {
+    const { component } = buildComponent({ convocatoria: { ...DRAFT_ENCUESTA, status: 'ACTIVE' } });
     expect(component['isDraft']()).toBe(false);
   });
 
-  it('detailTabs is the fixed convocatoria tab set', () => {
-    const { component } = buildComponent({ convocatoria: { ...DRAFT_CONVOCATORIA, status: 'ACTIVE' } });
+  it('detailTabs is the fixed encuesta tab set (respuestas, no ranking/stats/umbrales)', () => {
+    const { component } = buildComponent({ convocatoria: { ...DRAFT_ENCUESTA, status: 'ACTIVE' } });
     const ids = component['detailTabs'].map((t) => t.id);
-    expect(ids).toEqual(['ranking', 'stats', 'per-question', 'formularios']);
+    expect(ids).toEqual(['respuestas', 'per-question', 'formularios']);
   });
 
   describe('setActiveTab', () => {
-    it('defaults to the ranking tab and switches on demand', () => {
-      const { component } = buildComponent({ convocatoria: { ...DRAFT_CONVOCATORIA, status: 'ACTIVE' } });
+    it('defaults to the respuestas tab and switches on demand', () => {
+      const { component } = buildComponent({ convocatoria: { ...DRAFT_ENCUESTA, status: 'ACTIVE' } });
 
-      expect(component['activeTab']()).toBe('ranking');
+      expect(component['activeTab']()).toBe('respuestas');
 
       component['setActiveTab']('formularios');
       expect(component['activeTab']()).toBe('formularios');
-
-      component['setActiveTab']('stats');
-      expect(component['activeTab']()).toBe('stats');
     });
 
-    it('starts on the tab given in the ?tab query param, e.g. after returning from a form preview', () => {
+    it('starts on the tab given in the ?tab query param', () => {
       const { component } = buildComponent({
-        convocatoria: { ...DRAFT_CONVOCATORIA, status: 'ACTIVE' },
+        convocatoria: { ...DRAFT_ENCUESTA, status: 'ACTIVE' },
         queryParams: { tab: 'formularios' },
       });
 
       expect(component['activeTab']()).toBe('formularios');
     });
 
-    it('ignores an invalid ?tab query param and falls back to ranking', () => {
+    it('ignores an invalid ?tab query param and falls back to respuestas', () => {
       const { component } = buildComponent({
-        convocatoria: { ...DRAFT_CONVOCATORIA, status: 'ACTIVE' },
+        convocatoria: { ...DRAFT_ENCUESTA, status: 'ACTIVE' },
         queryParams: { tab: 'not-a-real-tab' },
       });
 
-      expect(component['activeTab']()).toBe('ranking');
+      expect(component['activeTab']()).toBe('respuestas');
     });
   });
 
   describe('draftTabs', () => {
-    it('marks formularios as pending with no forms', () => {
+    it('omits umbrales and relabels candidatos to destinatarios', () => {
       const { component } = buildComponent();
-      const formsTab = component['draftTabs']().find((t) => t.id === 'formularios');
-      expect(formsTab?.badge).toBe('pending');
+      const tabs = component['draftTabs']();
+      expect(tabs.find((t) => t.id === 'umbrales')).toBeUndefined();
+      expect(tabs.map((t) => t.id)).toEqual(['formularios', 'destinatarios', 'lanzar']);
     });
 
-    it('marks formularios as pending when weights do not sum to 100', () => {
+    it('marks formularios complete with one form regardless of weight', () => {
       const { component } = buildComponent({
-        convocatoria: { ...DRAFT_CONVOCATORIA, forms: [{ ...CONV_FORM_1, weight: 60 }] },
+        convocatoria: { ...DRAFT_ENCUESTA, forms: [{ ...CONV_FORM_1, weight: 40 }] },
       });
-      const formsTab = component['draftTabs']().find((t) => t.id === 'formularios');
-      expect(formsTab?.badge).toBe('pending');
+      expect(component['draftTabs']().find((t) => t.id === 'formularios')?.badge).toBe('complete');
     });
 
-    it('marks formularios as complete with at least one form and weights summing to 100', () => {
-      const { component } = buildComponent({
-        convocatoria: { ...DRAFT_CONVOCATORIA, forms: [CONV_FORM_1] },
-      });
-      const formsTab = component['draftTabs']().find((t) => t.id === 'formularios');
-      expect(formsTab?.badge).toBe('complete');
-    });
-
-    it('marks candidatos as pending with no candidates and complete with at least one', () => {
+    it('marks destinatarios as pending with none and complete with at least one', () => {
       const { component } = buildComponent();
-      expect(component['draftTabs']().find((t) => t.id === 'candidatos')?.badge).toBe('pending');
+      expect(component['draftTabs']().find((t) => t.id === 'destinatarios')?.badge).toBe('pending');
 
       component['onCandidateAdded']({
         id: 'cand1', convocatoriaId: 'c1', name: 'Ana', email: 'ana@x.com', token: 't',
         status: 'INVITED', responseId: null, scores: null, invitedAt: null, respondedAt: null, createdAt: '',
       });
 
-      expect(component['draftTabs']().find((t) => t.id === 'candidatos')?.badge).toBe('complete');
-    });
-
-    it('umbrales and lanzar have no badge', () => {
-      const { component } = buildComponent();
-      expect(component['draftTabs']().find((t) => t.id === 'umbrales')?.badge).toBeUndefined();
-      expect(component['draftTabs']().find((t) => t.id === 'lanzar')?.badge).toBeUndefined();
+      expect(component['draftTabs']().find((t) => t.id === 'destinatarios')?.badge).toBe('complete');
     });
   });
 
@@ -192,34 +162,17 @@ describe('ConvocatoriaDetailComponent', () => {
 
       expect(component['draftActiveTab']()).toBe('formularios');
 
-      component['setDraftTab']('candidatos');
-      expect(component['draftActiveTab']()).toBe('candidatos');
+      component['setDraftTab']('destinatarios');
+      expect(component['draftActiveTab']()).toBe('destinatarios');
 
       component['setDraftTab']('lanzar');
       expect(component['draftActiveTab']()).toBe('lanzar');
     });
   });
 
-  it('backToListPath points at the convocatorias list', () => {
+  it('backToListPath points at the encuestas list', () => {
     const { component } = buildComponent();
-    expect(component['backToListPath']).toEqual(['/', 'convocatorias']);
-  });
-
-  it('debounces thresholds changes into a single update() call with name + scoringConfig only', () => {
-    vi.useFakeTimers();
-    const { component, mockConvocatoriaService } = buildComponent();
-
-    component['onThresholdsChanged']({ aptoMin: 75, revisarMin: 45 });
-    component['onThresholdsChanged']({ aptoMin: 78, revisarMin: 48 });
-
-    expect(mockConvocatoriaService.update).not.toHaveBeenCalled();
-    vi.advanceTimersByTime(600);
-
-    expect(mockConvocatoriaService.update).toHaveBeenCalledTimes(1);
-    expect(mockConvocatoriaService.update).toHaveBeenCalledWith('c1', {
-      name: 'RRHH',
-      scoringConfig: { aptoMin: 78, revisarMin: 48 },
-    });
+    expect(component['backToListPath']).toEqual(['/', 'encuestas']);
   });
 
   it('onNameBlur persists immediately when the name changed', () => {
@@ -229,20 +182,20 @@ describe('ConvocatoriaDetailComponent', () => {
 
     component['onNameBlur']({ target: input } as unknown as FocusEvent);
 
-    expect(mockConvocatoriaService.update).toHaveBeenCalledWith('c1', expect.objectContaining({ name: 'Nuevo nombre' }));
+    expect(mockConvocatoriaService.update).toHaveBeenCalledWith('c1', { name: 'Nuevo nombre' });
   });
 
   it('onNameBlur does nothing when the name is unchanged', () => {
     const { component, mockConvocatoriaService } = buildComponent();
     const input = document.createElement('input');
-    input.value = 'RRHH';
+    input.value = 'Clima laboral';
 
     component['onNameBlur']({ target: input } as unknown as FocusEvent);
 
     expect(mockConvocatoriaService.update).not.toHaveBeenCalled();
   });
 
-  it('onCandidateAdded appends the candidate to the local list', () => {
+  it('onCandidateAdded appends the recipient to the local list', () => {
     const { component } = buildComponent();
     const candidate: Candidate = {
       id: 'cand1', convocatoriaId: 'c1', name: 'Ana', email: 'ana@x.com', token: 't',
@@ -254,9 +207,9 @@ describe('ConvocatoriaDetailComponent', () => {
     expect(component['convocatoria']()?.candidates).toEqual([candidate]);
   });
 
-  it('onLaunched replaces the local convocatoria with the launched detail', () => {
+  it('onLaunched replaces the local encuesta with the launched detail', () => {
     const { component } = buildComponent();
-    const launched: ConvocatoriaDetail = { ...DRAFT_CONVOCATORIA, status: 'ACTIVE' };
+    const launched: ConvocatoriaDetail = { ...DRAFT_ENCUESTA, status: 'ACTIVE' };
 
     component['onLaunched'](launched);
 
@@ -275,7 +228,7 @@ describe('ConvocatoriaDetailComponent', () => {
 
     it('onFormUpdated replaces the matching form in place', () => {
       const { component } = buildComponent({
-        convocatoria: { ...DRAFT_CONVOCATORIA, forms: [CONV_FORM_1] },
+        convocatoria: { ...DRAFT_ENCUESTA, forms: [CONV_FORM_1] },
       });
       const updated: ConvocatoriaForm = { ...CONV_FORM_1, weight: 60 };
 
@@ -286,7 +239,7 @@ describe('ConvocatoriaDetailComponent', () => {
 
     it('onFormRemoved filters the form out of the list', () => {
       const { component } = buildComponent({
-        convocatoria: { ...DRAFT_CONVOCATORIA, forms: [CONV_FORM_1] },
+        convocatoria: { ...DRAFT_ENCUESTA, forms: [CONV_FORM_1] },
       });
 
       component['onFormRemoved']('cf1');
@@ -298,7 +251,7 @@ describe('ConvocatoriaDetailComponent', () => {
       const cf2: ConvocatoriaForm = { ...CONV_FORM_1, id: 'cf2', position: 1 };
       const reordered = [cf2, CONV_FORM_1];
       const { component, mockConvocatoriaService } = buildComponent({
-        convocatoria: { ...DRAFT_CONVOCATORIA, forms: [CONV_FORM_1, cf2] },
+        convocatoria: { ...DRAFT_ENCUESTA, forms: [CONV_FORM_1, cf2] },
         reorderFormsImpl: vi.fn().mockReturnValue(of(reordered)),
       });
 
@@ -316,6 +269,6 @@ describe('ConvocatoriaDetailComponent', () => {
     component['confirmDelete']();
 
     expect(mockConvocatoriaService.delete).toHaveBeenCalledWith('c1');
-    expect(mockRouter.navigate).toHaveBeenCalledWith(['/', 'convocatorias']);
+    expect(mockRouter.navigate).toHaveBeenCalledWith(['/', 'encuestas']);
   });
 });

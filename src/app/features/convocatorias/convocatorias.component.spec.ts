@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { Observable, of, throwError } from 'rxjs';
 import { provideTranslateService } from '@ngx-translate/core';
 import { ConvocatoriasComponent } from './convocatorias.component';
@@ -19,7 +19,7 @@ function buildSvc(getAll: Observable<unknown> = of(mockList)) {
   return { getAll: vi.fn().mockReturnValue(getAll), close: vi.fn(), delete: vi.fn() };
 }
 
-async function create(svc = buildSvc(), routeData: Record<string, unknown> = {}) {
+async function create(svc = buildSvc()) {
   const mockRouter = { navigate: vi.fn() };
   await TestBed.configureTestingModule({
     imports: [ConvocatoriasComponent],
@@ -27,7 +27,6 @@ async function create(svc = buildSvc(), routeData: Record<string, unknown> = {})
       provideTranslateService({ lang: 'es' }),
       { provide: ConvocatoriaService, useValue: svc },
       { provide: Router, useValue: mockRouter },
-      { provide: ActivatedRoute, useValue: { snapshot: { data: routeData } } },
     ],
   }).compileComponents();
 
@@ -95,6 +94,12 @@ describe('ConvocatoriasComponent', () => {
       component['statusFilter'].set('CLOSED');
       expect(component['filtered']().length).toBe(1);
     });
+
+    it('excludes REGISTRATION items from the list', async () => {
+      const { component } = await create(buildSvc(of([...mockList, surveyItem])));
+      expect(component['filtered']().length).toBe(3);
+      expect(component['filtered']().some((c) => c.type === 'REGISTRATION')).toBe(false);
+    });
   });
 
   describe('actions', () => {
@@ -136,13 +141,7 @@ describe('ConvocatoriasComponent', () => {
     });
   });
 
-  describe('kind: convocatorias (default)', () => {
-    it('excludes REGISTRATION items from the list', async () => {
-      const { component } = await create(buildSvc(of([...mockList, surveyItem])));
-      expect(component['filtered']().length).toBe(3);
-      expect(component['filtered']().some((c) => c.type === 'REGISTRATION')).toBe(false);
-    });
-
+  describe('navigation', () => {
     it('navigateToNew navigates to the convocatoria creation route', async () => {
       const { component, mockRouter } = await create();
       component['navigateToNew']();
@@ -153,26 +152,6 @@ describe('ConvocatoriasComponent', () => {
       const { component, mockRouter } = await create();
       component['navigateToDetail']('1');
       expect(mockRouter.navigate).toHaveBeenCalledWith(['/', 'convocatorias', '1']);
-    });
-  });
-
-  describe('kind: encuestas', () => {
-    it('only includes REGISTRATION items in the list', async () => {
-      const { component } = await create(buildSvc(of([...mockList, surveyItem])), { kind: 'encuestas' });
-      expect(component['filtered']().length).toBe(1);
-      expect(component['filtered']()[0].id).toBe('4');
-    });
-
-    it('navigateToNew navigates to the encuesta creation route', async () => {
-      const { component, mockRouter } = await create(buildSvc(of([surveyItem])), { kind: 'encuestas' });
-      component['navigateToNew']();
-      expect(mockRouter.navigate).toHaveBeenCalledWith(['/', 'encuestas', 'new']);
-    });
-
-    it('navigateToDetail navigates to the encuesta detail route', async () => {
-      const { component, mockRouter } = await create(buildSvc(of([surveyItem])), { kind: 'encuestas' });
-      component['navigateToDetail']('4');
-      expect(mockRouter.navigate).toHaveBeenCalledWith(['/', 'encuestas', '4']);
     });
   });
 });
