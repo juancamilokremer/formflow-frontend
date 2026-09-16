@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
 import { provideTranslateService } from '@ngx-translate/core';
 import { BuilderTopbarComponent } from './builder-topbar.component';
 import { FormDetail } from '../../../../models/form.model';
@@ -236,5 +236,63 @@ describe('BuilderTopbarComponent', () => {
       fixture.detectChanges();
       expect((component as any).hasQuestionTimeLimits()).toBe(true);
     });
+  });
+});
+
+describe('BuilderTopbarComponent onPreviewClick', () => {
+  // NOTE: this component's template renders a real [routerLink] (the standalone-form
+  // "Volver a formularios" link) when convocatoriaId is absent, which needs a real Router
+  // instance under the hood — replacing the Router provider with a bare mock breaks that
+  // directive's own internal DI lookups. Spy on the real router's navigate() instead.
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [BuilderTopbarComponent],
+      providers: [
+        provideRouter([]),
+        provideTranslateService({ lang: 'es' }),
+      ],
+    }).compileComponents();
+  });
+
+  it('navigates to preview without query params when there is no convocatoriaId', () => {
+    const fixture = TestBed.createComponent(BuilderTopbarComponent);
+    fixture.componentRef.setInput('form', MOCK_FORM);
+    fixture.detectChanges();
+    const navigateSpy = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+
+    (fixture.componentInstance as any).onPreviewClick();
+
+    expect(navigateSpy).toHaveBeenCalledWith(['/', 'forms', 'f1', 'preview']);
+  });
+
+  it('carries convocatoriaId and kind so the builder does not forget its convocatoria on return', () => {
+    const fixture = TestBed.createComponent(BuilderTopbarComponent);
+    fixture.componentRef.setInput('form', MOCK_FORM);
+    fixture.componentRef.setInput('convocatoriaId', 'conv1');
+    fixture.detectChanges();
+    const navigateSpy = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+
+    (fixture.componentInstance as any).onPreviewClick();
+
+    expect(navigateSpy).toHaveBeenCalledWith(
+      ['/', 'forms', 'f1', 'preview'],
+      { queryParams: { convocatoriaId: 'conv1', kind: 'convocatorias' } },
+    );
+  });
+
+  it('carries kind=encuestas when containerKind is encuestas', () => {
+    const fixture = TestBed.createComponent(BuilderTopbarComponent);
+    fixture.componentRef.setInput('form', MOCK_FORM);
+    fixture.componentRef.setInput('convocatoriaId', 'conv1');
+    fixture.componentRef.setInput('containerKind', 'encuestas');
+    fixture.detectChanges();
+    const navigateSpy = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+
+    (fixture.componentInstance as any).onPreviewClick();
+
+    expect(navigateSpy).toHaveBeenCalledWith(
+      ['/', 'forms', 'f1', 'preview'],
+      { queryParams: { convocatoriaId: 'conv1', kind: 'encuestas' } },
+    );
   });
 });
