@@ -29,11 +29,23 @@ const mockCandidateForm: PublicCandidateForm = {
 const mockChecklist: CandidateChecklist = {
   candidateName:    'María García',
   convocatoriaName: 'Analista RRHH',
+  convocatoriaType: 'CANDIDATES',
   endDate:          null,
   allCompleted:     false,
   forms: [
     { formId: 'form-123', name: 'Evaluación de aspirantes', completed: false },
     { formId: 'form-456', name: 'Test psicotécnico',        completed: true },
+  ],
+};
+
+const mockSurveyChecklist: CandidateChecklist = {
+  candidateName:    'María García',
+  convocatoriaName: 'Clima laboral 2026',
+  convocatoriaType: 'REGISTRATION',
+  endDate:          null,
+  allCompleted:     false,
+  forms: [
+    { formId: 'form-123', name: 'Clima laboral 2026', completed: false },
   ],
 };
 
@@ -101,6 +113,62 @@ describe('CandidateFormPageComponent', () => {
       component.ngOnInit();
       expect(component['view']()).toBe('not_found');
       expect(svc.getCandidateChecklist).not.toHaveBeenCalled();
+    });
+
+    it('skips the checklist and goes straight to the form for a single-form REGISTRATION survey', async () => {
+      const { component, svc } = await createPage(
+        'cand-token-1',
+        buildSvc({ getCandidateChecklistImpl: of(mockSurveyChecklist) }),
+      );
+      component.ngOnInit();
+
+      expect(svc.getCandidateForm).toHaveBeenCalledWith('cand-token-1', 'form-123');
+      expect(component['view']()).toBe('form_ready');
+      expect(component['hasChecklist']()).toBe(false);
+    });
+
+    it('goes straight to form_already_done for a single-form survey the candidate already answered', async () => {
+      const doneSurvey: CandidateChecklist = {
+        ...mockSurveyChecklist,
+        allCompleted: true,
+        forms: [{ ...mockSurveyChecklist.forms[0], completed: true }],
+      };
+      const { component, svc } = await createPage(
+        'cand-token-1',
+        buildSvc({ getCandidateChecklistImpl: of(doneSurvey) }),
+      );
+      component.ngOnInit();
+
+      expect(svc.getCandidateForm).not.toHaveBeenCalled();
+      expect(component['view']()).toBe('form_already_done');
+      expect(component['hasChecklist']()).toBe(false);
+    });
+  });
+
+  describe('hasChecklist', () => {
+    it('is true for a multi-form convocatoria', async () => {
+      const { component } = await createPage('cand-token-1');
+      component.ngOnInit();
+      expect(component['hasChecklist']()).toBe(true);
+    });
+
+    it('is true for a single-form non-REGISTRATION convocatoria', async () => {
+      const singleCandidatesForm: CandidateChecklist = { ...mockChecklist, forms: [mockChecklist.forms[0]] };
+      const { component } = await createPage(
+        'cand-token-1',
+        buildSvc({ getCandidateChecklistImpl: of(singleCandidatesForm) }),
+      );
+      component.ngOnInit();
+      expect(component['hasChecklist']()).toBe(true);
+    });
+
+    it('is false for a single-form REGISTRATION survey', async () => {
+      const { component } = await createPage(
+        'cand-token-1',
+        buildSvc({ getCandidateChecklistImpl: of(mockSurveyChecklist) }),
+      );
+      component.ngOnInit();
+      expect(component['hasChecklist']()).toBe(false);
     });
   });
 
