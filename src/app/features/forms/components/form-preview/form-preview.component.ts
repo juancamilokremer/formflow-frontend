@@ -2,7 +2,7 @@ import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { IconComponent } from '../../../../shared/icons/icon.component';
-import { RouteConstants, convocatoriaDetailPath, formBuilderPath } from '../../../../core/constants/route.constants';
+import { RouteConstants, convocatoriaDetailPath, encuestaDetailPath, formBuilderPath } from '../../../../core/constants/route.constants';
 import { FormDetail, FormQuestion, FormSection } from '../../models/form.model';
 import { FormsService } from '../../services/forms.service';
 import { ConditionEngineService } from '../../services/condition-engine.service';
@@ -91,17 +91,31 @@ export class FormPreviewComponent implements OnInit {
 
   protected goBack(): void {
     const convocatoriaId = this.route.snapshot.queryParamMap.get(RouteConstants.QUERY_CONVOCATORIA_ID);
-    if (convocatoriaId) {
-      const tab = this.route.snapshot.queryParamMap.get(RouteConstants.QUERY_TAB);
-      if (tab) {
-        this.router.navigate(convocatoriaDetailPath(convocatoriaId), { queryParams: { [RouteConstants.QUERY_TAB]: tab } });
-      } else {
-        this.router.navigate(convocatoriaDetailPath(convocatoriaId));
-      }
+    const kind = this.route.snapshot.queryParamMap.get(RouteConstants.QUERY_KIND);
+    const tab = this.route.snapshot.queryParamMap.get(RouteConstants.QUERY_TAB);
+    const id = this.route.snapshot.paramMap.get('id')!;
+
+    // Opened from the container's own read-only form card (always carries `tab`) —
+    // return straight to that convocatoria/encuesta.
+    if (convocatoriaId && tab) {
+      const detailPath = kind === 'encuestas' ? encuestaDetailPath(convocatoriaId) : convocatoriaDetailPath(convocatoriaId);
+      this.router.navigate(detailPath, { queryParams: { [RouteConstants.QUERY_TAB]: tab } });
       return;
     }
 
-    const id = this.route.snapshot.paramMap.get('id')!;
+    // Opened from within the builder itself — return there. If a convocatoriaId was
+    // passed along, carry it (and kind) forward so the builder doesn't "forget" it
+    // belongs to that convocatoria/encuesta (it re-reads them fresh on construction).
+    if (convocatoriaId) {
+      this.router.navigate(formBuilderPath(id), {
+        queryParams: {
+          [RouteConstants.QUERY_CONVOCATORIA_ID]: convocatoriaId,
+          [RouteConstants.QUERY_KIND]: kind,
+        },
+      });
+      return;
+    }
+
     this.router.navigate(formBuilderPath(id));
   }
 }

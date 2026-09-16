@@ -443,3 +443,38 @@ describe('FormBuilderComponent with convocatoriaId in query params', () => {
     expect(mockRouter.navigate).toHaveBeenCalledWith(['/', 'convocatorias', 'conv1']);
   });
 });
+
+describe('FormBuilderComponent with convocatoriaId and kind=encuestas in query params', () => {
+  const mockRouter = { navigate: vi.fn() };
+
+  beforeEach(async () => {
+    mockRouter.navigate.mockClear();
+    await TestBed.configureTestingModule({
+      imports: [FormBuilderComponent],
+      providers: [
+        provideRouter([]),
+        provideTranslateService({ lang: 'es' }),
+        { provide: Router, useValue: mockRouter },
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            snapshot: {
+              paramMap: { get: () => 'f1' },
+              queryParamMap: {
+                get: (key: string) => ({ convocatoriaId: 'conv1', kind: 'encuestas' } as Record<string, string>)[key] ?? null,
+              },
+            },
+          },
+        },
+      ],
+    }).compileComponents();
+  });
+
+  it('onReturnToConvocatoria navigates back to the encuesta, not the convocatoria', () => {
+    const { component } = buildComponent('ok', { ...MOCK_CONVOCATORIA, type: 'REGISTRATION' });
+
+    (component as any).onReturnToConvocatoria();
+
+    expect(mockRouter.navigate).toHaveBeenCalledWith(['/', 'encuestas', 'conv1']);
+  });
+});

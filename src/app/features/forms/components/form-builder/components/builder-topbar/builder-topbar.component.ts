@@ -18,6 +18,10 @@ export class BuilderTopbarComponent {
 
   readonly form = input.required<FormDetail>();
   readonly convocatoriaId = input<string | null>(null);
+  readonly containerKind = input<'convocatorias' | 'encuestas'>('convocatorias');
+
+  protected readonly backToConvocatoriaLabelKey = computed(() =>
+    this.containerKind() === 'encuestas' ? 'builder.back_to_encuesta' : 'builder.back_to_convocatoria');
 
   readonly nameChanged = output<string>();
   readonly publishClicked = output<void>();
@@ -46,6 +50,20 @@ export class BuilderTopbarComponent {
   }
 
   protected onPreviewClick(): void {
+    const convocatoriaId = this.convocatoriaId();
+    if (convocatoriaId) {
+      // Carry the container context forward so that, on "Salir" from the preview, the
+      // builder is reconstructed still knowing it belongs to this convocatoria/encuesta
+      // (otherwise it "forgets" — the topbar falls back to a generic "Volver a
+      // formularios" link, and the pending attach-on-return never happens).
+      this.router.navigate(formPreviewPath(this.form().id), {
+        queryParams: {
+          [RouteConstants.QUERY_CONVOCATORIA_ID]: convocatoriaId,
+          [RouteConstants.QUERY_KIND]: this.containerKind(),
+        },
+      });
+      return;
+    }
     this.router.navigate(formPreviewPath(this.form().id));
   }
 

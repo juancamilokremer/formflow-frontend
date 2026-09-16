@@ -23,6 +23,7 @@ export const RouteConstants = {
   CONVOCATORIA_NEW: 'new',
   QUERY_CONVOCATORIA_ID: 'convocatoriaId',
   QUERY_TAB: 'tab',
+  QUERY_KIND: 'kind',
 } as const;
 
 export function publicFormPath(convId: string, token: string): string {

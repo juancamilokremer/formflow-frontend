@@ -102,7 +102,18 @@ describe('ConvocatoriaFormSectionComponent', () => {
       expect(mockFormsService.create).toHaveBeenCalledWith({ name: 'RRHH', type: 'CANDIDATES' });
       expect(mockRouter.navigate).toHaveBeenCalledWith(
         ['forms', 'f4', 'edit'],
-        { queryParams: { convocatoriaId: 'c1' } },
+        { queryParams: { convocatoriaId: 'c1', kind: 'convocatorias' } },
+      );
+    });
+
+    it('navigates with kind=encuestas when processType is REGISTRATION', () => {
+      const { component, mockRouter } = buildComponent({ processType: 'REGISTRATION' });
+
+      component['createNew']();
+
+      expect(mockRouter.navigate).toHaveBeenCalledWith(
+        ['forms', 'f4', 'edit'],
+        { queryParams: { convocatoriaId: 'c1', kind: 'encuestas' } },
       );
     });
 

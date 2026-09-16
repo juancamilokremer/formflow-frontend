@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
 import { provideTranslateService } from '@ngx-translate/core';
 import { BuilderTopbarComponent } from './builder-topbar.component';
 import { FormDetail } from '../../../../models/form.model';
@@ -107,6 +107,21 @@ describe('BuilderTopbarComponent', () => {
     expect(emitted).toBe(true);
   });
 
+  describe('back link label by container kind', () => {
+    it('shows "back_to_convocatoria" when containerKind is convocatorias (default)', () => {
+      fixture.componentRef.setInput('convocatoriaId', 'conv1');
+      fixture.detectChanges();
+      expect((component as any).backToConvocatoriaLabelKey()).toBe('builder.back_to_convocatoria');
+    });
+
+    it('shows "back_to_encuesta" when containerKind is encuestas', () => {
+      fixture.componentRef.setInput('convocatoriaId', 'conv1');
+      fixture.componentRef.setInput('containerKind', 'encuestas');
+      fixture.detectChanges();
+      expect((component as any).backToConvocatoriaLabelKey()).toBe('builder.back_to_encuesta');
+    });
+  });
+
   it('emits publishClicked when publish button clicked', () => {
     let emitted = false;
     component.publishClicked.subscribe(() => (emitted = true));
@@ -151,6 +166,28 @@ describe('BuilderTopbarComponent', () => {
       const hint = fixture.nativeElement.querySelector('.topbar__auto-publish-hint');
       expect(button).toBeTruthy();
       expect(hint).toBeFalsy();
+    });
+
+    it('shows the survey publish hint (never a button) for a DRAFT REGISTRATION form even without convocatoriaId', () => {
+      fixture.componentRef.setInput('form', { ...MOCK_FORM, type: 'REGISTRATION', status: 'DRAFT' });
+      fixture.detectChanges();
+
+      const button = fixture.nativeElement.querySelector('.topbar__actions app-button:last-child');
+      const hint = fixture.nativeElement.querySelector('.topbar__auto-publish-hint');
+      expect(button).toBeFalsy();
+      expect(hint).toBeTruthy();
+      expect(hint.textContent).toContain('builder.survey_publish_hint');
+    });
+
+    it('shows the survey publish hint (never a button) for an ACTIVE REGISTRATION form too', () => {
+      fixture.componentRef.setInput('form', { ...MOCK_FORM, type: 'REGISTRATION', status: 'ACTIVE' });
+      fixture.detectChanges();
+
+      const button = fixture.nativeElement.querySelector('.topbar__actions app-button:last-child');
+      const hint = fixture.nativeElement.querySelector('.topbar__auto-publish-hint');
+      expect(button).toBeFalsy();
+      expect(hint).toBeTruthy();
+      expect(hint.textContent).toContain('builder.survey_publish_hint');
     });
   });
 
@@ -199,5 +236,63 @@ describe('BuilderTopbarComponent', () => {
       fixture.detectChanges();
       expect((component as any).hasQuestionTimeLimits()).toBe(true);
     });
+  });
+});
+
+describe('BuilderTopbarComponent onPreviewClick', () => {
+  // NOTE: this component's template renders a real [routerLink] (the standalone-form
+  // "Volver a formularios" link) when convocatoriaId is absent, which needs a real Router
+  // instance under the hood — replacing the Router provider with a bare mock breaks that
+  // directive's own internal DI lookups. Spy on the real router's navigate() instead.
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [BuilderTopbarComponent],
+      providers: [
+        provideRouter([]),
+        provideTranslateService({ lang: 'es' }),
+      ],
+    }).compileComponents();
+  });
+
+  it('navigates to preview without query params when there is no convocatoriaId', () => {
+    const fixture = TestBed.createComponent(BuilderTopbarComponent);
+    fixture.componentRef.setInput('form', MOCK_FORM);
+    fixture.detectChanges();
+    const navigateSpy = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+
+    (fixture.componentInstance as any).onPreviewClick();
+
+    expect(navigateSpy).toHaveBeenCalledWith(['/', 'forms', 'f1', 'preview']);
+  });
+
+  it('carries convocatoriaId and kind so the builder does not forget its convocatoria on return', () => {
+    const fixture = TestBed.createComponent(BuilderTopbarComponent);
+    fixture.componentRef.setInput('form', MOCK_FORM);
+    fixture.componentRef.setInput('convocatoriaId', 'conv1');
+    fixture.detectChanges();
+    const navigateSpy = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+
+    (fixture.componentInstance as any).onPreviewClick();
+
+    expect(navigateSpy).toHaveBeenCalledWith(
+      ['/', 'forms', 'f1', 'preview'],
+      { queryParams: { convocatoriaId: 'conv1', kind: 'convocatorias' } },
+    );
+  });
+
+  it('carries kind=encuestas when containerKind is encuestas', () => {
+    const fixture = TestBed.createComponent(BuilderTopbarComponent);
+    fixture.componentRef.setInput('form', MOCK_FORM);
+    fixture.componentRef.setInput('convocatoriaId', 'conv1');
+    fixture.componentRef.setInput('containerKind', 'encuestas');
+    fixture.detectChanges();
+    const navigateSpy = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+
+    (fixture.componentInstance as any).onPreviewClick();
+
+    expect(navigateSpy).toHaveBeenCalledWith(
+      ['/', 'forms', 'f1', 'preview'],
+      { queryParams: { convocatoriaId: 'conv1', kind: 'encuestas' } },
+    );
   });
 });

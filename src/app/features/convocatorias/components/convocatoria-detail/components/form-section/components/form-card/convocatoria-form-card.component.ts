@@ -115,7 +115,10 @@ export class ConvocatoriaFormCardComponent implements OnInit {
 
   protected openForm(): void {
     this.router.navigate(formBuilderPath(this.convocatoriaForm().formId), {
-      queryParams: { [RouteConstants.QUERY_CONVOCATORIA_ID]: this.convocatoriaId() },
+      queryParams: {
+        [RouteConstants.QUERY_CONVOCATORIA_ID]: this.convocatoriaId(),
+        [RouteConstants.QUERY_KIND]: this.isSimpleMode() ? 'encuestas' : 'convocatorias',
+      },
     });
   }
 
@@ -124,6 +127,7 @@ export class ConvocatoriaFormCardComponent implements OnInit {
       queryParams: {
         [RouteConstants.QUERY_CONVOCATORIA_ID]: this.convocatoriaId(),
         [RouteConstants.QUERY_TAB]: 'formularios',
+        [RouteConstants.QUERY_KIND]: this.isSimpleMode() ? 'encuestas' : 'convocatorias',
       },
     });
   }

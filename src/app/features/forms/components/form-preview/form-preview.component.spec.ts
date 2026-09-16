@@ -58,19 +58,48 @@ describe('FormPreviewComponent', () => {
       expect(mockRouter.navigate).toHaveBeenCalledWith(['forms', 'f1', 'edit']);
     });
 
-    it('navigates back to the convocatoria when convocatoriaId is present in the query params', () => {
-      const { component, mockRouter } = buildComponent({ convocatoriaId: 'conv1' });
-      component['goBack']();
-      expect(mockRouter.navigate).toHaveBeenCalledWith(['/', 'convocatorias', 'conv1']);
+    describe('opened from the container card (tab present) — returns to the container', () => {
+      it('navigates back to the convocatoria, carrying the tab', () => {
+        const { component, mockRouter } = buildComponent({ convocatoriaId: 'conv1', tab: 'formularios' });
+        component['goBack']();
+        expect(mockRouter.navigate).toHaveBeenCalledWith(
+          ['/', 'convocatorias', 'conv1'],
+          { queryParams: { tab: 'formularios' } },
+        );
+      });
+
+      it('navigates back to the encuesta, carrying the tab', () => {
+        const { component, mockRouter } = buildComponent({ convocatoriaId: 'conv1', kind: 'encuestas', tab: 'formularios' });
+        component['goBack']();
+        expect(mockRouter.navigate).toHaveBeenCalledWith(
+          ['/', 'encuestas', 'conv1'],
+          { queryParams: { tab: 'formularios' } },
+        );
+      });
     });
 
-    it('carries the originating tab back to the convocatoria when present', () => {
-      const { component, mockRouter } = buildComponent({ convocatoriaId: 'conv1', tab: 'formularios' });
-      component['goBack']();
-      expect(mockRouter.navigate).toHaveBeenCalledWith(
-        ['/', 'convocatorias', 'conv1'],
-        { queryParams: { tab: 'formularios' } },
-      );
+    describe('opened from within the builder itself (no tab) — returns to the builder', () => {
+      // Regression: the builder re-reads convocatoriaId/kind fresh from its own route's
+      // query params on construction. If "Salir" dropped them, a round trip through the
+      // preview made the builder "forget" it belongs to a convocatoria/encuesta — the
+      // topbar fell back to a generic link, and the pending attach-on-return never fired.
+      it('carries convocatoriaId back to the builder so it does not forget its convocatoria', () => {
+        const { component, mockRouter } = buildComponent({ convocatoriaId: 'conv1' });
+        component['goBack']();
+        expect(mockRouter.navigate).toHaveBeenCalledWith(
+          ['forms', 'f1', 'edit'],
+          { queryParams: { convocatoriaId: 'conv1', kind: null } },
+        );
+      });
+
+      it('carries convocatoriaId and kind back to the builder for an encuesta', () => {
+        const { component, mockRouter } = buildComponent({ convocatoriaId: 'conv1', kind: 'encuestas' });
+        component['goBack']();
+        expect(mockRouter.navigate).toHaveBeenCalledWith(
+          ['forms', 'f1', 'edit'],
+          { queryParams: { convocatoriaId: 'conv1', kind: 'encuestas' } },
+        );
+      });
     });
   });
 });
