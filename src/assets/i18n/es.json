@@ -657,6 +657,7 @@
         "duplicate_placeholder": "Selecciona un formulario",
         "duplicate_action": "Duplicar",
         "duplicate_empty": "No hay formularios activos de este tipo para duplicar",
+        "ready_to_launch_label": "Listo para lanzar",
         "error": "No se pudo completar la acción. Intenta de nuevo.",
         "remove_confirm": {
           "title": "¿Quitar formulario?",
@@ -697,6 +698,7 @@
       "launch": {
         "button": "Lanzar convocatoria",
         "no_candidates_hint": "Agrega al menos un candidato para poder lanzar.",
+        "forms_not_ready_hint": "Marca todos los formularios como \"listo para lanzar\" antes de continuar.",
         "error": "No se pudo lanzar la convocatoria. Intenta de nuevo."
       },
       "delete_confirm": {

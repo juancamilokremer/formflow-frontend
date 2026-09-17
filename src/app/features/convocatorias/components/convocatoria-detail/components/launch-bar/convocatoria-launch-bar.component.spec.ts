@@ -11,7 +11,7 @@ const MOCK_LAUNCHED: ConvocatoriaDetail = {
   startDate: null, endDate: null, createdAt: '', updatedAt: '', candidates: [], forms: [],
 };
 
-function buildComponent(launchImpl?: ReturnType<typeof vi.fn>, hasCandidates = true) {
+function buildComponent(launchImpl?: ReturnType<typeof vi.fn>, hasCandidates = true, formsReady = true) {
   const mockConvocatoriaService = { launch: launchImpl ?? vi.fn().mockReturnValue(of(MOCK_LAUNCHED)) };
 
   TestBed.configureTestingModule({
@@ -25,6 +25,7 @@ function buildComponent(launchImpl?: ReturnType<typeof vi.fn>, hasCandidates = t
   const fixture = TestBed.createComponent(ConvocatoriaLaunchBarComponent);
   fixture.componentRef.setInput('convocatoriaId', 'c1');
   fixture.componentRef.setInput('hasCandidates', hasCandidates);
+  fixture.componentRef.setInput('formsReady', formsReady);
   fixture.detectChanges();
   return { component: fixture.componentInstance, mockConvocatoriaService };
 }
@@ -34,6 +35,11 @@ describe('ConvocatoriaLaunchBarComponent', () => {
 
   it('canLaunch is false without candidates', () => {
     const { component } = buildComponent(undefined, false);
+    expect(component['canLaunch']()).toBe(false);
+  });
+
+  it('canLaunch is false when forms are not ready', () => {
+    const { component } = buildComponent(undefined, true, false);
     expect(component['canLaunch']()).toBe(false);
   });
 

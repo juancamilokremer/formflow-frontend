@@ -12,6 +12,7 @@ import { Category } from '../../../../../../../../core/models/category.model';
 
 const CONV_FORM: ConvocatoriaForm = {
   id: 'cf1', formId: 'f1', weight: 40, categoryWeights: [{ categoryId: 'cat-1', weight: 100 }], minScore: 50, position: 0,
+  readyToLaunch: false,
 };
 
 const MOCK_SECTION: FormSection = {
@@ -119,6 +120,7 @@ describe('ConvocatoriaFormCardComponent', () => {
         weight: 100,
         categoryWeights: [{ categoryId: 'cat-1', weight: 100 }],
         minScore: 50,
+        readyToLaunch: false,
       });
     });
 
@@ -170,6 +172,62 @@ describe('ConvocatoriaFormCardComponent', () => {
       expect(mockConvocatoriaService.updateForm).toHaveBeenCalledWith('c1', 'cf1', expect.objectContaining({
         categoryWeights: [{ categoryId: 'cat-1', weight: 30 }],
       }));
+    });
+  });
+
+  describe('readyToLaunch', () => {
+    it('seeds readyToLaunch from the input on init', () => {
+      const { component } = buildComponent({ convocatoriaForm: { ...CONV_FORM, readyToLaunch: true } });
+      expect(component['readyToLaunch']()).toBe(true);
+    });
+
+    it('onReadyToLaunchChange sets the flag and debounces a save including it', () => {
+      vi.useFakeTimers();
+      const { component, mockConvocatoriaService } = buildComponent();
+
+      component['onReadyToLaunchChange'](true);
+
+      expect(component['readyToLaunch']()).toBe(true);
+      expect(mockConvocatoriaService.updateForm).not.toHaveBeenCalled();
+
+      vi.advanceTimersByTime(600);
+
+      expect(mockConvocatoriaService.updateForm).toHaveBeenCalledWith('c1', 'cf1', expect.objectContaining({
+        readyToLaunch: true,
+      }));
+    });
+
+    it('re-syncs the local flag from the backend response (auto-unset on config change)', () => {
+      vi.useFakeTimers();
+      const { component } = buildComponent({
+        updateFormImpl: vi.fn().mockReturnValue(of({ ...CONV_FORM, weight: 60, readyToLaunch: false })),
+      });
+
+      component['onReadyToLaunchChange'](true);
+      vi.advanceTimersByTime(600);
+
+      expect(component['readyToLaunch']()).toBe(false);
+    });
+
+    it('optimistically unchecks when weight/minScore/categoryWeights change', () => {
+      const { component } = buildComponent({ convocatoriaForm: { ...CONV_FORM, readyToLaunch: true } });
+      expect(component['readyToLaunch']()).toBe(true);
+
+      component['onWeightInput'](50);
+
+      expect(component['readyToLaunch']()).toBe(false);
+    });
+
+    it('checkbox is hidden when isDraft is false', () => {
+      const { fixture } = buildComponent();
+      fixture.componentRef.setInput('isDraft', false);
+      fixture.detectChanges();
+      expect(fixture.nativeElement.querySelector('.cfc__ready-row')).toBeNull();
+    });
+
+    it('checkbox is shown when isDraft is true (default)', () => {
+      const { fixture } = buildComponent();
+      expect(fixture.nativeElement.querySelector('.cfc__ready-row')).not.toBeNull();
     });
   });
 

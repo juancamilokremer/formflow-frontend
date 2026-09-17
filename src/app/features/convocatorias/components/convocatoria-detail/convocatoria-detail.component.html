@@ -74,6 +74,7 @@
               <app-convocatoria-launch-bar
                 [convocatoriaId]="conv.id"
                 [hasCandidates]="conv.candidates.length > 0"
+                [formsReady]="conv.forms.length > 0 && conv.forms.every(f => f.readyToLaunch)"
                 (launched)="onLaunched($event)" />
             }
           }

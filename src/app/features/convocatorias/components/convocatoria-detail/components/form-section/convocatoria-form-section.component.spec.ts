@@ -20,7 +20,7 @@ const NEW_FORM: Form = { ...ACTIVE_CANDIDATES_FORM, id: 'f4', name: 'RRHH' };
 const DUPLICATED_FORM: Form = { ...ACTIVE_CANDIDATES_FORM, id: 'f5', name: 'Evaluación técnica (copia)' };
 
 const CONV_FORM_1: ConvocatoriaForm = {
-  id: 'cf1', formId: 'f1', weight: 100, categoryWeights: [], minScore: null, position: 0,
+  id: 'cf1', formId: 'f1', weight: 100, categoryWeights: [], minScore: null, position: 0, readyToLaunch: false,
 };
 
 function buildComponent(overrides: {
@@ -35,7 +35,7 @@ function buildComponent(overrides: {
   };
   const mockConvocatoriaService = {
     addForm: overrides.addFormImpl ?? vi.fn().mockReturnValue(
-      of({ id: 'cf5', formId: 'f5', weight: 0, categoryWeights: [], minScore: null, position: 1 })),
+      of({ id: 'cf5', formId: 'f5', weight: 0, categoryWeights: [], minScore: null, position: 1, readyToLaunch: false })),
     updateForm: vi.fn().mockReturnValue(of(CONV_FORM_1)),
     removeForm: vi.fn().mockReturnValue(of(undefined)),
   };

@@ -432,7 +432,7 @@ describe('FormBuilderComponent with convocatoriaId in query params', () => {
   it('onReturnToConvocatoria does not re-attach a form that is already in the convocatoria, just navigates back', () => {
     const alreadyAttached: ConvocatoriaDetail = {
       ...MOCK_CONVOCATORIA,
-      forms: [{ id: 'cf1', formId: 'f1', weight: 100, categoryWeights: [], minScore: null, position: 0 }],
+      forms: [{ id: 'cf1', formId: 'f1', weight: 100, categoryWeights: [], minScore: null, position: 0, readyToLaunch: false }],
     };
     const { component, mockConvocatoriaService } = buildComponent('ok', alreadyAttached);
 

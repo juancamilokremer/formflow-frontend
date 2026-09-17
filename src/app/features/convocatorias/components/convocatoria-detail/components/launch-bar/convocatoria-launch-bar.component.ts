@@ -17,13 +17,14 @@ export class ConvocatoriaLaunchBarComponent {
 
   readonly convocatoriaId = input.required<string>();
   readonly hasCandidates = input.required<boolean>();
+  readonly formsReady = input.required<boolean>();
 
   readonly launched = output<ConvocatoriaDetail>();
 
   protected readonly submitting = signal(false);
   protected readonly error = signal(false);
 
-  protected readonly canLaunch = computed(() => this.hasCandidates() && !this.submitting());
+  protected readonly canLaunch = computed(() => this.hasCandidates() && this.formsReady() && !this.submitting());
 
   protected requestLaunch(): void {
     if (!this.canLaunch()) return;
