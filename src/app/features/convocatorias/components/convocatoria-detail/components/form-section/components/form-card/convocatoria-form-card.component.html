@@ -50,6 +50,15 @@
     }
   </div>
 
+  @if (isDraft()) {
+    <div class="cfc__ready-row">
+      <app-checkbox [checked]="readyToLaunch()"
+        [ariaLabel]="'convocatorias.detail.form.ready_to_launch_label' | translate"
+        (changed)="onReadyToLaunchChange($event)" />
+      <span class="cfc__ready-label">{{ 'convocatorias.detail.form.ready_to_launch_label' | translate }}</span>
+    </div>
+  }
+
   @if (readonly() || isSimpleMode()) {
     <div class="cfc__preview-row">
       <app-button type="button" variant="secondary" (click)="openPreview()">

@@ -49,6 +49,7 @@ export interface ConvocatoriaForm {
   categoryWeights: CategoryWeight[];
   minScore: number | null;
   position: number;
+  readyToLaunch: boolean;
 }
 
 export interface FormAddedEvent {
@@ -95,6 +96,7 @@ export interface UpdateConvocatoriaFormRequest {
   weight: number;
   categoryWeights?: CategoryWeight[];
   minScore?: number | null;
+  readyToLaunch: boolean;
 }
 
 export interface AddCandidateRequest {

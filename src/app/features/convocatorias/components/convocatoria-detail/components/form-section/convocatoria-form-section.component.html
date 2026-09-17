@@ -7,7 +7,8 @@
           [convocatoriaForm]="cf"
           [formName]="formName(cf)"
           [processType]="processType()"
-          [readonly]="true" />
+          [readonly]="true"
+          [isDraft]="false" />
       }
     </div>
   } @else {
@@ -19,6 +20,7 @@
           [convocatoriaForm]="cf"
           [formName]="formName(cf)"
           [processType]="processType()"
+          [isDraft]="isDraft()"
           (weightPreview)="onWeightPreview(cf.id, $event)"
           (formUpdated)="onCardUpdated($event)"
           (formRemoved)="onCardRemoved($event)" />

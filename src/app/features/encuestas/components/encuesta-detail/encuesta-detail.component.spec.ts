@@ -16,7 +16,7 @@ const DRAFT_ENCUESTA: ConvocatoriaDetail = {
 };
 
 const CONV_FORM_1: ConvocatoriaForm = {
-  id: 'cf1', formId: 'f1', weight: 100, categoryWeights: [], minScore: null, position: 0,
+  id: 'cf1', formId: 'f1', weight: 100, categoryWeights: [], minScore: null, position: 0, readyToLaunch: false,
 };
 
 const FORM_1: Form = {

@@ -32,6 +32,7 @@ export class ConvocatoriaFormSectionComponent {
   readonly convocatoriaForms = input.required<ConvocatoriaForm[]>();
   readonly forms = input.required<Form[]>();
   readonly readonly = input(false);
+  readonly isDraft = input(true);
 
   readonly formAdded = output<FormAddedEvent>();
   readonly formUpdated = output<ConvocatoriaForm>();
