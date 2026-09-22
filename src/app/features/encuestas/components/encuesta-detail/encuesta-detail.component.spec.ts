@@ -96,7 +96,7 @@ describe('EncuestaDetailComponent', () => {
   it('detailTabs is the fixed encuesta tab set (respuestas, no ranking/stats/umbrales)', () => {
     const { component } = buildComponent({ convocatoria: { ...DRAFT_ENCUESTA, status: 'ACTIVE' } });
     const ids = component['detailTabs'].map((t) => t.id);
-    expect(ids).toEqual(['respuestas', 'per-question', 'formularios']);
+    expect(ids).toEqual(['respuestas', 'per-question', 'formularios', 'destinatarios']);
   });
 
   describe('setActiveTab', () => {
@@ -205,6 +205,26 @@ describe('EncuestaDetailComponent', () => {
     component['onCandidateAdded'](candidate);
 
     expect(component['convocatoria']()?.candidates).toEqual([candidate]);
+  });
+
+  describe('copyAnonymousLink', () => {
+    it('copies the anonymous respond URL and toggles linkCopied briefly', async () => {
+      vi.useFakeTimers();
+      const writeText = vi.fn().mockResolvedValue(undefined);
+      Object.defineProperty(navigator, 'clipboard', { value: { writeText }, configurable: true });
+
+      const { component } = buildComponent();
+      component['copyAnonymousLink']('f1');
+      await Promise.resolve();
+
+      expect(writeText).toHaveBeenCalledWith(`${window.location.origin}/forms/f1/respond`);
+      expect(component['linkCopied']()).toBe(true);
+
+      vi.advanceTimersByTime(2000);
+      expect(component['linkCopied']()).toBe(false);
+
+      vi.useRealTimers();
+    });
   });
 
   it('onLaunched replaces the local encuesta with the launched detail', () => {

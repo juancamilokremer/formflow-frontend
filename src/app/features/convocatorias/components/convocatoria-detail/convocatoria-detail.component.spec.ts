@@ -109,7 +109,7 @@ describe('ConvocatoriaDetailComponent', () => {
   it('detailTabs is the fixed convocatoria tab set', () => {
     const { component } = buildComponent({ convocatoria: { ...DRAFT_CONVOCATORIA, status: 'ACTIVE' } });
     const ids = component['detailTabs'].map((t) => t.id);
-    expect(ids).toEqual(['ranking', 'stats', 'per-question', 'formularios']);
+    expect(ids).toEqual(['ranking', 'stats', 'per-question', 'formularios', 'candidatos']);
   });
 
   describe('setActiveTab', () => {
