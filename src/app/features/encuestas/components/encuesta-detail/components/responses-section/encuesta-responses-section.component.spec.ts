@@ -13,10 +13,10 @@ function candidate(status: Candidate['status']): Candidate {
   };
 }
 
-function buildComponent(candidates: Candidate[]) {
+function buildComponent(candidates: Candidate[], totalElements = 0) {
   const mockFormsService = {
     getResponses: vi.fn().mockReturnValue(of({
-      items: [], totalElements: 0, totalPages: 0, page: 0, size: 20,
+      items: [], totalElements, totalPages: 0, page: 0, size: 20,
     } satisfies ResponsePage)),
     getResponseDetail: vi.fn().mockReturnValue(of(null)),
   };
@@ -53,6 +53,26 @@ describe('EncuestaResponsesSectionComponent', () => {
     const { component } = buildComponent([]);
     expect(component['invitedCount']()).toBe(0);
     expect(component['responseRatePct']()).toBe(0);
+  });
+
+  describe('anonymousCount', () => {
+    it('is the gap between total responses and known destinatarios who responded', () => {
+      const { component } = buildComponent(
+        [candidate('RESPONDED'), candidate('RESPONDED'), candidate('INVITED')], 5);
+
+      expect(component['respondedCount']()).toBe(2);
+      expect(component['anonymousCount']()).toBe(3);
+    });
+
+    it('is 0 when total responses match known respondents exactly', () => {
+      const { component } = buildComponent([candidate('RESPONDED')], 1);
+      expect(component['anonymousCount']()).toBe(0);
+    });
+
+    it('never goes negative even if totals arrive out of order', () => {
+      const { component } = buildComponent([candidate('RESPONDED'), candidate('RESPONDED')], 1);
+      expect(component['anonymousCount']()).toBe(0);
+    });
   });
 
   it('opens and closes the response detail drawer', () => {

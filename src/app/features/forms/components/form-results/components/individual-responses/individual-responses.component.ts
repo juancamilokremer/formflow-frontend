@@ -19,6 +19,7 @@ export class IndividualResponsesComponent {
   readonly from = input<string | undefined>(undefined);
   readonly to = input<string | undefined>(undefined);
   readonly responseSelected = output<string>();
+  readonly totalLoaded = output<number>();
 
   private readonly formsService = inject(FormsService);
   private readonly destroyRef = inject(DestroyRef);
@@ -77,6 +78,7 @@ export class IndividualResponsesComponent {
           this.pageIndex.set(result.page);
           this.pageSize.set(result.size);
           this.loading.set(false);
+          this.totalLoaded.emit(result.totalElements);
         },
         error: () => {
           if (requestId !== this.loadRequestId) return;

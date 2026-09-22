@@ -2,8 +2,9 @@
   <app-stat-card [label]="'encuestas.detail.responses.invited' | translate" [value]="invitedCount()" />
   <app-stat-card [label]="'encuestas.detail.responses.responded' | translate" [value]="respondedCount()" color="success" />
   <app-stat-card [label]="'encuestas.detail.responses.rate' | translate" [value]="responseRatePct() + '%'" color="info" />
+  <app-stat-card [label]="'encuestas.detail.responses.anonymous' | translate" [value]="anonymousCount()" />
 </div>
 
-<app-individual-responses [formId]="formId()" (responseSelected)="onResponseSelected($event)" />
+<app-individual-responses [formId]="formId()" (responseSelected)="onResponseSelected($event)" (totalLoaded)="onTotalLoaded($event)" />
 
 <app-response-detail-drawer [formId]="formId()" [responseId]="selectedResponseId()" (closed)="closeDrawer()" />
