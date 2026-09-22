@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { Subject, debounceTime, forkJoin, switchMap } from 'rxjs';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ButtonComponent } from '../../../../../../../../shared/components/button/button.component';
+import { CheckboxComponent } from '../../../../../../../../shared/components/checkbox/checkbox.component';
 import { IconComponent } from '../../../../../../../../shared/icons/icon.component';
 import { ConfirmDialogComponent } from '../../../../../../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { RouteConstants, formBuilderPath, formPreviewPath } from '../../../../../../../../core/constants/route.constants';
@@ -19,7 +20,7 @@ import { ConvocatoriaWeightsSectionComponent } from '../../../weights-section/co
 
 @Component({
   selector: 'app-convocatoria-form-card',
-  imports: [TranslatePipe, LowerCasePipe, ButtonComponent, IconComponent, ConfirmDialogComponent, ConvocatoriaWeightsSectionComponent],
+  imports: [TranslatePipe, LowerCasePipe, ButtonComponent, CheckboxComponent, IconComponent, ConfirmDialogComponent, ConvocatoriaWeightsSectionComponent],
   templateUrl: './convocatoria-form-card.component.html',
   styleUrl: './convocatoria-form-card.component.scss',
   host: { '[class.cfc--readonly]': 'readonly()' },
@@ -36,6 +37,7 @@ export class ConvocatoriaFormCardComponent implements OnInit {
   readonly formName = input.required<string>();
   readonly processType = input.required<ProcessType>();
   readonly readonly = input(false);
+  readonly isDraft = input(true);
 
   protected readonly isSimpleMode = computed(() => this.processType() === 'REGISTRATION');
 
@@ -50,6 +52,7 @@ export class ConvocatoriaFormCardComponent implements OnInit {
   protected readonly weight = signal(0);
   protected readonly categoryWeights = signal<Record<string, number>>({});
   protected readonly minScore = signal<number | null>(null);
+  protected readonly readyToLaunch = signal(false);
   protected readonly removeConfirmOpen = signal(false);
   protected readonly removing = signal(false);
 
@@ -59,6 +62,7 @@ export class ConvocatoriaFormCardComponent implements OnInit {
     const currentForm = this.convocatoriaForm();
     this.weight.set(currentForm.weight);
     this.minScore.set(currentForm.minScore);
+    this.readyToLaunch.set(currentForm.readyToLaunch);
     this.categoryWeights.set(
       Object.fromEntries(currentForm.categoryWeights.map((categoryWeight) => [categoryWeight.categoryId, categoryWeight.weight])),
     );
@@ -90,26 +94,40 @@ export class ConvocatoriaFormCardComponent implements OnInit {
           .filter(([, weight]) => weight > 0)
           .map(([categoryId, weight]) => ({ categoryId, weight })),
         minScore: this.minScore(),
+        readyToLaunch: this.readyToLaunch(),
       })),
       takeUntilDestroyed(this.destroyRef),
-    ).subscribe((updated) => this.formUpdated.emit(updated));
+    ).subscribe((updated) => {
+      // The backend is the source of truth for auto-unsetting readyToLaunch when the config
+      // changed underneath it — reflect whatever it actually persisted.
+      this.readyToLaunch.set(updated.readyToLaunch);
+      this.formUpdated.emit(updated);
+    });
   }
 
   protected onWeightInput(value: number): void {
     const clamped = Math.max(0, Math.min(100, value || 0));
     this.weight.set(clamped);
     this.weightPreview.emit(clamped);
+    this.readyToLaunch.set(false);
     this.change$.next();
   }
 
   protected onWeightsChanged(weights: Record<string, number>): void {
     this.categoryWeights.set(weights);
+    this.readyToLaunch.set(false);
     this.change$.next();
   }
 
   protected onMinScoreInput(rawValue: string): void {
     const trimmed = rawValue.trim();
     this.minScore.set(trimmed === '' ? null : Math.max(0, Math.min(100, Number(trimmed))));
+    this.readyToLaunch.set(false);
+    this.change$.next();
+  }
+
+  protected onReadyToLaunchChange(checked: boolean): void {
+    this.readyToLaunch.set(checked);
     this.change$.next();
   }
 
