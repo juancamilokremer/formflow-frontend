@@ -45,6 +45,15 @@ describe('IndividualResponsesComponent', () => {
     expect(component['loading']()).toBe(false);
   });
 
+  it('emits totalLoaded with the fetched totalElements', () => {
+    const { component } = buildComponent();
+    let emitted: number | undefined;
+    component.totalLoaded.subscribe((total) => (emitted = total));
+    // Loaded already during buildComponent()'s initial detectChanges — trigger a reload to observe it.
+    component['onPageChange'](0);
+    expect(emitted).toBe(1);
+  });
+
   it('sets loadError on failure', () => {
     const { component } = buildComponent({
       getResponsesImpl: vi.fn().mockReturnValue(throwError(() => new Error('boom'))),

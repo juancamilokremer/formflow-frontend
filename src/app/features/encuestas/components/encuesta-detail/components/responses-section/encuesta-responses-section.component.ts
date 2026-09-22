@@ -16,6 +16,7 @@ export class EncuestaResponsesSectionComponent {
   readonly candidates = input.required<Candidate[]>();
 
   protected readonly selectedResponseId = signal<string | null>(null);
+  protected readonly totalResponses = signal(0);
 
   protected readonly invitedCount = computed(() => this.candidates().length);
   protected readonly respondedCount = computed(() =>
@@ -24,9 +25,17 @@ export class EncuestaResponsesSectionComponent {
     const total = this.invitedCount();
     return total === 0 ? 0 : Math.round((this.respondedCount() * 100) / total);
   });
+  // Responses submitted via the anonymous share link have no candidate behind them —
+  // anything beyond the known destinatarios' responses is one of those.
+  protected readonly anonymousCount = computed(() =>
+    Math.max(0, this.totalResponses() - this.respondedCount()));
 
   protected onResponseSelected(id: string): void {
     this.selectedResponseId.set(id);
+  }
+
+  protected onTotalLoaded(total: number): void {
+    this.totalResponses.set(total);
   }
 
   protected closeDrawer(): void {

@@ -766,7 +766,8 @@
       "responses": {
         "invited": "Invitados",
         "responded": "Respondieron",
-        "rate": "Tasa de respuesta"
+        "rate": "Tasa de respuesta",
+        "anonymous": "Respuestas anónimas"
       },
       "anonymous_link": {
         "button": "Copiar link anónimo",
