@@ -103,6 +103,21 @@
               (formRemoved)="onFormRemoved($event)"
               (formsReordered)="onFormsReordered($event)" />
           }
+          @case ('destinatarios') {
+            @if (conv.forms[0]; as surveyForm) {
+              <div class="ed__anon-link">
+                <app-button type="button" variant="secondary" (click)="copyAnonymousLink(surveyForm.formId)">
+                  {{ (linkCopied() ? 'encuestas.detail.anonymous_link.copied' : 'encuestas.detail.anonymous_link.button') | translate }}
+                </app-button>
+                <p class="ed__anon-link-hint">{{ 'encuestas.detail.anonymous_link.hint' | translate }}</p>
+              </div>
+            }
+            <app-convocatoria-candidates-section
+              [convocatoriaId]="conv.id"
+              [candidates]="conv.candidates"
+              (candidateAdded)="onCandidateAdded($event)"
+              (candidatesImported)="onCandidatesImported()" />
+          }
         }
       </app-card>
     }

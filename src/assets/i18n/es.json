@@ -596,7 +596,8 @@
         "ranking": "Ranking",
         "stats": "Estadísticas",
         "per_question": "Por pregunta",
-        "formularios": "Formularios"
+        "formularios": "Formularios",
+        "candidatos": "Candidatos"
       },
       "draft_tabs": {
         "formularios": "Formularios",
@@ -754,7 +755,8 @@
       "tabs": {
         "respuestas": "Respuestas",
         "per_question": "Por pregunta",
-        "formularios": "Formularios"
+        "formularios": "Formularios",
+        "destinatarios": "Destinatarios"
       },
       "draft_tabs": {
         "formularios": "Formularios",
@@ -765,6 +767,11 @@
         "invited": "Invitados",
         "responded": "Respondieron",
         "rate": "Tasa de respuesta"
+      },
+      "anonymous_link": {
+        "button": "Copiar link anónimo",
+        "copied": "¡Copiado!",
+        "hint": "Cualquiera con este link puede responder la encuesta sin haber sido invitado. Las respuestas no quedan asociadas a ningún destinatario."
       }
     }
   },

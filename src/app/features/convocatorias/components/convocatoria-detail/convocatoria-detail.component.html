@@ -103,6 +103,13 @@
               [forms]="forms()"
               [readonly]="true" />
           }
+          @case ('candidatos') {
+            <app-convocatoria-candidates-section
+              [convocatoriaId]="conv.id"
+              [candidates]="conv.candidates"
+              (candidateAdded)="onCandidateAdded($event)"
+              (candidatesImported)="onCandidatesImported()" />
+          }
         }
       </app-card>
     }

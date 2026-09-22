@@ -25,10 +25,10 @@ import { ConvocatoriaRankingSectionComponent } from './components/ranking-sectio
 import { ConvocatoriaStatsSectionComponent } from './components/stats-section/convocatoria-stats-section.component';
 import { ConvocatoriaQuestionStatsSectionComponent } from './components/question-stats-section/convocatoria-question-stats-section.component';
 
-type ConvocatoriaDetailTab = 'ranking' | 'stats' | 'per-question' | 'formularios';
+type ConvocatoriaDetailTab = 'ranking' | 'stats' | 'per-question' | 'formularios' | 'candidatos';
 type DraftTab = 'formularios' | 'umbrales' | 'candidatos' | 'lanzar';
 
-const DETAIL_TAB_IDS: ConvocatoriaDetailTab[] = ['ranking', 'stats', 'per-question', 'formularios'];
+const DETAIL_TAB_IDS: ConvocatoriaDetailTab[] = ['ranking', 'stats', 'per-question', 'formularios', 'candidatos'];
 
 function isDetailTab(value: string | null): value is ConvocatoriaDetailTab {
   return DETAIL_TAB_IDS.includes(value as ConvocatoriaDetailTab);
@@ -81,6 +81,7 @@ export class ConvocatoriaDetailComponent {
     { id: 'stats', label: 'convocatorias.detail.tabs.stats' },
     { id: 'per-question', label: 'convocatorias.detail.tabs.per_question' },
     { id: 'formularios', label: 'convocatorias.detail.tabs.formularios' },
+    { id: 'candidatos', label: 'convocatorias.detail.tabs.candidatos' },
   ];
 
   protected readonly draftActiveTab = signal<DraftTab>('formularios');

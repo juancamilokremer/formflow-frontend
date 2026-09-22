@@ -22,10 +22,10 @@ import { ConvocatoriaLaunchBarComponent } from '../../../convocatorias/component
 import { ConvocatoriaQuestionStatsSectionComponent } from '../../../convocatorias/components/convocatoria-detail/components/question-stats-section/convocatoria-question-stats-section.component';
 import { EncuestaResponsesSectionComponent } from './components/responses-section/encuesta-responses-section.component';
 
-type EncuestaDetailTab = 'respuestas' | 'per-question' | 'formularios';
+type EncuestaDetailTab = 'respuestas' | 'per-question' | 'formularios' | 'destinatarios';
 type DraftTab = 'formularios' | 'destinatarios' | 'lanzar';
 
-const DETAIL_TAB_IDS: EncuestaDetailTab[] = ['respuestas', 'per-question', 'formularios'];
+const DETAIL_TAB_IDS: EncuestaDetailTab[] = ['respuestas', 'per-question', 'formularios', 'destinatarios'];
 
 function isDetailTab(value: string | null): value is EncuestaDetailTab {
   return DETAIL_TAB_IDS.includes(value as EncuestaDetailTab);
@@ -61,6 +61,7 @@ export class EncuestaDetailComponent {
 
   protected readonly deleteConfirmOpen = signal(false);
   protected readonly deleting = signal(false);
+  protected readonly linkCopied = signal(false);
 
   protected readonly activeTab = signal<EncuestaDetailTab>(this.resolveInitialTab());
   protected readonly processTypeLabels = PROCESS_TYPE_LABEL_KEYS;
@@ -73,6 +74,7 @@ export class EncuestaDetailComponent {
     { id: 'respuestas', label: 'encuestas.detail.tabs.respuestas' },
     { id: 'per-question', label: 'encuestas.detail.tabs.per_question' },
     { id: 'formularios', label: 'encuestas.detail.tabs.formularios' },
+    { id: 'destinatarios', label: 'encuestas.detail.tabs.destinatarios' },
   ];
 
   protected readonly draftActiveTab = signal<DraftTab>('formularios');
@@ -165,6 +167,14 @@ export class EncuestaDetailComponent {
 
   protected onLaunched(detail: ConvocatoriaDetail): void {
     this.applyDetail(detail);
+  }
+
+  protected copyAnonymousLink(formId: string): void {
+    const url = `${window.location.origin}/${RouteConstants.FORMS}/${formId}/${RouteConstants.FORM_RESPOND}`;
+    navigator.clipboard.writeText(url).then(() => {
+      this.linkCopied.set(true);
+      setTimeout(() => this.linkCopied.set(false), 2000);
+    });
   }
 
   protected setActiveTab(tabId: string): void {
