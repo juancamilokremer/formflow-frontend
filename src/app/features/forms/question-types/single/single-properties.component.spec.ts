@@ -46,11 +46,10 @@ describe('SinglePropertiesComponent', () => {
     expect(emitted?.config?.['scoringType']).toBe('manual');
   });
 
-  it('emits title on blur', () => {
+  it('emits title on change', () => {
     let emitted: Partial<FormQuestion> | undefined;
     component.changed.subscribe((v) => (emitted = v));
-    const event = { target: { value: 'Nuevo título' } } as unknown as FocusEvent;
-    (component as any).onTitleBlur(event);
+    (component as any).onTitleChange('Nuevo título');
     expect(emitted?.title).toBe('Nuevo título');
   });
 

@@ -19,11 +19,11 @@ describe('InfoPropertiesComponent', () => {
     return fixture.componentInstance;
   }
 
-  it('emits title change on blur when value differs', () => {
+  it('emits title change when the value differs', () => {
     const c = create();
     const emitted: Partial<FormQuestion>[] = [];
     c.changed.subscribe((v) => emitted.push(v));
-    c['onTitleBlur']({ target: { value: 'Nuevo título' } } as unknown as FocusEvent);
+    c['onTitleChange']('Nuevo título');
     expect(emitted).toEqual([{ title: 'Nuevo título' }]);
   });
 
@@ -31,7 +31,7 @@ describe('InfoPropertiesComponent', () => {
     const c = create();
     const emitted: Partial<FormQuestion>[] = [];
     c.changed.subscribe((v) => emitted.push(v));
-    c['onTitleBlur']({ target: { value: 'Aviso' } } as unknown as FocusEvent);
+    c['onTitleChange']('Aviso');
     expect(emitted.length).toBe(0);
   });
 
