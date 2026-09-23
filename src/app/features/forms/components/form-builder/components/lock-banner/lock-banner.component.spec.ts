@@ -33,10 +33,4 @@ describe('LockBannerComponent', () => {
     expect(emitted).toBe(true);
   });
 
-  it('emits duplicateClicked', () => {
-    let emitted = false;
-    component.duplicateClicked.subscribe(() => (emitted = true));
-    component.duplicateClicked.emit();
-    expect(emitted).toBe(true);
-  });
 });

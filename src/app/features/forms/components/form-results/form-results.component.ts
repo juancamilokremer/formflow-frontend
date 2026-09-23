@@ -2,7 +2,7 @@ import { Component, DestroyRef, OnInit, computed, inject, signal } from '@angula
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
-import { formPreviewPath } from '../../../../core/constants/route.constants';
+import { ContainerKind, formPreviewPath } from '../../../../core/constants/route.constants';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
 import { CardComponent } from '../../../../shared/components/card/card.component';
 import { PageHeaderComponent } from '../../../../shared/components/page-header/page-header.component';
@@ -121,7 +121,10 @@ export class FormResultsComponent implements OnInit {
   }
 
   protected goToPreview(): void {
-    this.router.navigate(formPreviewPath(this.formId));
+    const containerId = this.route.snapshot.paramMap.get('containerId')!;
+    const kind: ContainerKind =
+      this.route.snapshot.data['containerKind'] === 'encuestas' ? 'encuestas' : 'convocatorias';
+    this.router.navigate(formPreviewPath(kind, containerId, this.formId));
   }
 
   protected exportResponses(format: ExportFormat): void {

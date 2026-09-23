@@ -1,13 +1,7 @@
 <div class="topbar">
-  @if (convocatoriaId()) {
-    <a class="topbar__back" role="button" tabindex="0" (click)="returnToConvocatoriaClicked.emit()">
-      <app-icon name="arrow-left" [size]="15" /> {{ backToConvocatoriaLabelKey() | translate }}
-    </a>
-  } @else {
-    <a class="topbar__back" [routerLink]="formsRoute">
-      <app-icon name="arrow-left" [size]="15" /> {{ 'builder.back' | translate }}
-    </a>
-  }
+  <a class="topbar__back" role="button" tabindex="0" (click)="returnToConvocatoriaClicked.emit()">
+    <app-icon name="arrow-left" [size]="15" /> {{ backToConvocatoriaLabelKey() | translate }}
+  </a>
 
   <div class="topbar__divider"></div>
 
@@ -66,7 +60,7 @@
         <app-icon name="info" [size]="13" />
         {{ 'builder.survey_publish_hint' | translate }}
       </span>
-    } @else if (convocatoriaId() && form().status === 'DRAFT') {
+    } @else if (form().status === 'DRAFT') {
       <span class="topbar__auto-publish-hint" [title]="'builder.auto_publish_hint' | translate">
         <app-icon name="info" [size]="13" />
         {{ 'builder.auto_publish_hint' | translate }}

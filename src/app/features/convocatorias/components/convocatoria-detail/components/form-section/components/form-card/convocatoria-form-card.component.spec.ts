@@ -231,39 +231,37 @@ describe('ConvocatoriaFormCardComponent', () => {
     });
   });
 
-  it('openForm navigates to the builder with the convocatoriaId and kind query params', () => {
+  it('openForm navigates to the builder under the convocatoria', () => {
     const { component, mockRouter } = buildComponent();
     component['openForm']();
     expect(mockRouter.navigate).toHaveBeenCalledWith(
-      ['forms', 'f1', 'edit'],
-      { queryParams: { convocatoriaId: 'c1', kind: 'convocatorias' } },
+      ['/', 'convocatorias', 'c1', 'formularios', 'f1'],
     );
   });
 
-  it('openForm passes kind=encuestas for a REGISTRATION form', () => {
+  it('openForm routes under encuestas for a REGISTRATION form', () => {
     const { component, mockRouter } = buildComponent({ processType: 'REGISTRATION' });
     component['openForm']();
     expect(mockRouter.navigate).toHaveBeenCalledWith(
-      ['forms', 'f1', 'edit'],
-      { queryParams: { convocatoriaId: 'c1', kind: 'encuestas' } },
+      ['/', 'encuestas', 'c1', 'formularios', 'f1'],
     );
   });
 
-  it('openPreview navigates to the preview route with the convocatoriaId, tab, and kind query params', () => {
+  it('openPreview navigates under the convocatoria, keeping only the tab it returns to', () => {
     const { component, mockRouter } = buildComponent();
     component['openPreview']();
     expect(mockRouter.navigate).toHaveBeenCalledWith(
-      ['/', 'forms', 'f1', 'preview'],
-      { queryParams: { convocatoriaId: 'c1', tab: 'formularios', kind: 'convocatorias' } },
+      ['/', 'convocatorias', 'c1', 'formularios', 'f1', 'preview'],
+      { queryParams: { tab: 'formularios' } },
     );
   });
 
-  it('openPreview passes kind=encuestas for a REGISTRATION form', () => {
+  it('openPreview routes under encuestas for a REGISTRATION form', () => {
     const { component, mockRouter } = buildComponent({ processType: 'REGISTRATION' });
     component['openPreview']();
     expect(mockRouter.navigate).toHaveBeenCalledWith(
-      ['/', 'forms', 'f1', 'preview'],
-      { queryParams: { convocatoriaId: 'c1', tab: 'formularios', kind: 'encuestas' } },
+      ['/', 'encuestas', 'c1', 'formularios', 'f1', 'preview'],
+      { queryParams: { tab: 'formularios' } },
     );
   });
 

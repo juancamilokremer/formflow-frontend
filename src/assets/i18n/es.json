@@ -13,10 +13,6 @@
     "close": "Cerrar",
     "error_generic": "Ocurrió un error inesperado. Por favor intenta de nuevo.",
     "required_field": "Este campo es obligatorio",
-    "never": "—",
-    "ago_minutes": "hace {{n}} min",
-    "ago_hours": "hace {{n}}h",
-    "ago_days": "hace {{n}}d",
     "pagination_range": "{{start}}–{{end}} de {{total}}"
   },
   "auth": {
@@ -98,7 +94,6 @@
   "shell": {
     "nav": {
       "dashboard": "Dashboard",
-      "forms": "Formularios",
       "categories": "Categorías",
       "convocatorias": "Convocatorias",
       "encuestas": "Encuestas",
@@ -118,71 +113,10 @@
     }
   },
   "forms": {
-    "title": "Formularios",
-    "subtitle": "Crea y administra tus formularios de evaluación",
-    "create_btn": "Nuevo formulario",
-    "search_placeholder": "Buscar por nombre...",
-    "stats": {
-      "total": "Formularios",
-      "total_responses": "Total respuestas",
-      "active": "Activos",
-      "draft": "Borradores"
-    },
     "status": {
       "draft": "Borrador",
       "active": "Activo",
       "archived": "Archivado"
-    },
-    "filter": {
-      "all": "Todos los estados",
-      "active": "Activos",
-      "draft": "Borradores",
-      "archived": "Archivados"
-    },
-    "type_filter": {
-      "all": "Todos",
-      "survey": "Encuestas",
-      "evaluation": "Evaluación"
-    },
-    "type": {
-      "candidates": "Candidatos",
-      "candidates_desc": "Evalúa aspirantes con scoring automático por categoría",
-      "diagnostic": "Diagnóstico",
-      "diagnostic_desc": "Mide clima laboral o dimensiones con escala Likert",
-      "registration": "Encuesta",
-      "registration_desc": "Recopila respuestas sin scoring ni ranking"
-    },
-    "table": {
-      "name": "Formulario",
-      "type": "Tipo",
-      "status": "Estado",
-      "responses": "Respuestas",
-      "last_response": "Última resp.",
-      "created": "Creado"
-    },
-    "actions": {
-      "edit": "Editar",
-      "results": "Ver resultados",
-      "generate_version": "Generar nueva versión",
-      "duplicate": "Duplicar",
-      "confirm_delete": "¿Eliminar este formulario?",
-      "delete_yes": "Sí, eliminar"
-    },
-    "dialog": {
-      "title": "Nuevo formulario",
-      "name_label": "Nombre del formulario",
-      "name_placeholder": "Ej: Evaluación de candidatos 2026",
-      "type_label": "Tipo de formulario",
-      "create_btn": "Crear formulario"
-    },
-    "empty": {
-      "title": "No tienes formularios aún",
-      "subtitle": "Crea tu primer formulario para empezar a recolectar respuestas",
-      "no_results_title": "Sin resultados",
-      "no_results_subtitle": "No hay formularios que coincidan con tu búsqueda"
-    },
-    "error": {
-      "load": "No se pudieron cargar los formularios. Intenta de nuevo."
     }
   },
   "categories": {
@@ -314,15 +248,15 @@
       "max_total": "Puntaje máximo total"
     },
     "type_desc": {
-      "info":     "Bloque estático de texto o instrucciones",
-      "text":     "Respuesta abierta de texto libre",
-      "single":   "Selección de una sola opción",
+      "info": "Bloque estático de texto o instrucciones",
+      "text": "Respuesta abierta de texto libre",
+      "single": "Selección de una sola opción",
       "multiple": "Selección de múltiples opciones",
-      "scale":    "Escala numérica con etiquetas de extremo",
-      "nps":      "Net Promoter Score — escala del 0 al 10",
-      "date":     "Selector de fecha",
-      "file":     "Subida de archivos (PDF, imágenes, etc.)",
-      "matrix":   "Tabla de filas y columnas, una selección por fila"
+      "scale": "Escala numérica con etiquetas de extremo",
+      "nps": "Net Promoter Score — escala del 0 al 10",
+      "date": "Selector de fecha",
+      "file": "Subida de archivos (PDF, imágenes, etc.)",
+      "matrix": "Tabla de filas y columnas, una selección por fila"
     },
     "move_to_section": "Mover a",
     "version_history": "Historial de versiones",
@@ -342,13 +276,11 @@
       "question_update": "No se pudo guardar los cambios.",
       "question_delete": "No se pudo eliminar la pregunta.",
       "version_generate": "No se pudo generar la nueva versión. Intenta de nuevo.",
-      "duplicate": "No se pudo duplicar el formulario. Intenta de nuevo.",
       "history_load": "No se pudo cargar el historial de versiones. Intenta de nuevo."
     },
     "locked": {
       "banner_message": "Este formulario está {{status}} y no admite cambios de estructura (secciones, preguntas, opciones o configuración) — puedes seguir editando textos y reordenando. Para cambiar la estructura, genera una nueva versión o duplica el formulario.",
       "generate_version_action": "Generar nueva versión",
-      "duplicate_action": "Duplicar formulario",
       "chip_tooltip": "No disponible mientras el formulario está en uso"
     },
     "history": {

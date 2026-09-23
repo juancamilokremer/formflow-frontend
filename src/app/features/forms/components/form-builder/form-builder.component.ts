@@ -2,9 +2,9 @@ import { Component, OnInit, computed, effect, inject, input, signal } from '@ang
 import { ActivatedRoute, Router } from '@angular/router';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { map, of, switchMap } from 'rxjs';
+import { map } from 'rxjs';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { RouteConstants, convocatoriaDetailPath, encuestaDetailPath, formBuilderPath } from '../../../../core/constants/route.constants';
+import { ContainerKind, convocatoriaDetailPath, encuestaDetailPath, formBuilderPath } from '../../../../core/constants/route.constants';
 import { Category } from '../../../../core/models/category.model';
 import { CategoryService } from '../../../../core/services/category.service';
 import { IconComponent } from '../../../../shared/icons/icon.component';
@@ -49,9 +49,17 @@ export class FormBuilderComponent implements OnInit {
   private readonly translateSvc       = inject(TranslateService);
   private readonly breakpointObserver = inject(BreakpointObserver);
 
-  protected readonly convocatoriaId = this.route.snapshot.queryParamMap.get(RouteConstants.QUERY_CONVOCATORIA_ID);
-  protected readonly containerKind =
-    this.route.snapshot.queryParamMap.get(RouteConstants.QUERY_KIND) === 'encuestas' ? 'encuestas' : 'convocatorias';
+  // A form always lives inside an encuesta or a convocatoria, so both travel in the route
+  // itself instead of query params that could be dropped on any navigation.
+  protected readonly containerId = this.route.snapshot.paramMap.get('containerId')!;
+  protected readonly containerKind: ContainerKind =
+    this.route.snapshot.data['containerKind'] === 'encuestas' ? 'encuestas' : 'convocatorias';
+
+  private containerDetailPath(): string[] {
+    return this.containerKind === 'encuestas'
+      ? encuestaDetailPath(this.containerId)
+      : convocatoriaDetailPath(this.containerId);
+  }
 
   // Bound automatically from the `:id` route param via withComponentInputBinding().
   // Angular reuses this component's instance across navigations between two
@@ -65,8 +73,8 @@ export class FormBuilderComponent implements OnInit {
     { initialValue: false },
   );
 
-  protected goToForms(): void {
-    this.router.navigate(['/forms']);
+  protected goToContainer(): void {
+    this.router.navigate(this.containerDetailPath());
   }
 
   protected readonly loading   = signal(true);
@@ -143,26 +151,8 @@ export class FormBuilderComponent implements OnInit {
   }
 
   protected onReturnToConvocatoria(): void {
-    const convocatoriaId = this.convocatoriaId;
-    const currentForm = this.form();
-    if (!convocatoriaId || !currentForm) return;
-
-    this.convocatoriaService.getById(convocatoriaId).pipe(
-      switchMap((detail) => {
-        const alreadyAttached = detail.forms.some((convocatoriaForm) => convocatoriaForm.formId === currentForm.id);
-        if (alreadyAttached) return of(undefined);
-
-        return this.convocatoriaService.addForm(convocatoriaId, {
-          formId: currentForm.id,
-          weight: detail.forms.length === 0 ? 100 : 0,
-          categoryWeights: [],
-          minScore: null,
-        });
-      }),
-    ).subscribe(() => {
-      this.router.navigate(
-        this.containerKind === 'encuestas' ? encuestaDetailPath(convocatoriaId) : convocatoriaDetailPath(convocatoriaId));
-    });
+    // Nothing to attach: the form was created inside its container.
+    this.router.navigate(this.containerDetailPath());
   }
 
   protected onPublishClicked(): void {
@@ -175,15 +165,9 @@ export class FormBuilderComponent implements OnInit {
 
   protected onGenerateVersion(): void {
     this.formsService.generateVersion(this.form()!.id).subscribe({
-      next: (newForm) => this.router.navigate(formBuilderPath(newForm.id)),
+      next: (newForm) => this.router.navigate(
+        formBuilderPath(this.containerKind, this.containerId, newForm.id)),
       error: () => this.actionError.set('builder.error.version_generate'),
-    });
-  }
-
-  protected onDuplicate(): void {
-    this.formsService.duplicate(this.form()!.id).subscribe({
-      next: (newForm) => this.router.navigate(formBuilderPath(newForm.id)),
-      error: () => this.actionError.set('builder.error.duplicate'),
     });
   }
 
@@ -199,7 +183,7 @@ export class FormBuilderComponent implements OnInit {
 
   protected onVersionSelected(formId: string): void {
     this.historyDrawerOpen.set(false);
-    this.router.navigate(formBuilderPath(formId));
+    this.router.navigate(formBuilderPath(this.containerKind, this.containerId, formId));
   }
 
   // ---------------------------------------------------------------------------

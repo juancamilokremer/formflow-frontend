@@ -24,17 +24,15 @@ const CONV_FORM_1: ConvocatoriaForm = {
 };
 
 function buildComponent(overrides: {
-  createImpl?: unknown; duplicateImpl?: unknown; addFormImpl?: unknown;
+  createFormImpl?: unknown; containerKind?: 'convocatorias' | 'encuestas';
   convocatoriaForms?: ConvocatoriaForm[]; processType?: 'CANDIDATES' | 'DIAGNOSTIC' | 'REGISTRATION';
 } = {}) {
   const mockFormsService = {
-    create: overrides.createImpl ?? vi.fn().mockReturnValue(of(NEW_FORM)),
-    duplicate: overrides.duplicateImpl ?? vi.fn().mockReturnValue(of(DUPLICATED_FORM)),
-    getById: vi.fn().mockReturnValue(of({ sections: [] })),
+    getById: vi.fn().mockReturnValue(of(DUPLICATED_FORM)),
     remove: vi.fn().mockReturnValue(of(undefined)),
   };
   const mockConvocatoriaService = {
-    addForm: overrides.addFormImpl ?? vi.fn().mockReturnValue(
+    createForm: overrides.createFormImpl ?? vi.fn().mockReturnValue(
       of({ id: 'cf5', formId: 'f5', weight: 0, categoryWeights: [], minScore: null, position: 1, readyToLaunch: false })),
     updateForm: vi.fn().mockReturnValue(of(CONV_FORM_1)),
     removeForm: vi.fn().mockReturnValue(of(undefined)),
@@ -59,6 +57,7 @@ function buildComponent(overrides: {
   fixture.componentRef.setInput('processType', overrides.processType ?? 'CANDIDATES');
   fixture.componentRef.setInput('forms', [ACTIVE_CANDIDATES_FORM, DRAFT_FORM, DIAGNOSTIC_FORM]);
   fixture.componentRef.setInput('convocatoriaForms', overrides.convocatoriaForms ?? []);
+  fixture.componentRef.setInput('containerKind', overrides.containerKind ?? 'convocatorias');
   fixture.detectChanges();
   return { fixture, component: fixture.componentInstance, mockFormsService, mockConvocatoriaService, mockRouter };
 }
@@ -94,31 +93,36 @@ describe('ConvocatoriaFormSectionComponent', () => {
   });
 
   describe('createNew', () => {
-    it('creates a form named after the convocatoria and navigates to the builder with convocatoriaId', () => {
-      const { component, mockFormsService, mockRouter } = buildComponent();
+    it('creates the form already attached, in a single call, and goes to the builder', () => {
+      const { component, mockConvocatoriaService, mockRouter } = buildComponent();
 
       component['createNew']();
 
-      expect(mockFormsService.create).toHaveBeenCalledWith({ name: 'RRHH', type: 'CANDIDATES' });
+      // One call, not create-then-attach: there is no moment where the form is an orphan.
+      expect(mockConvocatoriaService.createForm).toHaveBeenCalledWith('c1', {
+        name: 'RRHH', type: 'CANDIDATES', weight: 100, categoryWeights: [], minScore: null,
+      });
       expect(mockRouter.navigate).toHaveBeenCalledWith(
-        ['forms', 'f4', 'edit'],
-        { queryParams: { convocatoriaId: 'c1', kind: 'convocatorias' } },
+        ['/', 'convocatorias', 'c1', 'formularios', 'f5'],
       );
     });
 
-    it('navigates with kind=encuestas when processType is REGISTRATION', () => {
-      const { component, mockRouter } = buildComponent({ processType: 'REGISTRATION' });
+    it('routes under encuestas when the container is one', () => {
+      const { component, mockRouter } = buildComponent({
+        processType: 'REGISTRATION', containerKind: 'encuestas',
+      });
 
       component['createNew']();
 
       expect(mockRouter.navigate).toHaveBeenCalledWith(
-        ['forms', 'f4', 'edit'],
-        { queryParams: { convocatoriaId: 'c1', kind: 'encuestas' } },
+        ['/', 'encuestas', 'c1', 'formularios', 'f5'],
       );
     });
 
     it('sets error when creation fails', () => {
-      const { component } = buildComponent({ createImpl: vi.fn().mockReturnValue(throwError(() => new Error('boom'))) });
+      const { component } = buildComponent({
+        createFormImpl: vi.fn().mockReturnValue(throwError(() => new Error('boom'))),
+      });
       component['createNew']();
       expect(component['error']()).toBe(true);
       expect(component['creating']()).toBe(false);
@@ -127,22 +131,21 @@ describe('ConvocatoriaFormSectionComponent', () => {
 
   describe('duplicateSelected', () => {
     it('does nothing without a selected form', () => {
-      const { component, mockFormsService } = buildComponent();
+      const { component, mockConvocatoriaService } = buildComponent();
       component['duplicateSelected']();
-      expect(mockFormsService.duplicate).not.toHaveBeenCalled();
+      expect(mockConvocatoriaService.createForm).not.toHaveBeenCalled();
     });
 
-    it('duplicates the selected form, defaults weight to 100 when it is the first form, and emits formAdded', () => {
-      const { component, mockFormsService, mockConvocatoriaService } = buildComponent();
+    it('duplicates into the convocatoria, defaults weight to 100 when first, and emits formAdded', () => {
+      const { component, mockConvocatoriaService } = buildComponent();
       component['selectedFormId'].set('f1');
       let emitted: FormAddedEvent | undefined;
       component.formAdded.subscribe((e) => (emitted = e));
 
       component['duplicateSelected']();
 
-      expect(mockFormsService.duplicate).toHaveBeenCalledWith('f1');
-      expect(mockConvocatoriaService.addForm).toHaveBeenCalledWith('c1', {
-        formId: 'f5', weight: 100, categoryWeights: [], minScore: null,
+      expect(mockConvocatoriaService.createForm).toHaveBeenCalledWith('c1', {
+        duplicateFromId: 'f1', weight: 100, categoryWeights: [], minScore: null,
       });
       expect(emitted?.form).toEqual(DUPLICATED_FORM);
       expect(component['selectedFormId']()).toBe('');
@@ -154,14 +157,14 @@ describe('ConvocatoriaFormSectionComponent', () => {
 
       component['duplicateSelected']();
 
-      expect(mockConvocatoriaService.addForm).toHaveBeenCalledWith('c1', {
-        formId: 'f5', weight: 0, categoryWeights: [], minScore: null,
+      expect(mockConvocatoriaService.createForm).toHaveBeenCalledWith('c1', {
+        duplicateFromId: 'f1', weight: 0, categoryWeights: [], minScore: null,
       });
     });
 
-    it('sets error when the attach step fails', () => {
+    it('sets error when the duplicate fails', () => {
       const { component } = buildComponent({
-        addFormImpl: vi.fn().mockReturnValue(throwError(() => new Error('boom'))),
+        createFormImpl: vi.fn().mockReturnValue(throwError(() => new Error('boom'))),
       });
       component['selectedFormId'].set('f1');
 

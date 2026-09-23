@@ -52,27 +52,8 @@ describe('FormsService', () => {
     expect(result).toEqual([]);
   });
 
-  it('create() should POST and return the created form', () => {
-    let result: Form | undefined;
-    service.create({ name: 'Test', type: 'CANDIDATES' }).subscribe((f) => (result = f));
-
-    const req = http.expectOne((r) => r.method === 'POST');
-    expect(req.request.body).toEqual({ name: 'Test', type: 'CANDIDATES' });
-    req.flush({ success: true, data: mockForm });
-
-    expect(result).toEqual(mockForm);
-  });
-
-  it('duplicate() should POST to /duplicate and return the cloned form', () => {
-    let result: Form | undefined;
-    service.duplicate('f1').subscribe((f) => (result = f));
-
-    const req = http.expectOne((r) => r.method === 'POST' && r.url.includes('/f1/duplicate'));
-    expect(req.request.body).toEqual({});
-    req.flush({ success: true, data: { ...mockForm, id: 'f2', name: 'Test Form (copia)' } });
-
-    expect(result).toEqual({ ...mockForm, id: 'f2', name: 'Test Form (copia)' });
-  });
+  // Creating and duplicating a form now go through ConvocatoriaService.createForm, so that
+  // the form is born attached to its container — see convocatoria.service.spec.ts.
 
   it('generateVersion() should POST to /versions and return the new form', () => {
     let result: Form | undefined;

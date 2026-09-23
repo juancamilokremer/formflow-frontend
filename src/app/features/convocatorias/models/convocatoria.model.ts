@@ -85,8 +85,14 @@ export interface UpdateConvocatoriaRequest {
   scoringConfig?: ScoringConfig;
 }
 
-export interface AddConvocatoriaFormRequest {
-  formId: string;
+/**
+ * A form is created inside its convocatoria, never standalone: either blank (`name`) or as a
+ * copy of an existing one (`duplicateFromId`), exactly one of the two.
+ */
+export interface CreateConvocatoriaFormRequest {
+  name?: string;
+  type?: ProcessType;
+  duplicateFromId?: string;
   weight: number;
   categoryWeights?: CategoryWeight[];
   minScore?: number | null;

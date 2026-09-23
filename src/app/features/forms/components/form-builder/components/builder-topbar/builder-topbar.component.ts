@@ -4,7 +4,7 @@ import { Router, RouterLink } from '@angular/router';
 import { LowerCasePipe } from '@angular/common';
 import { ButtonComponent } from '../../../../../../shared/components/button/button.component';
 import { IconComponent } from '../../../../../../shared/icons/icon.component';
-import { RouteConstants, formPreviewPath } from '../../../../../../core/constants/route.constants';
+import { ContainerKind, formPreviewPath } from '../../../../../../core/constants/route.constants';
 import { FormDetail } from '../../../../models/form.model';
 
 @Component({
@@ -17,8 +17,8 @@ export class BuilderTopbarComponent {
   private readonly router = inject(Router);
 
   readonly form = input.required<FormDetail>();
-  readonly convocatoriaId = input<string | null>(null);
-  readonly containerKind = input<'convocatorias' | 'encuestas'>('convocatorias');
+  readonly containerId = input.required<string>();
+  readonly containerKind = input.required<ContainerKind>();
 
   protected readonly backToConvocatoriaLabelKey = computed(() =>
     this.containerKind() === 'encuestas' ? 'builder.back_to_encuesta' : 'builder.back_to_convocatoria');
@@ -29,7 +29,6 @@ export class BuilderTopbarComponent {
   readonly historyClicked = output<void>();
   readonly timeLimitChanged = output<number | null>();
 
-  protected readonly formsRoute = `/${RouteConstants.FORMS}`;
 
   protected readonly hasQuestionTimeLimits = computed(() =>
     this.form().sections.some((s) => s.questions.some((q) => q.timeLimitSeconds != null)),
@@ -50,21 +49,9 @@ export class BuilderTopbarComponent {
   }
 
   protected onPreviewClick(): void {
-    const convocatoriaId = this.convocatoriaId();
-    if (convocatoriaId) {
-      // Carry the container context forward so that, on "Salir" from the preview, the
-      // builder is reconstructed still knowing it belongs to this convocatoria/encuesta
-      // (otherwise it "forgets" — the topbar falls back to a generic "Volver a
-      // formularios" link, and the pending attach-on-return never happens).
-      this.router.navigate(formPreviewPath(this.form().id), {
-        queryParams: {
-          [RouteConstants.QUERY_CONVOCATORIA_ID]: convocatoriaId,
-          [RouteConstants.QUERY_KIND]: this.containerKind(),
-        },
-      });
-      return;
-    }
-    this.router.navigate(formPreviewPath(this.form().id));
+    // The container is part of the preview's own route, so returning from it lands back
+    // in this builder with its context intact — nothing to carry in query params.
+    this.router.navigate(formPreviewPath(this.containerKind(), this.containerId(), this.form().id));
   }
 
   protected onNameBlur(event: FocusEvent): void {

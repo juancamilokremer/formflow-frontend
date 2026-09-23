@@ -4,7 +4,7 @@ import { Observable, map } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ApiResponse } from '../../../core/models/api-response.model';
 import {
-  AddCandidateRequest, AddConvocatoriaFormRequest, Candidate, CandidateConvocatoriaResponseDetail,
+  AddCandidateRequest, CreateConvocatoriaFormRequest, Candidate, CandidateConvocatoriaResponseDetail,
   ConvocatoriaDetail, ConvocatoriaForm, ConvocatoriaQuestionStats, ConvocatoriaStats, ConvocatoriaSummary,
   CreateConvocatoriaRequest, ImportResponse, RankingEntry, UpdateConvocatoriaFormRequest, UpdateConvocatoriaRequest,
 } from '../models/convocatoria.model';
@@ -40,7 +40,7 @@ export class ConvocatoriaService {
       .pipe(map((r) => r.data!));
   }
 
-  addForm(id: string, request: AddConvocatoriaFormRequest): Observable<ConvocatoriaForm> {
+  createForm(id: string, request: CreateConvocatoriaFormRequest): Observable<ConvocatoriaForm> {
     return this.http
       .post<ApiResponse<ConvocatoriaForm>>(`${this.base}/${id}/forms`, request)
       .pipe(map((r) => r.data!));

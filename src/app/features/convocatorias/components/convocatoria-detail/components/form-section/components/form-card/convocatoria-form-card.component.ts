@@ -8,7 +8,7 @@ import { ButtonComponent } from '../../../../../../../../shared/components/butto
 import { CheckboxComponent } from '../../../../../../../../shared/components/checkbox/checkbox.component';
 import { IconComponent } from '../../../../../../../../shared/icons/icon.component';
 import { ConfirmDialogComponent } from '../../../../../../../../shared/components/confirm-dialog/confirm-dialog.component';
-import { RouteConstants, formBuilderPath, formPreviewPath } from '../../../../../../../../core/constants/route.constants';
+import { ContainerKind, RouteConstants, formBuilderPath, formPreviewPath } from '../../../../../../../../core/constants/route.constants';
 import { CategoryService } from '../../../../../../../../core/services/category.service';
 import { Category } from '../../../../../../../../core/models/category.model';
 import { FormsService } from '../../../../../../../forms/services/forms.service';
@@ -131,23 +131,19 @@ export class ConvocatoriaFormCardComponent implements OnInit {
     this.change$.next();
   }
 
+  private get containerKind(): ContainerKind {
+    return this.isSimpleMode() ? 'encuestas' : 'convocatorias';
+  }
+
   protected openForm(): void {
-    this.router.navigate(formBuilderPath(this.convocatoriaForm().formId), {
-      queryParams: {
-        [RouteConstants.QUERY_CONVOCATORIA_ID]: this.convocatoriaId(),
-        [RouteConstants.QUERY_KIND]: this.isSimpleMode() ? 'encuestas' : 'convocatorias',
-      },
-    });
+    this.router.navigate(
+      formBuilderPath(this.containerKind, this.convocatoriaId(), this.convocatoriaForm().formId));
   }
 
   protected openPreview(): void {
-    this.router.navigate(formPreviewPath(this.convocatoriaForm().formId), {
-      queryParams: {
-        [RouteConstants.QUERY_CONVOCATORIA_ID]: this.convocatoriaId(),
-        [RouteConstants.QUERY_TAB]: 'formularios',
-        [RouteConstants.QUERY_KIND]: this.isSimpleMode() ? 'encuestas' : 'convocatorias',
-      },
-    });
+    this.router.navigate(
+      formPreviewPath(this.containerKind, this.convocatoriaId(), this.convocatoriaForm().formId),
+      { queryParams: { [RouteConstants.QUERY_TAB]: 'formularios' } });
   }
 
   protected requestRemove(): void {
