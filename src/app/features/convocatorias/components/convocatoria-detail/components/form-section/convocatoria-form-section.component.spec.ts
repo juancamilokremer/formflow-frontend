@@ -7,7 +7,7 @@ import { ConvocatoriaFormSectionComponent } from './convocatoria-form-section.co
 import { FormsService } from '../../../../../forms/services/forms.service';
 import { ConvocatoriaService } from '../../../../services/convocatoria.service';
 import { CategoryService } from '../../../../../../core/services/category.service';
-import { Form } from '../../../../../forms/models/form.model';
+import { Form, FormDetail } from '../../../../../forms/models/form.model';
 import { ConvocatoriaForm, FormAddedEvent } from '../../../../models/convocatoria.model';
 
 const ACTIVE_CANDIDATES_FORM: Form = {
@@ -16,8 +16,10 @@ const ACTIVE_CANDIDATES_FORM: Form = {
 };
 const DRAFT_FORM: Form = { ...ACTIVE_CANDIDATES_FORM, id: 'f2', status: 'DRAFT' };
 const DIAGNOSTIC_FORM: Form = { ...ACTIVE_CANDIDATES_FORM, id: 'f3', type: 'DIAGNOSTIC' };
-const NEW_FORM: Form = { ...ACTIVE_CANDIDATES_FORM, id: 'f4', name: 'RRHH' };
-const DUPLICATED_FORM: Form = { ...ACTIVE_CANDIDATES_FORM, id: 'f5', name: 'Evaluación técnica (copia)' };
+const DUPLICATED_FORM: FormDetail = {
+  ...ACTIVE_CANDIDATES_FORM, id: 'f5', name: 'Evaluación técnica (copia)',
+  sections: [], timeLimitSeconds: null,
+};
 
 const CONV_FORM_1: ConvocatoriaForm = {
   id: 'cf1', formId: 'f1', weight: 100, categoryWeights: [], minScore: null, position: 0, readyToLaunch: false,
