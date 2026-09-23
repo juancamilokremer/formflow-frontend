@@ -1,15 +1,12 @@
 <div class="qp">
-  <div class="qp__field">
-    <label class="qp__label" for="qp-title">{{ 'builder.prop.title' | translate }}</label>
-    <input
-      id="qp-title"
-      class="qp__input"
-      type="text"
-      [value]="question().title"
-      [placeholder]="'builder.prop.info_title_placeholder' | translate"
-      (blur)="onTitleBlur($event)"
-    />
-  </div>
+  <app-question-base-fields
+    [question]="question()"
+    [titlePlaceholder]="'builder.prop.info_title_placeholder' | translate"
+    [showRequired]="false"
+    [showDescription]="false"
+    [showTimeLimit]="false"
+    (titleChange)="onTitleChange($event)"
+  />
 
   <div class="qp__divider"></div>
 

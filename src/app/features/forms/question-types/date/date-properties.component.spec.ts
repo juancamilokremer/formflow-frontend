@@ -26,7 +26,7 @@ describe('DatePropertiesComponent', () => {
   it('emits required toggle', () => {
     let emitted: Partial<FormQuestion> | undefined;
     component.changed.subscribe((v) => (emitted = v));
-    (component as any).onRequiredChange({ target: { checked: true } } as unknown as Event);
+    (component as any).onRequiredChange(true);
     expect(emitted).toEqual({ required: true });
   });
 });

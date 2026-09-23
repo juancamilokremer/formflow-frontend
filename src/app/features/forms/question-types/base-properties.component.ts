@@ -16,17 +16,17 @@ export abstract class BasePropertiesComponent implements PropertiesQuestionCompo
     this.changed.emit({ timeLimitSeconds });
   }
 
-  protected onTitleBlur(event: FocusEvent): void {
-    const title = (event.target as HTMLInputElement).value.trim();
+  // QuestionBaseFieldsComponent owns the markup and hands these already-parsed values over;
+  // what stays here is the rule about which of them are worth persisting.
+  protected onTitleChange(title: string): void {
     if (title && title !== this.question().title) this.changed.emit({ title });
   }
 
-  protected onRequiredChange(event: Event): void {
-    this.changed.emit({ required: (event.target as HTMLInputElement).checked });
+  protected onRequiredChange(required: boolean): void {
+    this.changed.emit({ required });
   }
 
-  protected onDescriptionBlur(event: FocusEvent): void {
-    const description = (event.target as HTMLTextAreaElement).value.trim() || null;
+  protected onDescriptionChange(description: string | null): void {
     if (description !== this.question().description) this.changed.emit({ description });
   }
 

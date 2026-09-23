@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { BasePropertiesComponent } from '../base-properties.component';
-import { TimeLimitFieldComponent } from '../shared/time-limit-field/time-limit-field.component';
+import { QuestionBaseFieldsComponent } from '../shared/question-base-fields/question-base-fields.component';
 
 @Component({
   selector: 'app-nps-properties',
-  imports: [TranslatePipe, TimeLimitFieldComponent],
+  imports: [TranslatePipe, QuestionBaseFieldsComponent],
   templateUrl: './nps-properties.component.html',
   styleUrl: './nps-properties.component.scss',
 })

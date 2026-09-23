@@ -1,16 +1,18 @@
 import { Component } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { BasePropertiesComponent } from '../base-properties.component';
+import { QuestionBaseFieldsComponent } from '../shared/question-base-fields/question-base-fields.component';
 
 @Component({
   selector: 'app-info-properties',
-  imports: [TranslatePipe],
+  imports: [TranslatePipe, QuestionBaseFieldsComponent],
   templateUrl: './info-properties.component.html',
   styleUrl: './info-properties.component.scss',
 })
 export class InfoPropertiesComponent extends BasePropertiesComponent {
-  protected override onTitleBlur(event: FocusEvent): void {
-    const title = (event.target as HTMLInputElement).value.trim();
+  // Unlike the other types, an info block may have no title at all, so an empty value is
+  // a legitimate change rather than something to ignore.
+  protected override onTitleChange(title: string): void {
     if (title !== this.question().title) this.changed.emit({ title });
   }
 
