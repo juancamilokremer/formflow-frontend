@@ -1,1 +1,784 @@
-{}
+{
+  "common": {
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "back": "Back",
+    "next": "Next",
+    "confirm": "Confirm",
+    "confirm_title": "Confirm action?",
+    "accept": "Accept",
+    "close": "Close",
+    "error_generic": "An unexpected error occurred. Please try again.",
+    "required_field": "This field is required",
+    "never": "—",
+    "ago_minutes": "{{n}} min ago",
+    "ago_hours": "{{n}}h ago",
+    "ago_days": "{{n}}d ago",
+    "pagination_range": "{{start}}–{{end}} of {{total}}"
+  },
+  "auth": {
+    "login": {
+      "title": "Log in",
+      "heading": "Welcome back",
+      "subheading": "Sign in to your FormFlow account",
+      "email": "Email address",
+      "password": "Password",
+      "tenant": "Company identifier",
+      "submit": "Log in",
+      "forgot_password": "Forgot your password?",
+      "no_account": "Don't have an account?",
+      "register_link": "Sign up",
+      "tenant_format": "Lowercase letters, numbers, and hyphens only (e.g. my-company)",
+      "email_invalid": "Enter a valid email",
+      "error_invalid": "Invalid credentials or company not found",
+      "error_email_not_verified": "You must verify your email before logging in. Check your inbox.",
+      "password_reset_success": "Password updated successfully. You can log in now."
+    },
+    "register": {
+      "title": "Create account",
+      "heading": "Create your account",
+      "subheading": "Start for free — no credit card required",
+      "company_name": "Company name",
+      "slug": "Company identifier",
+      "slug_hint": "Your URL will be",
+      "slug_format": "Lowercase letters, numbers, and hyphens only (e.g. my-company)",
+      "email": "Email address",
+      "password": "Password",
+      "password_min": "At least 8 characters",
+      "confirm_password": "Confirm password",
+      "password_mismatch": "Passwords do not match",
+      "first_name": "First name",
+      "last_name": "Last name",
+      "submit": "Create account",
+      "already_account": "Already have an account?",
+      "login_link": "Log in",
+      "error_conflict": "The company identifier or email is already in use",
+      "success_title": "Check your email!",
+      "success_message": "We sent a confirmation link to {{email}}. Activate your account before logging in.",
+      "go_to_login": "Go to login"
+    },
+    "forgot_password": {
+      "title": "Recover password",
+      "subheading": "Enter your company and email and we'll send you instructions.",
+      "email": "Email address",
+      "submit": "Send instructions",
+      "success_title": "Check your email!",
+      "success": "If the email exists on our platform, you'll receive instructions shortly.",
+      "back_to_login": "Back to login"
+    },
+    "reset_password": {
+      "title": "New password",
+      "subheading": "Choose a strong password for your account.",
+      "new_password": "New password",
+      "confirm_password": "Confirm password",
+      "submit": "Change password",
+      "success": "Password updated. You can log in now.",
+      "invalid_token": "This link is invalid or has expired.",
+      "request_new_link": "Request a new link"
+    },
+    "verify_email": {
+      "title": "Verify email",
+      "verifying": "Verifying your email...",
+      "no_token": "No valid verification link was found.",
+      "success": "Your email has been verified successfully.",
+      "invalid_token": "The verification link is invalid or has expired.",
+      "resend": "Resend verification email",
+      "resend_success": "Verification email sent.",
+      "go_to_dashboard": "Go to dashboard"
+    },
+    "email_banner": {
+      "message": "Verify your email {{email}} to activate all features.",
+      "resend": "Resend",
+      "resend_cooldown": "Resend in {{seconds}}s"
+    }
+  },
+  "shell": {
+    "nav": {
+      "dashboard": "Dashboard",
+      "forms": "Forms",
+      "categories": "Categories",
+      "convocatorias": "Convocatorias",
+      "encuestas": "Surveys",
+      "users": "Users",
+      "settings": "Settings",
+      "billing": "Billing",
+      "form_builder": "Form builder"
+    },
+    "header": {
+      "open_menu": "Open menu",
+      "user_menu": "User menu",
+      "logout": "Log out"
+    },
+    "sidebar": {
+      "plan_label": "{{plan}} plan",
+      "close_menu": "Close menu"
+    }
+  },
+  "forms": {
+    "title": "Forms",
+    "subtitle": "Create and manage your evaluation forms",
+    "create_btn": "New form",
+    "search_placeholder": "Search by name...",
+    "stats": {
+      "total": "Forms",
+      "total_responses": "Total responses",
+      "active": "Active",
+      "draft": "Drafts"
+    },
+    "status": {
+      "draft": "Draft",
+      "active": "Active",
+      "archived": "Archived"
+    },
+    "filter": {
+      "all": "All statuses",
+      "active": "Active",
+      "draft": "Drafts",
+      "archived": "Archived"
+    },
+    "type_filter": {
+      "all": "All",
+      "survey": "Surveys",
+      "evaluation": "Evaluation"
+    },
+    "type": {
+      "candidates": "Candidates",
+      "candidates_desc": "Evaluate applicants with automatic scoring by category",
+      "diagnostic": "Diagnostic",
+      "diagnostic_desc": "Measure work climate or dimensions with a Likert scale",
+      "registration": "Survey",
+      "registration_desc": "Collect responses without scoring or ranking"
+    },
+    "table": {
+      "name": "Form",
+      "type": "Type",
+      "status": "Status",
+      "responses": "Responses",
+      "last_response": "Last resp.",
+      "created": "Created"
+    },
+    "actions": {
+      "edit": "Edit",
+      "results": "View results",
+      "generate_version": "Generate new version",
+      "duplicate": "Duplicate",
+      "confirm_delete": "Delete this form?",
+      "delete_yes": "Yes, delete"
+    },
+    "dialog": {
+      "title": "New form",
+      "name_label": "Form name",
+      "name_placeholder": "E.g: Candidate evaluation 2026",
+      "type_label": "Form type",
+      "create_btn": "Create form"
+    },
+    "empty": {
+      "title": "You don't have any forms yet",
+      "subtitle": "Create your first form to start collecting responses",
+      "no_results_title": "No results",
+      "no_results_subtitle": "No forms match your search"
+    },
+    "error": {
+      "load": "Could not load the forms. Try again."
+    }
+  },
+  "categories": {
+    "title": "Categories",
+    "subtitle": "Group questions to calculate a per-dimension score",
+    "create_btn": "New category",
+    "search_placeholder": "Search by name...",
+    "table": {
+      "name": "Name",
+      "description": "Description"
+    },
+    "actions": {
+      "edit": "Edit",
+      "confirm_delete": "Delete this category?",
+      "delete_yes": "Yes, delete",
+      "delete_conflict": "Cannot delete: there are questions using this category.",
+      "delete_error": "Could not delete the category. Try again."
+    },
+    "dialog": {
+      "create_title": "New category",
+      "edit_title": "Edit category",
+      "name_label": "Name",
+      "name_placeholder": "E.g: Technical Skills",
+      "color_label": "Color",
+      "description_label": "Description (optional)",
+      "description_placeholder": "What this category is used for",
+      "create_btn": "Create category",
+      "save_btn": "Save changes",
+      "error_duplicate_name": "A category with that name already exists.",
+      "error_invalid_color": "Color must be a valid hex code (#RRGGBB).",
+      "error_generic": "Could not save the category. Try again."
+    },
+    "empty": {
+      "title": "You don't have any categories yet",
+      "subtitle": "Create categories to weight questions by dimension in your convocatorias",
+      "no_results_title": "No results",
+      "no_results_subtitle": "No categories match your search"
+    },
+    "error": {
+      "load": "Could not load the categories. Try again."
+    }
+  },
+  "builder": {
+    "back": "Back to forms",
+    "back_to_convocatoria": "Back to the convocatoria",
+    "back_to_encuesta": "Back to the survey",
+    "preview": "Preview",
+    "publish": "Publish",
+    "archive": "Archive",
+    "auto_publish_hint": "It will publish automatically when the convocatoria launches",
+    "survey_publish_hint": "This survey's status is controlled from its \"Launch\" tab",
+    "form_name": "Form name",
+    "add_section": "Add section",
+    "section_default_name": "New section",
+    "section_placeholder": "Section name",
+    "section_delete_title": "Delete section?",
+    "section_delete_message": "All questions in this section will be deleted. This action cannot be undone.",
+    "canvas_empty": "Start by adding a section",
+    "canvas_empty_subtitle": "Click \"Add section\" to get started",
+    "section_empty": "Drag fields here",
+    "properties_empty": "Select a field to edit it",
+    "properties_empty_subtitle": "Click any question on the canvas",
+    "panel_title": "Field types",
+    "group": {
+      "text": "Text",
+      "selection": "Selection",
+      "scales": "Scales",
+      "advanced": "Advanced"
+    },
+    "type": {
+      "info": "Info text",
+      "text": "Free text",
+      "single": "Single choice",
+      "multiple": "Multiple choice",
+      "scale": "Scale",
+      "nps": "NPS",
+      "date": "Date",
+      "file": "File",
+      "matrix": "Matrix"
+    },
+    "question_default_title": "New question",
+    "canvas_no_options": "No options — configure in the right panel",
+    "canvas_drop_file": "Click or drag a file here",
+    "properties_title": "Field properties",
+    "required_chip": "Required",
+    "scoring_badge": "Weighted",
+    "scoring_badge_auto": "Auto weights",
+    "canvas_max_score": "Maximum score",
+    "canvas_auto_scores": "Automatic weights",
+    "canvas_matrix_empty": "Configure rows and columns in the right panel",
+    "canvas_nps_hint": "Net Promoter Score — scale from 0 to 10",
+    "prop": {
+      "title": "Question",
+      "required": "Required",
+      "description": "Description (optional)",
+      "time_limit": "Time limit (optional)",
+      "time_limit_placeholder": "No limit",
+      "time_limit_seconds": "seconds",
+      "time_limit_minutes": "minutes",
+      "time_limit_seconds_short": "s",
+      "time_limit_minutes_short": "min",
+      "placeholder": "Help text (placeholder)",
+      "options": "Answer options",
+      "add_option": "+ Add option",
+      "option_placeholder": "Type an option...",
+      "scale_size": "Scale size",
+      "min_label": "Minimum label",
+      "max_label": "Maximum label",
+      "scoring_type": "Scoring system",
+      "scoring_none": "No scoring",
+      "scoring_manual": "Score per option",
+      "scoring_auto": "Automatic (Likert)",
+      "scoring_auto_info": "Linear score: 1→2pts, 2→4pts, ... 5→10pts",
+      "category": "Category",
+      "category_none": "No category",
+      "category_create": "+ New category...",
+      "nps_min_label": "Minimum label",
+      "nps_min_placeholder": "E.g: Not at all likely",
+      "nps_max_label": "Maximum label",
+      "nps_max_placeholder": "E.g: Extremely likely",
+      "matrix_rows": "Rows",
+      "matrix_columns": "Columns",
+      "info_content": "Content",
+      "info_title_placeholder": "Block title (optional)",
+      "info_content_placeholder": "Write the text or instructions here..."
+    },
+    "summary": {
+      "questions_count": "{{n}} scored questions",
+      "max_total": "Total maximum score"
+    },
+    "type_desc": {
+      "info":     "Static block of text or instructions",
+      "text":     "Open-ended free text answer",
+      "single":   "Single option selection",
+      "multiple": "Multiple option selection",
+      "scale":    "Numeric scale with endpoint labels",
+      "nps":      "Net Promoter Score — scale from 0 to 10",
+      "date":     "Date picker",
+      "file":     "File upload (PDF, images, etc.)",
+      "matrix":   "Table of rows and columns, one selection per row"
+    },
+    "move_to_section": "Move to",
+    "version_history": "Version history",
+    "form_time_limit_label": "Time limit for the whole form",
+    "form_time_limit_placeholder": "No limit",
+    "form_time_limit_warning": "This form also has questions with their own time limit — both limits will apply at the same time",
+    "mobile_block_title": "Screen too small",
+    "mobile_block_subtitle": "The form builder requires a larger screen. Access it from a computer or tablet.",
+    "mobile_block_action": "Back to my forms",
+    "error": {
+      "load": "Could not load the form. Try again.",
+      "name_update": "Could not update the name.",
+      "section_create": "Could not create the section.",
+      "section_update": "Could not update the section.",
+      "section_delete": "Could not delete the section.",
+      "question_create": "Could not add the question.",
+      "question_update": "Could not save the changes.",
+      "question_delete": "Could not delete the question.",
+      "version_generate": "Could not generate the new version. Try again.",
+      "duplicate": "Could not duplicate the form. Try again.",
+      "history_load": "Could not load the version history. Try again."
+    },
+    "locked": {
+      "banner_message": "This form is {{status}} and does not allow structural changes (sections, questions, options, or configuration) — you can still edit text and reorder. To change the structure, generate a new version or duplicate the form.",
+      "generate_version_action": "Generate new version",
+      "duplicate_action": "Duplicate form",
+      "chip_tooltip": "Not available while the form is in use"
+    },
+    "history": {
+      "version_label": "Version {{n}}",
+      "current_badge": "Current version",
+      "viewing_badge": "Viewing now"
+    }
+  },
+  "logic": {
+    "title": "Conditional logic",
+    "button_label": "Conditional logic",
+    "chip_label": "Conditional",
+    "no_previous_questions": "There are no previous questions. Add more questions before this one to configure conditions.",
+    "show_when": "Show this question if",
+    "all_conditions": "ALL conditions",
+    "any_condition": "ANY condition",
+    "conditions_met": "are met",
+    "condition": "Condition",
+    "select_question": "Select a question...",
+    "select_operator": "Select a condition...",
+    "select_value": "Select a value...",
+    "enter_value": "Type a value...",
+    "enter_number": "Enter a number...",
+    "add_condition": "Add condition",
+    "and_connector": "AND",
+    "or_connector": "OR",
+    "preview_show_if": "Show if",
+    "op": {
+      "equals": "equals",
+      "not_equals": "does not equal",
+      "contains": "contains",
+      "not_contains": "does not contain",
+      "greater_than": "is greater than",
+      "less_than": "is less than",
+      "is_empty": "is empty",
+      "is_not_empty": "is not empty"
+    }
+  },
+  "preview": {
+    "title": "Preview",
+    "banner": "Preview — responses will not be saved",
+    "exit": "Exit",
+    "prev_section": "Previous",
+    "next_section": "Next",
+    "submit_disabled": "Submit (preview only)",
+    "section_of": "Section {{current}} of {{total}}",
+    "no_visible_questions": "There are no visible questions in this section.",
+    "error_load": "Could not load the form. Try again.",
+    "choose_file": "Choose file",
+    "progress": "Progress",
+    "progress_counter": "{{answered}} of {{total}} questions"
+  },
+  "results": {
+    "title": "Results",
+    "subtitle": "Statistics and responses for the form",
+    "error": {
+      "load": "Could not load the results. Try again."
+    },
+    "empty": {
+      "title": "There are no responses yet",
+      "subtitle": "Share the form to start receiving responses.",
+      "cta": "Share form",
+      "range_title": "No responses in this range",
+      "range_subtitle": "Adjust the date filter to view a different period."
+    },
+    "filter": {
+      "hint": "This filter applies to all three tabs and to the export.",
+      "from": "From",
+      "to": "To"
+    },
+    "tabs": {
+      "summary": "Summary",
+      "per_question": "Per question",
+      "responses": "Individual responses"
+    },
+    "export": {
+      "excel": "Export Excel",
+      "csv": "Export CSV",
+      "error": "Could not generate the file. Try again."
+    },
+    "responses": {
+      "empty_title": "There are no individual responses to show yet.",
+      "column_submitted": "Submitted at",
+      "column_duration": "Completion time",
+      "column_score": "Score",
+      "drawer_title": "Response detail",
+      "total_score": "Total score",
+      "no_answer": "No answer",
+      "download_file": "Download file"
+    },
+    "summary": {
+      "total": "Total responses",
+      "completion_rate": "Completion rate",
+      "avg_time": "Average time",
+      "timeline_title": "Responses per day",
+      "timeline_empty": "There are no responses in this range."
+    },
+    "range": {
+      "7d": "7 days",
+      "30d": "30 days",
+      "all": "All"
+    },
+    "per_question": {
+      "answered": "{{answered}} of {{total}} answered ({{pct}}%)",
+      "no_answers": "There are no responses for this question yet.",
+      "no_questions": "This form has no questions with statistics.",
+      "no_options": "This question doesn't have any options configured yet.",
+      "no_preview": "No preview available for this question type.",
+      "nps": {
+        "promoters": "Promoters (9-10)",
+        "passives": "Passives (7-8)",
+        "detractors": "Detractors (0-6)"
+      }
+    }
+  },
+  "responder": {
+    "loading": "Loading form...",
+    "not_found": {
+      "title": "Form not available",
+      "message": "This form does not exist or is no longer available."
+    },
+    "section_of": "Section {{current}} of {{total}}",
+    "progress": "Progress",
+    "progress_counter": "{{answered}} of {{total}} questions",
+    "prev": "Previous",
+    "next": "Next",
+    "submit": "Submit response",
+    "submitting": "Submitting...",
+    "error_required": "This question is required",
+    "submit_error": "There was an error submitting your response. Please try again.",
+    "time_limit": {
+      "preview": "You have {{seconds}} seconds for this question",
+      "running": "Time running",
+      "seconds_left": "{{seconds}}s left",
+      "expired": "Time's up",
+      "aria_under_ten": "Less than 10 seconds left",
+      "aria_expired": "Time's up"
+    },
+    "no_visible_questions": "There are no visible questions in this section.",
+    "powered_by": "Made with FormFlow",
+    "confirmation": {
+      "title": "Response submitted!",
+      "message": "Your response to \"{{formName}}\" was recorded successfully.",
+      "by": "Submitted to {{tenantName}}"
+    },
+    "candidate": {
+      "greeting": "Hi, {{candidateName}}",
+      "confirmation_by": "Answered for: {{convocatoriaName}}",
+      "back_to_checklist": "Back to checklist",
+      "closed": {
+        "title": "Convocatoria closed",
+        "message": "This convocatoria is no longer accepting responses."
+      },
+      "checklist": {
+        "subtitle": "Complete each form to finish your process.",
+        "status_pending": "Pending",
+        "status_completed": "Completed",
+        "action_start": "Start",
+        "action_view": "View"
+      },
+      "all_done": {
+        "title": "You've completed everything!",
+        "message": "You submitted your responses for all the forms in \"{{convocatoriaName}}\". No further action is needed."
+      },
+      "form_already_done": {
+        "title": "You already answered this form",
+        "message": "Your response for \"{{formName}}\" was already recorded."
+      }
+    }
+  },
+  "convocatorias": {
+    "title": "Convocatorias",
+    "subtitle": "Manage evaluation processes and group surveys",
+    "new_button": "New convocatoria",
+    "stats": {
+      "active": "ACTIVE",
+      "draft": "DRAFTS",
+      "total_candidates": "CANDIDATES",
+      "responded": "RESPONDED"
+    },
+    "filter": {
+      "all": "All",
+      "active": "Active",
+      "draft": "Drafts",
+      "closed": "Closed"
+    },
+    "status": {
+      "ACTIVE": "Active",
+      "DRAFT": "Draft",
+      "CLOSED": "Closed"
+    },
+    "card": {
+      "created": "Created {{date}}",
+      "responded_of": "{{responded}} of {{total}} responded",
+      "view": "View results",
+      "edit": "Edit",
+      "close": "Close",
+      "delete": "Delete",
+      "no_candidates": "No candidates yet"
+    },
+    "empty": {
+      "title": "You don't have any convocatorias yet",
+      "subtitle": "Create your first convocatoria to evaluate candidates or run surveys with your team."
+    },
+    "confirm_close": {
+      "title": "Close convocatoria?",
+      "message": "The convocatoria \"{{name}}\" will be closed. Pending candidates will no longer be able to respond."
+    },
+    "confirm_delete": {
+      "title": "Delete convocatoria?",
+      "message": "The convocatoria \"{{name}}\" will be deleted. This action cannot be undone."
+    },
+    "error": {
+      "load": "Could not load the list of convocatorias."
+    },
+    "candidate_status": {
+      "INVITED": "Invited",
+      "IN_PROGRESS": "In progress",
+      "RESPONDED": "Responded",
+      "EXPIRED": "Expired"
+    },
+    "classification": {
+      "APTO": "✅ Qualified",
+      "REVISAR": "⚠️ Needs review",
+      "NO_APTO": "❌ Not qualified"
+    },
+    "create": {
+      "title": "New convocatoria",
+      "subtitle": "Start with the name and process type — the rest is configured afterward.",
+      "name_label": "Convocatoria name",
+      "name_placeholder": "E.g: HR Analyst — Q3 2026",
+      "type_label": "Process type",
+      "type_candidates": "Candidate evaluation",
+      "type_candidates_desc": "Receive applicants, score and rank them automatically",
+      "type_diagnostic": "Diagnostic / survey",
+      "type_diagnostic_desc": "Group survey with per-dimension analysis",
+      "error": "Could not create the convocatoria. Try again."
+    },
+    "detail": {
+      "title": "Convocatoria",
+      "name_label": "Convocatoria name",
+      "back_to_list": "Convocatorias",
+      "closes_on": "Closes: {{date}}",
+      "tabs": {
+        "ranking": "Ranking",
+        "stats": "Statistics",
+        "per_question": "Per question",
+        "formularios": "Forms",
+        "candidatos": "Candidates"
+      },
+      "draft_tabs": {
+        "formularios": "Forms",
+        "umbrales": "Thresholds",
+        "candidatos": "Candidates",
+        "lanzar": "Launch"
+      },
+      "ranking": {
+        "col_candidate": "Candidate",
+        "col_total": "Total",
+        "col_verdict": "Verdict",
+        "weight_label": "{{weight}}% weight",
+        "progress": "{{completed}}/{{total}} forms",
+        "empty_title": "No candidates have responded yet",
+        "empty_subtitle": "The ranking will appear here once candidates start responding.",
+        "error_title": "Could not load the ranking",
+        "drawer_title": "Candidate's response",
+        "download_pdf": "Download PDF",
+        "download_error": "Could not download the PDF. Try again.",
+        "form_score": "Form score",
+        "no_responses": "This candidate hasn't responded to any form yet.",
+        "export_selected": "Export selected ({{count}})",
+        "export_all": "Export all",
+        "export_error": "Could not export. Try again.",
+        "select_all_label": "Select all candidates"
+      },
+      "stats": {
+        "total": "Total candidates",
+        "not_started": "Not started",
+        "in_progress": "In progress",
+        "responded": "Completed",
+        "participation": "% Participation",
+        "apto": "Qualified",
+        "revisar": "Needs review",
+        "no_apto": "Not qualified",
+        "error_title": "Could not load the statistics"
+      },
+      "question_stats": {
+        "error_title": "Could not load the per-question statistics",
+        "no_forms": "This convocatoria doesn't have any associated forms yet."
+      },
+      "form": {
+        "title": "Forms",
+        "open_action": "Open form",
+        "preview_action": "👁 Preview",
+        "weight_label": "Weight",
+        "weight_chip": "{{weight}}% weight",
+        "readonly_subtitle": "{{count}} sections · {{status}} — structure locked while the convocatoria is active",
+        "weight_sum_ok": "Weights add up to {{sum}}% ✓",
+        "weight_sum_invalid": "Weights add up to {{sum}}% — they must add up to 100% to launch",
+        "min_score_label": "Minimum threshold (optional)",
+        "min_score_placeholder": "No threshold",
+        "create_title": "Create a new form",
+        "create_desc": "Opens a blank builder for this process type",
+        "create_action": "Create form",
+        "duplicate_title": "Duplicate an existing one",
+        "duplicate_desc": "Clones an already-published form of the same type",
+        "duplicate_placeholder": "Select a form",
+        "duplicate_action": "Duplicate",
+        "duplicate_empty": "There are no active forms of this type to duplicate",
+        "ready_to_launch_label": "Ready to launch",
+        "error": "Could not complete the action. Try again.",
+        "remove_confirm": {
+          "title": "Remove form?",
+          "message": "\"{{name}}\" will be removed from the convocatoria and deleted — it doesn't have any responses yet since the convocatoria is still a draft.",
+          "confirm": "Remove"
+        }
+      },
+      "weights": {
+        "hint": "They must add up to 100%, or be left at 0 if you don't want to weight by category",
+        "sum_ok": "Sum: {{sum}}% ✓",
+        "sum_invalid": "Sum: {{sum}}% — must be 100%",
+        "sum_skip": "Not weighted by category (optional)",
+        "empty_title": "This form has no categorized questions",
+        "empty_subtitle": "You can continue without weighting categories."
+      },
+      "thresholds": {
+        "title": "Thresholds",
+        "apto_label": "Minimum for Qualified",
+        "revisar_label": "Minimum for Needs review",
+        "zone_apto": "Qualified",
+        "zone_revisar": "Needs review",
+        "zone_no_apto": "Not qualified"
+      },
+      "candidates": {
+        "title": "Candidates",
+        "add_manual_title": "Add manually",
+        "name_placeholder": "Full name",
+        "email_placeholder": "email@example.com",
+        "add_button": "Add",
+        "add_error": "Could not add the candidate. Check that the email isn't already used.",
+        "no_candidates_hint": "There are no candidates yet.",
+        "csv_upload_label": "Import from CSV",
+        "csv_importing": "Importing…",
+        "csv_format_hint": "Two columns: name and email. Optional header row. Separator , or ; — detected automatically.",
+        "csv_result": "{{imported}} imported, {{skipped}} skipped",
+        "csv_read_error": "Could not read or import the file. Check that it's a valid CSV and try again."
+      },
+      "launch": {
+        "button": "Launch convocatoria",
+        "no_candidates_hint": "Add at least one candidate to be able to launch.",
+        "forms_not_ready_hint": "Mark all forms as \"ready to launch\" before continuing.",
+        "error": "Could not launch the convocatoria. Try again."
+      },
+      "delete_confirm": {
+        "title": "Delete draft?",
+        "message": "This convocatoria and its configuration will be deleted. This action cannot be undone."
+      },
+      "error": {
+        "load": "Could not load the convocatoria."
+      }
+    }
+  },
+  "encuestas": {
+    "title": "Surveys",
+    "subtitle": "Collect responses from your team or third parties, without scoring or ranking",
+    "type_pill": "Survey",
+    "new_button": "New survey",
+    "detail_title": "Survey",
+    "empty": {
+      "title": "You don't have any surveys yet",
+      "subtitle": "Create your first survey to collect responses from your team."
+    },
+    "error": {
+      "load": "Could not load the list of surveys."
+    },
+    "confirm_close": {
+      "title": "Close survey?",
+      "message": "The survey \"{{name}}\" will be closed. Pending recipients will no longer be able to respond."
+    },
+    "confirm_delete": {
+      "title": "Delete survey?",
+      "message": "The survey \"{{name}}\" will be deleted. This action cannot be undone."
+    },
+    "stats": {
+      "total_recipients": "RECIPIENTS"
+    },
+    "create": {
+      "title": "New survey",
+      "subtitle": "Start with the name — the rest is configured afterward.",
+      "name_label": "Survey name",
+      "name_placeholder": "E.g: 2026 Work Climate Survey",
+      "error": "Could not create the survey. Try again."
+    },
+    "detail": {
+      "back_to_list": "Surveys",
+      "closes_on": "Closes: {{date}}",
+      "error": {
+        "load": "Could not load the survey."
+      },
+      "name_label": "Survey name",
+      "delete_confirm": {
+        "message": "This survey and its configuration will be deleted. This action cannot be undone."
+      },
+      "tabs": {
+        "respuestas": "Responses",
+        "per_question": "Per question",
+        "formularios": "Forms",
+        "destinatarios": "Recipients"
+      },
+      "draft_tabs": {
+        "formularios": "Forms",
+        "destinatarios": "Recipients",
+        "lanzar": "Launch"
+      },
+      "responses": {
+        "invited": "Invited",
+        "responded": "Responded",
+        "rate": "Response rate",
+        "anonymous": "Anonymous responses"
+      },
+      "anonymous_link": {
+        "button": "Copy anonymous link",
+        "copied": "Copied!",
+        "hint": "Anyone with this link can answer the survey without having been invited. Responses are not linked to any recipient."
+      }
+    }
+  },
+  "errors": {
+    "unauthorized": "You don't have permission to perform this action.",
+    "not_found": "The requested resource does not exist.",
+    "server_error": "Server error. Please try again later."
+  }
+}

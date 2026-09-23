@@ -29,25 +29,28 @@
   </nav>
 
   <div class="sidebar__footer">
-    <div class="sidebar__user">
-      <div class="sidebar__avatar" aria-hidden="true">{{ userInitials }}</div>
-      <div class="sidebar__user-info">
-        <span class="sidebar__user-name">{{ userFullName }}</span>
-        <span class="sidebar__user-plan">
-          {{ 'shell.sidebar.plan_label' | translate: { plan: authService.currentUser()?.tenantPlan } }}
-        </span>
+    <div class="sidebar__footer-row">
+      <div class="sidebar__user">
+        <div class="sidebar__avatar" aria-hidden="true">{{ userInitials }}</div>
+        <div class="sidebar__user-info">
+          <span class="sidebar__user-name">{{ userFullName }}</span>
+          <span class="sidebar__user-plan">
+            {{ 'shell.sidebar.plan_label' | translate: { plan: authService.currentUser()?.tenantPlan } }}
+          </span>
+        </div>
       </div>
+      <app-button
+        variant="ghost"
+        [iconOnly]="true"
+        [danger]="true"
+        [type]="'button'"
+        [appTooltip]="'shell.header.logout' | translate"
+        (click)="logout()"
+        [attr.aria-label]="'shell.header.logout' | translate"
+      >
+        <app-icon name="log-out" [size]="18" />
+      </app-button>
     </div>
-    <app-button
-      variant="ghost"
-      [iconOnly]="true"
-      [danger]="true"
-      [type]="'button'"
-      [appTooltip]="'shell.header.logout' | translate"
-      (click)="logout()"
-      [attr.aria-label]="'shell.header.logout' | translate"
-    >
-      <app-icon name="log-out" [size]="18" />
-    </app-button>
+    <app-language-switcher />
   </div>
 </aside>

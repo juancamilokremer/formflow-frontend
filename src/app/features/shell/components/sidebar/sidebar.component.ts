@@ -7,6 +7,7 @@ import { ButtonComponent } from '../../../../shared/components/button/button.com
 import { IconComponent } from '../../../../shared/icons/icon.component';
 import { IconName } from '../../../../shared/icons/icon.registry';
 import { TooltipDirective } from '../../../../shared/directives/tooltip.directive';
+import { LanguageSwitcherComponent } from '../../../../shared/components/language-switcher/language-switcher.component';
 
 interface NavItem {
   labelKey: string;
@@ -26,7 +27,7 @@ const NAV_ITEMS: NavItem[] = [
 
 @Component({
   selector: 'app-sidebar',
-  imports: [RouterLink, RouterLinkActive, TranslatePipe, IconComponent, ButtonComponent, TooltipDirective],
+  imports: [RouterLink, RouterLinkActive, TranslatePipe, IconComponent, ButtonComponent, TooltipDirective, LanguageSwitcherComponent],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss',
 })

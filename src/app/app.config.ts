@@ -6,15 +6,17 @@ import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { routes } from './app.routes';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
+import { languageInterceptor } from './core/interceptors/language.interceptor';
 import { AuthService } from './core/auth/auth.service';
+import { readStoredLanguage } from './core/i18n/stored-language';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes, withComponentInputBinding()),
-    provideHttpClient(withInterceptors([authInterceptor])),
+    provideHttpClient(withInterceptors([authInterceptor, languageInterceptor])),
     provideAnimations(),
-    provideTranslateService({ lang: 'es' }),
+    provideTranslateService({ lang: readStoredLanguage() }),
     provideTranslateHttpLoader({ prefix: './assets/i18n/', suffix: '.json' }),
     provideAppInitializer(() => inject(AuthService).initialize()),
   ],
