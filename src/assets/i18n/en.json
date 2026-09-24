@@ -575,6 +575,7 @@
         "title": "Forms",
         "open_action": "Open form",
         "preview_action": "👁 Preview",
+        "results_action": "View results",
         "generate_version_action": "Create new version",
         "generate_version_error": "The new version could not be created. Please try again.",
         "weight_label": "Weight",

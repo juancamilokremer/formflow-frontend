@@ -1,0 +1,15 @@
+:host { display: contents; }
+
+.rex {
+  &__actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  &__error {
+    margin: 8px 0 0;
+    font-size: 12px;
+    color: var(--ff-error-text);
+  }
+}

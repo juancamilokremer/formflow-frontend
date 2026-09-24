@@ -149,45 +149,5 @@ describe('FormResultsComponent', () => {
     });
   });
 
-  describe('exportResponses', () => {
-    it('calls the service with the requested format and triggers the download', () => {
-      const file: ExportedFile = { blob: new Blob(['x']), filename: 'evaluacion.xlsx' };
-      const { component, mockFormsService, mockFileDownload } = buildComponent({
-        exportResponsesImpl: vi.fn().mockReturnValue(of(file)),
-      });
-
-      component['exportResponses']('excel');
-
-      expect(mockFormsService.exportResponses).toHaveBeenCalledWith(
-        'f1', 'excel', expect.any(String), expect.any(String));
-      expect(mockFileDownload.download).toHaveBeenCalledWith(file.blob, file.filename);
-      expect(component['exportingExcel']()).toBe(false);
-    });
-
-    it('sets exportingExcel while the excel export is in flight', () => {
-      const { component } = buildComponent({ exportResponsesImpl: vi.fn().mockReturnValue(of()) });
-      component['exportResponses']('excel');
-      expect(component['exportingExcel']()).toBe(true);
-      expect(component['exportingCsv']()).toBe(false);
-    });
-
-    it('sets exportingCsv while the csv export is in flight', () => {
-      const { component } = buildComponent({ exportResponsesImpl: vi.fn().mockReturnValue(of()) });
-      component['exportResponses']('csv');
-      expect(component['exportingCsv']()).toBe(true);
-      expect(component['exportingExcel']()).toBe(false);
-    });
-
-    it('sets exportError on failure and clears the loading state', () => {
-      const { component, mockFileDownload } = buildComponent({
-        exportResponsesImpl: vi.fn().mockReturnValue(throwError(() => new Error('boom'))),
-      });
-
-      component['exportResponses']('csv');
-
-      expect(component['exportError']()).toBe(true);
-      expect(component['exportingCsv']()).toBe(false);
-      expect(mockFileDownload.download).not.toHaveBeenCalled();
-    });
-  });
+  // El export se mudo a ResponseExportComponent, que tiene su propio spec.
 });

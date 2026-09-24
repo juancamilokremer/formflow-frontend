@@ -1,0 +1,14 @@
+<div class="rex">
+  <div class="rex__actions">
+    <app-button variant="secondary" type="button" [loading]="exportingExcel()" (click)="exportResponses('excel')">
+      {{ 'results.export.excel' | translate }}
+    </app-button>
+    <app-button variant="secondary" type="button" [loading]="exportingCsv()" (click)="exportResponses('csv')">
+      {{ 'results.export.csv' | translate }}
+    </app-button>
+  </div>
+
+  @if (exportError()) {
+    <p class="rex__error">{{ 'results.export.error' | translate }}</p>
+  }
+</div>

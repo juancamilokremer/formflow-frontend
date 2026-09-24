@@ -8,22 +8,11 @@
   <div class="fr">
     <app-page-header [title]="data.formName" [subtitle]="'results.subtitle' | translate">
       @if (data.totalResponses > 0) {
-        <div class="fr__export-actions">
-          <app-button variant="secondary" type="button" [loading]="exportingExcel()" (click)="exportResponses('excel')">
-            {{ 'results.export.excel' | translate }}
-          </app-button>
-          <app-button variant="secondary" type="button" [loading]="exportingCsv()" (click)="exportResponses('csv')">
-            {{ 'results.export.csv' | translate }}
-          </app-button>
-        </div>
+        <app-response-export [formId]="formId" [from]="range().from" [to]="range().to" />
       }
     </app-page-header>
 
     <app-results-filter-bar (rangeChange)="onRangeChange($event)" />
-
-    @if (exportError()) {
-      <p class="fr__export-error">{{ 'results.export.error' | translate }}</p>
-    }
 
     @if (data.totalResponses === 0) {
       @if (isAllTimeRange()) {

@@ -5,6 +5,12 @@
   <app-stat-card [label]="'encuestas.detail.responses.anonymous' | translate" [value]="anonymousCount()" />
 </div>
 
+@if (totalResponses() > 0) {
+  <div class="ers__export">
+    <app-response-export [formId]="formId()" />
+  </div>
+}
+
 <app-individual-responses [formId]="formId()" (responseSelected)="onResponseSelected($event)" (totalLoaded)="onTotalLoaded($event)" />
 
 <app-response-detail-drawer [formId]="formId()" [responseId]="selectedResponseId()" (closed)="closeDrawer()" />

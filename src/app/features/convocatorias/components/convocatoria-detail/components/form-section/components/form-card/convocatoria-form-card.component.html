@@ -64,6 +64,11 @@
       <app-button type="button" variant="secondary" (click)="openPreview()">
         {{ 'convocatorias.detail.form.preview_action' | translate }}
       </app-button>
+      @if (readonly()) {
+        <app-button type="button" variant="secondary" (click)="openResults()">
+          {{ 'convocatorias.detail.form.results_action' | translate }}
+        </app-button>
+      }
       @if (canGenerateVersion()) {
         <app-button type="button" variant="secondary" [loading]="generatingVersion()" (click)="generateVersion()">
           {{ 'convocatorias.detail.form.generate_version_action' | translate }}
