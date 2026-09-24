@@ -575,6 +575,8 @@
         "title": "Formularios",
         "open_action": "Abrir formulario",
         "preview_action": "👁 Vista previa",
+        "generate_version_action": "Generar nueva versión",
+        "generate_version_error": "No se pudo generar la nueva versión. Intenta de nuevo.",
         "weight_label": "Peso",
         "weight_chip": "peso {{weight}}%",
         "readonly_subtitle": "{{count}} secciones · {{status}} — estructura bloqueada mientras la convocatoria está activa",

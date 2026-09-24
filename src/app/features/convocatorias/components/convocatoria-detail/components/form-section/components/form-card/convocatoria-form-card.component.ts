@@ -41,6 +41,16 @@ export class ConvocatoriaFormCardComponent implements OnInit {
 
   protected readonly isSimpleMode = computed(() => this.processType() === 'REGISTRATION');
 
+  /**
+   * Same rule the domain applies in Form.isLocked(): a published CANDIDATES/DIAGNOSTIC form
+   * can no longer be edited structurally, and generating a new version is the way out.
+   * Surveys are never locked, so they never need it.
+   */
+  protected readonly canGenerateVersion = computed(() => {
+    const status = this.formStatus();
+    return status !== null && status !== 'DRAFT' && !this.isSimpleMode();
+  });
+
   readonly formUpdated = output<ConvocatoriaForm>();
   readonly formRemoved = output<string>();
   readonly weightPreview = output<number>();
@@ -49,6 +59,8 @@ export class ConvocatoriaFormCardComponent implements OnInit {
   protected readonly loadingCategories = signal(true);
   protected readonly sectionCount = signal(0);
   protected readonly formStatus = signal<FormStatus | null>(null);
+  protected readonly generatingVersion = signal(false);
+  protected readonly versionError = signal(false);
   protected readonly weight = signal(0);
   protected readonly categoryWeights = signal<Record<string, number>>({});
   protected readonly minScore = signal<number | null>(null);
@@ -144,6 +156,25 @@ export class ConvocatoriaFormCardComponent implements OnInit {
     this.router.navigate(
       formPreviewPath(this.containerKind, this.convocatoriaId(), this.convocatoriaForm().formId),
       { queryParams: { [RouteConstants.QUERY_TAB]: 'formularios' } });
+  }
+
+  protected generateVersion(): void {
+    if (this.generatingVersion()) return;
+    this.generatingVersion.set(true);
+    this.versionError.set(false);
+
+    this.formsService.generateVersion(this.convocatoriaForm().formId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        // The backend repoints this convocatoria to the new version, so the builder we land
+        // in is the one the convocatoria now uses.
+        next: (newForm) => this.router.navigate(
+          formBuilderPath(this.containerKind, this.convocatoriaId(), newForm.id)),
+        error: () => {
+          this.generatingVersion.set(false);
+          this.versionError.set(true);
+        },
+      });
   }
 
   protected requestRemove(): void {
