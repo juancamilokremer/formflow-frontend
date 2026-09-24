@@ -54,7 +54,7 @@ function buildComponent(overrides: {
       { provide: FileDownloadService, useValue: mockFileDownload },
       {
         provide: ActivatedRoute,
-        useValue: { snapshot: { paramMap: convertToParamMap({ id: 'f1' }) } },
+        useValue: { snapshot: { paramMap: convertToParamMap({ id: 'f1', containerId: 'conv1' }), data: { containerKind: 'convocatorias' } } },
       },
     ],
   }).compileComponents();
@@ -145,7 +145,7 @@ describe('FormResultsComponent', () => {
     it('navigates to the form preview path', () => {
       const { component, mockRouter } = buildComponent();
       component['goToPreview']();
-      expect(mockRouter.navigate).toHaveBeenCalledWith(['/', 'forms', 'f1', 'preview']);
+      expect(mockRouter.navigate).toHaveBeenCalledWith(['/', 'convocatorias', 'conv1', 'formularios', 'f1', 'preview']);
     });
   });
 

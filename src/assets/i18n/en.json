@@ -13,10 +13,6 @@
     "close": "Close",
     "error_generic": "An unexpected error occurred. Please try again.",
     "required_field": "This field is required",
-    "never": "—",
-    "ago_minutes": "{{n}} min ago",
-    "ago_hours": "{{n}}h ago",
-    "ago_days": "{{n}}d ago",
     "pagination_range": "{{start}}–{{end}} of {{total}}"
   },
   "auth": {
@@ -98,7 +94,6 @@
   "shell": {
     "nav": {
       "dashboard": "Dashboard",
-      "forms": "Forms",
       "categories": "Categories",
       "convocatorias": "Convocatorias",
       "encuestas": "Surveys",
@@ -118,71 +113,10 @@
     }
   },
   "forms": {
-    "title": "Forms",
-    "subtitle": "Create and manage your evaluation forms",
-    "create_btn": "New form",
-    "search_placeholder": "Search by name...",
-    "stats": {
-      "total": "Forms",
-      "total_responses": "Total responses",
-      "active": "Active",
-      "draft": "Drafts"
-    },
     "status": {
       "draft": "Draft",
       "active": "Active",
       "archived": "Archived"
-    },
-    "filter": {
-      "all": "All statuses",
-      "active": "Active",
-      "draft": "Drafts",
-      "archived": "Archived"
-    },
-    "type_filter": {
-      "all": "All",
-      "survey": "Surveys",
-      "evaluation": "Evaluation"
-    },
-    "type": {
-      "candidates": "Candidates",
-      "candidates_desc": "Evaluate applicants with automatic scoring by category",
-      "diagnostic": "Diagnostic",
-      "diagnostic_desc": "Measure work climate or dimensions with a Likert scale",
-      "registration": "Survey",
-      "registration_desc": "Collect responses without scoring or ranking"
-    },
-    "table": {
-      "name": "Form",
-      "type": "Type",
-      "status": "Status",
-      "responses": "Responses",
-      "last_response": "Last resp.",
-      "created": "Created"
-    },
-    "actions": {
-      "edit": "Edit",
-      "results": "View results",
-      "generate_version": "Generate new version",
-      "duplicate": "Duplicate",
-      "confirm_delete": "Delete this form?",
-      "delete_yes": "Yes, delete"
-    },
-    "dialog": {
-      "title": "New form",
-      "name_label": "Form name",
-      "name_placeholder": "E.g: Candidate evaluation 2026",
-      "type_label": "Form type",
-      "create_btn": "Create form"
-    },
-    "empty": {
-      "title": "You don't have any forms yet",
-      "subtitle": "Create your first form to start collecting responses",
-      "no_results_title": "No results",
-      "no_results_subtitle": "No forms match your search"
-    },
-    "error": {
-      "load": "Could not load the forms. Try again."
     }
   },
   "categories": {
@@ -314,15 +248,15 @@
       "max_total": "Total maximum score"
     },
     "type_desc": {
-      "info":     "Static block of text or instructions",
-      "text":     "Open-ended free text answer",
-      "single":   "Single option selection",
+      "info": "Static block of text or instructions",
+      "text": "Open-ended free text answer",
+      "single": "Single option selection",
       "multiple": "Multiple option selection",
-      "scale":    "Numeric scale with endpoint labels",
-      "nps":      "Net Promoter Score — scale from 0 to 10",
-      "date":     "Date picker",
-      "file":     "File upload (PDF, images, etc.)",
-      "matrix":   "Table of rows and columns, one selection per row"
+      "scale": "Numeric scale with endpoint labels",
+      "nps": "Net Promoter Score — scale from 0 to 10",
+      "date": "Date picker",
+      "file": "File upload (PDF, images, etc.)",
+      "matrix": "Table of rows and columns, one selection per row"
     },
     "move_to_section": "Move to",
     "version_history": "Version history",
@@ -342,13 +276,11 @@
       "question_update": "Could not save the changes.",
       "question_delete": "Could not delete the question.",
       "version_generate": "Could not generate the new version. Try again.",
-      "duplicate": "Could not duplicate the form. Try again.",
       "history_load": "Could not load the version history. Try again."
     },
     "locked": {
       "banner_message": "This form is {{status}} and does not allow structural changes (sections, questions, options, or configuration) — you can still edit text and reorder. To change the structure, generate a new version or duplicate the form.",
       "generate_version_action": "Generate new version",
-      "duplicate_action": "Duplicate form",
       "chip_tooltip": "Not available while the form is in use"
     },
     "history": {
@@ -643,6 +575,8 @@
         "title": "Forms",
         "open_action": "Open form",
         "preview_action": "👁 Preview",
+        "generate_version_action": "Create new version",
+        "generate_version_error": "The new version could not be created. Please try again.",
         "weight_label": "Weight",
         "weight_chip": "{{weight}}% weight",
         "readonly_subtitle": "{{count}} sections · {{status}} — structure locked while the convocatoria is active",

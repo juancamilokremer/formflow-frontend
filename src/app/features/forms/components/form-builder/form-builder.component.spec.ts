@@ -58,7 +58,6 @@ function buildComponent(formResult: 'ok' | 'error' = 'ok', convocatoriaDetail: C
     reorderSections: vi.fn().mockReturnValue(of(undefined)),
     remove: vi.fn().mockReturnValue(of(undefined)),
     generateVersion: vi.fn().mockReturnValue(of({ ...MOCK_FORM, id: 'f2', status: 'DRAFT' })),
-    duplicate: vi.fn().mockReturnValue(of({ ...MOCK_FORM, id: 'f3', status: 'DRAFT' })),
     getVersionHistory: vi.fn().mockReturnValue(of([
       { id: 'f1', version: 1, status: 'DRAFT', createdAt: '2026-01-01T00:00:00Z', updatedAt: '2026-01-01T00:00:00Z' },
     ])),
@@ -70,7 +69,7 @@ function buildComponent(formResult: 'ok' | 'error' = 'ok', convocatoriaDetail: C
 
   const mockConvocatoriaService = {
     getById: vi.fn().mockReturnValue(of(convocatoriaDetail)),
-    addForm: vi.fn().mockReturnValue(of({
+    createForm: vi.fn().mockReturnValue(of({
       id: 'cf1', formId: 'f1', weight: 100, categoryWeights: [], minScore: null, position: 0,
     })),
   };
@@ -93,7 +92,7 @@ describe('FormBuilderComponent', () => {
         provideTranslateService({ lang: 'es' }),
         {
           provide: ActivatedRoute,
-          useValue: { snapshot: { paramMap: { get: () => 'f1' }, queryParamMap: { get: () => null } } },
+          useValue: { snapshot: { paramMap: { get: (key: string) => ({ id: 'f1', containerId: 'conv1' } as Record<string, string>)[key] ?? null }, queryParamMap: { get: () => null }, data: { containerKind: 'convocatorias' } } },
         },
       ],
     }).compileComponents();
@@ -319,7 +318,7 @@ describe('FormBuilderComponent', () => {
       (component as any).onGenerateVersion();
 
       expect(mockFormsService.generateVersion).toHaveBeenCalledWith('f1');
-      expect(navigateSpy).toHaveBeenCalledWith(['forms', 'f2', 'edit']);
+      expect(navigateSpy).toHaveBeenCalledWith(['/', 'convocatorias', 'conv1', 'formularios', 'f2']);
     });
 
     it('sets actionError when generateVersion fails', () => {
@@ -329,28 +328,6 @@ describe('FormBuilderComponent', () => {
       (component as any).onGenerateVersion();
 
       expect((component as any).actionError()).toBe('builder.error.version_generate');
-    });
-  });
-
-  describe('onDuplicate', () => {
-    it('calls duplicate and navigates to the new form builder on success', () => {
-      const { component, mockFormsService } = buildComponent();
-      const router = TestBed.inject(Router);
-      const navigateSpy = vi.spyOn(router, 'navigate').mockResolvedValue(true);
-
-      (component as any).onDuplicate();
-
-      expect(mockFormsService.duplicate).toHaveBeenCalledWith('f1');
-      expect(navigateSpy).toHaveBeenCalledWith(['forms', 'f3', 'edit']);
-    });
-
-    it('sets actionError when duplicate fails', () => {
-      const { component, mockFormsService } = buildComponent();
-      mockFormsService.duplicate.mockReturnValue(throwError(() => new Error()));
-
-      (component as any).onDuplicate();
-
-      expect((component as any).actionError()).toBe('builder.error.duplicate');
     });
   });
 
@@ -384,12 +361,12 @@ describe('FormBuilderComponent', () => {
       (component as any).onVersionSelected('f9');
 
       expect((component as any).historyDrawerOpen()).toBe(false);
-      expect(navigateSpy).toHaveBeenCalledWith(['forms', 'f9', 'edit']);
+      expect(navigateSpy).toHaveBeenCalledWith(['/', 'convocatorias', 'conv1', 'formularios', 'f9']);
     });
   });
 });
 
-describe('FormBuilderComponent with convocatoriaId in query params', () => {
+describe('FormBuilderComponent inside a convocatoria', () => {
   const mockRouter = { navigate: vi.fn() };
 
   beforeEach(async () => {
@@ -404,8 +381,9 @@ describe('FormBuilderComponent with convocatoriaId in query params', () => {
           provide: ActivatedRoute,
           useValue: {
             snapshot: {
-              paramMap: { get: () => 'f1' },
-              queryParamMap: { get: (key: string) => ({ convocatoriaId: 'conv1' } as Record<string, string>)[key] ?? null },
+              paramMap: { get: (key: string) => ({ id: 'f1', containerId: 'conv1' } as Record<string, string>)[key] ?? null },
+              queryParamMap: { get: () => null },
+              data: { containerKind: 'convocatorias' },
             },
           },
         },
@@ -413,38 +391,21 @@ describe('FormBuilderComponent with convocatoriaId in query params', () => {
     }).compileComponents();
   });
 
-  it('onReturnToConvocatoria attaches the form, navigates to the convocatoria, and does not delete anything', () => {
+  it('onReturnToConvocatoria just navigates back — the form is already attached', () => {
     const { component, mockConvocatoriaService, mockFormsService } = buildComponent();
 
     (component as any).onReturnToConvocatoria();
 
-    expect(mockConvocatoriaService.getById).toHaveBeenCalledWith('conv1');
-    expect(mockConvocatoriaService.addForm).toHaveBeenCalledWith('conv1', {
-      formId: 'f1',
-      weight: 100,
-      categoryWeights: [],
-      minScore: null,
-    });
+    // No attach step and no lookup to decide whether one is needed: the form was created
+    // inside the convocatoria, so leaving the builder can no longer strand it.
+    expect(mockConvocatoriaService.createForm).not.toHaveBeenCalled();
+    expect(mockConvocatoriaService.getById).not.toHaveBeenCalled();
     expect(mockFormsService.remove).not.toHaveBeenCalled();
-    expect(mockRouter.navigate).toHaveBeenCalledWith(['/', 'convocatorias', 'conv1']);
-  });
-
-  it('onReturnToConvocatoria does not re-attach a form that is already in the convocatoria, just navigates back', () => {
-    const alreadyAttached: ConvocatoriaDetail = {
-      ...MOCK_CONVOCATORIA,
-      forms: [{ id: 'cf1', formId: 'f1', weight: 100, categoryWeights: [], minScore: null, position: 0, readyToLaunch: false }],
-    };
-    const { component, mockConvocatoriaService } = buildComponent('ok', alreadyAttached);
-
-    (component as any).onReturnToConvocatoria();
-
-    expect(mockConvocatoriaService.getById).toHaveBeenCalledWith('conv1');
-    expect(mockConvocatoriaService.addForm).not.toHaveBeenCalled();
     expect(mockRouter.navigate).toHaveBeenCalledWith(['/', 'convocatorias', 'conv1']);
   });
 });
 
-describe('FormBuilderComponent with convocatoriaId and kind=encuestas in query params', () => {
+describe('FormBuilderComponent inside an encuesta', () => {
   const mockRouter = { navigate: vi.fn() };
 
   beforeEach(async () => {
@@ -459,10 +420,9 @@ describe('FormBuilderComponent with convocatoriaId and kind=encuestas in query p
           provide: ActivatedRoute,
           useValue: {
             snapshot: {
-              paramMap: { get: () => 'f1' },
-              queryParamMap: {
-                get: (key: string) => ({ convocatoriaId: 'conv1', kind: 'encuestas' } as Record<string, string>)[key] ?? null,
-              },
+              paramMap: { get: (key: string) => ({ id: 'f1', containerId: 'conv1' } as Record<string, string>)[key] ?? null },
+              queryParamMap: { get: () => null },
+              data: { containerKind: 'encuestas' },
             },
           },
         },

@@ -33,7 +33,7 @@ const MOCK_CATEGORIES: Category[] = [
 ];
 
 function buildComponent(overrides: {
-  updateFormImpl?: unknown; removeFormImpl?: unknown; getByIdImpl?: unknown;
+  updateFormImpl?: unknown; removeFormImpl?: unknown; getByIdImpl?: unknown; generateVersionImpl?: unknown;
   convocatoriaForm?: ConvocatoriaForm; processType?: ProcessType;
 } = {}) {
   const mockConvocatoriaService = {
@@ -42,6 +42,8 @@ function buildComponent(overrides: {
   };
   const mockFormsService = {
     getById: overrides.getByIdImpl ?? vi.fn().mockReturnValue(of(MOCK_FORM_DETAIL)),
+    generateVersion: overrides.generateVersionImpl
+      ?? vi.fn().mockReturnValue(of({ ...MOCK_FORM_DETAIL, id: 'f2', version: 2, status: 'DRAFT' })),
     remove: vi.fn().mockReturnValue(of(undefined)),
   };
   const mockCategoryService = {
@@ -231,39 +233,37 @@ describe('ConvocatoriaFormCardComponent', () => {
     });
   });
 
-  it('openForm navigates to the builder with the convocatoriaId and kind query params', () => {
+  it('openForm navigates to the builder under the convocatoria', () => {
     const { component, mockRouter } = buildComponent();
     component['openForm']();
     expect(mockRouter.navigate).toHaveBeenCalledWith(
-      ['forms', 'f1', 'edit'],
-      { queryParams: { convocatoriaId: 'c1', kind: 'convocatorias' } },
+      ['/', 'convocatorias', 'c1', 'formularios', 'f1'],
     );
   });
 
-  it('openForm passes kind=encuestas for a REGISTRATION form', () => {
+  it('openForm routes under encuestas for a REGISTRATION form', () => {
     const { component, mockRouter } = buildComponent({ processType: 'REGISTRATION' });
     component['openForm']();
     expect(mockRouter.navigate).toHaveBeenCalledWith(
-      ['forms', 'f1', 'edit'],
-      { queryParams: { convocatoriaId: 'c1', kind: 'encuestas' } },
+      ['/', 'encuestas', 'c1', 'formularios', 'f1'],
     );
   });
 
-  it('openPreview navigates to the preview route with the convocatoriaId, tab, and kind query params', () => {
+  it('openPreview navigates under the convocatoria, keeping only the tab it returns to', () => {
     const { component, mockRouter } = buildComponent();
     component['openPreview']();
     expect(mockRouter.navigate).toHaveBeenCalledWith(
-      ['/', 'forms', 'f1', 'preview'],
-      { queryParams: { convocatoriaId: 'c1', tab: 'formularios', kind: 'convocatorias' } },
+      ['/', 'convocatorias', 'c1', 'formularios', 'f1', 'preview'],
+      { queryParams: { tab: 'formularios' } },
     );
   });
 
-  it('openPreview passes kind=encuestas for a REGISTRATION form', () => {
+  it('openPreview routes under encuestas for a REGISTRATION form', () => {
     const { component, mockRouter } = buildComponent({ processType: 'REGISTRATION' });
     component['openPreview']();
     expect(mockRouter.navigate).toHaveBeenCalledWith(
-      ['/', 'forms', 'f1', 'preview'],
-      { queryParams: { convocatoriaId: 'c1', tab: 'formularios', kind: 'encuestas' } },
+      ['/', 'encuestas', 'c1', 'formularios', 'f1', 'preview'],
+      { queryParams: { tab: 'formularios' } },
     );
   });
 
@@ -346,6 +346,49 @@ describe('ConvocatoriaFormCardComponent', () => {
       component['removing'].set(true);
       component['confirmRemove']();
       expect(mockConvocatoriaService.removeForm).not.toHaveBeenCalled();
+    });
+  });
+
+  // Regression: deleting the /forms list removed the only reachable "Generar versión" button.
+  // For a locked form the card is the one place left where it can live.
+  describe('generate new version', () => {
+    const LOCKED = { getByIdImpl: vi.fn().mockReturnValue(of({ ...MOCK_FORM_DETAIL, status: 'ACTIVE' as const })) };
+
+    it('is offered for a published CANDIDATES form', () => {
+      const { component } = buildComponent(LOCKED);
+      expect(component['canGenerateVersion']()).toBe(true);
+    });
+
+    it('is not offered while the form is still a draft', () => {
+      const { component } = buildComponent();
+      expect(component['canGenerateVersion']()).toBe(false);
+    });
+
+    it('is not offered for an encuesta, which never locks', () => {
+      const { component } = buildComponent({ ...LOCKED, processType: 'REGISTRATION' });
+      expect(component['canGenerateVersion']()).toBe(false);
+    });
+
+    it('generates the version and opens the new form under the same container', () => {
+      const { component, mockFormsService, mockRouter } = buildComponent(LOCKED);
+
+      component['generateVersion']();
+
+      expect(mockFormsService.generateVersion).toHaveBeenCalledWith('f1');
+      expect(mockRouter.navigate).toHaveBeenCalledWith(['/', 'convocatorias', 'c1', 'formularios', 'f2']);
+    });
+
+    it('surfaces an error instead of navigating when it fails', () => {
+      const { component, mockRouter } = buildComponent({
+        ...LOCKED,
+        generateVersionImpl: vi.fn().mockReturnValue(throwError(() => new Error('boom'))),
+      });
+
+      component['generateVersion']();
+
+      expect(component['versionError']()).toBe(true);
+      expect(component['generatingVersion']()).toBe(false);
+      expect(mockRouter.navigate).not.toHaveBeenCalled();
     });
   });
 });

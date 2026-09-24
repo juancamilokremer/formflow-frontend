@@ -3,7 +3,7 @@
     <app-icon name="monitor" [size]="48" />
     <span class="fb__mobile-block-title">{{ 'builder.mobile_block_title' | translate }}</span>
     <span class="fb__mobile-block-sub">{{ 'builder.mobile_block_subtitle' | translate }}</span>
-    <button class="fb__mobile-block-btn" type="button" (click)="goToForms()">
+    <button class="fb__mobile-block-btn" type="button" (click)="goToContainer()">
       {{ 'builder.mobile_block_action' | translate }}
     </button>
   </div>
@@ -21,7 +21,7 @@
   <div class="fb">
     <app-builder-topbar
       [form]="form()!"
-      [convocatoriaId]="convocatoriaId"
+      [containerId]="containerId"
       [containerKind]="containerKind"
       (nameChanged)="onNameChanged($event)"
       (publishClicked)="onPublishClicked()"
@@ -42,7 +42,6 @@
       <app-lock-banner
         [status]="form()!.status"
         (generateVersionClicked)="onGenerateVersion()"
-        (duplicateClicked)="onDuplicate()"
       />
     }
 

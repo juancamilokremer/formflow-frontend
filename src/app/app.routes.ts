@@ -59,30 +59,48 @@ export const routes: Routes = [
           import('./features/dashboard/dashboard.component').then((m) => m.DashboardComponent),
       },
       {
-        path: RouteConstants.FORMS,
-        data: { titleKey: 'shell.nav.forms' },
-        loadComponent: () =>
-          import('./features/forms/forms.component').then((m) => m.FormsComponent),
-      },
-      {
-        path: `${RouteConstants.FORMS}/:id/${RouteConstants.FORM_BUILDER}`,
-        data: { titleKey: 'shell.nav.form_builder', fullscreen: true },
+        path: `${RouteConstants.ENCUESTAS}/:containerId/${RouteConstants.CONTAINER_FORMS}/:id`,
+        data: { titleKey: 'shell.nav.form_builder', fullscreen: true, containerKind: 'encuestas' },
         loadComponent: () =>
           import('./features/forms/components/form-builder/form-builder.component').then(
             (m) => m.FormBuilderComponent,
           ),
       },
       {
-        path: `${RouteConstants.FORMS}/:id/${RouteConstants.FORM_PREVIEW}`,
-        data: { titleKey: 'preview.title', fullscreen: true },
+        path: `${RouteConstants.ENCUESTAS}/:containerId/${RouteConstants.CONTAINER_FORMS}/:id/${RouteConstants.FORM_PREVIEW}`,
+        data: { titleKey: 'preview.title', fullscreen: true, containerKind: 'encuestas' },
         loadComponent: () =>
           import('./features/forms/components/form-preview/form-preview.component').then(
             (m) => m.FormPreviewComponent,
           ),
       },
       {
-        path: `${RouteConstants.FORMS}/:id/${RouteConstants.FORM_RESULTS}`,
-        data: { titleKey: 'results.title' },
+        path: `${RouteConstants.ENCUESTAS}/:containerId/${RouteConstants.CONTAINER_FORMS}/:id/${RouteConstants.FORM_RESULTS}`,
+        data: { titleKey: 'results.title', containerKind: 'encuestas' },
+        loadComponent: () =>
+          import('./features/forms/components/form-results/form-results.component').then(
+            (m) => m.FormResultsComponent,
+          ),
+      },
+      {
+        path: `${RouteConstants.CONVOCATORIAS}/:containerId/${RouteConstants.CONTAINER_FORMS}/:id`,
+        data: { titleKey: 'shell.nav.form_builder', fullscreen: true, containerKind: 'convocatorias' },
+        loadComponent: () =>
+          import('./features/forms/components/form-builder/form-builder.component').then(
+            (m) => m.FormBuilderComponent,
+          ),
+      },
+      {
+        path: `${RouteConstants.CONVOCATORIAS}/:containerId/${RouteConstants.CONTAINER_FORMS}/:id/${RouteConstants.FORM_PREVIEW}`,
+        data: { titleKey: 'preview.title', fullscreen: true, containerKind: 'convocatorias' },
+        loadComponent: () =>
+          import('./features/forms/components/form-preview/form-preview.component').then(
+            (m) => m.FormPreviewComponent,
+          ),
+      },
+      {
+        path: `${RouteConstants.CONVOCATORIAS}/:containerId/${RouteConstants.CONTAINER_FORMS}/:id/${RouteConstants.FORM_RESULTS}`,
+        data: { titleKey: 'results.title', containerKind: 'convocatorias' },
         loadComponent: () =>
           import('./features/forms/components/form-results/form-results.component').then(
             (m) => m.FormResultsComponent,

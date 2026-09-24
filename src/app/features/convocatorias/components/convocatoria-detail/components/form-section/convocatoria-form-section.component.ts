@@ -7,7 +7,7 @@ import { CdkDropList, CdkDrag, CdkDragDrop, moveItemInArray } from '@angular/cdk
 import { ButtonComponent } from '../../../../../../shared/components/button/button.component';
 import { IconComponent } from '../../../../../../shared/icons/icon.component';
 import { SelectComponent, SelectOption } from '../../../../../../shared/components/select/select.component';
-import { RouteConstants, formBuilderPath } from '../../../../../../core/constants/route.constants';
+import { ContainerKind, formBuilderPath } from '../../../../../../core/constants/route.constants';
 import { FormsService } from '../../../../../forms/services/forms.service';
 import { Form } from '../../../../../forms/models/form.model';
 import { ConvocatoriaService } from '../../../../services/convocatoria.service';
@@ -33,6 +33,7 @@ export class ConvocatoriaFormSectionComponent {
   readonly forms = input.required<Form[]>();
   readonly readonly = input(false);
   readonly isDraft = input(true);
+  readonly containerKind = input<ContainerKind>('convocatorias');
 
   readonly formAdded = output<FormAddedEvent>();
   readonly formUpdated = output<ConvocatoriaForm>();
@@ -96,17 +97,20 @@ export class ConvocatoriaFormSectionComponent {
     this.creating.set(true);
     this.error.set(false);
 
-    this.formsService.create({ name: this.convocatoriaName(), type: this.processType() })
+    // One call: the form is created already attached. It used to be created standalone and
+    // attached only when the user came back from the builder, so abandoning the builder
+    // left an orphan behind.
+    this.convocatoriaService.createForm(this.convocatoriaId(), {
+      name: this.convocatoriaName(),
+      type: this.processType(),
+      weight: this.nextWeight(),
+      categoryWeights: [],
+      minScore: null,
+    })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (form) => {
-          this.router.navigate(formBuilderPath(form.id), {
-            queryParams: {
-              [RouteConstants.QUERY_CONVOCATORIA_ID]: this.convocatoriaId(),
-              [RouteConstants.QUERY_KIND]: this.isSimpleMode() ? 'encuestas' : 'convocatorias',
-            },
-          });
-        },
+        next: (convocatoriaForm) => this.router.navigate(
+          formBuilderPath(this.containerKind(), this.convocatoriaId(), convocatoriaForm.formId)),
         error: () => {
           this.creating.set(false);
           this.error.set(true);
@@ -118,25 +122,26 @@ export class ConvocatoriaFormSectionComponent {
     if (!this.selectedFormId() || this.duplicating()) return;
     this.duplicating.set(true);
     this.error.set(false);
-    const weight = this.nextWeight();
-    let duplicatedForm!: Form;
+    let created!: ConvocatoriaForm;
 
-    this.formsService.duplicate(this.selectedFormId()).pipe(
-      switchMap((newForm) => {
-        duplicatedForm = newForm;
-        return this.convocatoriaService.addForm(this.convocatoriaId(), {
-          formId: newForm.id,
-          weight,
-          categoryWeights: [],
-          minScore: null,
-        });
+    this.convocatoriaService.createForm(this.convocatoriaId(), {
+      duplicateFromId: this.selectedFormId(),
+      weight: this.nextWeight(),
+      categoryWeights: [],
+      minScore: null,
+    }).pipe(
+      // The copy already belongs to the convocatoria; this read only fetches its name and
+      // type so the card can render without reloading the whole detail.
+      switchMap((convocatoriaForm) => {
+        created = convocatoriaForm;
+        return this.formsService.getById(convocatoriaForm.formId);
       }),
       takeUntilDestroyed(this.destroyRef),
     ).subscribe({
-      next: (convocatoriaForm) => {
+      next: (form) => {
         this.duplicating.set(false);
         this.selectedFormId.set('');
-        this.formAdded.emit({ convocatoriaForm, form: duplicatedForm });
+        this.formAdded.emit({ convocatoriaForm: created, form });
       },
       error: () => {
         this.duplicating.set(false);

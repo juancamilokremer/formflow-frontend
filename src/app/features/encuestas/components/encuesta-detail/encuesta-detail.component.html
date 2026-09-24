@@ -52,6 +52,7 @@
                 [processType]="conv.type"
                 [convocatoriaForms]="conv.forms"
                 [forms]="forms()"
+                [containerKind]="'encuestas'"
                 (formAdded)="onFormAdded($event)"
                 (formUpdated)="onFormUpdated($event)"
                 (formRemoved)="onFormRemoved($event)"
@@ -90,18 +91,17 @@
             <app-convocatoria-question-stats-section [convocatoriaId]="conv.id" />
           }
           @case ('formularios') {
+            <!-- Launched: read-only, same as convocatorias. Adding or duplicating a form
+                 needs a DRAFT container, so offering it here only produced a 409. -->
             <app-convocatoria-form-section
               [convocatoriaId]="conv.id"
               [convocatoriaName]="conv.name"
               [processType]="conv.type"
               [convocatoriaForms]="conv.forms"
               [forms]="forms()"
-              [readonly]="false"
-              [isDraft]="false"
-              (formAdded)="onFormAdded($event)"
-              (formUpdated)="onFormUpdated($event)"
-              (formRemoved)="onFormRemoved($event)"
-              (formsReordered)="onFormsReordered($event)" />
+              [containerKind]="'encuestas'"
+              [readonly]="true"
+              [isDraft]="false" />
           }
           @case ('destinatarios') {
             @if (conv.forms[0]; as surveyForm) {

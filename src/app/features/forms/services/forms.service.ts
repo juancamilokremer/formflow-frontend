@@ -5,7 +5,7 @@ import { environment } from '../../../../environments/environment';
 import { ApiResponse } from '../../../core/models/api-response.model';
 import {
   Form, FormDetail, FormSection, FormQuestion, FormStatus, FormVersion,
-  CreateFormRequest, CreateSectionRequest, UpdateSectionRequest,
+  CreateSectionRequest, UpdateSectionRequest,
   AddQuestionRequest, UpdateQuestionRequest,
 } from '../models/form.model';
 import { FormStats } from '../models/form-stats.model';
@@ -28,20 +28,8 @@ export class FormsService {
     );
   }
 
-  create(req: CreateFormRequest): Observable<Form> {
-    return this.http.post<ApiResponse<Form>>(this.apiUrl, req).pipe(
-      map((r) => r.data!),
-    );
-  }
-
   update(id: string, name: string, description: string | null, timeLimitSeconds: number | null): Observable<void> {
     return this.http.put<void>(`${this.apiUrl}/${id}`, { name, description, timeLimitSeconds });
-  }
-
-  duplicate(id: string): Observable<Form> {
-    return this.http.post<ApiResponse<Form>>(`${this.apiUrl}/${id}/duplicate`, {}).pipe(
-      map((r) => r.data!),
-    );
   }
 
   generateVersion(id: string): Observable<Form> {
