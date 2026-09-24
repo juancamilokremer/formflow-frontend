@@ -3,11 +3,15 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { StatCardComponent } from '../../../../../../shared/components/stat-card/stat-card.component';
 import { IndividualResponsesComponent } from '../../../../../forms/components/form-results/components/individual-responses/individual-responses.component';
 import { ResponseDetailDrawerComponent } from '../../../../../forms/components/form-results/components/response-detail-drawer/response-detail-drawer.component';
+import { ResponseExportComponent } from '../../../../../forms/components/response-export/response-export.component';
 import { Candidate } from '../../../../../convocatorias/models/convocatoria.model';
 
 @Component({
   selector: 'app-encuesta-responses-section',
-  imports: [TranslatePipe, StatCardComponent, IndividualResponsesComponent, ResponseDetailDrawerComponent],
+  imports: [
+    TranslatePipe, StatCardComponent, IndividualResponsesComponent, ResponseDetailDrawerComponent,
+    ResponseExportComponent,
+  ],
   templateUrl: './encuesta-responses-section.component.html',
   styleUrl: './encuesta-responses-section.component.scss',
 })

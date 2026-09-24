@@ -8,7 +8,7 @@ import { ButtonComponent } from '../../../../../../../../shared/components/butto
 import { CheckboxComponent } from '../../../../../../../../shared/components/checkbox/checkbox.component';
 import { IconComponent } from '../../../../../../../../shared/icons/icon.component';
 import { ConfirmDialogComponent } from '../../../../../../../../shared/components/confirm-dialog/confirm-dialog.component';
-import { ContainerKind, RouteConstants, formBuilderPath, formPreviewPath } from '../../../../../../../../core/constants/route.constants';
+import { ContainerKind, RouteConstants, formBuilderPath, formPreviewPath, formResultsPath } from '../../../../../../../../core/constants/route.constants';
 import { CategoryService } from '../../../../../../../../core/services/category.service';
 import { Category } from '../../../../../../../../core/models/category.model';
 import { FormsService } from '../../../../../../../forms/services/forms.service';
@@ -156,6 +156,11 @@ export class ConvocatoriaFormCardComponent implements OnInit {
     this.router.navigate(
       formPreviewPath(this.containerKind, this.convocatoriaId(), this.convocatoriaForm().formId),
       { queryParams: { [RouteConstants.QUERY_TAB]: 'formularios' } });
+  }
+
+  protected openResults(): void {
+    this.router.navigate(
+      formResultsPath(this.containerKind, this.convocatoriaId(), this.convocatoriaForm().formId));
   }
 
   protected generateVersion(): void {

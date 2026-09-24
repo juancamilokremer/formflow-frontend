@@ -575,6 +575,7 @@
         "title": "Formularios",
         "open_action": "Abrir formulario",
         "preview_action": "👁 Vista previa",
+        "results_action": "Ver resultados",
         "generate_version_action": "Generar nueva versión",
         "generate_version_error": "No se pudo generar la nueva versión. Intenta de nuevo.",
         "weight_label": "Peso",
