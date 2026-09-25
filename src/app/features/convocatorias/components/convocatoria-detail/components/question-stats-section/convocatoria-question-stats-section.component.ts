@@ -5,17 +5,24 @@ import { LoadingSpinnerComponent } from '../../../../../../shared/components/loa
 import { EmptyStateComponent } from '../../../../../../shared/components/empty-state/empty-state.component';
 import { SelectComponent, SelectOption } from '../../../../../../shared/components/select/select.component';
 import { QuestionStatsCardComponent } from '../../../../../forms/components/form-results/components/question-stats-card/question-stats-card.component';
+import { ResultsSummaryComponent } from '../../../../../forms/components/form-results/components/results-summary/results-summary.component';
+import { FormsService } from '../../../../../forms/services/forms.service';
+import { FormStats } from '../../../../../forms/models/form-stats.model';
 import { ConvocatoriaService } from '../../../../services/convocatoria.service';
 import { ConvocatoriaQuestionStats } from '../../../../models/convocatoria.model';
 
 @Component({
   selector: 'app-convocatoria-question-stats-section',
-  imports: [TranslatePipe, LoadingSpinnerComponent, EmptyStateComponent, SelectComponent, QuestionStatsCardComponent],
+  imports: [
+    TranslatePipe, LoadingSpinnerComponent, EmptyStateComponent, SelectComponent,
+    QuestionStatsCardComponent, ResultsSummaryComponent,
+  ],
   templateUrl: './convocatoria-question-stats-section.component.html',
   styleUrl: './convocatoria-question-stats-section.component.scss',
 })
 export class ConvocatoriaQuestionStatsSectionComponent implements OnInit {
   private readonly convocatoriaService = inject(ConvocatoriaService);
+  private readonly formsService = inject(FormsService);
   private readonly destroyRef = inject(DestroyRef);
 
   readonly convocatoriaId = input.required<string>();
@@ -24,6 +31,7 @@ export class ConvocatoriaQuestionStatsSectionComponent implements OnInit {
   protected readonly loadError = signal(false);
   protected readonly data = signal<ConvocatoriaQuestionStats | null>(null);
   protected readonly selectedFormId = signal<string | null>(null);
+  protected readonly selectedFormStats = signal<FormStats | null>(null);
 
   protected readonly formOptions = computed<SelectOption[]>(() =>
     (this.data()?.forms ?? []).map((form) => ({ value: form.formId, label: form.formName })));
@@ -43,7 +51,9 @@ export class ConvocatoriaQuestionStatsSectionComponent implements OnInit {
       .subscribe({
         next: (data) => {
           this.data.set(data);
-          this.selectedFormId.set(data.forms[0]?.formId ?? null);
+          const firstFormId = data.forms[0]?.formId ?? null;
+          this.selectedFormId.set(firstFormId);
+          if (firstFormId) this.loadFormStats(firstFormId);
           this.loading.set(false);
         },
         error: () => {
@@ -55,5 +65,13 @@ export class ConvocatoriaQuestionStatsSectionComponent implements OnInit {
 
   protected onFormSelected(formId: string): void {
     this.selectedFormId.set(formId);
+    this.loadFormStats(formId);
+  }
+
+  private loadFormStats(formId: string): void {
+    this.selectedFormStats.set(null);
+    this.formsService.getStats(formId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((stats) => this.selectedFormStats.set(stats));
   }
 }

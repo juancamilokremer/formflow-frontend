@@ -5,6 +5,7 @@ import { EncuestaResponsesSectionComponent } from './encuesta-responses-section.
 import { FormsService } from '../../../../../forms/services/forms.service';
 import { Candidate } from '../../../../../convocatorias/models/convocatoria.model';
 import { ResponsePage } from '../../../../../forms/models/form-response.model';
+import { FormStats } from '../../../../../forms/models/form-stats.model';
 
 function candidate(status: Candidate['status']): Candidate {
   return {
@@ -19,6 +20,10 @@ function buildComponent(candidates: Candidate[], totalElements = 0) {
       items: [], totalElements, totalPages: 0, page: 0, size: 20,
     } satisfies ResponsePage)),
     getResponseDetail: vi.fn().mockReturnValue(of(null)),
+    getStats: vi.fn().mockReturnValue(of({
+      formId: 'f1', formName: 'Encuesta', totalResponses: totalElements, completionRate: null,
+      avgResponseTimeSeconds: null, timeline: [], questions: [],
+    } satisfies FormStats)),
   };
 
   TestBed.configureTestingModule({
@@ -73,6 +78,12 @@ describe('EncuestaResponsesSectionComponent', () => {
       const { component } = buildComponent([candidate('RESPONDED'), candidate('RESPONDED')], 1);
       expect(component['anonymousCount']()).toBe(0);
     });
+  });
+
+  it('loads the form stats (completion rate/avg time/timeline) for the summary block', () => {
+    const { component, mockFormsService } = buildComponent([]);
+    expect(mockFormsService.getStats).toHaveBeenCalledWith('f1');
+    expect(component['stats']()).not.toBeNull();
   });
 
   it('opens and closes the response detail drawer', () => {

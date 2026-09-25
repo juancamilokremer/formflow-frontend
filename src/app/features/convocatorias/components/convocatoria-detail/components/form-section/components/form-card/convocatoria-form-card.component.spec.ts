@@ -280,6 +280,29 @@ describe('ConvocatoriaFormCardComponent', () => {
     });
   });
 
+  describe('showResults', () => {
+    it('is false when readonly but only one form is attached (frontend#162)', () => {
+      const { fixture, component } = buildComponent();
+      fixture.componentRef.setInput('readonly', true);
+      fixture.componentRef.setInput('formCount', 1);
+      expect(component['showResults']()).toBe(false);
+    });
+
+    it('is true when readonly and more than one form is attached', () => {
+      const { fixture, component } = buildComponent();
+      fixture.componentRef.setInput('readonly', true);
+      fixture.componentRef.setInput('formCount', 2);
+      expect(component['showResults']()).toBe(true);
+    });
+
+    it('is false when not readonly, regardless of formCount', () => {
+      const { fixture, component } = buildComponent();
+      fixture.componentRef.setInput('readonly', false);
+      fixture.componentRef.setInput('formCount', 3);
+      expect(component['showResults']()).toBe(false);
+    });
+  });
+
   describe('preview button visibility', () => {
     it('is hidden when not readonly and not a REGISTRATION (survey) form', () => {
       const { fixture } = buildComponent({ processType: 'CANDIDATES' });
