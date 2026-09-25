@@ -32,6 +32,9 @@
         }
         @if (d.classification) {
           <span class="crd__classification" [class]="'crd__classification--' + d.classification.toLowerCase()">
+            @if (classificationIcon(d.classification); as icon) {
+              <app-icon [name]="icon" [size]="14" />
+            }
             {{ 'convocatorias.classification.' + d.classification | translate }}
           </span>
         }

@@ -503,9 +503,9 @@
       "EXPIRED": "Expired"
     },
     "classification": {
-      "APTO": "✅ Qualified",
-      "REVISAR": "⚠️ Needs review",
-      "NO_APTO": "❌ Not qualified"
+      "APTO": "Qualified",
+      "REVISAR": "Needs review",
+      "NO_APTO": "Not qualified"
     },
     "create": {
       "title": "New convocatoria",

@@ -7,6 +7,8 @@ import { EmptyStateComponent } from '../../../../../../shared/components/empty-s
 import { CheckboxComponent } from '../../../../../../shared/components/checkbox/checkbox.component';
 import { ButtonComponent } from '../../../../../../shared/components/button/button.component';
 import { FileDownloadService } from '../../../../../../core/services/file-download.service';
+import { IconComponent } from '../../../../../../shared/icons/icon.component';
+import { IconName } from '../../../../../../shared/icons/icon.registry';
 import { ConvocatoriaService } from '../../../../services/convocatoria.service';
 import { RankingEntry } from '../../../../models/convocatoria.model';
 import { CandidateResponseDrawerComponent } from './components/candidate-response-drawer/candidate-response-drawer.component';
@@ -17,13 +19,17 @@ interface RankingFormColumn {
   weight: number;
 }
 
-const RANK_MEDALS: Record<number, string> = { 1: '🥇', 2: '🥈' };
+const CLASSIFICATION_ICONS: Record<string, IconName> = {
+  APTO: 'check-circle',
+  REVISAR: 'alert-triangle',
+  NO_APTO: 'x-circle',
+};
 
 @Component({
   selector: 'app-convocatoria-ranking-section',
   imports: [
     TranslatePipe, DecimalPipe, LoadingSpinnerComponent, EmptyStateComponent, CheckboxComponent,
-    ButtonComponent, CandidateResponseDrawerComponent,
+    ButtonComponent, CandidateResponseDrawerComponent, IconComponent,
   ],
   templateUrl: './convocatoria-ranking-section.component.html',
   styleUrl: './convocatoria-ranking-section.component.scss',
@@ -76,8 +82,12 @@ export class ConvocatoriaRankingSectionComponent implements OnInit {
     return entry.formScores.filter((formScore) => formScore.completed).length;
   }
 
-  protected medal(rank: number | null): string | null {
-    return rank !== null ? (RANK_MEDALS[rank] ?? null) : null;
+  protected isMedalRank(rank: number | null): boolean {
+    return rank === 1 || rank === 2;
+  }
+
+  protected classificationIcon(classification: string | null): IconName | null {
+    return classification ? (CLASSIFICATION_ICONS[classification] ?? null) : null;
   }
 
   protected openCandidate(candidateId: string): void {

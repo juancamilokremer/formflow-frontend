@@ -115,8 +115,17 @@
     }
   }
 
+  &__medal {
+    display: inline-flex;
+
+    &--1 { color: #ca8a04; }
+    &--2 { color: #6b7280; }
+  }
+
   &__verdict {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
     padding: 3px 9px;
     border-radius: 999px;
     font-size: 12px;

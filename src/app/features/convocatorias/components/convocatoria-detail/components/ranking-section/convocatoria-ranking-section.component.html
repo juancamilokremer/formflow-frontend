@@ -51,7 +51,15 @@
               <app-checkbox [checked]="selectedCandidateIds().has(entry.candidateId)"
                 (changed)="toggleCandidate(entry.candidateId)" />
             </td>
-            <td class="convocatoria-ranking__col-rank">{{ medal(entry.rank) ?? (entry.rank ?? '—') }}</td>
+            <td class="convocatoria-ranking__col-rank">
+              @if (isMedalRank(entry.rank)) {
+                <app-icon name="award" [size]="18"
+                  class="convocatoria-ranking__medal"
+                  [class]="'convocatoria-ranking__medal--' + entry.rank" />
+              } @else {
+                {{ entry.rank ?? '—' }}
+              }
+            </td>
             <td>
               <p class="convocatoria-ranking__name">{{ entry.name }}</p>
               <span class="convocatoria-ranking__email">{{ entry.email }}</span>
@@ -75,6 +83,9 @@
               @if (entry.classification) {
                 <span class="convocatoria-ranking__verdict"
                   [class]="'convocatoria-ranking__verdict--' + entry.classification.toLowerCase()">
+                  @if (classificationIcon(entry.classification); as icon) {
+                    <app-icon [name]="icon" [size]="14" />
+                  }
                   {{ 'convocatorias.classification.' + entry.classification | translate }}
                 </span>
               } @else {
