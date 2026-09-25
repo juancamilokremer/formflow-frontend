@@ -5,6 +5,10 @@
   <app-stat-card [label]="'encuestas.detail.responses.anonymous' | translate" [value]="anonymousCount()" />
 </div>
 
+@if (stats(); as s) {
+  <app-results-summary [stats]="s" />
+}
+
 @if (totalResponses() > 0) {
   <div class="ers__export">
     <app-response-export [formId]="formId()" />

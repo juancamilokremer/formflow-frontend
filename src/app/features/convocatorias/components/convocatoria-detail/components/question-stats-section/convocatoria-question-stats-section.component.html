@@ -13,6 +13,10 @@
         (changed)="onFormSelected($event)" />
     }
 
+    @if (selectedFormStats(); as stats) {
+      <app-results-summary [stats]="stats" />
+    }
+
     @if (chartableQuestions().length === 0) {
       <app-empty-state icon="bar-chart-2" [compact]="true"
         [title]="'results.per_question.no_questions' | translate" />

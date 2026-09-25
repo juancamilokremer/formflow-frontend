@@ -64,7 +64,7 @@
       <app-button type="button" variant="secondary" (click)="openPreview()">
         {{ 'convocatorias.detail.form.preview_action' | translate }}
       </app-button>
-      @if (readonly()) {
+      @if (showResults()) {
         <app-button type="button" variant="secondary" (click)="openResults()">
           {{ 'convocatorias.detail.form.results_action' | translate }}
         </app-button>

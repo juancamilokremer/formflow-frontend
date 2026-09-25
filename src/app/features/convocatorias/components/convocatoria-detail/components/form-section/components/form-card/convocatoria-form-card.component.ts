@@ -38,6 +38,7 @@ export class ConvocatoriaFormCardComponent implements OnInit {
   readonly processType = input.required<ProcessType>();
   readonly readonly = input(false);
   readonly isDraft = input(true);
+  readonly formCount = input(1);
 
   protected readonly isSimpleMode = computed(() => this.processType() === 'REGISTRATION');
 
@@ -50,6 +51,14 @@ export class ConvocatoriaFormCardComponent implements OnInit {
     const status = this.formStatus();
     return status !== null && status !== 'DRAFT' && !this.isSimpleMode();
   });
+
+  /**
+   * With a single form attached, this form's own results are already shown in full by the
+   * container's own tabs (Por pregunta / Respuestas) — see frontend#162. The isolated
+   * per-form results page only earns its own entry point once there is more than one form
+   * to isolate from the container's aggregate view.
+   */
+  protected readonly showResults = computed(() => this.readonly() && this.formCount() > 1);
 
   readonly formUpdated = output<ConvocatoriaForm>();
   readonly formRemoved = output<string>();
