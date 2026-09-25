@@ -9,9 +9,16 @@ import { LoadingSpinnerComponent } from '../../../../../../../../shared/componen
 import { EmptyStateComponent } from '../../../../../../../../shared/components/empty-state/empty-state.component';
 import { StatCardComponent } from '../../../../../../../../shared/components/stat-card/stat-card.component';
 import { IconComponent } from '../../../../../../../../shared/icons/icon.component';
+import { IconName } from '../../../../../../../../shared/icons/icon.registry';
 import { FileDownloadService } from '../../../../../../../../core/services/file-download.service';
 import { ConvocatoriaService } from '../../../../../../services/convocatoria.service';
 import { CandidateConvocatoriaResponseDetail } from '../../../../../../models/convocatoria.model';
+
+const CLASSIFICATION_ICONS: Record<string, IconName> = {
+  APTO: 'check-circle',
+  REVISAR: 'alert-triangle',
+  NO_APTO: 'x-circle',
+};
 
 @Component({
   selector: 'app-candidate-response-drawer',
@@ -55,6 +62,10 @@ export class CandidateResponseDrawerComponent {
       }
       this.load(candidateId);
     });
+  }
+
+  protected classificationIcon(classification: string | null): IconName | null {
+    return classification ? (CLASSIFICATION_ICONS[classification] ?? null) : null;
   }
 
   protected downloadPdf(): void {

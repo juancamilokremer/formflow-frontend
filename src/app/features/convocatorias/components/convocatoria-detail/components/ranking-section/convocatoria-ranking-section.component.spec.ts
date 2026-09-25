@@ -108,13 +108,23 @@ describe('ConvocatoriaRankingSectionComponent', () => {
     });
   });
 
-  describe('medal', () => {
-    it('returns a medal for rank 1 and 2, and null otherwise', () => {
+  describe('isMedalRank', () => {
+    it('is true for rank 1 and 2, and false otherwise', () => {
       const { component } = buildComponent();
-      expect(component['medal'](1)).toBe('🥇');
-      expect(component['medal'](2)).toBe('🥈');
-      expect(component['medal'](3)).toBeNull();
-      expect(component['medal'](null)).toBeNull();
+      expect(component['isMedalRank'](1)).toBe(true);
+      expect(component['isMedalRank'](2)).toBe(true);
+      expect(component['isMedalRank'](3)).toBe(false);
+      expect(component['isMedalRank'](null)).toBe(false);
+    });
+  });
+
+  describe('classificationIcon', () => {
+    it('maps each classification to an icon, and null otherwise', () => {
+      const { component } = buildComponent();
+      expect(component['classificationIcon']('APTO')).toBe('check-circle');
+      expect(component['classificationIcon']('REVISAR')).toBe('alert-triangle');
+      expect(component['classificationIcon']('NO_APTO')).toBe('x-circle');
+      expect(component['classificationIcon'](null)).toBeNull();
     });
   });
 

@@ -503,9 +503,9 @@
       "EXPIRED": "Expirado"
     },
     "classification": {
-      "APTO": "✅ Apto",
-      "REVISAR": "⚠️ A revisar",
-      "NO_APTO": "❌ No apto"
+      "APTO": "Apto",
+      "REVISAR": "A revisar",
+      "NO_APTO": "No apto"
     },
     "create": {
       "title": "Nueva convocatoria",
