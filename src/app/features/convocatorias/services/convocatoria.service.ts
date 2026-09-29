@@ -6,7 +6,8 @@ import { ApiResponse } from '../../../core/models/api-response.model';
 import {
   AddCandidateRequest, CreateConvocatoriaFormRequest, Candidate, CandidateConvocatoriaResponseDetail,
   ConvocatoriaDetail, ConvocatoriaForm, ConvocatoriaQuestionStats, ConvocatoriaStats, ConvocatoriaSummary,
-  CreateConvocatoriaRequest, ImportResponse, RankingEntry, UpdateConvocatoriaFormRequest, UpdateConvocatoriaRequest,
+  CreateConvocatoriaRequest, ImportResponse, RankingEntry, SendRemindersResponse, UpdateConvocatoriaFormRequest,
+  UpdateConvocatoriaRequest,
 } from '../models/convocatoria.model';
 import { ExportedFile } from '../../forms/models/form-response.model';
 import { filenameFromContentDisposition } from '../../forms/services/forms.service';
@@ -92,7 +93,7 @@ export class ConvocatoriaService {
 
   sendReminders(id: string): Observable<number> {
     return this.http
-      .post<ApiResponse<{ remindersSent: number }>>(`${this.base}/${id}/reminders`, {})
+      .post<ApiResponse<SendRemindersResponse>>(`${this.base}/${id}/reminders`, {})
       .pipe(map((r) => r.data!.remindersSent));
   }
 
