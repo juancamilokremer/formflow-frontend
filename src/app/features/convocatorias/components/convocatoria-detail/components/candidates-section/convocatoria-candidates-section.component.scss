@@ -69,6 +69,19 @@
     text-transform: uppercase;
   }
 
+  &__reminders {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: flex-start;
+  }
+
+  &__reminders-result {
+    font-size: 12px;
+    color: var(--ff-text-secondary);
+    margin: 0;
+  }
+
   &__csv {
     display: flex;
     flex-direction: column;

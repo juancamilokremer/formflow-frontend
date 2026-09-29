@@ -115,6 +115,7 @@
             <app-convocatoria-candidates-section
               [convocatoriaId]="conv.id"
               [candidates]="conv.candidates"
+              [status]="conv.status"
               (candidateAdded)="onCandidateAdded($event)"
               (candidatesImported)="onCandidatesImported()" />
           }

@@ -629,7 +629,10 @@
         "csv_importing": "Importing…",
         "csv_format_hint": "Two columns: name and email. Optional header row. Separator , or ; — detected automatically.",
         "csv_result": "{{imported}} imported, {{skipped}} skipped",
-        "csv_read_error": "Could not read or import the file. Check that it's a valid CSV and try again."
+        "csv_read_error": "Could not read or import the file. Check that it's a valid CSV and try again.",
+        "send_reminders_button": "Send reminder ({{count}} pending)",
+        "reminders_sent": "Reminder sent to {{count}} candidates.",
+        "reminders_error": "Could not send the reminder. Try again."
       },
       "launch": {
         "button": "Launch convocatoria",
