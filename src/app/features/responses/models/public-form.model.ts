@@ -59,3 +59,7 @@ export interface CandidateChecklist {
   allCompleted: boolean;
   forms: CandidateChecklistFormItem[];
 }
+
+export interface UploadedFileResponse {
+  url: string;
+}

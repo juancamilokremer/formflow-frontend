@@ -204,3 +204,7 @@ export interface CandidateConvocatoriaResponseDetail {
   classification: CandidateClassification | null;
   forms: CandidateFormResponseDetail[];
 }
+
+export interface SendRemindersResponse {
+  remindersSent: number;
+}

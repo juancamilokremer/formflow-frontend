@@ -9,6 +9,7 @@ import {
   PublicForm,
   SubmitPublicResponsePayload,
   SubmitPublicResponseResult,
+  UploadedFileResponse,
 } from '../models/public-form.model';
 
 @Injectable({ providedIn: 'root' })
@@ -63,7 +64,7 @@ export class PublicResponseService {
     const formData = new FormData();
     formData.append('file', file);
     return this.http
-      .post<ApiResponse<{ url: string }>>(
+      .post<ApiResponse<UploadedFileResponse>>(
         `${this.apiUrl}/forms/${formId}/questions/${questionId}/files`,
         formData,
       )
