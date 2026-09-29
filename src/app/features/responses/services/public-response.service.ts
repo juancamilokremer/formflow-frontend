@@ -58,4 +58,15 @@ export class PublicResponseService {
       )
       .pipe(map((response) => response.data!));
   }
+
+  uploadAnswerFile(formId: string, questionId: string, file: File): Observable<string> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http
+      .post<ApiResponse<{ url: string }>>(
+        `${this.apiUrl}/forms/${formId}/questions/${questionId}/files`,
+        formData,
+      )
+      .pipe(map((response) => response.data!.url));
+  }
 }

@@ -1,12 +1,13 @@
 import { Component, DestroyRef, computed, inject, input, output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Observable } from 'rxjs';
+import { Observable, forkJoin, of, switchMap } from 'rxjs';
 import { TranslatePipe } from '@ngx-translate/core';
 import { IconComponent } from '../../../shared/icons/icon.component';
 import { ButtonComponent } from '../../../shared/components/button/button.component';
 import { PublicQuestionOutletComponent } from '../../forms/components/form-preview/components/public-question-outlet/public-question-outlet.component';
 import { TimeLimitCountdownComponent } from '../components/time-limit-countdown/time-limit-countdown.component';
 import { ConditionEngineService } from '../../forms/services/condition-engine.service';
+import { PublicResponseService } from '../services/public-response.service';
 import {
   AnswerPayload,
   PublicForm,
@@ -30,6 +31,7 @@ type SectionBlock =
 })
 export class FormFillerComponent {
   private readonly condEngine = inject(ConditionEngineService);
+  private readonly publicResponseService = inject(PublicResponseService);
   private readonly destroyRef = inject(DestroyRef);
 
   readonly form                = input.required<PublicForm>();
@@ -213,12 +215,14 @@ export class FormFillerComponent {
   protected submit(): void {
     if (!this.validateBlock(this.currentBlock())) return;
 
-    const payload = this.buildPayload();
     this.submitting.set(true);
     this.submitError.set(false);
 
-    this.submitFn()(payload)
-      .pipe(takeUntilDestroyed(this.destroyRef))
+    this.uploadPendingFiles()
+      .pipe(
+        switchMap(() => this.submitFn()(this.buildPayload())),
+        takeUntilDestroyed(this.destroyRef),
+      )
       .subscribe({
         next:  () => this.view.set('confirmation'),
         error: () => {
@@ -226,6 +230,22 @@ export class FormFillerComponent {
           this.submitError.set(true);
         },
       });
+  }
+
+  /** File answers hold the raw browser File until submit time — HttpClient's default JSON
+   *  body would serialize it to "{}" (a File has no own enumerable properties). Upload each
+   *  one first and swap it for the URL the backend returns before building the payload. */
+  private uploadPendingFiles(): Observable<unknown> {
+    const uploads = [...this.answers()]
+      .filter((entry): entry is [string, File] => entry[1] instanceof File)
+      .map(([questionId, file]) =>
+        this.publicResponseService.uploadAnswerFile(this.form().formId, questionId, file)
+          .pipe(switchMap((url) => {
+            this.onAnswered(questionId, url);
+            return of(url);
+          })));
+
+    return uploads.length > 0 ? forkJoin(uploads) : of(null);
   }
 
   private buildPayload(): SubmitPublicResponsePayload {
