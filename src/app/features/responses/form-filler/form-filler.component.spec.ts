@@ -3,6 +3,7 @@ import { Observable, of, throwError } from 'rxjs';
 import { provideTranslateService } from '@ngx-translate/core';
 import { FormFillerComponent } from './form-filler.component';
 import { ConditionEngineService } from '../../forms/services/condition-engine.service';
+import { PublicResponseService } from '../services/public-response.service';
 import { PublicForm, SubmitPublicResponseResult } from '../models/public-form.model';
 import { FormQuestion } from '../../forms/models/form.model';
 
@@ -39,14 +40,19 @@ async function createFiller(options: {
   submitResult?: Observable<unknown>;
   candidateName?: string | null;
   convocatoriaName?: string | null;
+  uploadAnswerFile?: unknown;
 } = {}) {
   const submitFn = vi.fn().mockReturnValue(options.submitResult ?? of(mockSubmitResult));
+  const mockPublicResponseService = {
+    uploadAnswerFile: options.uploadAnswerFile ?? vi.fn().mockReturnValue(of('https://api.test/files/uploaded')),
+  };
 
   await TestBed.configureTestingModule({
     imports:   [FormFillerComponent],
     providers: [
       provideTranslateService({ lang: 'es' }),
       { provide: ConditionEngineService, useValue: { isVisible: vi.fn().mockReturnValue(true) } },
+      { provide: PublicResponseService, useValue: mockPublicResponseService },
     ],
   }).compileComponents();
 
@@ -58,7 +64,7 @@ async function createFiller(options: {
   if (options.candidateName !== undefined) fixture.componentRef.setInput('candidateName', options.candidateName);
   if (options.convocatoriaName !== undefined) fixture.componentRef.setInput('convocatoriaName', options.convocatoriaName);
 
-  return { fixture, component, submitFn };
+  return { fixture, component, submitFn, mockPublicResponseService };
 }
 
 describe('FormFillerComponent', () => {
@@ -280,6 +286,38 @@ describe('FormFillerComponent', () => {
       component['submit']();
       const payload = submitFn.mock.calls[0][0];
       expect(payload.startedAt).toBeTruthy();
+    });
+
+    it('uploads a File answer first and sends the returned URL, never the raw File', async () => {
+      const fileQuestion: FormQuestion = { ...mockQuestion, id: 'q-file', type: 'file', required: false };
+      const { component, submitFn, mockPublicResponseService } = await createFiller({
+        formOverride: { sections: [{ ...mockForm.sections[0], questions: [fileQuestion] }] },
+        uploadAnswerFile: vi.fn().mockReturnValue(of('https://api.test/files/abc123')),
+      });
+      const file = new File(['contenido'], 'cv.pdf');
+      component['onAnswered']('q-file', file);
+
+      component['submit']();
+
+      expect(mockPublicResponseService.uploadAnswerFile).toHaveBeenCalledWith('form-123', 'q-file', file);
+      expect(submitFn).toHaveBeenCalledWith(
+        expect.objectContaining({ answers: [{ questionId: 'q-file', value: 'https://api.test/files/abc123' }] }),
+      );
+    });
+
+    it('sets submitError and never calls submitFn when the file upload fails', async () => {
+      const fileQuestion: FormQuestion = { ...mockQuestion, id: 'q-file', type: 'file', required: false };
+      const { component, submitFn } = await createFiller({
+        formOverride: { sections: [{ ...mockForm.sections[0], questions: [fileQuestion] }] },
+        uploadAnswerFile: vi.fn().mockReturnValue(throwError(() => new Error('too large'))),
+      });
+      component['onAnswered']('q-file', new File(['x'], 'big.pdf'));
+
+      component['submit']();
+
+      expect(submitFn).not.toHaveBeenCalled();
+      expect(component['submitError']()).toBe(true);
+      expect(component['view']()).toBe('form');
     });
   });
 
