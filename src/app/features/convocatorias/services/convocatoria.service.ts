@@ -90,6 +90,12 @@ export class ConvocatoriaService {
       .pipe(map(() => undefined));
   }
 
+  sendReminders(id: string): Observable<number> {
+    return this.http
+      .post<ApiResponse<{ remindersSent: number }>>(`${this.base}/${id}/reminders`, {})
+      .pipe(map((r) => r.data!.remindersSent));
+  }
+
   delete(id: string): Observable<void> {
     return this.http
       .delete<ApiResponse<void>>(`${this.base}/${id}`)

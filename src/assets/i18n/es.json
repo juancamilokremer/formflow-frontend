@@ -629,7 +629,10 @@
         "csv_importing": "Importando…",
         "csv_format_hint": "Dos columnas: nombre y correo. Primera fila opcional como encabezado. Separador , o ; — se detecta automáticamente.",
         "csv_result": "{{imported}} importados, {{skipped}} omitidos",
-        "csv_read_error": "No se pudo leer o importar el archivo. Verifica que sea un CSV válido e intenta de nuevo."
+        "csv_read_error": "No se pudo leer o importar el archivo. Verifica que sea un CSV válido e intenta de nuevo.",
+        "send_reminders_button": "Enviar recordatorio ({{count}} pendientes)",
+        "reminders_sent": "Recordatorio enviado a {{count}} candidatos.",
+        "reminders_error": "No se pudo enviar el recordatorio. Intenta de nuevo."
       },
       "launch": {
         "button": "Lanzar convocatoria",

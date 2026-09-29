@@ -13,6 +13,24 @@
   }
 </div>
 
+@if (status() === 'ACTIVE') {
+  <div class="ccs__reminders">
+    <app-button type="button" variant="secondary" [loading]="sendingReminders()"
+      [disabled]="!canSendReminders()" (click)="sendReminders()">
+      <app-icon name="mail" [size]="16" />
+      {{ 'convocatorias.detail.candidates.send_reminders_button' | translate: { count: pendingCount() } }}
+    </app-button>
+    @if (remindersSentCount(); as count) {
+      <p class="ccs__reminders-result">
+        {{ 'convocatorias.detail.candidates.reminders_sent' | translate: { count } }}
+      </p>
+    }
+    @if (remindersError()) {
+      <p class="ccs__error">{{ 'convocatorias.detail.candidates.reminders_error' | translate }}</p>
+    }
+  </div>
+}
+
 @if (candidates().length > 0) {
   <div class="ccs__list">
     @for (candidate of candidates(); track candidate.id) {
