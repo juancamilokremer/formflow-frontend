@@ -2,6 +2,8 @@ import { Routes } from '@angular/router';
 import { RouteConstants } from './core/constants/route.constants';
 import { authGuard } from './core/auth/guards/auth.guard';
 import { publicGuard } from './core/auth/guards/public.guard';
+import { roleGuard } from './core/auth/guards/role.guard';
+import { UserRole } from './core/models/user.model';
 
 export const routes: Routes = [
   {
@@ -174,7 +176,8 @@ export const routes: Routes = [
       },
       {
         path: RouteConstants.SETTINGS,
-        data: { titleKey: 'shell.nav.settings' },
+        canActivate: [roleGuard],
+        data: { titleKey: 'shell.nav.settings', roles: [UserRole.TENANT_ADMIN] },
         loadComponent: () =>
           import('./features/tenants/tenant-settings/tenant-settings.component').then(
             (m) => m.TenantSettingsComponent,

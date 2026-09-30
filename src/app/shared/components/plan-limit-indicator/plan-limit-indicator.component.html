@@ -1,0 +1,19 @@
+<div class="pli">
+  <div class="pli__header">
+    <span class="pli__label">{{ label() | translate }}</span>
+    @if (isUnlimited()) {
+      <span class="pli__value">{{ used() }} / {{ 'settings.empresa.usage.unlimited' | translate }}</span>
+    } @else {
+      <span class="pli__value">{{ used() }} / {{ limit() }}</span>
+    }
+  </div>
+  @if (!isUnlimited()) {
+    <div class="pli__track">
+      <div
+        class="pli__bar"
+        [class.pli__bar--warning]="isOverThreshold()"
+        [style.width.%]="percentage()"
+      ></div>
+    </div>
+  }
+</div>

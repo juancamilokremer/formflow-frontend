@@ -13,7 +13,18 @@
     "close": "Cerrar",
     "error_generic": "Ocurrió un error inesperado. Por favor intenta de nuevo.",
     "required_field": "Este campo es obligatorio",
-    "pagination_range": "{{start}}–{{end}} de {{total}}"
+    "pagination_range": "{{start}}–{{end}} de {{total}}",
+    "save_changes": "Guardar cambios"
+  },
+  "plans": {
+    "free": "Free",
+    "starter": "Starter",
+    "pro": "Pro",
+    "business": "Business",
+    "enterprise": "Enterprise"
+  },
+  "dashboard": {
+    "access_denied": "No tienes permisos para acceder a esa sección."
   },
   "auth": {
     "login": {
@@ -718,5 +729,67 @@
     "unauthorized": "No tienes permiso para realizar esta acción.",
     "not_found": "El recurso solicitado no existe.",
     "server_error": "Error del servidor. Por favor intenta más tarde."
+  },
+  "settings": {
+    "title": "Configuración",
+    "subtitle": "Administra los datos de tu empresa, tu marca y tu seguridad",
+    "tabs": {
+      "empresa": "Empresa",
+      "branding": "Branding",
+      "seguridad": "Seguridad"
+    },
+    "empresa": {
+      "name_label": "Nombre de la empresa",
+      "slug_label": "Identificador (slug)",
+      "slug_tooltip": "El slug no puede cambiarse después del registro",
+      "plan_label": "Plan actual",
+      "change_plan": "Cambiar plan",
+      "save_success": "Cambios guardados",
+      "save_error": "No se pudo guardar el nombre de la empresa",
+      "usage": {
+        "title": "Uso actual",
+        "forms": "Formularios",
+        "responses": "Respuestas este mes",
+        "users": "Usuarios",
+        "unlimited": "Ilimitado"
+      }
+    },
+    "branding": {
+      "logo": {
+        "title": "Logo",
+        "no_logo": "Sin logo",
+        "dropzone_hint": "Arrastra una imagen o haz clic para elegir un archivo",
+        "upload_button": "Subir logo",
+        "delete_button": "Eliminar logo",
+        "confirm_delete": "¿Eliminar el logo actual? Se volverá al branding por defecto.",
+        "error_type": "Formato no permitido. Usa PNG, JPG o SVG",
+        "error_size": "El archivo supera el tamaño máximo de 2MB",
+        "error_upload": "No se pudo subir el logo",
+        "error_delete": "No se pudo eliminar el logo"
+      },
+      "colors": {
+        "title": "Colores",
+        "primary": "Color primario",
+        "secondary": "Color secundario"
+      },
+      "preview": {
+        "title": "Vista previa",
+        "form_title": "Encuesta de ejemplo",
+        "question": "¿Qué tan satisfecho estás con nuestro servicio?",
+        "option_a": "Poco satisfecho",
+        "option_b": "Muy satisfecho",
+        "submit": "Enviar respuesta"
+      },
+      "save_button": "Guardar branding",
+      "save_success": "Branding actualizado",
+      "save_error": "No se pudieron guardar los colores"
+    },
+    "seguridad": {
+      "title": "Cambiar contraseña",
+      "description": "Te enviaremos un enlace para restablecer la contraseña de {{email}}.",
+      "send_button": "Enviar correo para cambiar contraseña",
+      "sent": "Revisa tu correo para continuar",
+      "error": "No se pudo enviar el correo, intenta de nuevo"
+    }
   }
 }

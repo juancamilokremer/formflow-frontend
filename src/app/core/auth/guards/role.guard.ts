@@ -17,5 +17,5 @@ export const roleGuard: CanActivateFn = (route) => {
   if (allowedRoles.length === 0 || allowedRoles.includes(user.role)) {
     return true;
   }
-  return router.createUrlTree([`/${RouteConstants.DASHBOARD}`]);
+  return router.createUrlTree([`/${RouteConstants.DASHBOARD}`], { queryParams: { accessDenied: 'true' } });
 };

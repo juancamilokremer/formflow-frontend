@@ -1,0 +1,32 @@
+.st {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  max-width: 480px;
+
+  &__title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ff-text-primary);
+    margin: 0;
+  }
+
+  &__description {
+    font-size: 14px;
+    color: var(--ff-text-secondary);
+    margin: 0;
+  }
+
+  &__success {
+    font-size: 13px;
+    color: var(--ff-success);
+    margin: 0;
+  }
+
+  &__error {
+    font-size: 13px;
+    color: var(--ff-error-text);
+    margin: 0;
+  }
+}

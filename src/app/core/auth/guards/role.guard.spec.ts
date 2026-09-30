@@ -39,11 +39,11 @@ describe('roleGuard', () => {
     expect(runGuard([UserRole.TENANT_ADMIN])).toBe(true);
   });
 
-  it('redirects to dashboard when role is not allowed', () => {
+  it('redirects to dashboard with accessDenied when role is not allowed', () => {
     (authService as { currentUser: ReturnType<typeof signal> }).currentUser = signal(adminUser);
     const result = runGuard([UserRole.VIEWER]);
     const router = TestBed.inject(Router);
-    expect(result).toEqual(router.createUrlTree(['/dashboard']));
+    expect(result).toEqual(router.createUrlTree(['/dashboard'], { queryParams: { accessDenied: 'true' } }));
   });
 
   it('allows access when no roles are specified', () => {

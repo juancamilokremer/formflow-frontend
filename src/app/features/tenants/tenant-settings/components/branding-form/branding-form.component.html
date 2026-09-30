@@ -1,0 +1,49 @@
+@if (loading()) {
+  <p>{{ 'common.loading' | translate }}</p>
+} @else {
+  <div class="bf">
+    <app-card>
+      <div class="bf__section">
+        <h3 class="bf__section-title">{{ 'settings.branding.logo.title' | translate }}</h3>
+        <app-logo-upload [logoUrl]="branding()?.logoUrl ?? null" (brandingChanged)="onLogoChanged($event)" />
+      </div>
+    </app-card>
+
+    <app-card>
+      <form class="bf__colors" [formGroup]="form" (ngSubmit)="save()">
+        <h3 class="bf__section-title">{{ 'settings.branding.colors.title' | translate }}</h3>
+        <div class="bf__color-fields">
+          <app-color-picker-input
+            formControlName="primaryColor"
+            [label]="'settings.branding.colors.primary' | translate"
+          />
+          <app-color-picker-input
+            formControlName="secondaryColor"
+            [label]="'settings.branding.colors.secondary' | translate"
+          />
+        </div>
+
+        <div class="bf__actions">
+          <app-button type="submit" [loading]="saving()" [disabled]="form.invalid">
+            {{ 'settings.branding.save_button' | translate }}
+          </app-button>
+          @if (saved()) {
+            <span class="bf__success">{{ 'settings.branding.save_success' | translate }}</span>
+          }
+          @if (errorKey()) {
+            <span class="bf__error">{{ errorKey()! | translate }}</span>
+          }
+        </div>
+      </form>
+    </app-card>
+
+    <div class="bf__preview">
+      <h3 class="bf__section-title">{{ 'settings.branding.preview.title' | translate }}</h3>
+      <app-branding-live-preview
+        [logoUrl]="branding()?.logoUrl ?? null"
+        [primaryColor]="previewColors().primaryColor"
+        [secondaryColor]="previewColors().secondaryColor"
+      />
+    </div>
+  </div>
+}

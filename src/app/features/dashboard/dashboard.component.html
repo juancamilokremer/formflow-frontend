@@ -1,1 +1,7 @@
+@if (accessDenied()) {
+  <div class="dashboard__banner" role="alert">
+    <span>{{ 'dashboard.access_denied' | translate }}</span>
+    <button type="button" class="dashboard__banner-dismiss" (click)="dismissAccessDenied()">&times;</button>
+  </div>
+}
 <p>Dashboard</p>

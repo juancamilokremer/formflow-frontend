@@ -1,0 +1,54 @@
+<div class="lu">
+  <div
+    class="lu__dropzone"
+    [class.lu__dropzone--over]="dragOver()"
+    (dragover)="onDragOver($event)"
+    (dragleave)="onDragLeave()"
+    (drop)="onDrop($event)"
+  >
+    <div class="lu__preview">
+      @if (previewUrl()) {
+        <img class="lu__preview-img" [src]="previewUrl()" alt="" />
+      } @else {
+        <span class="lu__placeholder">{{ 'settings.branding.logo.no_logo' | translate }}</span>
+      }
+    </div>
+
+    <label class="lu__pick">
+      {{ 'settings.branding.logo.dropzone_hint' | translate }}
+      <input
+        type="file"
+        class="lu__file-input"
+        accept="image/png,image/jpeg,image/svg+xml"
+        (change)="onFileSelected($event)"
+      />
+    </label>
+  </div>
+
+  @if (errorKey()) {
+    <p class="lu__error">{{ errorKey()! | translate }}</p>
+  }
+
+  <div class="lu__actions">
+    @if (stagedPreview()) {
+      <app-button [loading]="uploading()" (click)="upload()">
+        {{ 'settings.branding.logo.upload_button' | translate }}
+      </app-button>
+      <app-button variant="ghost" [disabled]="uploading()" (click)="cancelStagedFile()">
+        {{ 'common.cancel' | translate }}
+      </app-button>
+    } @else if (logoUrl()) {
+      <app-button variant="outline-primary" [danger]="true" (click)="confirmingDelete.set(true)">
+        {{ 'settings.branding.logo.delete_button' | translate }}
+      </app-button>
+    }
+  </div>
+</div>
+
+<app-confirm-dialog
+  [isOpen]="confirmingDelete()"
+  [message]="'settings.branding.logo.confirm_delete' | translate"
+  [loading]="deleting()"
+  (confirmed)="confirmDelete()"
+  (cancelled)="confirmingDelete.set(false)"
+/>

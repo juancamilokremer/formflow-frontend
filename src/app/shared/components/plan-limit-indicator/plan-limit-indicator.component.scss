@@ -1,0 +1,38 @@
+.pli {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+  }
+
+  &__label {
+    color: var(--ff-text-secondary);
+  }
+
+  &__value {
+    font-weight: 600;
+    color: var(--ff-text-primary);
+  }
+
+  &__track {
+    height: 6px;
+    border-radius: var(--ff-radius-sm);
+    background: var(--ff-border);
+    overflow: hidden;
+  }
+
+  &__bar {
+    height: 100%;
+    border-radius: var(--ff-radius-sm);
+    background: var(--ff-primary);
+    transition: width 0.2s ease;
+
+    &--warning {
+      background: var(--ff-error);
+    }
+  }
+}

@@ -1,0 +1,26 @@
+<div class="cpi">
+  @if (label()) {
+    <label [for]="inputId" class="cpi__label">{{ label() }}</label>
+  }
+  <div class="cpi__row">
+    <label class="cpi__swatch" [style.background]="swatchValue()">
+      <input
+        type="color"
+        class="cpi__native-picker"
+        [value]="swatchValue()"
+        [disabled]="isDisabled()"
+        (input)="onColorPick($event)"
+      />
+    </label>
+    <input
+      class="cpi__hex-input"
+      [id]="inputId"
+      type="text"
+      placeholder="#3B82F6"
+      [value]="internalValue()"
+      [disabled]="isDisabled()"
+      (input)="onTextInput($event)"
+      (blur)="onBlur()"
+    />
+  </div>
+</div>

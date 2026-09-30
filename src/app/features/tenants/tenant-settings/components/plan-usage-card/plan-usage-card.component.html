@@ -1,0 +1,22 @@
+@if (!loading() && usage(); as u) {
+  <app-card>
+    <div class="puc">
+      <h3 class="puc__title">{{ 'settings.empresa.usage.title' | translate }}</h3>
+      <app-plan-limit-indicator
+        label="settings.empresa.usage.forms"
+        [used]="u.formsUsed"
+        [limit]="u.formsLimit"
+      />
+      <app-plan-limit-indicator
+        label="settings.empresa.usage.responses"
+        [used]="u.responsesThisMonth"
+        [limit]="u.responsesLimit"
+      />
+      <app-plan-limit-indicator
+        label="settings.empresa.usage.users"
+        [used]="u.usersCount"
+        [limit]="u.usersLimit"
+      />
+    </div>
+  </app-card>
+}

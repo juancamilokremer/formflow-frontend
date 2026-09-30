@@ -1,1 +1,18 @@
-<p>Tenant Settings</p>
+<app-page-header [title]="'settings.title' | translate" [subtitle]="'settings.subtitle' | translate" />
+
+<app-tabs [tabs]="tabs" [activeTabId]="activeTab()" (tabChange)="setTab($event)" />
+
+<div class="tenant-settings__content">
+  @switch (activeTab()) {
+    @case ('empresa') {
+      <app-company-info-form />
+      <app-plan-usage-card />
+    }
+    @case ('branding') {
+      <app-branding-form />
+    }
+    @case ('seguridad') {
+      <app-security-tab />
+    }
+  }
+</div>
