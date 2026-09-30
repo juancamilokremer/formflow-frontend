@@ -774,6 +774,7 @@
       },
       "preview": {
         "title": "Live preview",
+        "hint": "These colors apply to the public form your candidates or respondents see — they don't change this admin panel.",
         "form_title": "Sample survey",
         "question": "How satisfied are you with our service?",
         "option_a": "Not very satisfied",

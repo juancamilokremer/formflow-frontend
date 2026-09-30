@@ -39,6 +39,7 @@
 
     <div class="bf__preview">
       <h3 class="bf__section-title">{{ 'settings.branding.preview.title' | translate }}</h3>
+      <p class="bf__preview-hint">{{ 'settings.branding.preview.hint' | translate }}</p>
       <app-branding-live-preview
         [logoUrl]="branding()?.logoUrl ?? null"
         [primaryColor]="previewColors().primaryColor"

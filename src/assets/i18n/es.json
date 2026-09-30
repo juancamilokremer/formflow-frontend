@@ -774,6 +774,7 @@
       },
       "preview": {
         "title": "Vista previa",
+        "hint": "Estos colores se aplican al formulario público que ven tus candidatos o respondientes — no cambian el panel de administración.",
         "form_title": "Encuesta de ejemplo",
         "question": "¿Qué tan satisfecho estás con nuestro servicio?",
         "option_a": "Poco satisfecho",

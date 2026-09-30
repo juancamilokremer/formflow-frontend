@@ -30,6 +30,12 @@
     margin: 0 0 16px;
   }
 
+  &__preview-hint {
+    font-size: 13px;
+    color: var(--ff-text-secondary);
+    margin: -8px 0 16px;
+  }
+
   &__color-fields {
     display: flex;
     flex-direction: column;
