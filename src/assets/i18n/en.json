@@ -792,5 +792,57 @@
       "sent": "Check your email to continue",
       "error": "Could not send the email, try again"
     }
+  },
+  "users": {
+    "title": "Team",
+    "subtitle": "Manage who has access to your company on FormFlow",
+    "invite_btn": "Invite user",
+    "role": {
+      "admin": "Admin",
+      "editor": "Editor",
+      "viewer": "Viewer"
+    },
+    "table": {
+      "name": "Name",
+      "email": "Email",
+      "role": "Role",
+      "joined": "Joined",
+      "revoke": "Revoke access",
+      "confirm_revoke": "Revoke this user's access? They won't be able to log in anymore.",
+      "revoke_yes": "Yes, revoke",
+      "empty_title": "No users yet",
+      "error_load": "Could not load the team",
+      "error_generic": "Could not complete the action. Try again."
+    },
+    "invite": {
+      "title": "Invite user",
+      "email_label": "Email",
+      "email_placeholder": "name@company.com",
+      "error_invalid_email": "Enter a valid email",
+      "role_label": "Role",
+      "limit_reached": "Upgrade your plan to add more users",
+      "send_btn": "Send invitation",
+      "success": "Invitation sent",
+      "error_generic": "Could not send the invitation. Try again."
+    },
+    "invitations": {
+      "title": "Pending invitations",
+      "empty_title": "No pending invitations",
+      "empty_subtitle": "Invitations you send will show up here until they're accepted",
+      "resend": "Resend",
+      "cancel": "Cancel",
+      "confirm_cancel": "Cancel this invitation?",
+      "cancel_yes": "Yes, cancel",
+      "expired": "Expired",
+      "expiring_soon": "Expiring soon",
+      "error_generic": "Could not complete the action. Try again.",
+      "just_now": "just now",
+      "minute_ago": "1 minute ago",
+      "minutes_ago": "{{count}} minutes ago",
+      "hour_ago": "1 hour ago",
+      "hours_ago": "{{count}} hours ago",
+      "day_ago": "1 day ago",
+      "days_ago": "{{count}} days ago"
+    }
   }
 }

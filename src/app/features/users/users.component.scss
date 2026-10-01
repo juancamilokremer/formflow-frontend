@@ -1,3 +1,8 @@
-:host {
-  display: block;
+:host { display: block; }
+
+.users-page__section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ff-text-primary);
+  margin: 32px 0 16px;
 }

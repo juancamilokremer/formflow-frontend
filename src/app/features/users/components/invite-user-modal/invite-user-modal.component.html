@@ -1,0 +1,61 @@
+<app-dialog
+  [title]="'users.invite.title' | translate"
+  [isOpen]="isOpen()"
+  (closed)="cancel()"
+>
+  @if (saved()) {
+    <p class="ium__success">{{ 'users.invite.success' | translate }}</p>
+  } @else {
+    <div class="ium__field">
+      <label class="ium__label" for="invite-email">{{ 'users.invite.email_label' | translate }}</label>
+      <input
+        id="invite-email"
+        class="ium__input"
+        type="email"
+        [placeholder]="'users.invite.email_placeholder' | translate"
+        [value]="email()"
+        (input)="email.set($any($event.target).value)"
+        (keydown.enter)="submit()"
+        autocomplete="off"
+      />
+      @if (email() && !emailValid()) {
+        <p class="ium__hint ium__hint--error">{{ 'users.invite.error_invalid_email' | translate }}</p>
+      }
+    </div>
+
+    <div class="ium__field">
+      <label class="ium__label" for="invite-role">{{ 'users.invite.role_label' | translate }}</label>
+      <app-select
+        id="invite-role"
+        [options]="roleOptions"
+        [value]="role()"
+        (changed)="role.set($any($event))"
+      />
+    </div>
+
+    @if (atLimit()) {
+      <p class="ium__hint ium__hint--error">{{ 'users.invite.limit_reached' | translate }}</p>
+    }
+
+    @if (errorMessage()) {
+      <p class="ium__hint ium__hint--error">{{ errorMessage() }}</p>
+    }
+  }
+
+  @if (!saved()) {
+    <div dialog-footer>
+      <app-button variant="secondary" type="button" [disabled]="saving()" (click)="cancel()">
+        {{ 'common.cancel' | translate }}
+      </app-button>
+      <app-button
+        type="button"
+        [loading]="saving()"
+        [disabled]="!canSubmit()"
+        [title]="atLimit() ? ('users.invite.limit_reached' | translate) : null"
+        (click)="submit()"
+      >
+        {{ 'users.invite.send_btn' | translate }}
+      </app-button>
+    </div>
+  }
+</app-dialog>

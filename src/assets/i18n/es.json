@@ -792,5 +792,57 @@
       "sent": "Revisa tu correo para continuar",
       "error": "No se pudo enviar el correo, intenta de nuevo"
     }
+  },
+  "users": {
+    "title": "Equipo",
+    "subtitle": "Gestiona quién tiene acceso a tu empresa en FormFlow",
+    "invite_btn": "Invitar usuario",
+    "role": {
+      "admin": "Admin",
+      "editor": "Editor",
+      "viewer": "Viewer"
+    },
+    "table": {
+      "name": "Nombre",
+      "email": "Correo",
+      "role": "Rol",
+      "joined": "Ingresó",
+      "revoke": "Revocar acceso",
+      "confirm_revoke": "¿Revocar el acceso de este usuario? Dejará de poder iniciar sesión.",
+      "revoke_yes": "Sí, revocar",
+      "empty_title": "Todavía no hay usuarios",
+      "error_load": "No se pudo cargar el equipo",
+      "error_generic": "No se pudo completar la acción. Intenta de nuevo."
+    },
+    "invite": {
+      "title": "Invitar usuario",
+      "email_label": "Correo",
+      "email_placeholder": "nombre@empresa.com",
+      "error_invalid_email": "Ingresa un correo válido",
+      "role_label": "Rol",
+      "limit_reached": "Actualiza tu plan para agregar más usuarios",
+      "send_btn": "Enviar invitación",
+      "success": "Invitación enviada",
+      "error_generic": "No se pudo enviar la invitación. Intenta de nuevo."
+    },
+    "invitations": {
+      "title": "Invitaciones pendientes",
+      "empty_title": "Sin invitaciones pendientes",
+      "empty_subtitle": "Las invitaciones que envíes aparecerán aquí hasta que se acepten",
+      "resend": "Reenviar",
+      "cancel": "Cancelar",
+      "confirm_cancel": "¿Cancelar esta invitación?",
+      "cancel_yes": "Sí, cancelar",
+      "expired": "Expirada",
+      "expiring_soon": "Expira pronto",
+      "error_generic": "No se pudo completar la acción. Intenta de nuevo.",
+      "just_now": "hace un momento",
+      "minute_ago": "hace 1 minuto",
+      "minutes_ago": "hace {{count}} minutos",
+      "hour_ago": "hace 1 hora",
+      "hours_ago": "hace {{count}} horas",
+      "day_ago": "hace 1 día",
+      "days_ago": "hace {{count}} días"
+    }
   }
 }
