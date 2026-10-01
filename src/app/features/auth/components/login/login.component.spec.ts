@@ -87,6 +87,18 @@ describe('LoginComponent', () => {
     expect((component as any).form.value.tenantSlug).toBe('test-empresa');
   });
 
+  it('pre-fills email from signal input', () => {
+    fixture.componentRef.setInput('email', 'nuevo@empresa.com');
+    fixture.detectChanges();
+    expect((component as any).form.value.email).toBe('nuevo@empresa.com');
+  });
+
+  it('shows the account-created banner when accountCreated=success', () => {
+    fixture.componentRef.setInput('accountCreated', 'success');
+    fixture.detectChanges();
+    expect((component as any).showAccountCreatedSuccess()).toBe(true);
+  });
+
   it('emailError is null when field is pristine', () => {
     expect((component as any).emailError).toBeNull();
   });

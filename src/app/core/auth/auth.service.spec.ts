@@ -113,6 +113,36 @@ describe('AuthService', () => {
     });
   });
 
+  describe('getInvitation', () => {
+    it('GETs the preview for a token', () => {
+      let result: { tenantName: string; tenantSlug: string; email: string; role: string } | undefined;
+      service.getInvitation('tok123').subscribe((r) => (result = r));
+
+      httpMock.expectOne(`${environment.apiUrl}/public/invitations/tok123`).flush({
+        success: true,
+        data: { tenantName: 'Empresa ABC', tenantSlug: 'empresa-abc', email: 'nuevo@empresa.com', role: 'EDITOR' },
+      });
+
+      expect(result?.tenantSlug).toBe('empresa-abc');
+      expect(result?.role).toBe('EDITOR');
+    });
+  });
+
+  describe('acceptInvitation', () => {
+    it('POSTs firstName/lastName/password to the accept endpoint', () => {
+      let completed = false;
+      service
+        .acceptInvitation('tok123', { firstName: 'Ada', lastName: 'QA', password: 'NewPass1!' })
+        .subscribe(() => (completed = true));
+
+      const req = httpMock.expectOne(`${environment.apiUrl}/public/invitations/tok123/accept`);
+      expect(req.request.body).toEqual({ firstName: 'Ada', lastName: 'QA', password: 'NewPass1!' });
+      req.flush({ success: true, data: null });
+
+      expect(completed).toBe(true);
+    });
+  });
+
   describe('verifyEmail', () => {
     it('posts the token', () => {
       let completed = false;

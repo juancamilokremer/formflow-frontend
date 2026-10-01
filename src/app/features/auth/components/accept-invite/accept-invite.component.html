@@ -1,0 +1,104 @@
+<div class="auth-wrapper">
+  <app-card class="auth-card">
+
+    @if (loading()) {
+
+      <div class="state-center">
+        <div class="logo-icon">F</div>
+        <p class="state-message">{{ 'auth.accept_invite.loading' | translate }}</p>
+      </div>
+
+    } @else if (saved()) {
+
+      <app-success-card
+        [title]="'auth.accept_invite.success_title' | translate"
+        [message]="'auth.accept_invite.success_message' | translate"
+      >
+        <a class="footer-link" [routerLink]="['/', routeConstants.LOGIN]" [queryParams]="loginQueryParams()">
+          {{ 'auth.accept_invite.go_to_login' | translate }}
+        </a>
+      </app-success-card>
+
+    } @else if (previewErrorKind()) {
+
+      <div class="state-center">
+        <div class="logo-icon error">!</div>
+        <h2 class="card-title">{{ 'auth.accept_invite.title' | translate }}</h2>
+        <p class="token-error">
+          @switch (previewErrorKind()) {
+            @case ('expired') { {{ 'auth.accept_invite.error_expired' | translate }} }
+            @case ('already_accepted') { {{ 'auth.accept_invite.error_already_accepted' | translate }} }
+            @default { {{ 'auth.accept_invite.error_not_found' | translate }} }
+          }
+        </p>
+        <a class="footer-link" [routerLink]="['/', routeConstants.LOGIN]">
+          {{ 'auth.forgot_password.back_to_login' | translate }}
+        </a>
+      </div>
+
+    } @else if (preview(); as p) {
+
+      <div class="card-header">
+        <div class="logo-icon">F</div>
+        <h2 class="card-title">{{ 'auth.accept_invite.title' | translate }}</h2>
+        <p class="card-subtitle">
+          {{ 'auth.accept_invite.subheading' | translate : { tenantName: p.tenantName, role: roleLabel() } }}
+        </p>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+
+        <div class="name-row">
+          <app-input
+            [label]="'auth.accept_invite.first_name' | translate"
+            formControlName="firstName"
+            autocomplete="given-name"
+            [errorMessage]="firstNameError"
+          />
+          <app-input
+            [label]="'auth.accept_invite.last_name' | translate"
+            formControlName="lastName"
+            autocomplete="family-name"
+            [errorMessage]="lastNameError"
+          />
+        </div>
+
+        <app-input
+          [label]="'auth.accept_invite.new_password' | translate"
+          type="password"
+          [toggleable]="true"
+          formControlName="newPassword"
+          placeholder="••••••••"
+          autocomplete="new-password"
+          [errorMessage]="newPasswordError"
+        />
+
+        <app-input
+          [label]="'auth.accept_invite.confirm_password' | translate"
+          type="password"
+          [toggleable]="true"
+          formControlName="confirmPassword"
+          placeholder="••••••••"
+          autocomplete="new-password"
+          [errorMessage]="confirmPasswordError"
+        />
+
+        @if (errorKey()) {
+          <p class="form-error">{{ errorKey()! | translate }}</p>
+        }
+
+        <app-button
+          type="submit"
+          [loading]="saving()"
+          [disabled]="form.invalid || saving()"
+          [fullWidth]="true"
+        >
+          {{ 'auth.accept_invite.submit' | translate }}
+        </app-button>
+
+      </form>
+
+    }
+
+  </app-card>
+</div>

@@ -5,6 +5,7 @@ export const RouteConstants = {
   FORGOT_PASSWORD: 'forgot-password',
   RESET_PASSWORD: 'reset-password',
   VERIFY_EMAIL: 'verify-email',
+  ACCEPT_INVITE: 'accept-invite',
   DASHBOARD: 'dashboard',
   FORMS: 'forms',
   CATEGORIES: 'categories',

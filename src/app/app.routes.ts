@@ -46,6 +46,13 @@ export const routes: Routes = [
             (m) => m.ResetPasswordComponent,
           ),
       },
+      {
+        path: RouteConstants.ACCEPT_INVITE,
+        loadComponent: () =>
+          import('./features/auth/components/accept-invite/accept-invite.component').then(
+            (m) => m.AcceptInviteComponent,
+          ),
+      },
     ],
   },
   {

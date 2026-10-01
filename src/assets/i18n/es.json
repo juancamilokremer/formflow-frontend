@@ -42,7 +42,8 @@
       "email_invalid": "Ingresa un correo válido",
       "error_invalid": "Credenciales inválidas o empresa no encontrada",
       "error_email_not_verified": "Debes verificar tu correo antes de iniciar sesión. Revisa tu bandeja de entrada.",
-      "password_reset_success": "Contraseña actualizada correctamente. Puedes iniciar sesión ahora."
+      "password_reset_success": "Contraseña actualizada correctamente. Puedes iniciar sesión ahora.",
+      "account_created_success": "Cuenta creada correctamente. Inicia sesión para continuar."
     },
     "register": {
       "title": "Crear cuenta",
@@ -95,6 +96,23 @@
       "resend": "Reenviar correo de verificación",
       "resend_success": "Correo de verificación enviado.",
       "go_to_dashboard": "Ir al panel"
+    },
+    "accept_invite": {
+      "title": "Aceptar invitación",
+      "loading": "Verificando tu invitación...",
+      "subheading": "Te invitaron a unirte a {{tenantName}} como {{role}}",
+      "first_name": "Nombre",
+      "last_name": "Apellido",
+      "new_password": "Contraseña",
+      "confirm_password": "Confirmar contraseña",
+      "submit": "Crear cuenta",
+      "success_title": "Cuenta creada",
+      "success_message": "Ya puedes iniciar sesión con tu correo y la contraseña que acabas de elegir.",
+      "go_to_login": "Ir a iniciar sesión",
+      "error_not_found": "Este enlace de invitación no es válido o fue cancelado.",
+      "error_expired": "Esta invitación expiró. Pide a tu administrador que te envíe una nueva.",
+      "error_already_accepted": "Esta invitación ya fue aceptada. Si ya tienes cuenta, inicia sesión.",
+      "error_generic": "No se pudo crear la cuenta. Intenta de nuevo."
     },
     "email_banner": {
       "message": "Verifica tu correo {{email}} para activar todas las funciones.",
