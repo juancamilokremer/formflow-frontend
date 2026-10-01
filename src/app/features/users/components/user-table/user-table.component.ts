@@ -62,6 +62,17 @@ export class UserTableComponent {
     return member.id === this.currentUserId();
   }
 
+  /** Whitelist, not blacklist — only EDITOR/VIEWER are editable from this screen. Keeps
+   *  an unexpected role (e.g. a platform SUPER_ADMIN account, see #171/#176) non-editable
+   *  by default instead of falling through to "anything that isn't TENANT_ADMIN". */
+  protected isEditableRole(role: UserRole): boolean {
+    return role === UserRole.EDITOR || role === UserRole.VIEWER;
+  }
+
+  protected isKnownTenantRole(role: UserRole): boolean {
+    return role === UserRole.TENANT_ADMIN || this.isEditableRole(role);
+  }
+
   protected onRoleChange(member: TeamMember, role: string): void {
     if (role === member.role) return;
     this.actionError.set(null);

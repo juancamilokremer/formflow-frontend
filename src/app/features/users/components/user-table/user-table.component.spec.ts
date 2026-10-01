@@ -43,6 +43,21 @@ describe('UserTableComponent', () => {
     expect(component['isSelf'](MEMBERS[1])).toBe(false);
   });
 
+  it('only treats EDITOR/VIEWER as editable roles', () => {
+    setup('u1');
+    expect(component['isEditableRole'](UserRole.EDITOR)).toBe(true);
+    expect(component['isEditableRole'](UserRole.VIEWER)).toBe(true);
+    expect(component['isEditableRole'](UserRole.TENANT_ADMIN)).toBe(false);
+    expect(component['isEditableRole']('SUPER_ADMIN' as UserRole)).toBe(false);
+  });
+
+  it('treats an unexpected role (e.g. a platform SUPER_ADMIN row) as unknown, not editable', () => {
+    setup('u1');
+    expect(component['isKnownTenantRole'](UserRole.TENANT_ADMIN)).toBe(true);
+    expect(component['isKnownTenantRole'](UserRole.EDITOR)).toBe(true);
+    expect(component['isKnownTenantRole']('SUPER_ADMIN' as UserRole)).toBe(false);
+  });
+
   it('calls changeRole and emits the updated member', () => {
     setup('u1');
     let emitted: TeamMember | undefined;
