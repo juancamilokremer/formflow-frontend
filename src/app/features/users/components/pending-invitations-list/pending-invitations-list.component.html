@@ -1,0 +1,49 @@
+@if (actionError()) {
+  <p class="pil__error">{{ actionError() }}</p>
+}
+
+@if (loading()) {
+  <app-loading-spinner [message]="'common.loading' | translate" />
+} @else {
+  <ul class="pil__list">
+    @for (invitation of invitations(); track invitation.id) {
+      <li class="pil__item">
+        <div class="pil__info">
+          <span class="pil__email">{{ invitation.email }}</span>
+          <span class="pil__meta">
+            {{ ('users.role.' + invitation.role.toLowerCase()) | translate }}
+            · {{ relativeTime(invitation.createdAt) }}
+          </span>
+        </div>
+
+        @if (isExpired(invitation)) {
+          <app-badge variant="neutral">{{ 'users.invitations.expired' | translate }}</app-badge>
+        } @else if (isExpiringSoon(invitation)) {
+          <app-badge variant="amber">{{ 'users.invitations.expiring_soon' | translate }}</app-badge>
+        }
+
+        <div class="pil__actions">
+          <app-button
+            variant="secondary"
+            [loading]="resendingId() === invitation.id"
+            (click)="resend(invitation)"
+          >
+            {{ 'users.invitations.resend' | translate }}
+          </app-button>
+          <app-button variant="ghost" [danger]="true" (click)="confirmCancel(invitation.id)">
+            {{ 'users.invitations.cancel' | translate }}
+          </app-button>
+        </div>
+      </li>
+    }
+  </ul>
+}
+
+<app-confirm-dialog
+  [isOpen]="!!pendingCancelId()"
+  [message]="'users.invitations.confirm_cancel' | translate"
+  confirmLabel="users.invitations.cancel_yes"
+  [loading]="cancelling()"
+  (confirmed)="cancelInvitation()"
+  (cancelled)="cancelCancel()"
+/>

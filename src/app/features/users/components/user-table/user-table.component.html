@@ -1,0 +1,62 @@
+@if (actionError()) {
+  <p class="ut__error">{{ actionError() }}</p>
+}
+
+<app-table
+  [columns]="tableColumns"
+  [rows]="members()"
+  [loading]="loading()"
+  [loadError]="loadError()"
+  [loadingMessage]="'common.loading' | translate"
+  [errorTitle]="'users.table.error_load' | translate"
+  emptyIcon="users"
+  [emptyTitle]="'users.table.empty_title' | translate"
+>
+
+  <ng-template appTableCell [column]="'name'" let-row>
+    <div class="ut__cell-name">
+      <app-user-avatar [firstName]="$any(row).firstName" [lastName]="$any(row).lastName" />
+      <span>{{ $any(row).firstName }} {{ $any(row).lastName }}</span>
+    </div>
+  </ng-template>
+
+  <ng-template appTableCell [column]="'email'" let-row>
+    <span class="ut__cell-muted">{{ $any(row).email }}</span>
+  </ng-template>
+
+  <ng-template appTableCell [column]="'role'" let-row>
+    @if ($any(row).role === UserRole.TENANT_ADMIN) {
+      <app-badge variant="purple">{{ 'users.role.admin' | translate }}</app-badge>
+    } @else if (isSelf($any(row))) {
+      <span class="ut__cell-muted">{{ ('users.role.' + $any(row).role.toLowerCase()) | translate }}</span>
+    } @else {
+      <app-select
+        [options]="roleOptions"
+        [value]="$any(row).role"
+        (changed)="onRoleChange($any(row), $event)"
+      />
+    }
+  </ng-template>
+
+  <ng-template appTableCell [column]="'createdAt'" let-row>
+    <span class="ut__cell-muted">{{ $any(row).createdAt | date : 'd MMM yyyy' }}</span>
+  </ng-template>
+
+  <ng-template appTableCell [column]="'__actions'" let-row>
+    @if (!isSelf($any(row))) {
+      <app-button variant="ghost" [danger]="true" (click)="confirmRevoke($any(row).id)">
+        {{ 'users.table.revoke' | translate }}
+      </app-button>
+    }
+  </ng-template>
+
+</app-table>
+
+<app-confirm-dialog
+  [isOpen]="!!pendingRevokeId()"
+  [message]="'users.table.confirm_revoke' | translate"
+  confirmLabel="users.table.revoke_yes"
+  [loading]="revoking()"
+  (confirmed)="revokeAccess()"
+  (cancelled)="cancelRevoke()"
+/>

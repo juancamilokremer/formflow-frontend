@@ -1,1 +1,54 @@
-<p>Users</p>
+<app-page-header
+  [title]="'users.title' | translate"
+  [subtitle]="'users.subtitle' | translate"
+>
+  @if (usage(); as u) {
+    <app-plan-limit-indicator
+      label="settings.empresa.usage.users"
+      [used]="u.usersCount"
+      [limit]="u.usersLimit"
+    />
+  }
+  <app-button
+    [disabled]="atLimit()"
+    [title]="atLimit() ? ('users.invite.limit_reached' | translate) : null"
+    (click)="openInviteModal()"
+  >
+    <app-icon name="plus" [size]="16" />
+    {{ 'users.invite_btn' | translate }}
+  </app-button>
+</app-page-header>
+
+<app-user-table
+  [members]="members()"
+  [currentUserId]="currentUserId()"
+  [loading]="loadingMembers()"
+  [loadError]="loadErrorMembers()"
+  (roleChanged)="onRoleChanged($event)"
+  (revoked)="onRevoked($event)"
+/>
+
+<h2 class="users-page__section-title">{{ 'users.invitations.title' | translate }}</h2>
+
+@if (!loadingInvitations() && invitations().length === 0) {
+  <app-empty-state
+    icon="mail"
+    [title]="'users.invitations.empty_title' | translate"
+    [subtitle]="'users.invitations.empty_subtitle' | translate"
+    [compact]="true"
+  />
+} @else {
+  <app-pending-invitations-list
+    [invitations]="invitations()"
+    [loading]="loadingInvitations()"
+    (resent)="upsertInvitation($event)"
+    (cancelled)="onInvitationCancelled($event)"
+  />
+}
+
+<app-invite-user-modal
+  [isOpen]="inviteModalOpen()"
+  [usage]="usage()"
+  (invited)="upsertInvitation($event)"
+  (cancelled)="closeInviteModal()"
+/>

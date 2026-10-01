@@ -185,7 +185,8 @@ export const routes: Routes = [
       },
       {
         path: RouteConstants.USERS,
-        data: { titleKey: 'shell.nav.users' },
+        canActivate: [roleGuard],
+        data: { titleKey: 'shell.nav.users', roles: [UserRole.TENANT_ADMIN] },
         loadComponent: () =>
           import('./features/users/users.component').then((m) => m.UsersComponent),
       },
