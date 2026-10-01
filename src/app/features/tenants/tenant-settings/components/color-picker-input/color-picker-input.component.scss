@@ -1,0 +1,55 @@
+.cpi {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  &__label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ff-text-secondary);
+  }
+
+  &__row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  &__swatch {
+    position: relative;
+    display: inline-block;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--ff-radius-sm);
+    border: 1px solid var(--ff-border);
+    cursor: pointer;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+
+  &__native-picker {
+    position: absolute;
+    inset: -4px;
+    width: calc(100% + 8px);
+    height: calc(100% + 8px);
+    padding: 0;
+    border: none;
+    cursor: pointer;
+    opacity: 0;
+  }
+
+  &__hex-input {
+    flex: 1;
+    height: 36px;
+    padding: 0 12px;
+    border: 1px solid var(--ff-border);
+    border-radius: var(--ff-radius-sm);
+    font-size: 14px;
+    font-family: inherit;
+
+    &:focus {
+      outline: none;
+      border-color: var(--ff-primary);
+    }
+  }
+}

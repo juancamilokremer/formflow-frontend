@@ -1,0 +1,12 @@
+.puc {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  &__title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ff-text-primary);
+    margin: 0;
+  }
+}

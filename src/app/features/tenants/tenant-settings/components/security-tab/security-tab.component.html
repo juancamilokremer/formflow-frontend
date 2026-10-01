@@ -1,0 +1,17 @@
+<app-card>
+  <div class="st">
+    <h3 class="st__title">{{ 'settings.seguridad.title' | translate }}</h3>
+    <p class="st__description">{{ 'settings.seguridad.description' | translate: { email } }}</p>
+
+    <app-button [loading]="sending()" (click)="sendResetEmail()">
+      {{ 'settings.seguridad.send_button' | translate }}
+    </app-button>
+
+    @if (sent()) {
+      <p class="st__success">{{ 'settings.seguridad.sent' | translate }}</p>
+    }
+    @if (errorKey()) {
+      <p class="st__error">{{ errorKey()! | translate }}</p>
+    }
+  </div>
+</app-card>

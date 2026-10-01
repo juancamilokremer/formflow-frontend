@@ -1,0 +1,44 @@
+@if (loading()) {
+  <p>{{ 'common.loading' | translate }}</p>
+} @else {
+  <app-card>
+    <form class="cif" [formGroup]="form" (ngSubmit)="save()">
+      <app-input
+        class="cif__field"
+        formControlName="name"
+        [label]="'settings.empresa.name_label' | translate"
+      />
+
+      <div class="cif__field">
+        <span class="cif__label">{{ 'settings.empresa.slug_label' | translate }}</span>
+        <p class="cif__slug" [title]="'settings.empresa.slug_tooltip' | translate">
+          {{ tenant()?.slug }}
+        </p>
+      </div>
+
+      <div class="cif__field cif__plan-row">
+        <span class="cif__label">{{ 'settings.empresa.plan_label' | translate }}</span>
+        <div class="cif__plan-value">
+          @if (tenant(); as t) {
+            <app-plan-badge [plan]="t.plan" />
+          }
+          <a class="cif__change-plan" [routerLink]="['/', routeConstants.BILLING]">
+            {{ 'settings.empresa.change_plan' | translate }}
+          </a>
+        </div>
+      </div>
+
+      <div class="cif__actions">
+        <app-button type="submit" [loading]="saving()" [disabled]="form.invalid">
+          {{ 'common.save_changes' | translate }}
+        </app-button>
+        @if (saved()) {
+          <span class="cif__success">{{ 'settings.empresa.save_success' | translate }}</span>
+        }
+        @if (errorKey()) {
+          <span class="cif__error">{{ errorKey()! | translate }}</span>
+        }
+      </div>
+    </form>
+  </app-card>
+}

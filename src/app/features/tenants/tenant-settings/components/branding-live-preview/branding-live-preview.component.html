@@ -1,0 +1,14 @@
+<div class="blp" [ngStyle]="previewStyle()">
+  <div class="blp__header">
+    @if (logoUrl()) {
+      <img class="blp__logo" [src]="logoUrl()" alt="" />
+    }
+    <span class="blp__title">{{ 'settings.branding.preview.form_title' | translate }}</span>
+  </div>
+  <p class="blp__question">{{ 'settings.branding.preview.question' | translate }}</p>
+  <div class="blp__option">{{ 'settings.branding.preview.option_a' | translate }}</div>
+  <div class="blp__option blp__option--selected">{{ 'settings.branding.preview.option_b' | translate }}</div>
+  <button type="button" class="blp__button" disabled>
+    {{ 'settings.branding.preview.submit' | translate }}
+  </button>
+</div>

@@ -1,3 +1,25 @@
 :host {
   display: block;
 }
+
+.dashboard__banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  border-radius: var(--ff-radius-sm);
+  background: var(--ff-error-bg);
+  color: var(--ff-error-text);
+  font-size: 14px;
+
+  &-dismiss {
+    background: none;
+    border: none;
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+    color: inherit;
+  }
+}

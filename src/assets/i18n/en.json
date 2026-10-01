@@ -13,7 +13,18 @@
     "close": "Close",
     "error_generic": "An unexpected error occurred. Please try again.",
     "required_field": "This field is required",
-    "pagination_range": "{{start}}–{{end}} of {{total}}"
+    "pagination_range": "{{start}}–{{end}} of {{total}}",
+    "save_changes": "Save changes"
+  },
+  "plans": {
+    "free": "Free",
+    "starter": "Starter",
+    "pro": "Pro",
+    "business": "Business",
+    "enterprise": "Enterprise"
+  },
+  "dashboard": {
+    "access_denied": "You don't have permission to access that section."
   },
   "auth": {
     "login": {
@@ -718,5 +729,68 @@
     "unauthorized": "You don't have permission to perform this action.",
     "not_found": "The requested resource does not exist.",
     "server_error": "Server error. Please try again later."
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Manage your company data, branding, and security",
+    "tabs": {
+      "empresa": "Company",
+      "branding": "Branding",
+      "seguridad": "Security"
+    },
+    "empresa": {
+      "name_label": "Company name",
+      "slug_label": "Identifier (slug)",
+      "slug_tooltip": "The slug cannot be changed after registration",
+      "plan_label": "Current plan",
+      "change_plan": "Change plan",
+      "save_success": "Changes saved",
+      "save_error": "Could not save the company name",
+      "usage": {
+        "title": "Current usage",
+        "forms": "Forms",
+        "responses": "Responses this month",
+        "users": "Users",
+        "unlimited": "Unlimited"
+      }
+    },
+    "branding": {
+      "logo": {
+        "title": "Logo",
+        "no_logo": "No logo",
+        "dropzone_hint": "Drag an image or click to choose a file",
+        "upload_button": "Upload logo",
+        "delete_button": "Delete logo",
+        "confirm_delete": "Delete the current logo? It will revert to the default branding.",
+        "error_type": "Unsupported format. Use PNG, JPG or SVG",
+        "error_size": "The file exceeds the maximum size of 2MB",
+        "error_upload": "Could not upload the logo",
+        "error_delete": "Could not delete the logo"
+      },
+      "colors": {
+        "title": "Colors",
+        "primary": "Primary color",
+        "secondary": "Secondary color"
+      },
+      "preview": {
+        "title": "Live preview",
+        "hint": "These colors apply to the public form your candidates or respondents see — they don't change this admin panel.",
+        "form_title": "Sample survey",
+        "question": "How satisfied are you with our service?",
+        "option_a": "Not very satisfied",
+        "option_b": "Very satisfied",
+        "submit": "Submit response"
+      },
+      "save_button": "Save branding",
+      "save_success": "Branding updated",
+      "save_error": "Could not save the colors"
+    },
+    "seguridad": {
+      "title": "Change password",
+      "description": "We'll send a password reset link to {{email}}.",
+      "send_button": "Send password reset email",
+      "sent": "Check your email to continue",
+      "error": "Could not send the email, try again"
+    }
   }
 }
