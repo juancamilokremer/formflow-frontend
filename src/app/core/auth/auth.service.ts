@@ -15,6 +15,8 @@ import {
   AuthResponse,
   AuthUserSummary,
   AuthTenantSummary,
+  InvitationPreview,
+  AcceptInvitationRequest,
 } from '../models/auth.model';
 
 @Injectable({ providedIn: 'root' })
@@ -64,6 +66,18 @@ export class AuthService {
   verifyEmail(token: string): Observable<void> {
     return this.http
       .post<ApiResponse<void>>(`${environment.apiUrl}/auth/verify-email`, { token })
+      .pipe(map(() => void 0));
+  }
+
+  getInvitation(token: string): Observable<InvitationPreview> {
+    return this.http
+      .get<ApiResponse<InvitationPreview>>(`${environment.apiUrl}/public/invitations/${token}`)
+      .pipe(map((res) => res.data!));
+  }
+
+  acceptInvitation(token: string, request: AcceptInvitationRequest): Observable<void> {
+    return this.http
+      .post<ApiResponse<void>>(`${environment.apiUrl}/public/invitations/${token}/accept`, request)
       .pipe(map(() => void 0));
   }
 

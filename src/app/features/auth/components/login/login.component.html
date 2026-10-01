@@ -4,6 +4,9 @@
     @if (showPasswordResetSuccess()) {
       <p class="success-banner">{{ 'auth.login.password_reset_success' | translate }}</p>
     }
+    @if (showAccountCreatedSuccess()) {
+      <p class="success-banner">{{ 'auth.login.account_created_success' | translate }}</p>
+    }
 
     <div class="card-header">
       <div class="logo-icon">F</div>

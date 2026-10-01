@@ -42,7 +42,8 @@
       "email_invalid": "Enter a valid email",
       "error_invalid": "Invalid credentials or company not found",
       "error_email_not_verified": "You must verify your email before logging in. Check your inbox.",
-      "password_reset_success": "Password updated successfully. You can log in now."
+      "password_reset_success": "Password updated successfully. You can log in now.",
+      "account_created_success": "Account created successfully. Log in to continue."
     },
     "register": {
       "title": "Create account",
@@ -95,6 +96,23 @@
       "resend": "Resend verification email",
       "resend_success": "Verification email sent.",
       "go_to_dashboard": "Go to dashboard"
+    },
+    "accept_invite": {
+      "title": "Accept invitation",
+      "loading": "Checking your invitation...",
+      "subheading": "You were invited to join {{tenantName}} as {{role}}",
+      "first_name": "First name",
+      "last_name": "Last name",
+      "new_password": "Password",
+      "confirm_password": "Confirm password",
+      "submit": "Create account",
+      "success_title": "Account created",
+      "success_message": "You can now log in with your email and the password you just chose.",
+      "go_to_login": "Go to login",
+      "error_not_found": "This invitation link is invalid or was cancelled.",
+      "error_expired": "This invitation expired. Ask your admin to send a new one.",
+      "error_already_accepted": "This invitation was already accepted. If you already have an account, log in.",
+      "error_generic": "Could not create the account. Try again."
     },
     "email_banner": {
       "message": "Verify your email {{email}} to activate all features.",

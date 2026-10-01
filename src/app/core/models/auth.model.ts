@@ -54,6 +54,21 @@ export interface RegisterResponse {
   tenant: AuthTenantSummary;
 }
 
+/** GET /public/invitations/{token} — shown before the accept-invite form. */
+export interface InvitationPreview {
+  tenantName: string;
+  tenantSlug: string;
+  email: string;
+  role: string;
+}
+
+/** POST /public/invitations/{token}/accept — no tokens back, unlike register/login. */
+export interface AcceptInvitationRequest {
+  firstName: string;
+  lastName: string;
+  password: string;
+}
+
 export interface JwtPayload {
   sub: string;
   tenantId: string;

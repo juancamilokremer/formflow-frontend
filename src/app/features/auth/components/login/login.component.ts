@@ -41,14 +41,24 @@ export class LoginComponent {
 
   // Receives ?tenant= query param via withComponentInputBinding()
   readonly tenant = input('');
+  // Receives ?email= query param (e.g. from accept-invite, so the person doesn't have
+  // to retype it right after setting their password)
+  readonly email = input('');
   // Receives ?passwordReset=success from reset-password redirect
   readonly passwordReset = input('');
   protected readonly showPasswordResetSuccess = computed(() => this.passwordReset() === 'success');
+  // Receives ?accountCreated=success from accept-invite redirect
+  readonly accountCreated = input('');
+  protected readonly showAccountCreatedSuccess = computed(() => this.accountCreated() === 'success');
 
   constructor() {
     effect(() => {
       const slug = this.tenant();
       if (slug) this.form.patchValue({ tenantSlug: slug });
+    });
+    effect(() => {
+      const email = this.email();
+      if (email) this.form.patchValue({ email });
     });
   }
 
