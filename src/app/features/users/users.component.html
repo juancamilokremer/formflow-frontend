@@ -9,7 +9,11 @@
       [limit]="u.usersLimit"
     />
   }
-  <app-button (click)="openInviteModal()">
+  <app-button
+    [disabled]="atLimit()"
+    [title]="atLimit() ? ('users.invite.limit_reached' | translate) : null"
+    (click)="openInviteModal()"
+  >
     <app-icon name="plus" [size]="16" />
     {{ 'users.invite_btn' | translate }}
   </app-button>

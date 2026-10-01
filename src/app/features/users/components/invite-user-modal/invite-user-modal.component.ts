@@ -5,7 +5,7 @@ import { DialogComponent } from '../../../../shared/components/dialog/dialog.com
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
 import { SelectComponent, SelectOption } from '../../../../shared/components/select/select.component';
 import { UsersService } from '../../services/users.service';
-import { PendingInvitation } from '../../models/user-management.model';
+import { PendingInvitation, isAtUserLimit } from '../../models/user-management.model';
 import { UserRole } from '../../../../core/models/user.model';
 import { TenantUsage } from '../../../../core/models/tenant.model';
 
@@ -43,10 +43,7 @@ export class InviteUserModalComponent {
 
   protected readonly emailValid = computed(() => EMAIL_PATTERN.test(this.email().trim()));
 
-  protected readonly atLimit = computed(() => {
-    const u = this.usage();
-    return !!u && u.usersLimit !== null && u.usersCount >= u.usersLimit;
-  });
+  protected readonly atLimit = computed(() => isAtUserLimit(this.usage()));
 
   protected readonly canSubmit = computed(
     () => this.emailValid() && !this.atLimit() && !this.saving(),

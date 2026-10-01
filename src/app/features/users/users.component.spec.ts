@@ -69,6 +69,11 @@ describe('UsersComponent', () => {
     expect(component['invitations']()).toEqual([INVITATION]);
   });
 
+  it('is not at the user limit when there is room left', () => {
+    const { component } = buildComponent();
+    expect(component['atLimit']()).toBe(false);
+  });
+
   it('exposes the current user id from AuthService', () => {
     const { component } = buildComponent();
     expect(component['currentUserId']()).toBe('u1');

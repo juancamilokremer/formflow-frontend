@@ -10,7 +10,7 @@ import { PendingInvitationsListComponent } from './components/pending-invitation
 import { InviteUserModalComponent } from './components/invite-user-modal/invite-user-modal.component';
 import { UsersService } from './services/users.service';
 import { AuthService } from '../../core/auth/auth.service';
-import { TeamMember, PendingInvitation } from './models/user-management.model';
+import { TeamMember, PendingInvitation, isAtUserLimit } from './models/user-management.model';
 import { TenantUsage } from '../../core/models/tenant.model';
 
 @Component({
@@ -37,6 +37,7 @@ export class UsersComponent {
   protected readonly inviteModalOpen = signal(false);
 
   protected readonly currentUserId = computed(() => this.authService.currentUser()?.id ?? null);
+  protected readonly atLimit = computed(() => isAtUserLimit(this.usage()));
 
   constructor() {
     this.usersService.listUsers().subscribe({
