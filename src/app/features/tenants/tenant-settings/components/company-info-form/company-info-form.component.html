@@ -10,14 +10,14 @@
       />
 
       <div class="cif__field">
-        <label class="cif__label">{{ 'settings.empresa.slug_label' | translate }}</label>
+        <span class="cif__label">{{ 'settings.empresa.slug_label' | translate }}</span>
         <p class="cif__slug" [title]="'settings.empresa.slug_tooltip' | translate">
           {{ tenant()?.slug }}
         </p>
       </div>
 
       <div class="cif__field cif__plan-row">
-        <label class="cif__label">{{ 'settings.empresa.plan_label' | translate }}</label>
+        <span class="cif__label">{{ 'settings.empresa.plan_label' | translate }}</span>
         <div class="cif__plan-value">
           @if (tenant(); as t) {
             <app-plan-badge [plan]="t.plan" />
