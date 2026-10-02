@@ -10,4 +10,8 @@
   font-size: 12px;
   font-weight: 700;
   flex-shrink: 0;
+
+  &--photo {
+    object-fit: cover;
+  }
 }

@@ -14,6 +14,7 @@ export const RouteConstants = {
   BILLING: 'billing',
   SETTINGS: 'settings',
   USERS: 'users',
+  ACCOUNT: 'account',
   TERMS: 'terms',
   PRIVACY: 'privacy',
   PUBLIC_FORM_PREFIX: 'r',

@@ -1,0 +1,28 @@
+<app-card>
+  <form class="pf" [formGroup]="form" (ngSubmit)="save()">
+    <div class="pf__row">
+      <app-input
+        class="pf__field"
+        formControlName="firstName"
+        [label]="'account.profile.first_name_label' | translate"
+      />
+      <app-input
+        class="pf__field"
+        formControlName="lastName"
+        [label]="'account.profile.last_name_label' | translate"
+      />
+    </div>
+
+    <div class="pf__actions">
+      <app-button type="submit" [loading]="saving()" [disabled]="form.invalid">
+        {{ 'common.save_changes' | translate }}
+      </app-button>
+      @if (saved()) {
+        <span class="pf__success">{{ 'account.profile.save_success' | translate }}</span>
+      }
+      @if (errorKey()) {
+        <span class="pf__error">{{ errorKey()! | translate }}</span>
+      }
+    </div>
+  </form>
+</app-card>

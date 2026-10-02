@@ -5,21 +5,19 @@ import { TabItem, TabsComponent } from '../../../shared/components/tabs/tabs.com
 import { CompanyInfoFormComponent } from './components/company-info-form/company-info-form.component';
 import { PlanUsageCardComponent } from './components/plan-usage-card/plan-usage-card.component';
 import { BrandingFormComponent } from './components/branding-form/branding-form.component';
-import { SecurityTabComponent } from './components/security-tab/security-tab.component';
 
-type SettingsTab = 'empresa' | 'branding' | 'seguridad';
+type SettingsTab = 'empresa' | 'branding';
 
 const TABS: TabItem[] = [
   { id: 'empresa', label: 'settings.tabs.empresa' },
   { id: 'branding', label: 'settings.tabs.branding' },
-  { id: 'seguridad', label: 'settings.tabs.seguridad' },
 ];
 
 @Component({
   selector: 'app-tenant-settings',
   imports: [
     TranslatePipe, PageHeaderComponent, TabsComponent,
-    CompanyInfoFormComponent, PlanUsageCardComponent, BrandingFormComponent, SecurityTabComponent,
+    CompanyInfoFormComponent, PlanUsageCardComponent, BrandingFormComponent,
   ],
   templateUrl: './tenant-settings.component.html',
   styleUrl: './tenant-settings.component.scss',

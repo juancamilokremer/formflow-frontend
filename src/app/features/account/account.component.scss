@@ -1,0 +1,13 @@
+.account__content {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.account__section-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ff-text-primary);
+  margin: 0 0 16px;
+}

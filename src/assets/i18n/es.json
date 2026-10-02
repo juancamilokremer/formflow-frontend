@@ -134,6 +134,7 @@
     "header": {
       "open_menu": "Abrir menú",
       "user_menu": "Menú de usuario",
+      "my_account": "Mi cuenta",
       "logout": "Cerrar sesión"
     },
     "sidebar": {
@@ -750,11 +751,10 @@
   },
   "settings": {
     "title": "Configuración",
-    "subtitle": "Administra los datos de tu empresa, tu marca y tu seguridad",
+    "subtitle": "Administra los datos de tu empresa y tu marca",
     "tabs": {
       "empresa": "Empresa",
-      "branding": "Branding",
-      "seguridad": "Seguridad"
+      "branding": "Branding"
     },
     "empresa": {
       "name_label": "Nombre de la empresa",
@@ -802,13 +802,37 @@
       "save_button": "Guardar branding",
       "save_success": "Branding actualizado",
       "save_error": "No se pudieron guardar los colores"
+    }
+  },
+  "account": {
+    "title": "Mi cuenta",
+    "subtitle": "Administra tus datos personales y tu seguridad",
+    "profile": {
+      "first_name_label": "Nombre",
+      "last_name_label": "Apellido",
+      "save_success": "Cambios guardados",
+      "save_error": "No se pudo guardar el nombre"
     },
-    "seguridad": {
+    "avatar": {
+      "title": "Foto de perfil",
+      "dropzone_hint": "Arrastra una imagen o haz clic para elegir un archivo",
+      "upload_button": "Subir foto",
+      "delete_button": "Eliminar foto",
+      "confirm_delete": "¿Eliminar tu foto de perfil? Volverás a mostrar tus iniciales.",
+      "error_type": "Formato no permitido. Usa PNG o JPG",
+      "error_size": "El archivo supera el tamaño máximo de 2MB",
+      "error_upload": "No se pudo subir la foto",
+      "error_delete": "No se pudo eliminar la foto"
+    },
+    "security": {
       "title": "Cambiar contraseña",
-      "description": "Te enviaremos un enlace para restablecer la contraseña de {{email}}.",
-      "send_button": "Enviar correo para cambiar contraseña",
-      "sent": "Revisa tu correo para continuar",
-      "error": "No se pudo enviar el correo, intenta de nuevo"
+      "description": "Ingresa tu contraseña actual y la nueva que quieras usar.",
+      "current_password": "Contraseña actual",
+      "new_password": "Nueva contraseña",
+      "confirm_password": "Confirmar nueva contraseña",
+      "submit": "Actualizar contraseña",
+      "success": "Contraseña actualizada correctamente.",
+      "error": "No se pudo actualizar la contraseña, intenta de nuevo"
     }
   },
   "users": {

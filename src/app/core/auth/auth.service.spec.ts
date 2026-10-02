@@ -45,7 +45,10 @@ describe('AuthService', () => {
           refreshToken: 'ref',
           tokenType: 'Bearer',
           expiresInMs: 3600000,
-          user: { id: 'u1', email: 'a@b.com', fullName: 'Juan Kremer', role: 'TENANT_ADMIN', emailVerified: false },
+          user: {
+            id: 'u1', email: 'a@b.com', fullName: 'Juan Kremer', role: 'TENANT_ADMIN',
+            emailVerified: false, avatarUrl: 'http://x/avatar.png',
+          },
           tenant: { id: 't1', slug: 'acme', name: 'Acme Corp', plan: 'FREE' },
         },
       });
@@ -54,6 +57,7 @@ describe('AuthService', () => {
       expect(service.currentUser()?.email).toBe('a@b.com');
       expect(service.currentUser()?.firstName).toBe('Juan');
       expect(service.currentUser()?.tenantId).toBe('t1');
+      expect(service.currentUser()?.avatarUrl).toBe('http://x/avatar.png');
       expect(tokenService.getRefreshToken()).toBe('ref');
     });
   });

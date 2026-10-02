@@ -1,5 +1,5 @@
 import { Component, HostListener, inject, output, signal } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
+import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { filter, map, startWith } from 'rxjs';
@@ -9,10 +9,15 @@ import { ButtonComponent } from '../../../../shared/components/button/button.com
 import { EmailVerificationBannerComponent } from '../../../../shared/components/email-verification-banner/email-verification-banner.component';
 import { IconComponent } from '../../../../shared/icons/icon.component';
 import { TooltipDirective } from '../../../../shared/directives/tooltip.directive';
+import { UserAvatarComponent } from '../../../../shared/components/user-avatar/user-avatar.component';
+import { RouteConstants } from '../../../../core/constants/route.constants';
 
 @Component({
   selector: 'app-header',
-  imports: [TranslatePipe, IconComponent, EmailVerificationBannerComponent, ButtonComponent, TooltipDirective],
+  imports: [
+    TranslatePipe, IconComponent, EmailVerificationBannerComponent, ButtonComponent,
+    TooltipDirective, RouterLink, UserAvatarComponent,
+  ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })
@@ -20,6 +25,7 @@ export class HeaderComponent {
   private readonly router = inject(Router);
   private readonly activatedRoute = inject(ActivatedRoute);
   protected readonly authService = inject(AuthService);
+  protected readonly routeConstants = RouteConstants;
 
   readonly menuToggled = output<void>();
 
