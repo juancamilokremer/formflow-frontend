@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ApiResponse } from '../../../core/models/api-response.model';
-import { Me, UpdateMeRequest } from '../models/account.model';
+import { Me, UpdateMeRequest, ChangeMyPasswordRequest } from '../models/account.model';
 
 @Injectable({ providedIn: 'root' })
 export class AccountService {
@@ -30,5 +30,11 @@ export class AccountService {
     return this.http
       .delete<ApiResponse<Me>>(`${this.base}/avatar`)
       .pipe(map((r) => r.data!));
+  }
+
+  changePassword(request: ChangeMyPasswordRequest): Observable<void> {
+    return this.http
+      .put<ApiResponse<void>>(`${this.base}/password`, request)
+      .pipe(map(() => undefined));
   }
 }

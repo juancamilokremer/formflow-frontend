@@ -60,4 +60,16 @@ describe('AccountService', () => {
 
     expect(result).toEqual(mockMe);
   });
+
+  it('changePassword() PUTs currentPassword/newPassword to /me/password', () => {
+    const request = { currentPassword: 'Old1234!', newPassword: 'New12345!' };
+    let completed = false;
+    service.changePassword(request).subscribe(() => (completed = true));
+
+    const req = http.expectOne((r) => r.url.endsWith('/me/password') && r.method === 'PUT');
+    expect(req.request.body).toEqual(request);
+    req.flush({ success: true, data: null });
+
+    expect(completed).toBe(true);
+  });
 });

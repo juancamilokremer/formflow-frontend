@@ -1,17 +1,49 @@
 <app-card>
   <div class="st">
     <h3 class="st__title">{{ 'account.security.title' | translate }}</h3>
-    <p class="st__description">{{ 'account.security.description' | translate: { email } }}</p>
+    <p class="st__description">{{ 'account.security.description' | translate }}</p>
 
-    <app-button [loading]="sending()" (click)="sendResetEmail()">
-      {{ 'account.security.send_button' | translate }}
-    </app-button>
+    <form [formGroup]="form" (ngSubmit)="save()">
+      <app-input
+        class="st__field"
+        type="password"
+        [toggleable]="true"
+        formControlName="currentPassword"
+        [label]="'account.security.current_password' | translate"
+        autocomplete="current-password"
+      />
 
-    @if (sent()) {
-      <p class="st__success">{{ 'account.security.sent' | translate }}</p>
-    }
-    @if (errorKey()) {
-      <p class="st__error">{{ errorKey()! | translate }}</p>
-    }
+      <app-input
+        class="st__field"
+        type="password"
+        [toggleable]="true"
+        formControlName="newPassword"
+        [label]="'account.security.new_password' | translate"
+        autocomplete="new-password"
+        [errorMessage]="newPasswordError"
+      />
+
+      <app-input
+        class="st__field"
+        type="password"
+        [toggleable]="true"
+        formControlName="confirmPassword"
+        [label]="'account.security.confirm_password' | translate"
+        autocomplete="new-password"
+        [errorMessage]="confirmPasswordError"
+      />
+
+      <div class="st__actions">
+        <app-button type="submit" [loading]="saving()" [disabled]="form.invalid">
+          {{ 'account.security.submit' | translate }}
+        </app-button>
+        @if (saved()) {
+          <span class="st__success">{{ 'account.security.success' | translate }}</span>
+        }
+        @if (errorKey()) {
+          <span class="st__error">{{ errorKey() }}</span>
+        }
+      </div>
+    </form>
   </div>
 </app-card>

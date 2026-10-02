@@ -14,3 +14,10 @@ export interface UpdateMeRequest {
   firstName: string;
   lastName: string;
 }
+
+/** PUT /me/password — requires the current password since there's an active session
+ *  (unlike the forgot/reset-by-email flow, which proves inbox ownership instead). */
+export interface ChangeMyPasswordRequest {
+  currentPassword: string;
+  newPassword: string;
+}

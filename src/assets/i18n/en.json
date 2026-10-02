@@ -826,10 +826,13 @@
     },
     "security": {
       "title": "Change password",
-      "description": "We'll send a password reset link to {{email}}.",
-      "send_button": "Send password reset email",
-      "sent": "Check your email to continue",
-      "error": "Could not send the email, try again"
+      "description": "Enter your current password and the new one you want to use.",
+      "current_password": "Current password",
+      "new_password": "New password",
+      "confirm_password": "Confirm new password",
+      "submit": "Update password",
+      "success": "Password updated successfully.",
+      "error": "Could not update the password, try again"
     }
   },
   "users": {

@@ -826,10 +826,13 @@
     },
     "security": {
       "title": "Cambiar contraseña",
-      "description": "Te enviaremos un enlace para restablecer la contraseña de {{email}}.",
-      "send_button": "Enviar correo para cambiar contraseña",
-      "sent": "Revisa tu correo para continuar",
-      "error": "No se pudo enviar el correo, intenta de nuevo"
+      "description": "Ingresa tu contraseña actual y la nueva que quieras usar.",
+      "current_password": "Contraseña actual",
+      "new_password": "Nueva contraseña",
+      "confirm_password": "Confirmar nueva contraseña",
+      "submit": "Actualizar contraseña",
+      "success": "Contraseña actualizada correctamente.",
+      "error": "No se pudo actualizar la contraseña, intenta de nuevo"
     }
   },
   "users": {
