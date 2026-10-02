@@ -24,7 +24,19 @@
     "enterprise": "Enterprise"
   },
   "dashboard": {
-    "access_denied": "You don't have permission to access that section."
+    "access_denied": "You don't have permission to access that section.",
+    "greeting": "Hi, {{name}}",
+    "kpis": {
+      "active_forms": "Active forms",
+      "active_convocatorias": "Active processes",
+      "responses_this_month": "Responses this month",
+      "team_users": "Team members"
+    },
+    "recent_activity": {
+      "title": "Recent activity",
+      "empty_title": "No activity yet",
+      "empty_subtitle": "Create a process or survey to see it here."
+    }
   },
   "auth": {
     "login": {
