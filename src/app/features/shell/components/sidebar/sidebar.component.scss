@@ -110,20 +110,6 @@
     min-width: 0;
   }
 
-  &__avatar {
-    width: 34px;
-    height: 34px;
-    min-width: 34px;
-    border-radius: 50%;
-    background-color: var(--ff-primary-light);
-    color: var(--ff-primary);
-    font-size: 12px;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
   &__user-info {
     display: flex;
     flex-direction: column;

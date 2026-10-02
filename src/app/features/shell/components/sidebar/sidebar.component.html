@@ -31,7 +31,12 @@
   <div class="sidebar__footer">
     <div class="sidebar__footer-row">
       <div class="sidebar__user">
-        <div class="sidebar__avatar" aria-hidden="true">{{ userInitials }}</div>
+        <app-user-avatar
+          [firstName]="authService.currentUser()?.firstName ?? ''"
+          [lastName]="authService.currentUser()?.lastName ?? ''"
+          [avatarUrl]="authService.currentUser()?.avatarUrl ?? null"
+          [size]="34"
+        />
         <div class="sidebar__user-info">
           <span class="sidebar__user-name">{{ userFullName }}</span>
           <span class="sidebar__user-plan">

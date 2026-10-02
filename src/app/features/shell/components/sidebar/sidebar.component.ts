@@ -8,6 +8,7 @@ import { IconComponent } from '../../../../shared/icons/icon.component';
 import { IconName } from '../../../../shared/icons/icon.registry';
 import { TooltipDirective } from '../../../../shared/directives/tooltip.directive';
 import { LanguageSwitcherComponent } from '../../../../shared/components/language-switcher/language-switcher.component';
+import { UserAvatarComponent } from '../../../../shared/components/user-avatar/user-avatar.component';
 
 interface NavItem {
   labelKey: string;
@@ -27,7 +28,10 @@ const NAV_ITEMS: NavItem[] = [
 
 @Component({
   selector: 'app-sidebar',
-  imports: [RouterLink, RouterLinkActive, TranslatePipe, IconComponent, ButtonComponent, TooltipDirective, LanguageSwitcherComponent],
+  imports: [
+    RouterLink, RouterLinkActive, TranslatePipe, IconComponent, ButtonComponent,
+    TooltipDirective, LanguageSwitcherComponent, UserAvatarComponent,
+  ],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss',
 })
