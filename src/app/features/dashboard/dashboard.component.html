@@ -4,4 +4,50 @@
     <button type="button" class="dashboard__banner-dismiss" (click)="dismissAccessDenied()">&times;</button>
   </div>
 }
-<p>Dashboard</p>
+
+<div class="dashboard__header">
+  <h1 class="dashboard__greeting">
+    {{ 'dashboard.greeting' | translate : { name: authService.currentUser()?.firstName } }}
+  </h1>
+  @if (usage(); as u) {
+    <app-plan-badge [plan]="u.plan" />
+  }
+</div>
+
+<div class="dashboard__kpis">
+  <app-stat-card [label]="'dashboard.kpis.active_forms' | translate" [value]="activeFormsCount()" />
+  <app-stat-card [label]="'dashboard.kpis.active_convocatorias' | translate" [value]="activeConvocatoriasCount()" />
+  @if (usage(); as u) {
+    <app-stat-card [label]="'dashboard.kpis.responses_this_month' | translate" [value]="u.responsesThisMonth" />
+    <app-stat-card [label]="'dashboard.kpis.team_users' | translate" [value]="u.usersCount" />
+  }
+</div>
+
+<div class="dashboard__content">
+  <app-plan-usage-card />
+
+  <app-card class="dashboard__recent">
+    <h3 class="dashboard__section-title">{{ 'dashboard.recent_activity.title' | translate }}</h3>
+
+    @if (recentActivity().length === 0) {
+      <app-empty-state
+        icon="megaphone"
+        [title]="'dashboard.recent_activity.empty_title' | translate"
+        [subtitle]="'dashboard.recent_activity.empty_subtitle' | translate"
+        [compact]="true"
+      />
+    } @else {
+      <ul class="dashboard__recent-list">
+        @for (item of recentActivity(); track item.id) {
+          <li class="dashboard__recent-item">
+            <a [routerLink]="item.path" class="dashboard__recent-link">
+              <span class="dashboard__recent-name">{{ item.name }}</span>
+              <span class="dashboard__recent-type">{{ processTypeLabelKeys[item.type] | translate }}</span>
+              <span class="dashboard__recent-date">{{ item.createdAt | date : 'd MMM yyyy' }}</span>
+            </a>
+          </li>
+        }
+      </ul>
+    }
+  </app-card>
+</div>

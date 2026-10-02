@@ -24,7 +24,19 @@
     "enterprise": "Enterprise"
   },
   "dashboard": {
-    "access_denied": "No tienes permisos para acceder a esa sección."
+    "access_denied": "No tienes permisos para acceder a esa sección.",
+    "greeting": "Hola, {{name}}",
+    "kpis": {
+      "active_forms": "Formularios activos",
+      "active_convocatorias": "Convocatorias activas",
+      "responses_this_month": "Respuestas este mes",
+      "team_users": "Usuarios del equipo"
+    },
+    "recent_activity": {
+      "title": "Actividad reciente",
+      "empty_title": "Todavía no hay actividad",
+      "empty_subtitle": "Crea una convocatoria o encuesta para verla aquí."
+    }
   },
   "auth": {
     "login": {
