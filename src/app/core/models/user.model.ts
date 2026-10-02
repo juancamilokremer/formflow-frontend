@@ -8,6 +8,7 @@ export interface User {
   lastName: string;
   role: UserRole;
   emailVerified: boolean;
+  avatarUrl?: string | null;
 }
 
 export enum UserRole {

@@ -3,8 +3,8 @@ import { of, throwError } from 'rxjs';
 import { signal } from '@angular/core';
 import { provideTranslateService } from '@ngx-translate/core';
 import { SecurityTabComponent } from './security-tab.component';
-import { AuthService } from '../../../../../core/auth/auth.service';
-import { TokenService } from '../../../../../core/auth/token.service';
+import { AuthService } from '../../../../core/auth/auth.service';
+import { TokenService } from '../../../../core/auth/token.service';
 
 describe('SecurityTabComponent', () => {
   let component: SecurityTabComponent;
@@ -50,7 +50,7 @@ describe('SecurityTabComponent', () => {
 
     component['sendResetEmail']();
 
-    expect(component['errorKey']()).toBe('settings.seguridad.error');
+    expect(component['errorKey']()).toBe('account.security.error');
     expect(component['sending']()).toBe(false);
   });
 

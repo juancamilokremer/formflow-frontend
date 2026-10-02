@@ -1,0 +1,7 @@
+@if (avatarUrl()) {
+  <img class="ua ua--photo" [style.width.px]="size()" [style.height.px]="size()" [src]="avatarUrl()" alt="" />
+} @else {
+  <div class="ua" [style.width.px]="size()" [style.height.px]="size()" [style.font-size.px]="size() / 2.6">
+    {{ initials() }}
+  </div>
+}

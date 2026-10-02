@@ -134,6 +134,7 @@
     "header": {
       "open_menu": "Open menu",
       "user_menu": "User menu",
+      "my_account": "My account",
       "logout": "Log out"
     },
     "sidebar": {
@@ -750,11 +751,10 @@
   },
   "settings": {
     "title": "Settings",
-    "subtitle": "Manage your company data, branding, and security",
+    "subtitle": "Manage your company data and branding",
     "tabs": {
       "empresa": "Company",
-      "branding": "Branding",
-      "seguridad": "Security"
+      "branding": "Branding"
     },
     "empresa": {
       "name_label": "Company name",
@@ -802,8 +802,29 @@
       "save_button": "Save branding",
       "save_success": "Branding updated",
       "save_error": "Could not save the colors"
+    }
+  },
+  "account": {
+    "title": "My account",
+    "subtitle": "Manage your personal data and security",
+    "profile": {
+      "first_name_label": "First name",
+      "last_name_label": "Last name",
+      "save_success": "Changes saved",
+      "save_error": "Could not save your name"
     },
-    "seguridad": {
+    "avatar": {
+      "title": "Profile photo",
+      "dropzone_hint": "Drag an image or click to choose a file",
+      "upload_button": "Upload photo",
+      "delete_button": "Delete photo",
+      "confirm_delete": "Delete your profile photo? You'll show your initials again.",
+      "error_type": "Unsupported format. Use PNG or JPG",
+      "error_size": "The file exceeds the maximum size of 2MB",
+      "error_upload": "Could not upload the photo",
+      "error_delete": "Could not delete the photo"
+    },
+    "security": {
       "title": "Change password",
       "description": "We'll send a password reset link to {{email}}.",
       "send_button": "Send password reset email",

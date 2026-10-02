@@ -1,9 +1,9 @@
 import { Component, inject, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { ButtonComponent } from '../../../../../shared/components/button/button.component';
-import { CardComponent } from '../../../../../shared/components/card/card.component';
-import { AuthService } from '../../../../../core/auth/auth.service';
-import { TokenService } from '../../../../../core/auth/token.service';
+import { ButtonComponent } from '../../../../shared/components/button/button.component';
+import { CardComponent } from '../../../../shared/components/card/card.component';
+import { AuthService } from '../../../../core/auth/auth.service';
+import { TokenService } from '../../../../core/auth/token.service';
 
 /**
  * MVP "change password" — there is no authenticated change-password endpoint in the
@@ -41,7 +41,7 @@ export class SecurityTabComponent {
       },
       error: () => {
         this.sending.set(false);
-        this.errorKey.set('settings.seguridad.error');
+        this.errorKey.set('account.security.error');
       },
     });
   }

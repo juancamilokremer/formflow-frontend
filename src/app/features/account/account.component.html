@@ -1,0 +1,19 @@
+<app-page-header [title]="'account.title' | translate" [subtitle]="'account.subtitle' | translate" />
+
+<div class="account__content">
+  @if (loading()) {
+    <p>{{ 'common.loading' | translate }}</p>
+  } @else if (me(); as m) {
+    <app-card>
+      <h3 class="account__section-title">{{ 'account.avatar.title' | translate }}</h3>
+      <app-avatar-upload
+        [avatarUrl]="m.avatarUrl"
+        [firstName]="m.firstName"
+        [lastName]="m.lastName"
+        (avatarChanged)="onAvatarChanged($event)"
+      />
+    </app-card>
+    <app-profile-form [me]="me()" (profileChanged)="onProfileChanged($event)" />
+    <app-security-tab />
+  }
+</div>

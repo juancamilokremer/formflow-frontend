@@ -8,6 +8,8 @@ import { Component, computed, input } from '@angular/core';
 export class UserAvatarComponent {
   readonly firstName = input.required<string>();
   readonly lastName = input.required<string>();
+  readonly avatarUrl = input<string | null>(null);
+  readonly size = input(32);
 
   protected readonly initials = computed(() => {
     const first = this.firstName().trim().charAt(0);

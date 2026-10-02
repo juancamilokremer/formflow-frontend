@@ -1,0 +1,31 @@
+.pf {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 480px;
+
+  &__row {
+    display: flex;
+    gap: 16px;
+  }
+
+  &__field {
+    flex: 1;
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  &__success {
+    font-size: 13px;
+    color: var(--ff-success);
+  }
+
+  &__error {
+    font-size: 13px;
+    color: var(--ff-error-text);
+  }
+}

@@ -1,0 +1,54 @@
+<div class="au">
+  <div
+    class="au__dropzone"
+    [class.au__dropzone--over]="dragOver()"
+    (dragover)="onDragOver($event)"
+    (dragleave)="onDragLeave()"
+    (drop)="onDrop($event)"
+  >
+    <div class="au__preview">
+      @if (previewUrl(); as url) {
+        <img class="au__preview-img" [src]="url" alt="" />
+      } @else {
+        <app-user-avatar [firstName]="firstName()" [lastName]="lastName()" [size]="72" />
+      }
+    </div>
+
+    <label class="au__pick">
+      {{ 'account.avatar.dropzone_hint' | translate }}
+      <input
+        type="file"
+        class="au__file-input"
+        accept="image/png,image/jpeg"
+        (change)="onFileSelected($event)"
+      />
+    </label>
+  </div>
+
+  @if (errorKey()) {
+    <p class="au__error">{{ errorKey()! | translate }}</p>
+  }
+
+  <div class="au__actions">
+    @if (stagedPreview()) {
+      <app-button [loading]="uploading()" (click)="upload()">
+        {{ 'account.avatar.upload_button' | translate }}
+      </app-button>
+      <app-button variant="ghost" [disabled]="uploading()" (click)="cancelStagedFile()">
+        {{ 'common.cancel' | translate }}
+      </app-button>
+    } @else if (avatarUrl()) {
+      <app-button variant="outline-primary" [danger]="true" (click)="confirmingDelete.set(true)">
+        {{ 'account.avatar.delete_button' | translate }}
+      </app-button>
+    }
+  </div>
+</div>
+
+<app-confirm-dialog
+  [isOpen]="confirmingDelete()"
+  [message]="'account.avatar.confirm_delete' | translate"
+  [loading]="deleting()"
+  (confirmed)="confirmDelete()"
+  (cancelled)="confirmingDelete.set(false)"
+/>

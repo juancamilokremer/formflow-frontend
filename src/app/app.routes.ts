@@ -197,6 +197,12 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/users/users.component').then((m) => m.UsersComponent),
       },
+      {
+        path: RouteConstants.ACCOUNT,
+        data: { titleKey: 'shell.header.my_account' },
+        loadComponent: () =>
+          import('./features/account/account.component').then((m) => m.AccountComponent),
+      },
     ],
   },
   {

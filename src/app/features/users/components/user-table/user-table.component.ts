@@ -8,7 +8,7 @@ import { ButtonComponent } from '../../../../shared/components/button/button.com
 import { BadgeComponent } from '../../../../shared/components/badge/badge.component';
 import { SelectComponent, SelectOption } from '../../../../shared/components/select/select.component';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
-import { UserAvatarComponent } from '../user-avatar/user-avatar.component';
+import { UserAvatarComponent } from '../../../../shared/components/user-avatar/user-avatar.component';
 import { UsersService } from '../../services/users.service';
 import { TeamMember } from '../../models/user-management.model';
 import { UserRole } from '../../../../core/models/user.model';

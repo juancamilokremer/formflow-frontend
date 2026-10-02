@@ -26,7 +26,12 @@
         [attr.aria-label]="'shell.header.user_menu' | translate"
         [attr.aria-expanded]="userMenuOpen()"
       >
-        <span class="header__avatar-initials">{{ userInitials }}</span>
+        <app-user-avatar
+          [firstName]="authService.currentUser()?.firstName ?? ''"
+          [lastName]="authService.currentUser()?.lastName ?? ''"
+          [avatarUrl]="authService.currentUser()?.avatarUrl ?? null"
+          [size]="28"
+        />
         <app-icon name="chevron-down" [size]="14" />
       </button>
 
@@ -37,6 +42,14 @@
             <span class="header__dropdown-email">{{ authService.currentUser()?.email }}</span>
           </div>
           <hr class="header__dropdown-divider" />
+          <a
+            class="header__dropdown-item"
+            [routerLink]="['/', routeConstants.ACCOUNT]"
+            (click)="closeUserMenu()"
+          >
+            <app-icon name="settings" [size]="16" />
+            {{ 'shell.header.my_account' | translate }}
+          </a>
           <button class="header__dropdown-item header__dropdown-item--danger" type="button" (click)="logout()">
             <app-icon name="log-out" [size]="16" />
             {{ 'shell.header.logout' | translate }}
