@@ -25,7 +25,7 @@
   </ul>
   <p>
     {{ 'legal.privacy.s4_contact_prefix' | translate }}
-    <a href="mailto:privacidad@formflow.app">privacidad&#64;formflow.app</a>
+    <a [href]="'mailto:' + privacyEmail">{{ privacyEmail }}</a>
   </p>
 
   <h2>{{ 'legal.privacy.s5_title' | translate }}</h2>

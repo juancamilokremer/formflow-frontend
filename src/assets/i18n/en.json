@@ -926,11 +926,11 @@
       "s6_title": "6. Limitation of liability",
       "s6_body": "The Service is provided \"as is\", without guarantees of uninterrupted availability. To the extent permitted by law, Kode Labs will not be liable for indirect damages, lost profits, or data loss arising from use of the Service, beyond the amount actually paid by the user in the last 12 months.",
       "s7_title": "7. Termination",
-      "s7_body": "We may suspend or cancel your account if you breach these Terms, including repeated non-payment or fraudulent use of the Service. You may close your account at any time by contacting support@formflow.app.",
+      "s7_body": "We may suspend or cancel your account if you breach these Terms, including repeated non-payment or fraudulent use of the Service. You may close your account at any time by contacting {{supportEmail}}.",
       "s8_title": "8. Governing law and jurisdiction",
       "s8_body": "These Terms are governed by the laws of the Republic of Colombia. Any dispute will be resolved before the competent courts of Colombia.",
       "s9_title": "9. Contact",
-      "s9_body": "For questions about these Terms, write to us at support@formflow.app."
+      "s9_body": "For questions about these Terms, write to us at {{supportEmail}}."
     },
     "privacy": {
       "title": "Privacy Policy",
