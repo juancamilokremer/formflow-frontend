@@ -8,6 +8,7 @@ import { InputComponent } from '../../../../shared/components/input/input.compon
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
 import { CardComponent } from '../../../../shared/components/card/card.component';
 import { SuccessCardComponent } from '../../../../shared/components/success-card/success-card.component';
+import { CheckboxComponent } from '../../../../shared/components/checkbox/checkbox.component';
 import { passwordsMatchValidator } from '../../../../shared/validators/passwords-match.validator';
 
 function slugValidator(control: AbstractControl): ValidationErrors | null {
@@ -25,6 +26,7 @@ function slugValidator(control: AbstractControl): ValidationErrors | null {
     ButtonComponent,
     CardComponent,
     SuccessCardComponent,
+    CheckboxComponent,
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
@@ -50,6 +52,7 @@ export class RegisterComponent {
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8)]],
       confirmPassword: ['', [Validators.required]],
+      acceptedTerms: [false, Validators.requiredTrue],
     },
     { validators: passwordsMatchValidator('password', 'confirmPassword') }
   );
@@ -114,6 +117,10 @@ export class RegisterComponent {
 
   protected onSlugChange(): void {
     this.slugManuallyEdited = true;
+  }
+
+  protected onAcceptedTermsChange(checked: boolean): void {
+    this.form.controls.acceptedTerms.setValue(checked);
   }
 
   protected onSubmit(): void {

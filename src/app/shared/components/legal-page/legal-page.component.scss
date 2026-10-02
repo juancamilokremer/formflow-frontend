@@ -1,3 +1,63 @@
 :host {
   display: block;
+  background: var(--ff-bg);
+  min-height: 100vh;
+}
+
+.legal-page {
+  &__header {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--ff-border);
+    background: var(--ff-white);
+  }
+
+  &__logo {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--ff-primary);
+    text-decoration: none;
+    letter-spacing: -0.3px;
+  }
+
+  &__content {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  &__title {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--ff-text-primary);
+    margin: 0 0 8px;
+  }
+
+  &__updated {
+    font-size: 13px;
+    color: var(--ff-text-muted);
+    margin: 0 0 32px;
+  }
+
+  ::ng-deep &__content h2 {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--ff-text-primary);
+    margin: 32px 0 12px;
+  }
+
+  ::ng-deep &__content p,
+  ::ng-deep &__content li {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--ff-text-secondary);
+  }
+
+  ::ng-deep &__content ul {
+    margin: 0 0 16px;
+    padding-left: 20px;
+  }
+
+  ::ng-deep &__content a {
+    color: var(--ff-primary);
+  }
 }

@@ -61,6 +61,7 @@ describe('RegisterComponent', () => {
       email: 'juan@empresa.com',
       password: 'Password1!',
       confirmPassword: 'Password1!',
+      acceptedTerms: true,
     });
     expect((component as any).form.valid).toBe(true);
   });
@@ -80,6 +81,26 @@ describe('RegisterComponent', () => {
     (component as any).form.patchValue({ slug: 'custom-slug' });
     (component as any).onCompanyNameChange('Other Name');
     expect((component as any).form.value.slug).toBe('custom-slug');
+  });
+
+  it('form is invalid when terms are not accepted', () => {
+    (component as any).form.setValue({
+      companyName: 'Mi Empresa',
+      slug: 'mi-empresa',
+      firstName: 'Juan',
+      lastName: 'Pérez',
+      email: 'juan@empresa.com',
+      password: 'Password1!',
+      confirmPassword: 'Password1!',
+      acceptedTerms: false,
+    });
+    expect((component as any).form.valid).toBe(false);
+    expect((component as any).form.controls.acceptedTerms.hasError('required')).toBe(true);
+  });
+
+  it('onAcceptedTermsChange updates the form control', () => {
+    (component as any).onAcceptedTermsChange(true);
+    expect((component as any).form.controls.acceptedTerms.value).toBe(true);
   });
 
   it('rejects slug with uppercase', () => {
@@ -104,6 +125,7 @@ describe('RegisterComponent', () => {
       email: 'juan@empresa.com',
       password: 'Password1!',
       confirmPassword: 'Password1!',
+      acceptedTerms: true,
     });
     (component as any).onSubmit();
     await new Promise((r) => setTimeout(r, 0));
@@ -122,6 +144,7 @@ describe('RegisterComponent', () => {
       email: 'juan@empresa.com',
       password: 'Password1!',
       confirmPassword: 'Password1!',
+      acceptedTerms: true,
     });
     (component as any).onSubmit();
     await new Promise((r) => setTimeout(r, 0));
@@ -148,6 +171,7 @@ describe('RegisterComponent', () => {
       email: 'juan@empresa.com',
       password: 'Password1!',
       confirmPassword: 'Other1!',
+      acceptedTerms: true,
     });
     expect((component as any).form.valid).toBe(false);
     expect((component as any).form.hasError('passwordsMismatch')).toBe(true);
@@ -185,6 +209,7 @@ describe('RegisterComponent', () => {
       email: 'juan@empresa.com',
       password: 'Password1!',
       confirmPassword: 'Password1!',
+      acceptedTerms: true,
     });
     (component as any).onSubmit();
     expect(sentRequest).toBeDefined();

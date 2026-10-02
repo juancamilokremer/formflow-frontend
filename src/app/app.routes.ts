@@ -229,15 +229,15 @@ export const routes: Routes = [
   {
     path: RouteConstants.TERMS,
     loadComponent: () =>
-      import('./shared/components/legal-page/legal-page.component').then(
-        (m) => m.LegalPageComponent,
+      import('./features/legal/components/terms-page/terms-page.component').then(
+        (m) => m.TermsPageComponent,
       ),
   },
   {
     path: RouteConstants.PRIVACY,
     loadComponent: () =>
-      import('./shared/components/legal-page/legal-page.component').then(
-        (m) => m.LegalPageComponent,
+      import('./features/legal/components/privacy-page/privacy-page.component').then(
+        (m) => m.PrivacyPageComponent,
       ),
   },
   {

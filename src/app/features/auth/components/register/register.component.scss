@@ -52,6 +52,26 @@
   gap: 16px;
 }
 
+.accept-terms-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 4px 0 16px;
+
+  span {
+    font-size: 13px;
+    color: var(--ff-text-secondary);
+    line-height: 1.5;
+  }
+
+  a {
+    color: var(--ff-primary);
+    text-decoration: none;
+
+    &:hover { text-decoration: underline; }
+  }
+}
+
 .form-error {
   color: var(--ff-error-text);
   font-size: 13px;
