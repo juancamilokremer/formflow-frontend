@@ -39,6 +39,7 @@ export interface AuthUserSummary {
   fullName: string;
   role: string;
   emailVerified: boolean;
+  avatarUrl: string | null;
 }
 
 export interface AuthTenantSummary {

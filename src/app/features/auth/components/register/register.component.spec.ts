@@ -9,7 +9,7 @@ import { AuthService } from '../../../../core/auth/auth.service';
 import { RegisterResponse } from '../../../../core/models/auth.model';
 
 const registeredResponse: RegisterResponse = {
-  user: { id: 'u1', email: 'juan@empresa.com', fullName: 'Juan Pérez', role: 'TENANT_ADMIN', emailVerified: false },
+  user: { id: 'u1', email: 'juan@empresa.com', fullName: 'Juan Pérez', role: 'TENANT_ADMIN', emailVerified: false, avatarUrl: null },
   tenant: { id: 't1', slug: 'mi-empresa', name: 'Mi Empresa', plan: 'FREE' },
 };
 

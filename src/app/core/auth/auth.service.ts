@@ -155,6 +155,7 @@ export class AuthService {
       lastName: parts.slice(1).join(' '),
       role: user.role as UserRole,
       emailVerified: user.emailVerified,
+      avatarUrl: user.avatarUrl,
     };
   }
 }
