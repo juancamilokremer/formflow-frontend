@@ -73,6 +73,7 @@ describe('AuthService', () => {
           password: '12345678',
           firstName: 'Juan',
           lastName: 'Kremer',
+          acceptedTerms: true,
         })
         .subscribe((res) => (result = res));
 

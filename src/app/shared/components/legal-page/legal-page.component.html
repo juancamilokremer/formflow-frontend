@@ -1,1 +1,14 @@
-<p>Legal Page</p>
+<div class="legal-page">
+  <header class="legal-page__header">
+    <a class="legal-page__logo" [routerLink]="['/']">FormFlow</a>
+  </header>
+
+  <main class="legal-page__content">
+    <h1 class="legal-page__title">{{ title() }}</h1>
+    <p class="legal-page__updated">
+      {{ 'legal.last_updated' | translate }} {{ lastUpdated() }}
+    </p>
+
+    <ng-content />
+  </main>
+</div>

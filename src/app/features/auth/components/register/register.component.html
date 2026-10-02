@@ -86,6 +86,20 @@
           [errorMessage]="confirmPasswordError"
         />
 
+        <div class="accept-terms-row">
+          <app-checkbox
+            [checked]="form.controls.acceptedTerms.value"
+            [ariaLabel]="'auth.register.accept_terms_aria' | translate"
+            (changed)="onAcceptedTermsChange($event)"
+          />
+          <span>
+            {{ 'auth.register.accept_terms_prefix' | translate }}
+            <a [routerLink]="['/', routeConstants.TERMS]" target="_blank" rel="noopener">{{ 'auth.register.terms_link' | translate }}</a>
+            {{ 'auth.register.accept_terms_and' | translate }}
+            <a [routerLink]="['/', routeConstants.PRIVACY]" target="_blank" rel="noopener">{{ 'auth.register.privacy_link' | translate }}</a>
+          </span>
+        </div>
+
         @if (errorKey()) {
           <p class="form-error">{{ errorKey()! | translate }}</p>
         }
