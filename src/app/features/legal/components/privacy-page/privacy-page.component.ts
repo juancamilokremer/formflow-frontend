@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { LegalPageComponent } from '../../../../shared/components/legal-page/legal-page.component';
-import { AppConstants } from '../../../../core/constants/app.constants';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-privacy-page',
@@ -9,5 +9,5 @@ import { AppConstants } from '../../../../core/constants/app.constants';
   templateUrl: './privacy-page.component.html',
 })
 export class PrivacyPageComponent {
-  protected readonly privacyEmail = AppConstants.PRIVACY_EMAIL;
+  protected readonly privacyEmail = environment.privacyEmail;
 }

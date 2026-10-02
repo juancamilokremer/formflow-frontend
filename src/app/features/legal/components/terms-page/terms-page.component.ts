@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { LegalPageComponent } from '../../../../shared/components/legal-page/legal-page.component';
-import { AppConstants } from '../../../../core/constants/app.constants';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-terms-page',
@@ -9,5 +9,5 @@ import { AppConstants } from '../../../../core/constants/app.constants';
   templateUrl: './terms-page.component.html',
 })
 export class TermsPageComponent {
-  protected readonly supportEmail = AppConstants.SUPPORT_EMAIL;
+  protected readonly supportEmail = environment.supportEmail;
 }
