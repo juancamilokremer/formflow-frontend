@@ -50,4 +50,22 @@ describe('SidebarComponent', () => {
     (component as any).logout();
     expect(mockLogout).toHaveBeenCalled();
   });
+
+  it('hides the Admin nav item for a regular TENANT_ADMIN', () => {
+    const { component } = setup();
+    const routes = (component as any).navItems().map((i: { route: string }) => i.route);
+    expect(routes).not.toContain('admin');
+  });
+
+  it('shows the Admin nav item only for SUPER_ADMIN', () => {
+    const { component } = setup({ ...mockUser, role: UserRole.SUPER_ADMIN });
+    const routes = (component as any).navItems().map((i: { route: string }) => i.route);
+    expect(routes).toContain('admin');
+  });
+
+  it('hides every role-restricted item when there is no user', () => {
+    const { component } = setup(null);
+    const routes = (component as any).navItems().map((i: { route: string }) => i.route);
+    expect(routes).not.toContain('admin');
+  });
 });

@@ -50,4 +50,17 @@ describe('roleGuard', () => {
     (authService as { currentUser: ReturnType<typeof signal> }).currentUser = signal(adminUser);
     expect(runGuard([])).toBe(true);
   });
+
+  it('redirects a TENANT_ADMIN away from a SUPER_ADMIN-only route (e.g. /admin)', () => {
+    (authService as { currentUser: ReturnType<typeof signal> }).currentUser = signal(adminUser);
+    const result = runGuard([UserRole.SUPER_ADMIN]);
+    const router = TestBed.inject(Router);
+    expect(result).toEqual(router.createUrlTree(['/dashboard'], { queryParams: { accessDenied: 'true' } }));
+  });
+
+  it('allows a SUPER_ADMIN into a SUPER_ADMIN-only route', () => {
+    const superAdmin = { ...adminUser, role: UserRole.SUPER_ADMIN };
+    (authService as { currentUser: ReturnType<typeof signal> }).currentUser = signal(superAdmin);
+    expect(runGuard([UserRole.SUPER_ADMIN])).toBe(true);
+  });
 });

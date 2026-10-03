@@ -1,0 +1,57 @@
+<div class="admin-page">
+
+  <app-page-header
+    [title]="'admin.title' | translate"
+    [subtitle]="'admin.subtitle' | translate"
+  />
+
+  <div class="admin-page__stats">
+    @if (stats(); as s) {
+      <app-stat-card [label]="'admin.stats.total_tenants' | translate" [value]="s.totalTenants" />
+      <app-stat-card [label]="'admin.stats.responses_this_month' | translate" [value]="s.responsesThisMonth" />
+    }
+  </div>
+
+  @if (planBreakdown().length > 0) {
+    <div class="admin-page__plan-breakdown">
+      <span class="admin-page__plan-breakdown-label">{{ 'admin.stats.by_plan' | translate }}</span>
+      @for (item of planBreakdown(); track item.plan) {
+        <span class="admin-page__plan-breakdown-item">
+          <app-plan-badge [plan]="item.plan" />
+          {{ item.count }}
+        </span>
+      }
+    </div>
+  }
+
+  <div class="admin-page__filters">
+    <div class="admin-page__filter">
+      <span>{{ 'admin.filter.status_label' | translate }}</span>
+      <app-select
+        [options]="statusOptions"
+        [value]="statusFilter()"
+        (changed)="onStatusFilterChange($event)"
+      />
+    </div>
+    <div class="admin-page__filter">
+      <span>{{ 'admin.filter.plan_label' | translate }}</span>
+      <app-select
+        [options]="planOptions"
+        [value]="planFilter()"
+        (changed)="onPlanFilterChange($event)"
+      />
+    </div>
+  </div>
+
+  <app-admin-tenant-table
+    [rows]="tenants()"
+    [totalElements]="totalElements()"
+    [pageIndex]="pageIndex()"
+    [pageSize]="pageSize()"
+    [loading]="loading()"
+    [loadError]="loadError()"
+    (pageChange)="onPageChange($event)"
+    (tenantUpdated)="onTenantUpdated($event)"
+  />
+
+</div>

@@ -198,6 +198,13 @@ export const routes: Routes = [
           import('./features/users/users.component').then((m) => m.UsersComponent),
       },
       {
+        path: RouteConstants.ADMIN,
+        canActivate: [roleGuard],
+        data: { titleKey: 'shell.nav.admin', roles: [UserRole.SUPER_ADMIN] },
+        loadComponent: () =>
+          import('./features/admin/admin.component').then((m) => m.AdminComponent),
+      },
+      {
         path: RouteConstants.ACCOUNT,
         data: { titleKey: 'shell.header.my_account' },
         loadComponent: () =>
