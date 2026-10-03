@@ -5,6 +5,7 @@ import { Router, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../../core/auth/auth.service';
 import { RouteConstants } from '../../../../core/constants/route.constants';
+import { UserRole } from '../../../../core/models/user.model';
 import { InputComponent } from '../../../../shared/components/input/input.component';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
 import { CardComponent } from '../../../../shared/components/card/card.component';
@@ -89,7 +90,11 @@ export class LoginComponent {
     this.emailNotVerified.set(false);
 
     this.authService.login(this.form.getRawValue()).subscribe({
-      next: () => this.router.navigate([`/${RouteConstants.DASHBOARD}`]),
+      next: () => {
+        // SUPER_ADMIN's internal tenant has no dashboard worth seeing — its home is /admin.
+        const isSuperAdmin = this.authService.currentUser()?.role === UserRole.SUPER_ADMIN;
+        this.router.navigate([`/${isSuperAdmin ? RouteConstants.ADMIN : RouteConstants.DASHBOARD}`]);
+      },
       error: (err: HttpErrorResponse) => {
         if (err.status === 403) {
           this.emailNotVerified.set(true);

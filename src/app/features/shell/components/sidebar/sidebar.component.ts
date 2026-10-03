@@ -47,7 +47,13 @@ export class SidebarComponent {
 
   protected readonly navItems = computed(() => {
     const role = this.authService.currentUser()?.role;
-    return NAV_ITEMS.filter((item) => !item.roles || (role !== undefined && item.roles.includes(role)));
+    return NAV_ITEMS.filter((item) => {
+      if (item.roles) return role !== undefined && item.roles.includes(role);
+      // No explicit roles declared: visible to everyone except SUPER_ADMIN — that
+      // account's internal tenant has no forms/convocatorias worth managing, its
+      // whole experience is the platform console (see superAdminScopeGuard).
+      return role !== UserRole.SUPER_ADMIN;
+    });
   });
 
   protected get userInitials(): string {

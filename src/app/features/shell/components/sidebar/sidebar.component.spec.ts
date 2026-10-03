@@ -57,10 +57,18 @@ describe('SidebarComponent', () => {
     expect(routes).not.toContain('admin');
   });
 
-  it('shows the Admin nav item only for SUPER_ADMIN', () => {
+  it('shows a regular TENANT_ADMIN every tenant-scoped item', () => {
+    const { component } = setup();
+    const routes = (component as any).navItems().map((i: { route: string }) => i.route);
+    expect(routes).toEqual(
+      expect.arrayContaining(['dashboard', 'encuestas', 'convocatorias', 'categories', 'users', 'settings', 'billing']),
+    );
+  });
+
+  it('shows SUPER_ADMIN only the Admin item — the internal tenant has nothing worth managing', () => {
     const { component } = setup({ ...mockUser, role: UserRole.SUPER_ADMIN });
     const routes = (component as any).navItems().map((i: { route: string }) => i.route);
-    expect(routes).toContain('admin');
+    expect(routes).toEqual(['admin']);
   });
 
   it('hides every role-restricted item when there is no user', () => {

@@ -1,20 +1,22 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
 import { signal } from '@angular/core';
 import { of, throwError, Observable } from 'rxjs';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideTranslateService } from '@ngx-translate/core';
 import { LoginComponent } from './login.component';
 import { AuthService } from '../../../../core/auth/auth.service';
+import { UserRole } from '../../../../core/models/user.model';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
   let loginResult = of<void>(undefined);
+  const currentUserSignal = signal<{ role: UserRole } | null>(null);
 
   const mockAuthService = {
     login: () => loginResult,
-    currentUser: signal(null),
+    currentUser: currentUserSignal,
     isAuthenticated: signal(false),
     initialize: () => of(undefined),
     logout: () => {},
@@ -23,6 +25,7 @@ describe('LoginComponent', () => {
 
   beforeEach(async () => {
     loginResult = of(undefined);
+    currentUserSignal.set(null);
 
     await TestBed.configureTestingModule({
       imports: [LoginComponent],
@@ -108,5 +111,29 @@ describe('LoginComponent', () => {
     c.markAsTouched();
     c.setValue('not-an-email');
     expect((component as any).emailError).not.toBeNull();
+  });
+
+  it('redirects a regular user to /dashboard after login', async () => {
+    currentUserSignal.set({ role: UserRole.TENANT_ADMIN });
+    const router = TestBed.inject(Router);
+    const navigateSpy = vi.spyOn(router, 'navigate');
+    (component as any).form.setValue({ tenantSlug: 'mi-empresa', email: 'user@test.com', password: 'Password1!' });
+
+    (component as any).onSubmit();
+    await new Promise((r) => setTimeout(r, 0));
+
+    expect(navigateSpy).toHaveBeenCalledWith(['/dashboard']);
+  });
+
+  it('redirects a SUPER_ADMIN to /admin after login — its tenant has no dashboard worth seeing', async () => {
+    currentUserSignal.set({ role: UserRole.SUPER_ADMIN });
+    const router = TestBed.inject(Router);
+    const navigateSpy = vi.spyOn(router, 'navigate');
+    (component as any).form.setValue({ tenantSlug: 'kodelabs', email: 'admin@kodelabs.com', password: 'Password1!' });
+
+    (component as any).onSubmit();
+    await new Promise((r) => setTimeout(r, 0));
+
+    expect(navigateSpy).toHaveBeenCalledWith(['/admin']);
   });
 });

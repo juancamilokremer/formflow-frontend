@@ -3,6 +3,7 @@ import { RouteConstants } from './core/constants/route.constants';
 import { authGuard } from './core/auth/guards/auth.guard';
 import { publicGuard } from './core/auth/guards/public.guard';
 import { roleGuard } from './core/auth/guards/role.guard';
+import { superAdminScopeGuard } from './core/auth/guards/super-admin-scope.guard';
 import { UserRole } from './core/models/user.model';
 
 export const routes: Routes = [
@@ -58,6 +59,7 @@ export const routes: Routes = [
   {
     path: '',
     canActivate: [authGuard],
+    canActivateChild: [superAdminScopeGuard],
     loadComponent: () =>
       import('./features/shell/shell.component').then((m) => m.ShellComponent),
     children: [
