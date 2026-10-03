@@ -15,4 +15,5 @@ export enum UserRole {
   TENANT_ADMIN = 'TENANT_ADMIN',
   EDITOR = 'EDITOR',
   VIEWER = 'VIEWER',
+  SUPER_ADMIN = 'SUPER_ADMIN',
 }

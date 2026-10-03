@@ -146,7 +146,8 @@
       "users": "Users",
       "settings": "Settings",
       "billing": "Billing",
-      "form_builder": "Form builder"
+      "form_builder": "Form builder",
+      "admin": "Admin"
     },
     "header": {
       "open_menu": "Open menu",
@@ -902,6 +903,40 @@
       "hours_ago": "{{count}} hours ago",
       "day_ago": "1 day ago",
       "days_ago": "{{count}} days ago"
+    }
+  },
+  "admin": {
+    "title": "Admin panel",
+    "subtitle": "Tenant management and platform-wide stats",
+    "stats": {
+      "total_tenants": "Total tenants",
+      "responses_this_month": "Responses this month",
+      "by_plan": "By plan:"
+    },
+    "filter": {
+      "status_label": "Status",
+      "status_all": "All",
+      "plan_label": "Plan",
+      "plan_all": "All"
+    },
+    "table": {
+      "name": "Name",
+      "slug": "Slug",
+      "plan": "Plan",
+      "status": "Status",
+      "created": "Created",
+      "status_value": {
+        "active": "Active",
+        "suspended": "Suspended",
+        "cancelled": "Cancelled"
+      },
+      "suspend": "Suspend",
+      "suspend_yes": "Yes, suspend",
+      "confirm_suspend": "Suspend this tenant? Its users won't be able to access until it's reactivated.",
+      "activate": "Activate",
+      "error_load": "Could not load the tenant list",
+      "empty_title": "No tenants match the current filters",
+      "error_generic": "Could not complete the action. Try again."
     }
   },
   "legal": {

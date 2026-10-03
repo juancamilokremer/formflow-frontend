@@ -146,7 +146,8 @@
       "users": "Usuarios",
       "settings": "Configuración",
       "billing": "Facturación",
-      "form_builder": "Constructor de formulario"
+      "form_builder": "Constructor de formulario",
+      "admin": "Admin"
     },
     "header": {
       "open_menu": "Abrir menú",
@@ -902,6 +903,40 @@
       "hours_ago": "hace {{count}} horas",
       "day_ago": "hace 1 día",
       "days_ago": "hace {{count}} días"
+    }
+  },
+  "admin": {
+    "title": "Panel de administración",
+    "subtitle": "Gestión de tenants y estadísticas de la plataforma",
+    "stats": {
+      "total_tenants": "Tenants totales",
+      "responses_this_month": "Respuestas este mes",
+      "by_plan": "Por plan:"
+    },
+    "filter": {
+      "status_label": "Estado",
+      "status_all": "Todos",
+      "plan_label": "Plan",
+      "plan_all": "Todos"
+    },
+    "table": {
+      "name": "Nombre",
+      "slug": "Identificador",
+      "plan": "Plan",
+      "status": "Estado",
+      "created": "Creado",
+      "status_value": {
+        "active": "Activo",
+        "suspended": "Suspendido",
+        "cancelled": "Cancelado"
+      },
+      "suspend": "Suspender",
+      "suspend_yes": "Sí, suspender",
+      "confirm_suspend": "¿Suspender este tenant? Sus usuarios no podrán acceder hasta que se reactive.",
+      "activate": "Reactivar",
+      "error_load": "No se pudo cargar la lista de tenants",
+      "empty_title": "No hay tenants que coincidan con los filtros",
+      "error_generic": "No se pudo completar la acción. Intenta de nuevo."
     }
   },
   "legal": {

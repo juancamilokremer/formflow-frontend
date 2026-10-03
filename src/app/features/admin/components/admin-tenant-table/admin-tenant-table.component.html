@@ -1,0 +1,67 @@
+@if (actionError()) {
+  <p class="att__error">{{ actionError() }}</p>
+}
+
+<app-table
+  [columns]="tableColumns"
+  [rows]="rows()"
+  [loading]="loading()"
+  [loadError]="loadError()"
+  [loadingMessage]="'common.loading' | translate"
+  [errorTitle]="'admin.table.error_load' | translate"
+  emptyIcon="shield"
+  [emptyTitle]="'admin.table.empty_title' | translate"
+  [totalElements]="totalElements()"
+  [pageIndex]="pageIndex()"
+  [pageSize]="pageSize()"
+  (pageChange)="onPageChange($event)"
+>
+
+  <ng-template appTableCell [column]="'name'" let-row>
+    <span class="att__cell-name">{{ $any(row).name }}</span>
+  </ng-template>
+
+  <ng-template appTableCell [column]="'slug'" let-row>
+    <span class="att__cell-muted">{{ $any(row).slug }}</span>
+  </ng-template>
+
+  <ng-template appTableCell [column]="'plan'" let-row>
+    <app-select
+      [options]="planOptions"
+      [value]="$any(row).plan"
+      (changed)="onPlanChange($any(row), $event)"
+    />
+  </ng-template>
+
+  <ng-template appTableCell [column]="'status'" let-row>
+    <app-badge [variant]="statusVariant($any(row).status)">
+      {{ ('admin.table.status_value.' + $any(row).status.toLowerCase()) | translate }}
+    </app-badge>
+  </ng-template>
+
+  <ng-template appTableCell [column]="'createdAt'" let-row>
+    <span class="att__cell-muted">{{ $any(row).createdAt | date : 'd MMM yyyy' }}</span>
+  </ng-template>
+
+  <ng-template appTableCell [column]="'__actions'" let-row>
+    @if ($any(row).status === TenantStatus.ACTIVE) {
+      <app-button variant="ghost" [danger]="true" (click)="confirmSuspend($any(row).id)">
+        {{ 'admin.table.suspend' | translate }}
+      </app-button>
+    } @else if ($any(row).status === TenantStatus.SUSPENDED) {
+      <app-button variant="ghost" [loading]="activatingId() === $any(row).id" (click)="activate($any(row))">
+        {{ 'admin.table.activate' | translate }}
+      </app-button>
+    }
+  </ng-template>
+
+</app-table>
+
+<app-confirm-dialog
+  [isOpen]="!!pendingSuspendId()"
+  [message]="'admin.table.confirm_suspend' | translate"
+  confirmLabel="admin.table.suspend_yes"
+  [loading]="suspending()"
+  (confirmed)="suspend()"
+  (cancelled)="cancelSuspend()"
+/>
