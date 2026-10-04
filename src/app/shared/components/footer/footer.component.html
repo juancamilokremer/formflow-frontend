@@ -1,0 +1,16 @@
+<footer class="footer">
+  <div class="footer__brand">
+    <span class="footer__logo">F</span>
+    <span class="footer__name">FormFlow</span>
+  </div>
+
+  <div class="footer__links">
+    <a [routerLink]="['/', routeConstants.TERMS]">{{ 'landing.footer.terms' | translate }}</a>
+    <a [routerLink]="['/', routeConstants.PRIVACY]">{{ 'landing.footer.privacy' | translate }}</a>
+    <a [href]="'mailto:' + supportEmail">{{ 'landing.footer.contact' | translate }}</a>
+  </div>
+
+  <p class="footer__copyright">
+    {{ 'landing.footer.copyright' | translate: { year: year() } }}
+  </p>
+</footer>

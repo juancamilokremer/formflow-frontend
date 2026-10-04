@@ -9,6 +9,7 @@ import { UserRole } from './core/models/user.model';
 export const routes: Routes = [
   {
     path: RouteConstants.HOME,
+    canActivate: [publicGuard],
     loadComponent: () =>
       import('./features/landing/landing.component').then((m) => m.LandingComponent),
     pathMatch: 'full',
@@ -182,6 +183,14 @@ export const routes: Routes = [
         data: { titleKey: 'shell.nav.billing' },
         loadComponent: () =>
           import('./features/billing/billing.component').then((m) => m.BillingComponent),
+      },
+      {
+        path: RouteConstants.PLANS,
+        data: { titleKey: 'plans.upgrade.title' },
+        loadComponent: () =>
+          import('./features/plans/pages/plans-upgrade-page/plans-upgrade-page.component').then(
+            (m) => m.PlansUpgradePageComponent,
+          ),
       },
       {
         path: RouteConstants.SETTINGS,

@@ -1,0 +1,21 @@
+<nav class="navbar-public">
+  <a class="navbar-public__brand" routerLink="/">
+    <span class="navbar-public__logo">F</span>
+    <span class="navbar-public__name">FormFlow</span>
+  </a>
+
+  <div class="navbar-public__links">
+    <a routerLink="/" fragment="features">{{ 'landing.navbar.features' | translate }}</a>
+    <a routerLink="/" fragment="pricing">{{ 'landing.navbar.pricing' | translate }}</a>
+    <a routerLink="/" fragment="use-cases">{{ 'landing.navbar.use_cases' | translate }}</a>
+  </div>
+
+  <div class="navbar-public__actions">
+    <a class="navbar-public__login" [routerLink]="['/', routeConstants.LOGIN]">
+      {{ 'landing.navbar.login' | translate }}
+    </a>
+    <app-button [routerLink]="['/', routeConstants.REGISTER]">
+      {{ 'landing.navbar.cta' | translate }}
+    </app-button>
+  </div>
+</nav>

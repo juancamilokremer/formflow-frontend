@@ -21,7 +21,105 @@
     "starter": "Starter",
     "pro": "Pro",
     "business": "Business",
-    "enterprise": "Enterprise"
+    "enterprise": "Enterprise",
+    "upgrade": {
+      "title": "Plan y facturación",
+      "subtitle": "Actualmente en plan {{plan}}"
+    },
+    "catalog": {
+      "period": "/mes",
+      "custom_price": "Personalizado",
+      "shared": {
+        "white_label": "White-label",
+        "multi_user": "Multi-usuario"
+      },
+      "free": {
+        "teaser": {
+          "forms": "2 formularios",
+          "responses": "50 respuestas/mes",
+          "export": "Exportar CSV"
+        },
+        "features": {
+          "forms": "2 formularios",
+          "responses": "50 respuestas/mes",
+          "basic_stats": "Estadísticas básicas",
+          "export_csv": "Exportar CSV"
+        }
+      },
+      "starter": {
+        "teaser": {
+          "forms": "10 formularios",
+          "responses": "500 respuestas/mes",
+          "export": "Exportar Excel"
+        },
+        "features": {
+          "forms": "10 formularios",
+          "responses": "500 respuestas/mes",
+          "advanced_stats": "Estadísticas avanzadas",
+          "export_excel": "Exportar Excel"
+        }
+      },
+      "pro": {
+        "teaser": {
+          "unlimited": "Ilimitado",
+          "reports": "Reportes avanzados",
+          "white_label": "White-label parcial"
+        },
+        "features": {
+          "unlimited_forms": "Formularios ilimitados",
+          "unlimited_responses": "Respuestas ilimitadas",
+          "advanced_reports": "Reportes avanzados",
+          "export_excel": "Exportar Excel",
+          "white_label_partial": "White-label parcial"
+        }
+      },
+      "business": {
+        "teaser": {
+          "multi_user": "Multi-usuario",
+          "api": "API + Webhooks",
+          "domain": "Dominio propio"
+        },
+        "features": {
+          "everything_pro": "Todo en Pro",
+          "multi_user": "Multi-usuario",
+          "api_webhooks": "API + Webhooks",
+          "own_domain": "Dominio propio",
+          "white_label_full": "White-label completo",
+          "priority_support": "Soporte prioritario"
+        }
+      },
+      "enterprise": {
+        "teaser": {
+          "sso": "SSO",
+          "sla": "SLA dedicado",
+          "onboarding": "Onboarding personalizado"
+        },
+        "features": {
+          "everything_business": "Todo en Business",
+          "sso": "SSO",
+          "isolated_db": "Base de datos aislada",
+          "sla": "SLA dedicado",
+          "onboarding": "Onboarding personalizado"
+        }
+      }
+    },
+    "cta": {
+      "popular": "POPULAR",
+      "current_badge": "Tu plan",
+      "current": "Plan actual",
+      "upgrade": "Mejorar plan",
+      "contact_sales": "Contactar ventas"
+    },
+    "modal": {
+      "title": "Solicitar upgrade",
+      "target_plan": "Vas a solicitar el plan {{plan}}",
+      "sent_as": "Se enviará como {{name}} ({{email}})",
+      "message_label": "Mensaje (opcional)",
+      "message_placeholder": "Cuéntanos qué necesitas...",
+      "submit": "Enviar solicitud",
+      "sent_confirmation": "¡Listo! Nuestro equipo te contactará pronto.",
+      "error_generic": "No se pudo enviar la solicitud. Intenta de nuevo."
+    }
   },
   "dashboard": {
     "access_denied": "No tienes permisos para acceder a esa sección.",
@@ -993,6 +1091,107 @@
       "s6_body": "Aplicamos medidas técnicas y organizativas razonables (cifrado en tránsito y en reposo, control de acceso por roles, copias de seguridad) para proteger tus datos frente a accesos no autorizados, pérdida o alteración.",
       "s7_title": "7. Cambios a esta política",
       "s7_body": "Podemos actualizar esta Política de Privacidad periódicamente. Los cambios relevantes se notificarán por correo electrónico o mediante un aviso visible en la plataforma antes de que entren en vigor."
+    }
+  },
+  "landing": {
+    "navbar": {
+      "features": "Funcionalidades",
+      "pricing": "Precios",
+      "use_cases": "Casos de uso",
+      "login": "Iniciar sesión",
+      "cta": "Empezar gratis"
+    },
+    "hero": {
+      "badge": "Plataforma de formularios inteligentes",
+      "title_line1": "Crea formularios.",
+      "title_line2": "Analiza resultados.",
+      "subtitle": "Diseña encuestas dinámicas, recolecta respuestas y obtén estadísticas visuales automáticas. Sin necesidad de tabular manualmente.",
+      "cta_primary": "Crear cuenta gratis",
+      "cta_secondary": "Ver demo",
+      "disclaimer": "Sin tarjeta de crédito · 2 formularios gratis para siempre"
+    },
+    "features": {
+      "title": "Todo lo que necesitas para evaluar y decidir",
+      "subtitle": "Desde el formulario hasta el resultado, sin pasos manuales.",
+      "item_1": {
+        "title": "Constructor visual",
+        "description": "Arrastra y suelta campos. Lógica condicional, categorías y puntajes en segundos."
+      },
+      "item_2": {
+        "title": "Scoring automático",
+        "description": "Pesos por respuesta y por categoría, con puntaje final calculado al instante."
+      },
+      "item_3": {
+        "title": "Convocatorias",
+        "description": "Agrupa candidatos bajo un proceso, envía invitaciones y rankea automáticamente."
+      },
+      "item_4": {
+        "title": "Dashboard estadístico",
+        "description": "Estadísticas visuales en tiempo real, gráficas y puntajes por categoría."
+      },
+      "item_5": {
+        "title": "Tu marca, tus colores",
+        "description": "Personaliza con el logo y colores de tu empresa. Tus clientes ven tu marca, no la nuestra."
+      },
+      "item_6": {
+        "title": "Exportación a Excel",
+        "description": "Descarga tabulaciones completas listas para compartir con tu equipo."
+      }
+    },
+    "use_cases": {
+      "title": "Para cada tipo de proceso",
+      "subtitle": "Un mismo motor de formularios, tres formas de usarlo.",
+      "item_1": {
+        "label": "Evaluación de candidatos",
+        "title": "Evaluación de candidatos (RRHH)",
+        "description": "Rankea aspirantes automáticamente con pesos por competencia y categoría. Ideal para procesos de selección."
+      },
+      "item_2": {
+        "label": "Clima laboral",
+        "title": "Diagnóstico de clima laboral",
+        "description": "Escalas Likert ponderadas y radar por dimensión para medir el pulso de tu equipo."
+      },
+      "item_3": {
+        "label": "Registro de datos",
+        "title": "Formularios de registro",
+        "description": "Recolecta información estructurada sin scoring, con filtros y base de datos lista para analizar."
+      }
+    },
+    "how_it_works": {
+      "title": "Tan simple como 3 pasos",
+      "subtitle": "De la idea al resultado, sin fricción.",
+      "step_1": {
+        "title": "Crea",
+        "description": "Arma tu formulario con el constructor visual en minutos."
+      },
+      "step_2": {
+        "title": "Comparte",
+        "description": "Envía el link a tus candidatos o respondientes, con o sin convocatoria."
+      },
+      "step_3": {
+        "title": "Analiza",
+        "description": "Obtén estadísticas y rankings automáticos en cuanto llegan las respuestas."
+      }
+    },
+    "pricing": {
+      "title": "Precios simples y transparentes",
+      "subtitle": "Empieza gratis. Escala cuando lo necesites."
+    },
+    "testimonials": {
+      "title": "Lo que dicen nuestros clientes",
+      "subtitle": "Casos de uso reales de empresas en LATAM.",
+      "empty_title": "Próximamente"
+    },
+    "cta_banner": {
+      "title": "Empieza gratis hoy",
+      "subtitle": "Sin tarjeta de crédito. 2 formularios gratis para siempre.",
+      "cta": "Crear cuenta gratis"
+    },
+    "footer": {
+      "terms": "Términos",
+      "privacy": "Privacidad",
+      "contact": "Contacto",
+      "copyright": "© {{year}} FormFlow — Kode Labs"
     }
   }
 }

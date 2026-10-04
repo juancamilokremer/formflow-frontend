@@ -1,0 +1,27 @@
+<div class="pricing-section">
+  <div class="pricing-section__header">
+    @if (teaser()) {
+      <h2 class="pricing-section__title">{{ 'landing.pricing.title' | translate }}</h2>
+      <p class="pricing-section__subtitle">{{ 'landing.pricing.subtitle' | translate }}</p>
+    } @else {
+      <h2 class="pricing-section__title">{{ 'plans.upgrade.title' | translate }}</h2>
+      @if (currentPlan()) {
+        <p class="pricing-section__subtitle">
+          {{ 'plans.upgrade.subtitle' | translate: { plan: ('plans.' + currentPlan()!.toLowerCase() | translate) } }}
+        </p>
+      }
+    }
+  </div>
+
+  <div class="pricing-section__grid">
+    @for (entry of catalog; track entry.plan) {
+      <app-plan-card
+        [entry]="entry"
+        [teaser]="teaser()"
+        [current]="entry.plan === currentPlan()"
+        [cta]="ctaFor(entry)"
+        (ctaClicked)="onCtaClicked($event)"
+      />
+    }
+  </div>
+</div>

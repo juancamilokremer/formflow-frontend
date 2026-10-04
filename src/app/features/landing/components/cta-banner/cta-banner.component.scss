@@ -1,0 +1,30 @@
+:host { display: block; }
+
+.cta-banner {
+  text-align: center;
+  padding: 64px 32px;
+  background: linear-gradient(135deg, var(--ff-primary), var(--ff-primary-hover));
+  color: #fff;
+}
+
+.cta-banner__title {
+  font-size: 30px;
+  font-weight: 800;
+  margin: 16px 0 8px;
+}
+
+.cta-banner__subtitle {
+  font-size: 16px;
+  color: #C7D2FE;
+  margin: 0 0 28px;
+}
+
+@media (max-width: 639px) {
+  .cta-banner {
+    padding: 48px 20px;
+  }
+
+  .cta-banner__title {
+    font-size: 24px;
+  }
+}

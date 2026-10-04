@@ -33,4 +33,9 @@ describe('ButtonComponent', () => {
   it('title defaults to null', () => {
     expect(component.title()).toBeNull();
   });
+
+  it('routerLink and href default to null', () => {
+    expect(component.routerLink()).toBeNull();
+    expect(component.href()).toBeNull();
+  });
 });

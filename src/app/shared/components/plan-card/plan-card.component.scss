@@ -1,0 +1,100 @@
+:host { display: block; height: 100%; }
+
+.plan-card {
+  position: relative;
+  height: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  background: var(--ff-white);
+  border: 1px solid var(--ff-border);
+  border-radius: var(--ff-radius-xl);
+  padding: 24px;
+
+  &--current {
+    border: 2px solid var(--ff-primary);
+  }
+
+  &--popular {
+    background: var(--ff-primary);
+    border: none;
+  }
+}
+
+.plan-card__popular-badge {
+  position: absolute;
+  top: -10px;
+  right: 16px;
+}
+
+.plan-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.plan-card__name {
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--ff-text-primary);
+  margin: 0;
+}
+
+.plan-card--popular .plan-card__name {
+  color: var(--ff-white);
+}
+
+.plan-card__price {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--ff-text-primary);
+  margin: 0 0 16px;
+}
+
+.plan-card--popular .plan-card__price {
+  color: var(--ff-white);
+}
+
+.plan-card__period {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--ff-text-secondary);
+}
+
+.plan-card--popular .plan-card__period {
+  color: #C7D2FE;
+}
+
+.plan-card__features {
+  flex: 1;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 20px;
+  font-size: 13px;
+  color: var(--ff-text-secondary);
+  line-height: 2.2;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+}
+
+.plan-card--popular .plan-card__features {
+  color: #C7D2FE;
+}
+
+.plan-card__feature--excluded {
+  color: var(--ff-text-muted);
+}
+
+.plan-card--popular .plan-card__feature--excluded {
+  color: #818CF8;
+}
+
+.plan-card__cta {
+  margin-top: auto;
+}

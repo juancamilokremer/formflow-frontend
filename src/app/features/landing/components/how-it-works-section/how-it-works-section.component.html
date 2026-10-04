@@ -1,0 +1,15 @@
+<section class="how-it-works">
+  <h2 class="how-it-works__title">{{ 'landing.how_it_works.title' | translate }}</h2>
+  <p class="how-it-works__subtitle">{{ 'landing.how_it_works.subtitle' | translate }}</p>
+
+  <div class="how-it-works__steps">
+    @for (step of steps; track step.titleKey; let i = $index) {
+      <div class="how-it-works__step">
+        <div class="how-it-works__number">{{ i + 1 }}</div>
+        <app-icon [name]="step.icon" [size]="32" />
+        <h3>{{ step.titleKey | translate }}</h3>
+        <p>{{ step.descriptionKey | translate }}</p>
+      </div>
+    }
+  </div>
+</section>

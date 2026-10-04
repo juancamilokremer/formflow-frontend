@@ -3,4 +3,5 @@ export const environment = {
   apiUrl: 'https://api.formflow.app/api/v1',
   supportEmail: 'soporte@formflow.app',
   privacyEmail: 'privacidad@formflow.app',
+  salesEmail: 'ventas@formflow.app',
 };

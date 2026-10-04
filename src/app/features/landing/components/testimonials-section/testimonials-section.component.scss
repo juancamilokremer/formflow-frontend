@@ -1,0 +1,24 @@
+:host { display: block; }
+
+.testimonials {
+  padding: 64px;
+  text-align: center;
+}
+
+.testimonials__title {
+  font-size: 34px;
+  font-weight: 800;
+  color: var(--ff-text-primary);
+  margin: 0 0 8px;
+}
+
+.testimonials__subtitle {
+  color: var(--ff-text-secondary);
+  margin: 0 0 32px;
+}
+
+@media (max-width: 639px) {
+  .testimonials {
+    padding: 48px 20px;
+  }
+}

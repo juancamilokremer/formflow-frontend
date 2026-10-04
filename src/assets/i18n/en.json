@@ -21,7 +21,105 @@
     "starter": "Starter",
     "pro": "Pro",
     "business": "Business",
-    "enterprise": "Enterprise"
+    "enterprise": "Enterprise",
+    "upgrade": {
+      "title": "Plan & billing",
+      "subtitle": "Currently on the {{plan}} plan"
+    },
+    "catalog": {
+      "period": "/mo",
+      "custom_price": "Custom",
+      "shared": {
+        "white_label": "White-label",
+        "multi_user": "Multi-user"
+      },
+      "free": {
+        "teaser": {
+          "forms": "2 forms",
+          "responses": "50 responses/mo",
+          "export": "Export CSV"
+        },
+        "features": {
+          "forms": "2 forms",
+          "responses": "50 responses/mo",
+          "basic_stats": "Basic statistics",
+          "export_csv": "Export CSV"
+        }
+      },
+      "starter": {
+        "teaser": {
+          "forms": "10 forms",
+          "responses": "500 responses/mo",
+          "export": "Export Excel"
+        },
+        "features": {
+          "forms": "10 forms",
+          "responses": "500 responses/mo",
+          "advanced_stats": "Advanced statistics",
+          "export_excel": "Export Excel"
+        }
+      },
+      "pro": {
+        "teaser": {
+          "unlimited": "Unlimited",
+          "reports": "Advanced reports",
+          "white_label": "Partial white-label"
+        },
+        "features": {
+          "unlimited_forms": "Unlimited forms",
+          "unlimited_responses": "Unlimited responses",
+          "advanced_reports": "Advanced reports",
+          "export_excel": "Export Excel",
+          "white_label_partial": "Partial white-label"
+        }
+      },
+      "business": {
+        "teaser": {
+          "multi_user": "Multi-user",
+          "api": "API + Webhooks",
+          "domain": "Custom domain"
+        },
+        "features": {
+          "everything_pro": "Everything in Pro",
+          "multi_user": "Multi-user",
+          "api_webhooks": "API + Webhooks",
+          "own_domain": "Custom domain",
+          "white_label_full": "Full white-label",
+          "priority_support": "Priority support"
+        }
+      },
+      "enterprise": {
+        "teaser": {
+          "sso": "SSO",
+          "sla": "Dedicated SLA",
+          "onboarding": "Custom onboarding"
+        },
+        "features": {
+          "everything_business": "Everything in Business",
+          "sso": "SSO",
+          "isolated_db": "Isolated database",
+          "sla": "Dedicated SLA",
+          "onboarding": "Custom onboarding"
+        }
+      }
+    },
+    "cta": {
+      "popular": "POPULAR",
+      "current_badge": "Your plan",
+      "current": "Current plan",
+      "upgrade": "Upgrade plan",
+      "contact_sales": "Contact sales"
+    },
+    "modal": {
+      "title": "Request upgrade",
+      "target_plan": "You're about to request the {{plan}} plan",
+      "sent_as": "Will be sent as {{name}} ({{email}})",
+      "message_label": "Message (optional)",
+      "message_placeholder": "Tell us what you need...",
+      "submit": "Send request",
+      "sent_confirmation": "Done! Our team will reach out soon.",
+      "error_generic": "Could not send the request. Please try again."
+    }
   },
   "dashboard": {
     "access_denied": "You don't have permission to access that section.",
@@ -993,6 +1091,107 @@
       "s6_body": "We apply reasonable technical and organizational measures (encryption in transit and at rest, role-based access control, backups) to protect your data against unauthorized access, loss or alteration.",
       "s7_title": "7. Changes to this policy",
       "s7_body": "We may update this Privacy Policy periodically. Material changes will be notified by email or through a visible notice on the platform before they take effect."
+    }
+  },
+  "landing": {
+    "navbar": {
+      "features": "Features",
+      "pricing": "Pricing",
+      "use_cases": "Use cases",
+      "login": "Log in",
+      "cta": "Start for free"
+    },
+    "hero": {
+      "badge": "Smart forms platform",
+      "title_line1": "Build forms.",
+      "title_line2": "Analyze results.",
+      "subtitle": "Design dynamic surveys, collect responses and get automatic visual statistics. No manual tabulation needed.",
+      "cta_primary": "Create free account",
+      "cta_secondary": "Watch demo",
+      "disclaimer": "No credit card required · 2 free forms forever"
+    },
+    "features": {
+      "title": "Everything you need to evaluate and decide",
+      "subtitle": "From the form to the result, with no manual steps.",
+      "item_1": {
+        "title": "Visual builder",
+        "description": "Drag and drop fields. Conditional logic, categories and scoring in seconds."
+      },
+      "item_2": {
+        "title": "Automatic scoring",
+        "description": "Weights per answer and per category, with an instantly calculated final score."
+      },
+      "item_3": {
+        "title": "Recruitment drives",
+        "description": "Group candidates under one process, send invitations and rank them automatically."
+      },
+      "item_4": {
+        "title": "Statistics dashboard",
+        "description": "Real-time visual statistics, charts and scores per category."
+      },
+      "item_5": {
+        "title": "Your brand, your colors",
+        "description": "Customize with your company's logo and colors. Your customers see your brand, not ours."
+      },
+      "item_6": {
+        "title": "Excel export",
+        "description": "Download complete tabulations ready to share with your team."
+      }
+    },
+    "use_cases": {
+      "title": "For every kind of process",
+      "subtitle": "One form engine, three ways to use it.",
+      "item_1": {
+        "label": "Candidate evaluation",
+        "title": "Candidate evaluation (HR)",
+        "description": "Automatically rank candidates with weights per competency and category. Ideal for selection processes."
+      },
+      "item_2": {
+        "label": "Workplace climate",
+        "title": "Workplace climate diagnosis",
+        "description": "Weighted Likert scales and a per-dimension radar to measure your team's pulse."
+      },
+      "item_3": {
+        "label": "Data collection",
+        "title": "Registration forms",
+        "description": "Collect structured information with no scoring, with filters and a ready-to-analyze database."
+      }
+    },
+    "how_it_works": {
+      "title": "As simple as 3 steps",
+      "subtitle": "From idea to result, with no friction.",
+      "step_1": {
+        "title": "Create",
+        "description": "Build your form with the visual builder in minutes."
+      },
+      "step_2": {
+        "title": "Share",
+        "description": "Send the link to your candidates or respondents, with or without a recruitment drive."
+      },
+      "step_3": {
+        "title": "Analyze",
+        "description": "Get automatic statistics and rankings as soon as responses come in."
+      }
+    },
+    "pricing": {
+      "title": "Simple, transparent pricing",
+      "subtitle": "Start for free. Scale when you need to."
+    },
+    "testimonials": {
+      "title": "What our customers say",
+      "subtitle": "Real use cases from companies across LATAM.",
+      "empty_title": "Coming soon"
+    },
+    "cta_banner": {
+      "title": "Start for free today",
+      "subtitle": "No credit card required. 2 free forms forever.",
+      "cta": "Create free account"
+    },
+    "footer": {
+      "terms": "Terms",
+      "privacy": "Privacy",
+      "contact": "Contact",
+      "copyright": "© {{year}} FormFlow — Kode Labs"
     }
   }
 }

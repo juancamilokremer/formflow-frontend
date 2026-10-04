@@ -26,7 +26,7 @@ const NAV_ITEMS: NavItem[] = [
   { labelKey: 'shell.nav.categories', icon: 'tag', route: RouteConstants.CATEGORIES },
   { labelKey: 'shell.nav.users', icon: 'users', route: RouteConstants.USERS },
   { labelKey: 'shell.nav.settings', icon: 'settings', route: RouteConstants.SETTINGS },
-  { labelKey: 'shell.nav.billing', icon: 'credit-card', route: RouteConstants.BILLING },
+  { labelKey: 'shell.nav.billing', icon: 'credit-card', route: RouteConstants.PLANS },
   { labelKey: 'shell.nav.admin', icon: 'shield', route: RouteConstants.ADMIN, roles: [UserRole.SUPER_ADMIN] },
 ];
 

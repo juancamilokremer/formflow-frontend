@@ -1,0 +1,27 @@
+<section id="use-cases" class="use-cases">
+  <h2 class="use-cases__title">{{ 'landing.use_cases.title' | translate }}</h2>
+  <p class="use-cases__subtitle">{{ 'landing.use_cases.subtitle' | translate }}</p>
+
+  <div class="use-cases__tabs">
+    @for (useCase of useCases; track useCase.id) {
+      <button
+        type="button"
+        class="use-cases__tab"
+        [class.use-cases__tab--active]="useCase.id === activeId()"
+        (click)="selectTab(useCase.id)"
+      >
+        {{ useCase.labelKey | translate }}
+      </button>
+    }
+  </div>
+
+  <div class="use-cases__panel">
+    <div class="use-cases__visual">
+      <app-icon [name]="active().icon" [size]="48" />
+    </div>
+    <div class="use-cases__copy">
+      <h3>{{ active().titleKey | translate }}</h3>
+      <p>{{ active().descriptionKey | translate }}</p>
+    </div>
+  </div>
+</section>
