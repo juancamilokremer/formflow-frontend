@@ -1,0 +1,25 @@
+<section class="hero">
+  <span class="hero__badge">
+    <app-icon name="rocket" [size]="14" />
+    {{ 'landing.hero.badge' | translate }}
+  </span>
+
+  <h1 class="hero__title">
+    {{ 'landing.hero.title_line1' | translate }}<br />
+    <span class="hero__title-accent">{{ 'landing.hero.title_line2' | translate }}</span>
+  </h1>
+
+  <p class="hero__subtitle">{{ 'landing.hero.subtitle' | translate }}</p>
+
+  <div class="hero__ctas">
+    <app-button [routerLink]="registerPath">
+      {{ 'landing.hero.cta_primary' | translate }}
+    </app-button>
+    <app-button variant="secondary" [routerLink]="registerPath">
+      <app-icon name="play" [size]="16" />
+      {{ 'landing.hero.cta_secondary' | translate }}
+    </app-button>
+  </div>
+
+  <p class="hero__disclaimer">{{ 'landing.hero.disclaimer' | translate }}</p>
+</section>

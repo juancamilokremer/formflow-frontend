@@ -1,3 +1,13 @@
 :host {
   display: block;
 }
+
+.landing__pricing {
+  padding: 64px;
+}
+
+@media (max-width: 639px) {
+  .landing__pricing {
+    padding: 48px 20px;
+  }
+}

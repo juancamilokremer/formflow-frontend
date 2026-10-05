@@ -61,7 +61,7 @@ describe('SidebarComponent', () => {
     const { component } = setup();
     const routes = (component as any).navItems().map((i: { route: string }) => i.route);
     expect(routes).toEqual(
-      expect.arrayContaining(['dashboard', 'encuestas', 'convocatorias', 'categories', 'users', 'settings', 'billing']),
+      expect.arrayContaining(['dashboard', 'encuestas', 'convocatorias', 'categories', 'users', 'settings', 'plans']),
     );
   });
 

@@ -1,0 +1,37 @@
+.pricing-section__header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.pricing-section__title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--ff-text-primary);
+  margin: 0 0 4px;
+}
+
+.pricing-section__subtitle {
+  font-size: 14px;
+  color: var(--ff-text-secondary);
+  margin: 0;
+}
+
+.pricing-section__grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+@media (max-width: 1023px) {
+  .pricing-section__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 639px) {
+  .pricing-section__grid {
+    grid-template-columns: 1fr;
+  }
+}

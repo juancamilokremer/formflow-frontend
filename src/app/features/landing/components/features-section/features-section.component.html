@@ -1,0 +1,16 @@
+<section id="features" class="features">
+  <h2 class="features__title">{{ 'landing.features.title' | translate }}</h2>
+  <p class="features__subtitle">{{ 'landing.features.subtitle' | translate }}</p>
+
+  <div class="features__grid">
+    @for (feature of features; track feature.titleKey) {
+      <div class="features__card">
+        <div class="features__icon">
+          <app-icon [name]="feature.icon" [size]="24" />
+        </div>
+        <h3 class="features__card-title">{{ feature.titleKey | translate }}</h3>
+        <p class="features__card-description">{{ feature.descriptionKey | translate }}</p>
+      </div>
+    }
+  </div>
+</section>

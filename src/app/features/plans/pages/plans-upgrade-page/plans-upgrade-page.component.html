@@ -1,0 +1,10 @@
+<app-pricing-section
+  [currentPlan]="currentPlan()"
+  (upgradeRequested)="openUpgradeModal($event)"
+/>
+
+<app-upgrade-request-modal
+  [isOpen]="modalOpen()"
+  [targetPlan]="selectedPlan()"
+  (cancelled)="closeModal()"
+/>

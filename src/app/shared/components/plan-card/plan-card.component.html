@@ -1,0 +1,68 @@
+<div
+  class="plan-card"
+  [class.plan-card--popular]="entry().popular"
+  [class.plan-card--current]="current()"
+>
+  @if (entry().popular) {
+    <app-badge class="plan-card__popular-badge" variant="amber">
+      {{ 'plans.cta.popular' | translate }}
+    </app-badge>
+  }
+
+  <div class="plan-card__header">
+    <p class="plan-card__name">{{ ('plans.' + entry().plan.toLowerCase()) | translate }}</p>
+    @if (current()) {
+      <app-badge variant="primary">{{ 'plans.cta.current_badge' | translate }}</app-badge>
+    }
+  </div>
+
+  <p class="plan-card__price">
+    @if (entry().priceAmount) {
+      {{ entry().priceAmount }}<span class="plan-card__period">{{ 'plans.catalog.period' | translate }}</span>
+    } @else {
+      {{ 'plans.catalog.custom_price' | translate }}
+    }
+  </p>
+
+  @if (teaser()) {
+    <ul class="plan-card__features">
+      @for (key of entry().teaserFeatureKeys; track key) {
+        <li>
+          <app-icon name="check" [size]="14" />
+          {{ key | translate }}
+        </li>
+      }
+    </ul>
+  } @else {
+    <ul class="plan-card__features">
+      @for (feature of entry().features; track feature.labelKey) {
+        <li [class.plan-card__feature--excluded]="!feature.included">
+          <app-icon [name]="feature.included ? 'check' : 'x'" [size]="14" />
+          {{ feature.labelKey | translate }}
+        </li>
+      }
+    </ul>
+
+    <div class="plan-card__cta">
+      @let c = cta();
+      @let primaryVariant = entry().popular ? 'light' : 'primary';
+      @if (c.kind === 'navigate') {
+        <app-button [routerLink]="c.routerLink" [variant]="primaryVariant" [fullWidth]="true">
+          {{ c.labelKey | translate }}
+        </app-button>
+      } @else if (c.kind === 'external') {
+        <app-button [href]="c.href" variant="secondary" [fullWidth]="true">
+          {{ c.labelKey | translate }}
+        </app-button>
+      } @else if (c.kind === 'action') {
+        <app-button [variant]="primaryVariant" [fullWidth]="true" (click)="onCtaClick()">
+          {{ c.labelKey | translate }}
+        </app-button>
+      } @else {
+        <app-button variant="secondary" [disabled]="true" [fullWidth]="true">
+          {{ c.labelKey | translate }}
+        </app-button>
+      }
+    </div>
+  }
+</div>

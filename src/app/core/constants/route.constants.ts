@@ -12,6 +12,7 @@ export const RouteConstants = {
   CONVOCATORIAS: 'convocatorias',
   ENCUESTAS: 'encuestas',
   BILLING: 'billing',
+  PLANS: 'plans',
   SETTINGS: 'settings',
   USERS: 'users',
   ADMIN: 'admin',

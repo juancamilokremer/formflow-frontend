@@ -1,0 +1,46 @@
+<app-dialog
+  [title]="'plans.modal.title' | translate"
+  [isOpen]="isOpen()"
+  (closed)="cancel()"
+>
+  @if (sentState()) {
+    <p class="urm__success">{{ 'plans.modal.sent_confirmation' | translate }}</p>
+  } @else {
+    @if (targetPlan()) {
+      <p class="urm__plan">
+        {{ 'plans.modal.target_plan' | translate: { plan: ('plans.' + targetPlan()!.toLowerCase() | translate) } }}
+      </p>
+    }
+
+    <p class="urm__requester">
+      {{ 'plans.modal.sent_as' | translate: { name: requesterName(), email: requesterEmail() } }}
+    </p>
+
+    <div class="urm__field">
+      <label class="urm__label" for="upgrade-message">{{ 'plans.modal.message_label' | translate }}</label>
+      <textarea
+        id="upgrade-message"
+        class="urm__textarea"
+        rows="3"
+        [placeholder]="'plans.modal.message_placeholder' | translate"
+        [value]="message()"
+        (input)="message.set($any($event.target).value)"
+      ></textarea>
+    </div>
+
+    @if (errorMessage()) {
+      <p class="urm__hint urm__hint--error">{{ errorMessage() }}</p>
+    }
+  }
+
+  @if (!sentState()) {
+    <div dialog-footer>
+      <app-button variant="secondary" type="button" [disabled]="sending()" (click)="cancel()">
+        {{ 'common.cancel' | translate }}
+      </app-button>
+      <app-button type="button" [loading]="sending()" [disabled]="!canSubmit()" (click)="submit()">
+        {{ 'plans.modal.submit' | translate }}
+      </app-button>
+    </div>
+  }
+</app-dialog>
