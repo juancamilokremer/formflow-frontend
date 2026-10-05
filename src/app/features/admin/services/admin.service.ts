@@ -4,6 +4,7 @@ import { Observable, map } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ApiResponse } from '../../../core/models/api-response.model';
 import { Plan, TenantStatus } from '../../../core/models/tenant.model';
+import { PlanLimits, UpdatePlanLimitsRequest } from '../../../core/models/plan-limits.model';
 import { AdminTenantPage, AdminTenantSummary, GlobalStats } from '../models/admin.model';
 
 function tenantFilterParams(status?: TenantStatus, plan?: Plan): Record<string, string> {
@@ -48,6 +49,18 @@ export class AdminService {
   changePlan(id: string, plan: Plan): Observable<AdminTenantSummary> {
     return this.http
       .put<ApiResponse<AdminTenantSummary>>(`${this.apiUrl}/tenants/${id}/plan`, { plan })
+      .pipe(map((r) => r.data!));
+  }
+
+  getPlanLimits(): Observable<PlanLimits[]> {
+    return this.http
+      .get<ApiResponse<PlanLimits[]>>(`${this.apiUrl}/plan-limits`)
+      .pipe(map((r) => r.data ?? []));
+  }
+
+  updatePlanLimits(plan: Plan, request: UpdatePlanLimitsRequest): Observable<PlanLimits> {
+    return this.http
+      .put<ApiResponse<PlanLimits>>(`${this.apiUrl}/plan-limits/${plan}`, request)
       .pipe(map((r) => r.data!));
   }
 }

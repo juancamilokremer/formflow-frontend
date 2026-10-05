@@ -26,19 +26,21 @@
 
   @if (teaser()) {
     <ul class="plan-card__features">
-      @for (key of entry().teaserFeatureKeys; track key) {
+      @for (feature of entry().teaserFeatures; track feature.labelKey) {
+        @let resolved = resolve(feature);
         <li>
           <app-icon name="check" [size]="14" />
-          {{ key | translate }}
+          {{ resolved.labelKey | translate: resolved.params }}
         </li>
       }
     </ul>
   } @else {
     <ul class="plan-card__features">
       @for (feature of entry().features; track feature.labelKey) {
-        <li [class.plan-card__feature--excluded]="!feature.included">
-          <app-icon [name]="feature.included ? 'check' : 'x'" [size]="14" />
-          {{ feature.labelKey | translate }}
+        @let resolved = resolve(feature);
+        <li [class.plan-card__feature--excluded]="!resolved.included">
+          <app-icon [name]="resolved.included ? 'check' : 'x'" [size]="14" />
+          {{ resolved.labelKey | translate: resolved.params }}
         </li>
       }
     </ul>

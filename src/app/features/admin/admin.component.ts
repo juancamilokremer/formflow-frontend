@@ -5,10 +5,19 @@ import { PageHeaderComponent } from '../../shared/components/page-header/page-he
 import { StatCardComponent } from '../../shared/components/stat-card/stat-card.component';
 import { SelectComponent, SelectOption } from '../../shared/components/select/select.component';
 import { PlanBadgeComponent } from '../../shared/components/plan-badge/plan-badge.component';
+import { TabsComponent, TabItem } from '../../shared/components/tabs/tabs.component';
 import { AdminTenantTableComponent } from './components/admin-tenant-table/admin-tenant-table.component';
+import { PlanLimitsEditorComponent } from './components/plan-limits-editor/plan-limits-editor.component';
 import { AdminService } from './services/admin.service';
 import { AdminPlanFilter, AdminStatusFilter, AdminTenantSummary, GlobalStats } from './models/admin.model';
 import { Plan, TenantStatus } from '../../core/models/tenant.model';
+
+type AdminTab = 'tenants' | 'plan-limits';
+
+const ADMIN_TABS: TabItem[] = [
+  { id: 'tenants', label: 'admin.tabs.tenants' },
+  { id: 'plan-limits', label: 'admin.tabs.plan_limits' },
+];
 
 const STATUS_OPTIONS: SelectOption[] = [
   { value: 'ALL', label: 'admin.filter.status_all' },
@@ -29,7 +38,7 @@ const PLAN_OPTIONS: SelectOption[] = [
   selector: 'app-admin',
   imports: [
     TranslatePipe, PageHeaderComponent, StatCardComponent, SelectComponent,
-    PlanBadgeComponent, AdminTenantTableComponent,
+    PlanBadgeComponent, TabsComponent, AdminTenantTableComponent, PlanLimitsEditorComponent,
   ],
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.scss',
@@ -40,6 +49,8 @@ export class AdminComponent {
 
   protected readonly statusOptions = STATUS_OPTIONS;
   protected readonly planOptions = PLAN_OPTIONS;
+  protected readonly adminTabs = ADMIN_TABS;
+  protected readonly activeTab = signal<AdminTab>('tenants');
 
   protected readonly stats = signal<GlobalStats | null>(null);
   protected readonly tenants = signal<AdminTenantSummary[]>([]);
@@ -70,6 +81,10 @@ export class AdminComponent {
       this.planFilter();
       this.load(0);
     });
+  }
+
+  protected setActiveTab(tabId: string): void {
+    this.activeTab.set(tabId as AdminTab);
   }
 
   protected onPageChange(page: number): void {
