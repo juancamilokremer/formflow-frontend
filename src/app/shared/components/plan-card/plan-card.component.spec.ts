@@ -1,7 +1,7 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { provideTranslateService } from '@ngx-translate/core';
-import { PlanCardComponent, PlanCardCta } from './plan-card.component';
-import { PLAN_CATALOG, PlanFeatureItem } from '../../../core/models/plan-catalog.model';
+import { PlanCardComponent } from './plan-card.component';
+import { PLAN_CATALOG, PlanCardCta, PlanFeatureItem } from '../../../core/models/plan-catalog.model';
 import { Plan } from '../../../core/models/tenant.model';
 import { PlanLimits } from '../../../core/models/plan-limits.model';
 

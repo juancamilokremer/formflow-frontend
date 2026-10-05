@@ -5,49 +5,9 @@ import { CardComponent } from '../../../../shared/components/card/card.component
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
 import { CheckboxComponent } from '../../../../shared/components/checkbox/checkbox.component';
 import { AdminService } from '../../services/admin.service';
+import { EditableLimitField, EditablePlanLimitsRow, LimitFieldKey } from '../../models/admin.model';
 import { PlanLimits, UpdatePlanLimitsRequest } from '../../../../core/models/plan-limits.model';
 import { Plan } from '../../../../core/models/tenant.model';
-
-type LimitFieldKey = 'forms' | 'responses' | 'users' | 'convocatorias';
-
-interface EditableLimitField {
-  value: number;
-  unlimited: boolean;
-}
-
-interface EditablePlanLimitsRow {
-  plan: Plan;
-  forms: EditableLimitField;
-  responses: EditableLimitField;
-  users: EditableLimitField;
-  convocatorias: EditableLimitField;
-  canExportExcel: boolean;
-  saving: boolean;
-  saved: boolean;
-  error: string | null;
-}
-
-function toField(limit: number | null): EditableLimitField {
-  return { value: limit ?? 0, unlimited: limit === null };
-}
-
-function toRow(limits: PlanLimits): EditablePlanLimitsRow {
-  return {
-    plan: limits.plan,
-    forms: toField(limits.formsLimit),
-    responses: toField(limits.responsesLimit),
-    users: toField(limits.usersLimit),
-    convocatorias: toField(limits.convocatoriasLimit),
-    canExportExcel: limits.canExportExcel,
-    saving: false,
-    saved: false,
-    error: null,
-  };
-}
-
-function toRequestValue(field: EditableLimitField): number | null {
-  return field.unlimited ? null : field.value;
-}
 
 @Component({
   selector: 'app-plan-limits-editor',
@@ -66,7 +26,7 @@ export class PlanLimitsEditorComponent implements OnInit {
   ngOnInit(): void {
     this.adminService.getPlanLimits().subscribe({
       next: (limits) => {
-        this.rows.set(limits.map(toRow));
+        this.rows.set(limits.map((limit) => this.toRow(limit)));
         this.loading.set(false);
       },
       error: () => {
@@ -77,16 +37,16 @@ export class PlanLimitsEditorComponent implements OnInit {
   }
 
   protected onUnlimitedChange(plan: Plan, field: LimitFieldKey, unlimited: boolean): void {
-    this.updateRow(plan, (r) => ({ ...r, [field]: { ...r[field], unlimited } }));
+    this.updateRow(plan, (row) => ({ ...row, [field]: { ...row[field], unlimited } }));
   }
 
   protected onValueChange(plan: Plan, field: LimitFieldKey, raw: string): void {
     const value = Math.max(0, Math.trunc(Number(raw)) || 0);
-    this.updateRow(plan, (r) => ({ ...r, [field]: { ...r[field], value } }));
+    this.updateRow(plan, (row) => ({ ...row, [field]: { ...row[field], value } }));
   }
 
   protected onExportChange(plan: Plan, canExportExcel: boolean): void {
-    this.updateRow(plan, (r) => ({ ...r, canExportExcel }));
+    this.updateRow(plan, (row) => ({ ...row, canExportExcel }));
   }
 
   protected save(plan: Plan): void {
@@ -96,15 +56,15 @@ export class PlanLimitsEditorComponent implements OnInit {
     this.updateRow(plan, (r) => ({ ...r, saving: true, saved: false, error: null }));
 
     const request: UpdatePlanLimitsRequest = {
-      formsLimit: toRequestValue(row.forms),
-      responsesLimit: toRequestValue(row.responses),
-      usersLimit: toRequestValue(row.users),
-      convocatoriasLimit: toRequestValue(row.convocatorias),
+      formsLimit: this.toRequestValue(row.forms),
+      responsesLimit: this.toRequestValue(row.responses),
+      usersLimit: this.toRequestValue(row.users),
+      convocatoriasLimit: this.toRequestValue(row.convocatorias),
       canExportExcel: row.canExportExcel,
     };
 
     this.adminService.updatePlanLimits(plan, request).subscribe({
-      next: (updated) => this.updateRow(plan, () => ({ ...toRow(updated), saved: true })),
+      next: (updated) => this.updateRow(plan, () => ({ ...this.toRow(updated), saved: true })),
       error: (err: HttpErrorResponse) => this.updateRow(plan, (r) => ({
         ...r,
         saving: false,
@@ -114,6 +74,28 @@ export class PlanLimitsEditorComponent implements OnInit {
   }
 
   private updateRow(plan: Plan, updater: (row: EditablePlanLimitsRow) => EditablePlanLimitsRow): void {
-    this.rows.update((list) => list.map((r) => (r.plan === plan ? updater(r) : r)));
+    this.rows.update((list) => list.map((row) => (row.plan === plan ? updater(row) : row)));
+  }
+
+  private toRow(limits: PlanLimits): EditablePlanLimitsRow {
+    return {
+      plan: limits.plan,
+      forms: this.toField(limits.formsLimit),
+      responses: this.toField(limits.responsesLimit),
+      users: this.toField(limits.usersLimit),
+      convocatorias: this.toField(limits.convocatoriasLimit),
+      canExportExcel: limits.canExportExcel,
+      saving: false,
+      saved: false,
+      error: null,
+    };
+  }
+
+  private toField(limit: number | null): EditableLimitField {
+    return { value: limit ?? 0, unlimited: limit === null };
+  }
+
+  private toRequestValue(field: EditableLimitField): number | null {
+    return field.unlimited ? null : field.value;
   }
 }

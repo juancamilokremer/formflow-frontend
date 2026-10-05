@@ -25,3 +25,22 @@ export interface GlobalStats {
 
 export type AdminStatusFilter = TenantStatus | 'ALL';
 export type AdminPlanFilter = Plan | 'ALL';
+
+export type LimitFieldKey = 'forms' | 'responses' | 'users' | 'convocatorias';
+
+export interface EditableLimitField {
+  value: number;
+  unlimited: boolean;
+}
+
+export interface EditablePlanLimitsRow {
+  plan: Plan;
+  forms: EditableLimitField;
+  responses: EditableLimitField;
+  users: EditableLimitField;
+  convocatorias: EditableLimitField;
+  canExportExcel: boolean;
+  saving: boolean;
+  saved: boolean;
+  error: string | null;
+}

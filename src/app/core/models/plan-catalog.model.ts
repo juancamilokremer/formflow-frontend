@@ -23,6 +23,39 @@ export interface PlanCatalogEntry {
   popular: boolean;
 }
 
+export type PlanCardCta =
+  | { kind: 'navigate'; routerLink: string[]; labelKey: string }
+  | { kind: 'external'; href: string; labelKey: string }
+  | { kind: 'action'; labelKey: string }
+  | { kind: 'disabled'; labelKey: string };
+
+/** What PlanCardComponent.resolve() renders for a single feature row — either the live
+ *  number/flag from PlanLimits or the static labelKey/included fallback. */
+export interface ResolvedPlanFeature {
+  labelKey: string;
+  params?: Record<string, number>;
+  included: boolean;
+}
+
+export type NumericLimitKey = Exclude<PlanLimitKey, 'canExportExcel'>;
+
+/** i18n keys PlanCardComponent picks between per numeric limit, based on the live value:
+ *  null → unlimited, 0 → zero (if defined), 1 → countSingular (if defined), else → count. */
+export const LIMIT_I18N: Record<NumericLimitKey, { count: string; unlimited: string; zero?: string; countSingular?: string }> = {
+  forms: { count: 'plans.catalog.limits.forms_count', unlimited: 'plans.catalog.limits.forms_unlimited' },
+  responses: { count: 'plans.catalog.limits.responses_count', unlimited: 'plans.catalog.limits.responses_unlimited' },
+  users: {
+    count: 'plans.catalog.limits.users_count',
+    countSingular: 'plans.catalog.limits.users_count_singular',
+    unlimited: 'plans.catalog.limits.users_unlimited',
+  },
+  convocatorias: {
+    count: 'plans.catalog.limits.convocatorias_count',
+    unlimited: 'plans.catalog.limits.convocatorias_unlimited',
+    zero: 'plans.catalog.limits.convocatorias_none',
+  },
+};
+
 /**
  * Every item here is a real, enforced limit (see backend PlanLimits.java) or,
  * for Enterprise, a human/contractual deliverable that doesn't need code

@@ -2,8 +2,8 @@ import { Component, OnInit, inject, input, output, signal } from '@angular/core'
 import { TranslatePipe } from '@ngx-translate/core';
 import { environment } from '../../../../environments/environment';
 import { PlanLimitsService } from '../../../core/services/plan-limits.service';
-import { PlanCardComponent, PlanCardCta } from '../plan-card/plan-card.component';
-import { PLAN_CATALOG, PlanCatalogEntry } from '../../../core/models/plan-catalog.model';
+import { PlanCardComponent } from '../plan-card/plan-card.component';
+import { PLAN_CATALOG, PlanCardCta, PlanCatalogEntry } from '../../../core/models/plan-catalog.model';
 import { PlanLimits } from '../../../core/models/plan-limits.model';
 import { Plan } from '../../../core/models/tenant.model';
 
