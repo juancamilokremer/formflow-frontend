@@ -30,10 +30,6 @@ describe('PlanBadgeComponent', () => {
     expect(build(Plan.PRO)['variant']()).toBe('purple');
   });
 
-  it('maps BUSINESS to the amber variant', () => {
-    expect(build(Plan.BUSINESS)['variant']()).toBe('amber');
-  });
-
   it('maps ENTERPRISE to the orange variant', () => {
     expect(build(Plan.ENTERPRISE)['variant']()).toBe('orange');
   });

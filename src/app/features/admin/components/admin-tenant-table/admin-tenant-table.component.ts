@@ -25,7 +25,6 @@ const PLAN_OPTIONS: SelectOption[] = [
   { value: Plan.FREE, label: 'plans.free' },
   { value: Plan.STARTER, label: 'plans.starter' },
   { value: Plan.PRO, label: 'plans.pro' },
-  { value: Plan.BUSINESS, label: 'plans.business' },
   { value: Plan.ENTERPRISE, label: 'plans.enterprise' },
 ];
 

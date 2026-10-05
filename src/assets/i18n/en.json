@@ -20,7 +20,6 @@
     "free": "Free",
     "starter": "Starter",
     "pro": "Pro",
-    "business": "Business",
     "enterprise": "Enterprise",
     "upgrade": {
       "title": "Plan & billing",
@@ -29,77 +28,60 @@
     "catalog": {
       "period": "/mo",
       "custom_price": "Custom",
-      "shared": {
-        "white_label": "White-label",
-        "multi_user": "Multi-user"
-      },
       "free": {
         "teaser": {
           "forms": "2 forms",
           "responses": "50 responses/mo",
-          "export": "Export CSV"
+          "export_csv": "Export CSV"
         },
         "features": {
           "forms": "2 forms",
           "responses": "50 responses/mo",
-          "basic_stats": "Basic statistics",
-          "export_csv": "Export CSV"
+          "users": "1 user",
+          "convocatorias": "Recruitment drives",
+          "export_csv": "Export CSV",
+          "export_excel": "Export Excel"
         }
       },
       "starter": {
         "teaser": {
           "forms": "10 forms",
           "responses": "500 responses/mo",
-          "export": "Export Excel"
+          "export_excel": "Export Excel"
         },
         "features": {
           "forms": "10 forms",
           "responses": "500 responses/mo",
-          "advanced_stats": "Advanced statistics",
+          "users": "3 users",
+          "convocatorias": "5 recruitment drives",
           "export_excel": "Export Excel"
         }
       },
       "pro": {
         "teaser": {
-          "unlimited": "Unlimited",
-          "reports": "Advanced reports",
-          "white_label": "Partial white-label"
+          "forms": "Unlimited forms",
+          "users": "Unlimited users",
+          "convocatorias": "Unlimited recruitment drives"
         },
         "features": {
-          "unlimited_forms": "Unlimited forms",
-          "unlimited_responses": "Unlimited responses",
-          "advanced_reports": "Advanced reports",
-          "export_excel": "Export Excel",
-          "white_label_partial": "Partial white-label"
-        }
-      },
-      "business": {
-        "teaser": {
-          "multi_user": "Multi-user",
-          "api": "API + Webhooks",
-          "domain": "Custom domain"
-        },
-        "features": {
-          "everything_pro": "Everything in Pro",
-          "multi_user": "Multi-user",
-          "api_webhooks": "API + Webhooks",
-          "own_domain": "Custom domain",
-          "white_label_full": "Full white-label",
-          "priority_support": "Priority support"
+          "forms": "Unlimited forms",
+          "responses": "Unlimited responses",
+          "users": "Unlimited users",
+          "convocatorias": "Unlimited recruitment drives",
+          "export_excel": "Export Excel"
         }
       },
       "enterprise": {
         "teaser": {
-          "sso": "SSO",
-          "sla": "Dedicated SLA",
-          "onboarding": "Custom onboarding"
+          "dedicated_support": "Dedicated support",
+          "custom_sla": "Custom SLA",
+          "custom_onboarding": "Custom onboarding"
         },
         "features": {
-          "everything_business": "Everything in Business",
-          "sso": "SSO",
-          "isolated_db": "Isolated database",
-          "sla": "Dedicated SLA",
-          "onboarding": "Custom onboarding"
+          "everything_pro": "Everything in Pro",
+          "dedicated_support": "Dedicated support",
+          "custom_sla": "Custom SLA",
+          "custom_onboarding": "Custom onboarding"
         }
       }
     },
