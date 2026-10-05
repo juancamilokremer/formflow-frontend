@@ -16,6 +16,14 @@ export interface PlanCatalogEntry {
   popular: boolean;
 }
 
+/**
+ * Every item here is a real, enforced limit (see backend PlanLimits.java) or,
+ * for Enterprise, a human/contractual deliverable that doesn't need code
+ * (dedicated support, custom SLA, onboarding). Nothing here claims a feature
+ * that doesn't exist — see backend#192 for the audit that removed the
+ * previous Business tier and the false "API/webhooks/custom domain/SSO/
+ * isolated DB/white-label" claims.
+ */
 export const PLAN_CATALOG: PlanCatalogEntry[] = [
   {
     plan: Plan.FREE,
@@ -24,15 +32,15 @@ export const PLAN_CATALOG: PlanCatalogEntry[] = [
     teaserFeatureKeys: [
       'plans.catalog.free.teaser.forms',
       'plans.catalog.free.teaser.responses',
-      'plans.catalog.free.teaser.export',
+      'plans.catalog.free.teaser.export_csv',
     ],
     features: [
       { labelKey: 'plans.catalog.free.features.forms', included: true },
       { labelKey: 'plans.catalog.free.features.responses', included: true },
-      { labelKey: 'plans.catalog.free.features.basic_stats', included: true },
+      { labelKey: 'plans.catalog.free.features.users', included: true },
+      { labelKey: 'plans.catalog.free.features.convocatorias', included: false },
       { labelKey: 'plans.catalog.free.features.export_csv', included: true },
-      { labelKey: 'plans.catalog.shared.white_label', included: false },
-      { labelKey: 'plans.catalog.shared.multi_user', included: false },
+      { labelKey: 'plans.catalog.free.features.export_excel', included: false },
     ],
   },
   {
@@ -42,15 +50,14 @@ export const PLAN_CATALOG: PlanCatalogEntry[] = [
     teaserFeatureKeys: [
       'plans.catalog.starter.teaser.forms',
       'plans.catalog.starter.teaser.responses',
-      'plans.catalog.starter.teaser.export',
+      'plans.catalog.starter.teaser.export_excel',
     ],
     features: [
       { labelKey: 'plans.catalog.starter.features.forms', included: true },
       { labelKey: 'plans.catalog.starter.features.responses', included: true },
-      { labelKey: 'plans.catalog.starter.features.advanced_stats', included: true },
+      { labelKey: 'plans.catalog.starter.features.users', included: true },
+      { labelKey: 'plans.catalog.starter.features.convocatorias', included: true },
       { labelKey: 'plans.catalog.starter.features.export_excel', included: true },
-      { labelKey: 'plans.catalog.shared.white_label', included: false },
-      { labelKey: 'plans.catalog.shared.multi_user', included: false },
     ],
   },
   {
@@ -58,35 +65,16 @@ export const PLAN_CATALOG: PlanCatalogEntry[] = [
     priceAmount: '$49',
     popular: true,
     teaserFeatureKeys: [
-      'plans.catalog.pro.teaser.unlimited',
-      'plans.catalog.pro.teaser.reports',
-      'plans.catalog.pro.teaser.white_label',
+      'plans.catalog.pro.teaser.forms',
+      'plans.catalog.pro.teaser.users',
+      'plans.catalog.pro.teaser.convocatorias',
     ],
     features: [
-      { labelKey: 'plans.catalog.pro.features.unlimited_forms', included: true },
-      { labelKey: 'plans.catalog.pro.features.unlimited_responses', included: true },
-      { labelKey: 'plans.catalog.pro.features.advanced_reports', included: true },
+      { labelKey: 'plans.catalog.pro.features.forms', included: true },
+      { labelKey: 'plans.catalog.pro.features.responses', included: true },
+      { labelKey: 'plans.catalog.pro.features.users', included: true },
+      { labelKey: 'plans.catalog.pro.features.convocatorias', included: true },
       { labelKey: 'plans.catalog.pro.features.export_excel', included: true },
-      { labelKey: 'plans.catalog.pro.features.white_label_partial', included: true },
-      { labelKey: 'plans.catalog.shared.multi_user', included: false },
-    ],
-  },
-  {
-    plan: Plan.BUSINESS,
-    priceAmount: '$99',
-    popular: false,
-    teaserFeatureKeys: [
-      'plans.catalog.business.teaser.multi_user',
-      'plans.catalog.business.teaser.api',
-      'plans.catalog.business.teaser.domain',
-    ],
-    features: [
-      { labelKey: 'plans.catalog.business.features.everything_pro', included: true },
-      { labelKey: 'plans.catalog.business.features.multi_user', included: true },
-      { labelKey: 'plans.catalog.business.features.api_webhooks', included: true },
-      { labelKey: 'plans.catalog.business.features.own_domain', included: true },
-      { labelKey: 'plans.catalog.business.features.white_label_full', included: true },
-      { labelKey: 'plans.catalog.business.features.priority_support', included: true },
     ],
   },
   {
@@ -94,16 +82,15 @@ export const PLAN_CATALOG: PlanCatalogEntry[] = [
     priceAmount: null,
     popular: false,
     teaserFeatureKeys: [
-      'plans.catalog.enterprise.teaser.sso',
-      'plans.catalog.enterprise.teaser.sla',
-      'plans.catalog.enterprise.teaser.onboarding',
+      'plans.catalog.enterprise.teaser.dedicated_support',
+      'plans.catalog.enterprise.teaser.custom_sla',
+      'plans.catalog.enterprise.teaser.custom_onboarding',
     ],
     features: [
-      { labelKey: 'plans.catalog.enterprise.features.everything_business', included: true },
-      { labelKey: 'plans.catalog.enterprise.features.sso', included: true },
-      { labelKey: 'plans.catalog.enterprise.features.isolated_db', included: true },
-      { labelKey: 'plans.catalog.enterprise.features.sla', included: true },
-      { labelKey: 'plans.catalog.enterprise.features.onboarding', included: true },
+      { labelKey: 'plans.catalog.enterprise.features.everything_pro', included: true },
+      { labelKey: 'plans.catalog.enterprise.features.dedicated_support', included: true },
+      { labelKey: 'plans.catalog.enterprise.features.custom_sla', included: true },
+      { labelKey: 'plans.catalog.enterprise.features.custom_onboarding', included: true },
     ],
   },
 ];

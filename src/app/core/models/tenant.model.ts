@@ -14,7 +14,6 @@ export enum Plan {
   FREE = 'FREE',
   STARTER = 'STARTER',
   PRO = 'PRO',
-  BUSINESS = 'BUSINESS',
   ENTERPRISE = 'ENTERPRISE',
 }
 

@@ -7,7 +7,6 @@ const VARIANT_BY_PLAN: Record<Plan, BadgeVariant> = {
   [Plan.FREE]: 'neutral',
   [Plan.STARTER]: 'primary',
   [Plan.PRO]: 'purple',
-  [Plan.BUSINESS]: 'amber',
   [Plan.ENTERPRISE]: 'orange',
 };
 

@@ -20,7 +20,6 @@
     "free": "Free",
     "starter": "Starter",
     "pro": "Pro",
-    "business": "Business",
     "enterprise": "Enterprise",
     "upgrade": {
       "title": "Plan y facturación",
@@ -29,77 +28,60 @@
     "catalog": {
       "period": "/mes",
       "custom_price": "Personalizado",
-      "shared": {
-        "white_label": "White-label",
-        "multi_user": "Multi-usuario"
-      },
       "free": {
         "teaser": {
           "forms": "2 formularios",
           "responses": "50 respuestas/mes",
-          "export": "Exportar CSV"
+          "export_csv": "Exportar CSV"
         },
         "features": {
           "forms": "2 formularios",
           "responses": "50 respuestas/mes",
-          "basic_stats": "Estadísticas básicas",
-          "export_csv": "Exportar CSV"
+          "users": "1 usuario",
+          "convocatorias": "Convocatorias",
+          "export_csv": "Exportar CSV",
+          "export_excel": "Exportar Excel"
         }
       },
       "starter": {
         "teaser": {
           "forms": "10 formularios",
           "responses": "500 respuestas/mes",
-          "export": "Exportar Excel"
+          "export_excel": "Exportar Excel"
         },
         "features": {
           "forms": "10 formularios",
           "responses": "500 respuestas/mes",
-          "advanced_stats": "Estadísticas avanzadas",
+          "users": "3 usuarios",
+          "convocatorias": "5 convocatorias",
           "export_excel": "Exportar Excel"
         }
       },
       "pro": {
         "teaser": {
-          "unlimited": "Ilimitado",
-          "reports": "Reportes avanzados",
-          "white_label": "White-label parcial"
+          "forms": "Formularios ilimitados",
+          "users": "Usuarios ilimitados",
+          "convocatorias": "Convocatorias ilimitadas"
         },
         "features": {
-          "unlimited_forms": "Formularios ilimitados",
-          "unlimited_responses": "Respuestas ilimitadas",
-          "advanced_reports": "Reportes avanzados",
-          "export_excel": "Exportar Excel",
-          "white_label_partial": "White-label parcial"
-        }
-      },
-      "business": {
-        "teaser": {
-          "multi_user": "Multi-usuario",
-          "api": "API + Webhooks",
-          "domain": "Dominio propio"
-        },
-        "features": {
-          "everything_pro": "Todo en Pro",
-          "multi_user": "Multi-usuario",
-          "api_webhooks": "API + Webhooks",
-          "own_domain": "Dominio propio",
-          "white_label_full": "White-label completo",
-          "priority_support": "Soporte prioritario"
+          "forms": "Formularios ilimitados",
+          "responses": "Respuestas ilimitadas",
+          "users": "Usuarios ilimitados",
+          "convocatorias": "Convocatorias ilimitadas",
+          "export_excel": "Exportar Excel"
         }
       },
       "enterprise": {
         "teaser": {
-          "sso": "SSO",
-          "sla": "SLA dedicado",
-          "onboarding": "Onboarding personalizado"
+          "dedicated_support": "Soporte dedicado",
+          "custom_sla": "SLA a medida",
+          "custom_onboarding": "Onboarding personalizado"
         },
         "features": {
-          "everything_business": "Todo en Business",
-          "sso": "SSO",
-          "isolated_db": "Base de datos aislada",
-          "sla": "SLA dedicado",
-          "onboarding": "Onboarding personalizado"
+          "everything_pro": "Todo en Pro",
+          "dedicated_support": "Soporte dedicado",
+          "custom_sla": "SLA a medida",
+          "custom_onboarding": "Onboarding personalizado"
         }
       }
     },
