@@ -28,6 +28,19 @@
     "catalog": {
       "period": "/mes",
       "custom_price": "Personalizado",
+      "limits": {
+        "forms_count": "{{n}} formularios",
+        "forms_unlimited": "Formularios ilimitados",
+        "responses_count": "{{n}} respuestas/mes",
+        "responses_unlimited": "Respuestas ilimitadas",
+        "users_count": "{{n}} usuarios",
+        "users_count_singular": "{{n}} usuario",
+        "users_unlimited": "Usuarios ilimitados",
+        "convocatorias_count": "{{n}} convocatorias",
+        "convocatorias_unlimited": "Convocatorias ilimitadas",
+        "convocatorias_none": "Sin convocatorias",
+        "export_excel": "Exportar Excel"
+      },
       "free": {
         "teaser": {
           "forms": "2 formularios",
@@ -988,6 +1001,20 @@
   "admin": {
     "title": "Panel de administración",
     "subtitle": "Gestión de tenants y estadísticas de la plataforma",
+    "tabs": {
+      "tenants": "Tenants",
+      "plan_limits": "Límites de plan"
+    },
+    "plan_limits": {
+      "forms": "Formularios",
+      "responses": "Respuestas/mes",
+      "users": "Usuarios",
+      "convocatorias": "Convocatorias",
+      "unlimited": "Ilimitado",
+      "can_export_excel": "Exportar Excel",
+      "saved": "Guardado",
+      "error_generic": "No se pudo guardar. Intenta de nuevo."
+    },
     "stats": {
       "total_tenants": "Tenants totales",
       "responses_this_month": "Respuestas este mes",

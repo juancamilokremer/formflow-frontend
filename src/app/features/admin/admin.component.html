@@ -24,34 +24,43 @@
     </div>
   }
 
-  <div class="admin-page__filters">
-    <div class="admin-page__filter">
-      <span>{{ 'admin.filter.status_label' | translate }}</span>
-      <app-select
-        [options]="statusOptions"
-        [value]="statusFilter()"
-        (changed)="onStatusFilterChange($event)"
-      />
-    </div>
-    <div class="admin-page__filter">
-      <span>{{ 'admin.filter.plan_label' | translate }}</span>
-      <app-select
-        [options]="planOptions"
-        [value]="planFilter()"
-        (changed)="onPlanFilterChange($event)"
-      />
-    </div>
-  </div>
+  <app-tabs [tabs]="adminTabs" [activeTabId]="activeTab()" (tabChange)="setActiveTab($event)" />
 
-  <app-admin-tenant-table
-    [rows]="tenants()"
-    [totalElements]="totalElements()"
-    [pageIndex]="pageIndex()"
-    [pageSize]="pageSize()"
-    [loading]="loading()"
-    [loadError]="loadError()"
-    (pageChange)="onPageChange($event)"
-    (tenantUpdated)="onTenantUpdated($event)"
-  />
+  @switch (activeTab()) {
+    @case ('tenants') {
+      <div class="admin-page__filters">
+        <div class="admin-page__filter">
+          <span>{{ 'admin.filter.status_label' | translate }}</span>
+          <app-select
+            [options]="statusOptions"
+            [value]="statusFilter()"
+            (changed)="onStatusFilterChange($event)"
+          />
+        </div>
+        <div class="admin-page__filter">
+          <span>{{ 'admin.filter.plan_label' | translate }}</span>
+          <app-select
+            [options]="planOptions"
+            [value]="planFilter()"
+            (changed)="onPlanFilterChange($event)"
+          />
+        </div>
+      </div>
+
+      <app-admin-tenant-table
+        [rows]="tenants()"
+        [totalElements]="totalElements()"
+        [pageIndex]="pageIndex()"
+        [pageSize]="pageSize()"
+        [loading]="loading()"
+        [loadError]="loadError()"
+        (pageChange)="onPageChange($event)"
+        (tenantUpdated)="onTenantUpdated($event)"
+      />
+    }
+    @case ('plan-limits') {
+      <app-plan-limits-editor />
+    }
+  }
 
 </div>

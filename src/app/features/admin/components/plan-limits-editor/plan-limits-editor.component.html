@@ -1,0 +1,81 @@
+@if (loading()) {
+  <p class="ple__loading">{{ 'common.loading' | translate }}</p>
+} @else if (loadError()) {
+  <p class="ple__hint ple__hint--error">{{ 'admin.plan_limits.error_generic' | translate }}</p>
+} @else {
+  <div class="ple__grid">
+    @for (row of rows(); track row.plan) {
+      <app-card class="ple__card">
+        <h3 class="ple__plan-name">{{ ('plans.' + row.plan.toLowerCase()) | translate }}</h3>
+
+        <div class="ple__field">
+          <span class="ple__field-label">{{ 'admin.plan_limits.forms' | translate }}</span>
+          <input
+            type="number" min="0" class="ple__input"
+            [value]="row.forms.value" [disabled]="row.forms.unlimited"
+            (input)="onValueChange(row.plan, 'forms', $any($event.target).value)"
+          />
+          <div class="ple__unlimited">
+            <app-checkbox [checked]="row.forms.unlimited" (changed)="onUnlimitedChange(row.plan, 'forms', $event)" />
+            {{ 'admin.plan_limits.unlimited' | translate }}
+          </div>
+        </div>
+
+        <div class="ple__field">
+          <span class="ple__field-label">{{ 'admin.plan_limits.responses' | translate }}</span>
+          <input
+            type="number" min="0" class="ple__input"
+            [value]="row.responses.value" [disabled]="row.responses.unlimited"
+            (input)="onValueChange(row.plan, 'responses', $any($event.target).value)"
+          />
+          <div class="ple__unlimited">
+            <app-checkbox [checked]="row.responses.unlimited" (changed)="onUnlimitedChange(row.plan, 'responses', $event)" />
+            {{ 'admin.plan_limits.unlimited' | translate }}
+          </div>
+        </div>
+
+        <div class="ple__field">
+          <span class="ple__field-label">{{ 'admin.plan_limits.users' | translate }}</span>
+          <input
+            type="number" min="0" class="ple__input"
+            [value]="row.users.value" [disabled]="row.users.unlimited"
+            (input)="onValueChange(row.plan, 'users', $any($event.target).value)"
+          />
+          <div class="ple__unlimited">
+            <app-checkbox [checked]="row.users.unlimited" (changed)="onUnlimitedChange(row.plan, 'users', $event)" />
+            {{ 'admin.plan_limits.unlimited' | translate }}
+          </div>
+        </div>
+
+        <div class="ple__field">
+          <span class="ple__field-label">{{ 'admin.plan_limits.convocatorias' | translate }}</span>
+          <input
+            type="number" min="0" class="ple__input"
+            [value]="row.convocatorias.value" [disabled]="row.convocatorias.unlimited"
+            (input)="onValueChange(row.plan, 'convocatorias', $any($event.target).value)"
+          />
+          <div class="ple__unlimited">
+            <app-checkbox [checked]="row.convocatorias.unlimited" (changed)="onUnlimitedChange(row.plan, 'convocatorias', $event)" />
+            {{ 'admin.plan_limits.unlimited' | translate }}
+          </div>
+        </div>
+
+        <div class="ple__export">
+          <app-checkbox [checked]="row.canExportExcel" (changed)="onExportChange(row.plan, $event)" />
+          {{ 'admin.plan_limits.can_export_excel' | translate }}
+        </div>
+
+        @if (row.error) {
+          <p class="ple__hint ple__hint--error">{{ row.error }}</p>
+        }
+        @if (row.saved) {
+          <p class="ple__hint ple__hint--success">{{ 'admin.plan_limits.saved' | translate }}</p>
+        }
+
+        <app-button [loading]="row.saving" [fullWidth]="true" (click)="save(row.plan)">
+          {{ 'common.save' | translate }}
+        </app-button>
+      </app-card>
+    }
+  </div>
+}

@@ -88,6 +88,15 @@ describe('AdminComponent', () => {
     expect(mockAdminService.listTenants).toHaveBeenCalledWith(3, 20, undefined, undefined);
   });
 
+  it('switches the active tab', () => {
+    const { component } = buildComponent();
+    expect(component['activeTab']()).toBe('tenants');
+
+    component['setActiveTab']('plan-limits');
+
+    expect(component['activeTab']()).toBe('plan-limits');
+  });
+
   it('patches the updated tenant into the list and refreshes stats', () => {
     const { component, mockAdminService } = buildComponent();
     const updated: AdminTenantSummary = { ...TENANT, plan: Plan.STARTER };

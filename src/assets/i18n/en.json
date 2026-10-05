@@ -28,6 +28,19 @@
     "catalog": {
       "period": "/mo",
       "custom_price": "Custom",
+      "limits": {
+        "forms_count": "{{n}} forms",
+        "forms_unlimited": "Unlimited forms",
+        "responses_count": "{{n}} responses/mo",
+        "responses_unlimited": "Unlimited responses",
+        "users_count": "{{n}} users",
+        "users_count_singular": "{{n}} user",
+        "users_unlimited": "Unlimited users",
+        "convocatorias_count": "{{n}} recruitment drives",
+        "convocatorias_unlimited": "Unlimited recruitment drives",
+        "convocatorias_none": "No recruitment drives",
+        "export_excel": "Export Excel"
+      },
       "free": {
         "teaser": {
           "forms": "2 forms",
@@ -988,6 +1001,20 @@
   "admin": {
     "title": "Admin panel",
     "subtitle": "Tenant management and platform-wide stats",
+    "tabs": {
+      "tenants": "Tenants",
+      "plan_limits": "Plan limits"
+    },
+    "plan_limits": {
+      "forms": "Forms",
+      "responses": "Responses/mo",
+      "users": "Users",
+      "convocatorias": "Recruitment drives",
+      "unlimited": "Unlimited",
+      "can_export_excel": "Export Excel",
+      "saved": "Saved",
+      "error_generic": "Could not save. Please try again."
+    },
     "stats": {
       "total_tenants": "Total tenants",
       "responses_this_month": "Responses this month",
