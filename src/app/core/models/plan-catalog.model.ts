@@ -80,7 +80,7 @@ export const PLAN_CATALOG: PlanCatalogEntry[] = [
       { labelKey: 'plans.catalog.free.features.forms', included: true, limitKey: 'forms' },
       { labelKey: 'plans.catalog.free.features.responses', included: true, limitKey: 'responses' },
       { labelKey: 'plans.catalog.free.features.users', included: true, limitKey: 'users' },
-      { labelKey: 'plans.catalog.free.features.convocatorias', included: false, limitKey: 'convocatorias' },
+      { labelKey: 'plans.catalog.free.features.convocatorias', included: true, limitKey: 'convocatorias' },
       { labelKey: 'plans.catalog.free.features.export_csv', included: true },
       { labelKey: 'plans.catalog.free.features.export_excel', included: false, limitKey: 'canExportExcel' },
     ],

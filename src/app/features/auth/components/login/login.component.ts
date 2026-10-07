@@ -6,6 +6,8 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../../core/auth/auth.service';
 import { RouteConstants } from '../../../../core/constants/route.constants';
 import { UserRole } from '../../../../core/models/user.model';
+import { StorageService } from '../../../../core/storage/storage.service';
+import { StorageKeys } from '../../../../core/storage/storage-keys.constants';
 import { InputComponent } from '../../../../shared/components/input/input.component';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
 import { CardComponent } from '../../../../shared/components/card/card.component';
@@ -28,6 +30,7 @@ export class LoginComponent {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
   private readonly translate = inject(TranslateService);
+  private readonly storageService = inject(StorageService);
 
   protected readonly routeConstants = RouteConstants;
   protected readonly loading = signal(false);
@@ -93,7 +96,14 @@ export class LoginComponent {
       next: () => {
         // SUPER_ADMIN's internal tenant has no dashboard worth seeing — its home is /admin.
         const isSuperAdmin = this.authService.currentUser()?.role === UserRole.SUPER_ADMIN;
-        this.router.navigate([`/${isSuperAdmin ? RouteConstants.ADMIN : RouteConstants.DASHBOARD}`]);
+        if (isSuperAdmin) {
+          this.router.navigate([`/${RouteConstants.ADMIN}`]);
+          return;
+        }
+        // Onboarding-pending only exists for accounts registered after this feature —
+        // set() in register.component.ts, never backfilled for pre-existing accounts.
+        const onboardingPending = this.storageService.get<boolean>(StorageKeys.ONBOARDING_DONE) === false;
+        this.router.navigate([`/${onboardingPending ? RouteConstants.ONBOARDING : RouteConstants.DASHBOARD}`]);
       },
       error: (err: HttpErrorResponse) => {
         if (err.status === 403) {

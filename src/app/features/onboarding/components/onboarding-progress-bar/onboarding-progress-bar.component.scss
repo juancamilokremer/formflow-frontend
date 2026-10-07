@@ -1,0 +1,23 @@
+.onboarding-progress {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.onboarding-progress__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ff-border);
+  transition: background-color 0.15s ease, width 0.15s ease;
+}
+
+.onboarding-progress__dot--done {
+  background: var(--ff-primary-light);
+}
+
+.onboarding-progress__dot--active {
+  width: 24px;
+  border-radius: 4px;
+  background: var(--ff-primary);
+}

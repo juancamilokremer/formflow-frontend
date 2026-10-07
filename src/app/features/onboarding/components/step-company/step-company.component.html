@@ -1,0 +1,16 @@
+<section class="step-company">
+  <h2 class="step-company__title">{{ 'onboarding.company.title' | translate }}</h2>
+  <p class="step-company__subtitle">{{ 'onboarding.company.subtitle' | translate }}</p>
+
+  <div class="step-company__name">
+    <span class="step-company__name-label">{{ 'onboarding.company.name_label' | translate }}</span>
+    <span class="step-company__name-value">{{ authService.currentUser()?.tenantName }}</span>
+  </div>
+
+  <app-logo-upload [logoUrl]="null" />
+
+  <div class="step-company__actions">
+    <app-button variant="ghost" (click)="onSkip()">{{ 'onboarding.skip' | translate }}</app-button>
+    <app-button (click)="onContinue()">{{ 'common.next' | translate }}</app-button>
+  </div>
+</section>

@@ -51,7 +51,7 @@
           "forms": "2 forms",
           "responses": "50 responses/mo",
           "users": "1 user",
-          "convocatorias": "Recruitment drives",
+          "convocatorias": "2 processes",
           "export_csv": "Export CSV",
           "export_excel": "Export Excel"
         }
@@ -129,6 +129,57 @@
       "title": "Recent activity",
       "empty_title": "No activity yet",
       "empty_subtitle": "Create a process or survey to see it here."
+    },
+    "onboarding_resume": {
+      "message": "You haven't finished setting up your account yet.",
+      "cta": "Continue setup"
+    }
+  },
+  "onboarding": {
+    "title": "Getting started",
+    "skip": "Skip for now",
+    "welcome": {
+      "greeting": "Hi, {{name}}!",
+      "description": "Welcome to FormFlow. We'll help you create your first form in a few minutes.",
+      "cta": "Get started"
+    },
+    "company": {
+      "title": "Your company",
+      "subtitle": "Confirm your company's name and logo — you can change them later in Settings.",
+      "name_label": "Company name"
+    },
+    "template": {
+      "title": "What do you want to create?",
+      "subtitle": "Pick a template to start quickly, or start from scratch.",
+      "question_count": "{{count}} questions",
+      "use_cta": "Use this template",
+      "start_blank_cta": "Start from scratch",
+      "error_generic": "We couldn't create the form. Please try again."
+    },
+    "templates": {
+      "candidates": {
+        "name": "Candidate evaluation",
+        "description": "A hiring process with typical questions to evaluate applicants."
+      },
+      "diagnostic": {
+        "name": "Workplace climate diagnostic",
+        "description": "A survey with Likert scales to measure communication, leadership and work environment."
+      },
+      "registration": {
+        "name": "Registration form",
+        "description": "A simple survey to collect basic contact information."
+      }
+    },
+    "share": {
+      "title": "Your form is ready!",
+      "subtitle_encuesta": "Share this link to start collecting responses.",
+      "subtitle_convocatoria": "Now add candidates so they can respond.",
+      "copy_link": "Copy link",
+      "link_copied": "Copied!",
+      "go_to_builder_cta": "Edit form",
+      "create_another_encuesta_cta": "Create another survey",
+      "create_another_convocatoria_cta": "Create another process",
+      "go_to_dashboard_cta": "Go to dashboard"
     }
   },
   "auth": {

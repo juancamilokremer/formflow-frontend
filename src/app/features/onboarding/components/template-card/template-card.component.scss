@@ -1,0 +1,44 @@
+:host { display: block; height: 100%; }
+
+.template-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 20px;
+  background: var(--ff-white);
+  border: 1px solid var(--ff-border);
+  border-radius: var(--ff-radius-lg);
+}
+
+.template-card__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: var(--ff-primary-light);
+  color: var(--ff-primary);
+  border-radius: var(--ff-radius-md);
+  margin-bottom: 12px;
+}
+
+.template-card__name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ff-text-primary);
+  margin: 0 0 6px;
+}
+
+.template-card__description {
+  font-size: 13px;
+  color: var(--ff-text-secondary);
+  line-height: 1.5;
+  margin: 0 0 8px;
+  flex: 1;
+}
+
+.template-card__count {
+  font-size: 12px;
+  color: var(--ff-text-muted);
+  margin: 0 0 16px;
+}

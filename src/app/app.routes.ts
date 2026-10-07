@@ -71,6 +71,12 @@ export const routes: Routes = [
           import('./features/dashboard/dashboard.component').then((m) => m.DashboardComponent),
       },
       {
+        path: RouteConstants.ONBOARDING,
+        data: { titleKey: 'onboarding.title' },
+        loadComponent: () =>
+          import('./features/onboarding/onboarding.component').then((m) => m.OnboardingComponent),
+      },
+      {
         path: `${RouteConstants.ENCUESTAS}/:containerId/${RouteConstants.CONTAINER_FORMS}/:id`,
         data: { titleKey: 'shell.nav.form_builder', fullscreen: true, containerKind: 'encuestas' },
         loadComponent: () =>

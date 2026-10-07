@@ -1,0 +1,56 @@
+:host { display: block; }
+
+.step-company {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 40px 24px;
+}
+
+.step-company__title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--ff-text-primary);
+  margin: 0 0 8px;
+  text-align: center;
+}
+
+.step-company__subtitle {
+  font-size: 14px;
+  color: var(--ff-text-secondary);
+  margin: 0 0 24px;
+  text-align: center;
+}
+
+.step-company__name {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 24px;
+  padding: 12px 16px;
+  background: var(--ff-bg);
+  border-radius: var(--ff-radius-md);
+}
+
+.step-company__name-label {
+  font-size: 12px;
+  color: var(--ff-text-muted);
+}
+
+.step-company__name-value {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ff-text-primary);
+}
+
+.step-company__actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 32px;
+}
+
+@media (max-width: 639px) {
+  .step-company {
+    padding: 24px 16px;
+  }
+}

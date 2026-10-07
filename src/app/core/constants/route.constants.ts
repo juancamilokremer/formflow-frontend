@@ -7,6 +7,7 @@ export const RouteConstants = {
   VERIFY_EMAIL: 'verify-email',
   ACCEPT_INVITE: 'accept-invite',
   DASHBOARD: 'dashboard',
+  ONBOARDING: 'onboarding',
   FORMS: 'forms',
   CATEGORIES: 'categories',
   CONVOCATORIAS: 'convocatorias',

@@ -1,0 +1,28 @@
+<div class="onboarding">
+  <div class="onboarding__card">
+    @if (step() !== 'welcome') {
+      <app-onboarding-progress-bar [activeStep]="step()" />
+    }
+
+    @switch (step()) {
+      @case ('welcome') {
+        <app-step-welcome (continued)="onWelcomeContinued()" />
+      }
+      @case ('company') {
+        <app-step-company (continued)="onCompanyContinued()" (skipped)="onSkip()" />
+      }
+      @case ('template') {
+        <app-step-template
+          (created)="onTemplateCreated($event)"
+          (startedBlank)="onTemplateStartedBlank($event)"
+          (skipped)="onSkip()"
+        />
+      }
+      @case ('share') {
+        @if (createdForm()) {
+          <app-step-share [createdForm]="createdForm()!" (doneAndNavigate)="onShareDone($event)" />
+        }
+      }
+    }
+  </div>
+</div>

@@ -1,0 +1,27 @@
+<div class="step-share">
+  <h2 class="step-share__title">{{ 'onboarding.share.title' | translate }}</h2>
+
+  @if (isEncuesta()) {
+    <p class="step-share__subtitle">{{ 'onboarding.share.subtitle_encuesta' | translate }}</p>
+    <div class="step-share__link-row">
+      <input class="step-share__link-input" type="text" [value]="anonymousLink()" readonly />
+      <app-button variant="secondary" (click)="copyLink()">
+        {{ (linkCopied() ? 'onboarding.share.link_copied' : 'onboarding.share.copy_link') | translate }}
+      </app-button>
+    </div>
+  } @else {
+    <p class="step-share__subtitle">{{ 'onboarding.share.subtitle_convocatoria' | translate }}</p>
+  }
+
+  <div class="step-share__actions">
+    <app-button (click)="goToBuilder()">
+      {{ 'onboarding.share.go_to_builder_cta' | translate }}
+    </app-button>
+    <app-button variant="secondary" (click)="createAnother()">
+      {{ (isEncuesta() ? 'onboarding.share.create_another_encuesta_cta' : 'onboarding.share.create_another_convocatoria_cta') | translate }}
+    </app-button>
+    <button type="button" class="step-share__dashboard-link" (click)="goToDashboard()">
+      {{ 'onboarding.share.go_to_dashboard_cta' | translate }}
+    </button>
+  </div>
+</div>

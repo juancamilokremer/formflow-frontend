@@ -1,0 +1,9 @@
+<div class="onboarding-progress">
+  @for (step of steps; track step) {
+    <span
+      class="onboarding-progress__dot"
+      [class.onboarding-progress__dot--active]="isActive(step)"
+      [class.onboarding-progress__dot--done]="isDone(step)"
+    ></span>
+  }
+</div>

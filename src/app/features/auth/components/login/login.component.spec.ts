@@ -7,12 +7,14 @@ import { provideTranslateService } from '@ngx-translate/core';
 import { LoginComponent } from './login.component';
 import { AuthService } from '../../../../core/auth/auth.service';
 import { UserRole } from '../../../../core/models/user.model';
+import { StorageService } from '../../../../core/storage/storage.service';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
   let loginResult = of<void>(undefined);
   const currentUserSignal = signal<{ role: UserRole } | null>(null);
+  let onboardingDoneValue: boolean | null = null;
 
   const mockAuthService = {
     login: () => loginResult,
@@ -23,9 +25,12 @@ describe('LoginComponent', () => {
     refreshToken: () => of(undefined),
   };
 
+  const mockStorageService = { get: () => onboardingDoneValue };
+
   beforeEach(async () => {
     loginResult = of(undefined);
     currentUserSignal.set(null);
+    onboardingDoneValue = null;
 
     await TestBed.configureTestingModule({
       imports: [LoginComponent],
@@ -34,6 +39,7 @@ describe('LoginComponent', () => {
         provideAnimations(),
         provideTranslateService({ lang: 'es' }),
         { provide: AuthService, useValue: mockAuthService },
+        { provide: StorageService, useValue: mockStorageService },
       ],
     }).compileComponents();
 
@@ -135,5 +141,31 @@ describe('LoginComponent', () => {
     await new Promise((r) => setTimeout(r, 0));
 
     expect(navigateSpy).toHaveBeenCalledWith(['/admin']);
+  });
+
+  it('redirects to /onboarding when the account registered after this feature and has not finished it', async () => {
+    currentUserSignal.set({ role: UserRole.TENANT_ADMIN });
+    onboardingDoneValue = false;
+    const router = TestBed.inject(Router);
+    const navigateSpy = vi.spyOn(router, 'navigate');
+    (component as any).form.setValue({ tenantSlug: 'mi-empresa', email: 'user@test.com', password: 'Password1!' });
+
+    (component as any).onSubmit();
+    await new Promise((r) => setTimeout(r, 0));
+
+    expect(navigateSpy).toHaveBeenCalledWith(['/onboarding']);
+  });
+
+  it('redirects to /dashboard once onboarding is marked done, even if the key exists', async () => {
+    currentUserSignal.set({ role: UserRole.TENANT_ADMIN });
+    onboardingDoneValue = true;
+    const router = TestBed.inject(Router);
+    const navigateSpy = vi.spyOn(router, 'navigate');
+    (component as any).form.setValue({ tenantSlug: 'mi-empresa', email: 'user@test.com', password: 'Password1!' });
+
+    (component as any).onSubmit();
+    await new Promise((r) => setTimeout(r, 0));
+
+    expect(navigateSpy).toHaveBeenCalledWith(['/dashboard']);
   });
 });
