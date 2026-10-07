@@ -1,5 +1,5 @@
-<select class="ff-select" [value]="value()" (change)="onChange($event)">
+<select class="ff-select" (change)="onChange($event)">
   @for (opt of options(); track opt.value) {
-    <option [value]="opt.value">{{ opt.label | translate }}</option>
+    <option [value]="opt.value" [selected]="opt.value === value()">{{ opt.label | translate }}</option>
   }
 </select>
