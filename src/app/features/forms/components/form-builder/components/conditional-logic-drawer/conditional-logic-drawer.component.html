@@ -20,9 +20,9 @@
       @if (conditions().length > 1) {
         <div class="cld__operator-row">
           <span>{{ 'logic.show_when' | translate }}</span>
-          <select class="cld__operator-select" [value]="logicOperator()" (change)="onLogicOperatorChange($event)">
-            <option value="AND">{{ 'logic.all_conditions' | translate }}</option>
-            <option value="OR">{{ 'logic.any_condition' | translate }}</option>
+          <select class="cld__operator-select" (change)="onLogicOperatorChange($event)">
+            <option value="AND" [selected]="logicOperator() === 'AND'">{{ 'logic.all_conditions' | translate }}</option>
+            <option value="OR" [selected]="logicOperator() === 'OR'">{{ 'logic.any_condition' | translate }}</option>
           </select>
           <span>{{ 'logic.conditions_met' | translate }}</span>
         </div>
