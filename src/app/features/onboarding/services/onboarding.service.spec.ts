@@ -60,6 +60,33 @@ describe('OnboardingService', () => {
     });
     expect(mockFormsService.addQuestion).toHaveBeenCalledTimes(template.questions.length);
     expect(result).toEqual({ containerId: 'conv-1', containerKind: 'convocatorias', formId: 'form-1' });
+
+    // First diagnostic question is a scale type — assert the resolved AddQuestionRequest shape.
+    const [, , firstRequest] = mockFormsService.addQuestion.mock.calls[0];
+    expect(firstRequest.type).toBe('scale');
+    expect(firstRequest.title).toBe('onboarding.templates.diagnostic.questions.communication.title');
+    expect(firstRequest.config).toEqual({
+      min: 1, max: 5,
+      minLabel: 'onboarding.templates.diagnostic.scale.min_label',
+      maxLabel: 'onboarding.templates.diagnostic.scale.max_label',
+      scoringType: 'none',
+    });
+  });
+
+  it('resolves a single-choice question into real options with generated ids', () => {
+    const { service, mockFormsService } = setup();
+    const template = ONBOARDING_TEMPLATES.find((t) => t.id === 'candidates')!;
+
+    resultOf(service.createFromTemplate(template));
+
+    const [, , firstRequest] = mockFormsService.addQuestion.mock.calls[0];
+    expect(firstRequest.type).toBe('single');
+    expect(firstRequest.config.scoringType).toBe('none');
+    expect(firstRequest.config.options).toHaveLength(4);
+    expect(firstRequest.config.options[0]).toEqual({
+      id: expect.any(String),
+      label: 'onboarding.templates.candidates.questions.experience.options.under_1',
+    });
   });
 
   it('routes a REGISTRATION template through /encuestas', () => {

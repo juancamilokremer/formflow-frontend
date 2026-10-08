@@ -5,7 +5,11 @@ import { ConvocatoriaService } from '../../convocatorias/services/convocatoria.s
 import { FormsService } from '../../forms/services/forms.service';
 import { ContainerKind } from '../../../core/constants/route.constants';
 import { ProcessType } from '../../convocatorias/models/convocatoria.model';
-import { CreatedOnboardingForm, OnboardingTemplate } from '../models/onboarding.model';
+import { AddQuestionRequest, QuestionOption } from '../../forms/models/form.model';
+import { CreatedOnboardingForm, OnboardingQuestion, OnboardingTemplate } from '../models/onboarding.model';
+
+const LIKERT_MIN = 1;
+const LIKERT_MAX = 5;
 
 /** No standalone "create form" endpoint exists — every form is born inside a
  *  convocatoria/encuesta container (create container, then create the form inside it). */
@@ -25,7 +29,7 @@ export class OnboardingService {
           switchMap((section) =>
             forkJoin(
               template.questions.map((question) =>
-                this.formsService.addQuestion(created.formId, section.id, question)),
+                this.formsService.addQuestion(created.formId, section.id, this.toAddQuestionRequest(question))),
             ),
           ),
           switchMap(() => of(created)),
@@ -55,5 +59,37 @@ export class OnboardingService {
    *  /convocatorias — same split EncuestaCreateComponent/ConvocatoriaCreateComponent use. */
   private containerKindFor(type: ProcessType): ContainerKind {
     return type === 'REGISTRATION' ? 'encuestas' : 'convocatorias';
+  }
+
+  private toAddQuestionRequest(question: OnboardingQuestion): AddQuestionRequest {
+    const title = this.translate.instant(question.titleKey);
+    switch (question.type) {
+      case 'text':
+        return { type: 'text', title, required: question.required, config: { placeholder: '' } };
+      case 'single':
+        return {
+          type: 'single',
+          title,
+          required: question.required,
+          config: { scoringType: 'none', options: question.optionLabelKeys.map((key) => this.toOption(key)) },
+        };
+      case 'scale':
+        return {
+          type: 'scale',
+          title,
+          required: question.required,
+          config: {
+            min: LIKERT_MIN,
+            max: LIKERT_MAX,
+            minLabel: this.translate.instant('onboarding.templates.diagnostic.scale.min_label'),
+            maxLabel: this.translate.instant('onboarding.templates.diagnostic.scale.max_label'),
+            scoringType: 'none',
+          },
+        };
+    }
+  }
+
+  private toOption(labelKey: string): QuestionOption {
+    return { id: crypto.randomUUID(), label: this.translate.instant(labelKey) };
   }
 }

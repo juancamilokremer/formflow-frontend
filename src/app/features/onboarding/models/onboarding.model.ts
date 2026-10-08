@@ -1,5 +1,4 @@
 import { ProcessType } from '../../convocatorias/models/convocatoria.model';
-import { AddQuestionRequest } from '../../forms/models/form.model';
 import { ContainerKind } from '../../../core/constants/route.constants';
 
 export type OnboardingStepId = 'welcome' | 'company' | 'template' | 'share';
@@ -12,6 +11,29 @@ export interface CreatedOnboardingForm {
   formId: string;
 }
 
+export interface OnboardingTextQuestion {
+  type: 'text';
+  titleKey: string;
+  required: boolean;
+}
+
+export interface OnboardingSingleQuestion {
+  type: 'single';
+  titleKey: string;
+  required: boolean;
+  optionLabelKeys: string[];
+}
+
+export interface OnboardingScaleQuestion {
+  type: 'scale';
+  titleKey: string;
+  required: boolean;
+}
+
+/** Everything the templates below need to build an AddQuestionRequest — all text as
+ *  i18n keys, resolved by OnboardingService at creation time, never as literal strings. */
+export type OnboardingQuestion = OnboardingTextQuestion | OnboardingSingleQuestion | OnboardingScaleQuestion;
+
 export interface OnboardingTemplate {
   id: string;
   type: ProcessType;
@@ -19,11 +41,19 @@ export interface OnboardingTemplate {
    *  shown on the template card; the user can rename it right after creation. */
   nameKey: string;
   descriptionKey: string;
-  questions: AddQuestionRequest[];
+  questions: OnboardingQuestion[];
 }
 
-function singleOption(label: string): { id: string; label: string } {
-  return { id: crypto.randomUUID(), label };
+function textQuestion(titleKey: string, required: boolean): OnboardingTextQuestion {
+  return { type: 'text', titleKey, required };
+}
+
+function singleQuestion(titleKey: string, optionLabelKeys: string[]): OnboardingSingleQuestion {
+  return { type: 'single', titleKey, required: true, optionLabelKeys };
+}
+
+function scaleQuestion(titleKey: string): OnboardingScaleQuestion {
+  return { type: 'scale', titleKey, required: true };
 }
 
 const CANDIDATES_TEMPLATE: OnboardingTemplate = {
@@ -32,54 +62,28 @@ const CANDIDATES_TEMPLATE: OnboardingTemplate = {
   nameKey: 'onboarding.templates.candidates.name',
   descriptionKey: 'onboarding.templates.candidates.description',
   questions: [
-    {
-      type: 'single',
-      title: '¿Cuántos años de experiencia tienes en este campo?',
-      required: true,
-      config: {
-        scoringType: 'none',
-        options: [
-          singleOption('Menos de 1 año'),
-          singleOption('1-2 años'),
-          singleOption('3-5 años'),
-          singleOption('Más de 5 años'),
-        ],
-      },
-    },
-    {
-      type: 'single',
-      title: '¿Cuál es tu nivel de formación más alto?',
-      required: true,
-      config: {
-        scoringType: 'none',
-        options: [
-          singleOption('Bachillerato'),
-          singleOption('Técnico/Tecnólogo'),
-          singleOption('Profesional'),
-          singleOption('Posgrado'),
-        ],
-      },
-    },
-    { type: 'text', title: 'Cuéntanos tus expectativas salariales', required: false, config: { placeholder: '' } },
-    {
-      type: 'single',
-      title: '¿Cuál es tu disponibilidad para iniciar?',
-      required: true,
-      config: {
-        scoringType: 'none',
-        options: [
-          singleOption('Inmediata'),
-          singleOption('2 semanas'),
-          singleOption('1 mes'),
-          singleOption('Más de 1 mes'),
-        ],
-      },
-    },
-    { type: 'text', title: '¿Qué te motiva a postularte a esta posición?', required: false, config: { placeholder: '' } },
+    singleQuestion('onboarding.templates.candidates.questions.experience.title', [
+      'onboarding.templates.candidates.questions.experience.options.under_1',
+      'onboarding.templates.candidates.questions.experience.options.one_to_two',
+      'onboarding.templates.candidates.questions.experience.options.three_to_five',
+      'onboarding.templates.candidates.questions.experience.options.over_five',
+    ]),
+    singleQuestion('onboarding.templates.candidates.questions.education.title', [
+      'onboarding.templates.candidates.questions.education.options.high_school',
+      'onboarding.templates.candidates.questions.education.options.technical',
+      'onboarding.templates.candidates.questions.education.options.professional',
+      'onboarding.templates.candidates.questions.education.options.postgraduate',
+    ]),
+    textQuestion('onboarding.templates.candidates.questions.salary_expectation.title', false),
+    singleQuestion('onboarding.templates.candidates.questions.availability.title', [
+      'onboarding.templates.candidates.questions.availability.options.immediate',
+      'onboarding.templates.candidates.questions.availability.options.two_weeks',
+      'onboarding.templates.candidates.questions.availability.options.one_month',
+      'onboarding.templates.candidates.questions.availability.options.over_one_month',
+    ]),
+    textQuestion('onboarding.templates.candidates.questions.motivation.title', false),
   ],
 };
-
-const LIKERT_CONFIG = { min: 1, max: 5, minLabel: 'Muy en desacuerdo', maxLabel: 'Muy de acuerdo', scoringType: 'none' };
 
 const DIAGNOSTIC_TEMPLATE: OnboardingTemplate = {
   id: 'diagnostic',
@@ -87,15 +91,9 @@ const DIAGNOSTIC_TEMPLATE: OnboardingTemplate = {
   nameKey: 'onboarding.templates.diagnostic.name',
   descriptionKey: 'onboarding.templates.diagnostic.description',
   questions: [
-    'La comunicación dentro de mi equipo es clara y efectiva',
-    'Recibo la información que necesito para hacer bien mi trabajo',
-    'Mi líder directo me brinda retroalimentación útil',
-    'Confío en las decisiones que toma el liderazgo de la empresa',
-    'El ambiente de trabajo es positivo y colaborativo',
-    'Me siento valorado como miembro del equipo',
-    'Mi compensación es justa en relación con mis responsabilidades',
-    'Los beneficios que recibo satisfacen mis necesidades',
-  ].map((title) => ({ type: 'scale' as const, title, required: true, config: { ...LIKERT_CONFIG } })),
+    'communication', 'information', 'feedback', 'trust',
+    'environment', 'recognition', 'compensation', 'benefits',
+  ].map((id) => scaleQuestion(`onboarding.templates.diagnostic.questions.${id}.title`)),
 };
 
 const REGISTRATION_TEMPLATE: OnboardingTemplate = {
@@ -104,10 +102,10 @@ const REGISTRATION_TEMPLATE: OnboardingTemplate = {
   nameKey: 'onboarding.templates.registration.name',
   descriptionKey: 'onboarding.templates.registration.description',
   questions: [
-    { type: 'text', title: 'Nombre completo', required: true, config: { placeholder: '' } },
-    { type: 'text', title: 'Correo electrónico', required: true, config: { placeholder: '' } },
-    { type: 'text', title: 'Cargo', required: false, config: { placeholder: '' } },
-    { type: 'text', title: 'Empresa', required: false, config: { placeholder: '' } },
+    textQuestion('onboarding.templates.registration.questions.full_name.title', true),
+    textQuestion('onboarding.templates.registration.questions.email.title', true),
+    textQuestion('onboarding.templates.registration.questions.position.title', false),
+    textQuestion('onboarding.templates.registration.questions.company.title', false),
   ],
 };
 

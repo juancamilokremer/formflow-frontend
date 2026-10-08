@@ -161,15 +161,70 @@
     "templates": {
       "candidates": {
         "name": "Evaluación de candidatos",
-        "description": "Convocatoria con preguntas típicas para evaluar aspirantes a un puesto."
+        "description": "Convocatoria con preguntas típicas para evaluar aspirantes a un puesto.",
+        "questions": {
+          "experience": {
+            "title": "¿Cuántos años de experiencia tienes en este campo?",
+            "options": {
+              "under_1": "Menos de 1 año",
+              "one_to_two": "1-2 años",
+              "three_to_five": "3-5 años",
+              "over_five": "Más de 5 años"
+            }
+          },
+          "education": {
+            "title": "¿Cuál es tu nivel de formación más alto?",
+            "options": {
+              "high_school": "Bachillerato",
+              "technical": "Técnico/Tecnólogo",
+              "professional": "Profesional",
+              "postgraduate": "Posgrado"
+            }
+          },
+          "salary_expectation": {
+            "title": "Cuéntanos tus expectativas salariales"
+          },
+          "availability": {
+            "title": "¿Cuál es tu disponibilidad para iniciar?",
+            "options": {
+              "immediate": "Inmediata",
+              "two_weeks": "2 semanas",
+              "one_month": "1 mes",
+              "over_one_month": "Más de 1 mes"
+            }
+          },
+          "motivation": {
+            "title": "¿Qué te motiva a postularte a esta posición?"
+          }
+        }
       },
       "diagnostic": {
         "name": "Diagnóstico de clima laboral",
-        "description": "Encuesta con escalas Likert para medir comunicación, liderazgo y ambiente de trabajo."
+        "description": "Encuesta con escalas Likert para medir comunicación, liderazgo y ambiente de trabajo.",
+        "questions": {
+          "communication": { "title": "La comunicación dentro de mi equipo es clara y efectiva" },
+          "information": { "title": "Recibo la información que necesito para hacer bien mi trabajo" },
+          "feedback": { "title": "Mi líder directo me brinda retroalimentación útil" },
+          "trust": { "title": "Confío en las decisiones que toma el liderazgo de la empresa" },
+          "environment": { "title": "El ambiente de trabajo es positivo y colaborativo" },
+          "recognition": { "title": "Me siento valorado como miembro del equipo" },
+          "compensation": { "title": "Mi compensación es justa en relación con mis responsabilidades" },
+          "benefits": { "title": "Los beneficios que recibo satisfacen mis necesidades" }
+        },
+        "scale": {
+          "min_label": "Muy en desacuerdo",
+          "max_label": "Muy de acuerdo"
+        }
       },
       "registration": {
         "name": "Formulario de registro",
-        "description": "Encuesta simple para recolectar datos básicos de contacto."
+        "description": "Encuesta simple para recolectar datos básicos de contacto.",
+        "questions": {
+          "full_name": { "title": "Nombre completo" },
+          "email": { "title": "Correo electrónico" },
+          "position": { "title": "Cargo" },
+          "company": { "title": "Empresa" }
+        }
       }
     },
     "share": {
