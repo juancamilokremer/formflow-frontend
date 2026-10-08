@@ -7,7 +7,7 @@
     <span class="step-company__name-value">{{ authService.currentUser()?.tenantName }}</span>
   </div>
 
-  <app-logo-upload [logoUrl]="null" />
+  <app-logo-upload [logoUrl]="logoUrl()" (brandingChanged)="onBrandingChanged($event)" />
 
   <div class="step-company__actions">
     <app-button variant="ghost" (click)="onSkip()">{{ 'onboarding.skip' | translate }}</app-button>

@@ -26,4 +26,19 @@ describe('StepCompanyComponent', () => {
     component['onSkip']();
     expect(emitted).toBe(true);
   });
+
+  it('updates logoUrl from the branding returned after an upload', () => {
+    const component = setup();
+    expect(component['logoUrl']()).toBeNull();
+
+    component['onBrandingChanged']({
+      tenantName: 'Mi Empresa',
+      logoUrl: 'https://cdn.test/logo.png',
+      primaryColor: null,
+      secondaryColor: null,
+      faviconUrl: null,
+    });
+
+    expect(component['logoUrl']()).toBe('https://cdn.test/logo.png');
+  });
 });
