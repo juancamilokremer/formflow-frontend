@@ -1,11 +1,10 @@
 import { Component, inject, signal, output } from '@angular/core';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
 import { TemplateCardComponent } from '../template-card/template-card.component';
 import { OnboardingService } from '../../services/onboarding.service';
 import { CreatedOnboardingForm, ONBOARDING_TEMPLATES, OnboardingTemplate } from '../../models/onboarding.model';
 
-const BLANK_FORM_NAME = 'Mi primer formulario';
 const ERROR_KEY = 'onboarding.template.error_generic';
 
 @Component({
@@ -16,6 +15,7 @@ const ERROR_KEY = 'onboarding.template.error_generic';
 })
 export class StepTemplateComponent {
   private readonly onboardingService = inject(OnboardingService);
+  private readonly translate = inject(TranslateService);
 
   readonly created = output<CreatedOnboardingForm>();
   readonly startedBlank = output<CreatedOnboardingForm>();
@@ -44,7 +44,8 @@ export class StepTemplateComponent {
   protected startBlank(): void {
     this.errorKey.set(null);
     this.creatingBlank.set(true);
-    this.onboardingService.createBlank('REGISTRATION', BLANK_FORM_NAME).subscribe({
+    const blankFormName = this.translate.instant('onboarding.template.blank_form_name');
+    this.onboardingService.createBlank('REGISTRATION', blankFormName).subscribe({
       next: (createdForm) => {
         this.creatingBlank.set(false);
         this.startedBlank.emit(createdForm);

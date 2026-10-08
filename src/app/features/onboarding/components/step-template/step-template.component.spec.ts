@@ -65,7 +65,7 @@ describe('StepTemplateComponent', () => {
 
     component['startBlank']();
 
-    expect(mockOnboardingService.createBlank).toHaveBeenCalledWith('REGISTRATION', 'Mi primer formulario');
+    expect(mockOnboardingService.createBlank).toHaveBeenCalledWith('REGISTRATION', 'onboarding.template.blank_form_name');
     expect(emitted).toEqual(createdForm);
     expect(component['creatingBlank']()).toBe(false);
   });

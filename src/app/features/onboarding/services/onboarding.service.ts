@@ -1,4 +1,5 @@
 import { Injectable, inject } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { Observable, forkJoin, of, switchMap } from 'rxjs';
 import { ConvocatoriaService } from '../../convocatorias/services/convocatoria.service';
 import { FormsService } from '../../forms/services/forms.service';
@@ -6,20 +7,21 @@ import { ContainerKind } from '../../../core/constants/route.constants';
 import { ProcessType } from '../../convocatorias/models/convocatoria.model';
 import { CreatedOnboardingForm, OnboardingTemplate } from '../models/onboarding.model';
 
-const DEFAULT_SECTION_TITLE = 'Preguntas';
-
 /** No standalone "create form" endpoint exists — every form is born inside a
  *  convocatoria/encuesta container (create container, then create the form inside it). */
 @Injectable({ providedIn: 'root' })
 export class OnboardingService {
   private readonly convocatoriaService = inject(ConvocatoriaService);
   private readonly formsService = inject(FormsService);
+  private readonly translate = inject(TranslateService);
 
   createFromTemplate(template: OnboardingTemplate): Observable<CreatedOnboardingForm> {
-    return this.createContainerAndForm(template.defaultName, template.type).pipe(
+    const name = this.translate.instant(template.nameKey);
+    return this.createContainerAndForm(name, template.type).pipe(
       switchMap((created) => {
         if (template.questions.length === 0) return of(created);
-        return this.formsService.createSection(created.formId, { title: DEFAULT_SECTION_TITLE }).pipe(
+        const sectionTitle = this.translate.instant('onboarding.template.default_section_title');
+        return this.formsService.createSection(created.formId, { title: sectionTitle }).pipe(
           switchMap((section) =>
             forkJoin(
               template.questions.map((question) =>

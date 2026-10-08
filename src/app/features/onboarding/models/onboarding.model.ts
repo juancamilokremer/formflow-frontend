@@ -15,11 +15,10 @@ export interface CreatedOnboardingForm {
 export interface OnboardingTemplate {
   id: string;
   type: ProcessType;
+  /** Also used as the default container name sent to the API — same text
+   *  shown on the template card; the user can rename it right after creation. */
   nameKey: string;
   descriptionKey: string;
-  /** Container name sent to the API — plain Spanish text, same as any other
-   *  convocatoria/encuesta name; the user can rename it right after creation. */
-  defaultName: string;
   questions: AddQuestionRequest[];
 }
 
@@ -32,7 +31,6 @@ const CANDIDATES_TEMPLATE: OnboardingTemplate = {
   type: 'CANDIDATES',
   nameKey: 'onboarding.templates.candidates.name',
   descriptionKey: 'onboarding.templates.candidates.description',
-  defaultName: 'Evaluación de candidatos',
   questions: [
     {
       type: 'single',
@@ -88,7 +86,6 @@ const DIAGNOSTIC_TEMPLATE: OnboardingTemplate = {
   type: 'DIAGNOSTIC',
   nameKey: 'onboarding.templates.diagnostic.name',
   descriptionKey: 'onboarding.templates.diagnostic.description',
-  defaultName: 'Diagnóstico de clima laboral',
   questions: [
     'La comunicación dentro de mi equipo es clara y efectiva',
     'Recibo la información que necesito para hacer bien mi trabajo',
@@ -106,7 +103,6 @@ const REGISTRATION_TEMPLATE: OnboardingTemplate = {
   type: 'REGISTRATION',
   nameKey: 'onboarding.templates.registration.name',
   descriptionKey: 'onboarding.templates.registration.description',
-  defaultName: 'Formulario de registro',
   questions: [
     { type: 'text', title: 'Nombre completo', required: true, config: { placeholder: '' } },
     { type: 'text', title: 'Correo electrónico', required: true, config: { placeholder: '' } },

@@ -154,7 +154,9 @@
       "question_count": "{{count}} preguntas",
       "use_cta": "Usar esta plantilla",
       "start_blank_cta": "Empezar desde cero",
-      "error_generic": "No pudimos crear el formulario. Intenta de nuevo."
+      "error_generic": "No pudimos crear el formulario. Intenta de nuevo.",
+      "default_section_title": "Preguntas",
+      "blank_form_name": "Mi primer formulario"
     },
     "templates": {
       "candidates": {

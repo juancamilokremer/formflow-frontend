@@ -154,7 +154,9 @@
       "question_count": "{{count}} questions",
       "use_cta": "Use this template",
       "start_blank_cta": "Start from scratch",
-      "error_generic": "We couldn't create the form. Please try again."
+      "error_generic": "We couldn't create the form. Please try again.",
+      "default_section_title": "Questions",
+      "blank_form_name": "My first form"
     },
     "templates": {
       "candidates": {
