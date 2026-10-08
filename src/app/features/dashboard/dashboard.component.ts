@@ -12,6 +12,7 @@ import { StatCardComponent } from '../../shared/components/stat-card/stat-card.c
 import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state.component';
 import { PlanUsageCardComponent } from '../tenants/tenant-settings/components/plan-usage-card/plan-usage-card.component';
 import { CardComponent } from '../../shared/components/card/card.component';
+import { OnboardingResumeBannerComponent } from './components/onboarding-resume-banner/onboarding-resume-banner.component';
 import { Form } from '../forms/models/form.model';
 import { ConvocatoriaSummary, PROCESS_TYPE_LABEL_KEYS } from '../convocatorias/models/convocatoria.model';
 import { TenantUsage } from '../../core/models/tenant.model';
@@ -25,6 +26,7 @@ interface RecentActivityItem extends ConvocatoriaSummary {
   imports: [
     TranslatePipe, DatePipe, RouterLink,
     PlanBadgeComponent, StatCardComponent, EmptyStateComponent, PlanUsageCardComponent, CardComponent,
+    OnboardingResumeBannerComponent,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',

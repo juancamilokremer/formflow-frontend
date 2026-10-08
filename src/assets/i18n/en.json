@@ -51,7 +51,7 @@
           "forms": "2 forms",
           "responses": "50 responses/mo",
           "users": "1 user",
-          "convocatorias": "Recruitment drives",
+          "convocatorias": "2 processes",
           "export_csv": "Export CSV",
           "export_excel": "Export Excel"
         }
@@ -129,6 +129,114 @@
       "title": "Recent activity",
       "empty_title": "No activity yet",
       "empty_subtitle": "Create a process or survey to see it here."
+    },
+    "onboarding_resume": {
+      "message": "You haven't finished setting up your account yet.",
+      "cta": "Continue setup"
+    }
+  },
+  "onboarding": {
+    "title": "Getting started",
+    "skip": "Skip for now",
+    "welcome": {
+      "greeting": "Hi, {{name}}!",
+      "description": "Welcome to FormFlow. We'll help you create your first form in a few minutes.",
+      "cta": "Get started"
+    },
+    "company": {
+      "title": "Your company",
+      "subtitle": "Confirm your company's name and logo — you can change them later in Settings.",
+      "name_label": "Company name"
+    },
+    "template": {
+      "title": "What do you want to create?",
+      "subtitle": "Pick a template to start quickly, or start from scratch.",
+      "question_count": "{{count}} questions",
+      "use_cta": "Use this template",
+      "start_blank_cta": "Start from scratch",
+      "error_generic": "We couldn't create the form. Please try again.",
+      "default_section_title": "Questions",
+      "blank_form_name": "My first form"
+    },
+    "templates": {
+      "candidates": {
+        "name": "Candidate evaluation",
+        "description": "A hiring process with typical questions to evaluate applicants.",
+        "questions": {
+          "experience": {
+            "title": "How many years of experience do you have in this field?",
+            "options": {
+              "under_1": "Less than 1 year",
+              "one_to_two": "1-2 years",
+              "three_to_five": "3-5 years",
+              "over_five": "More than 5 years"
+            }
+          },
+          "education": {
+            "title": "What is your highest level of education?",
+            "options": {
+              "high_school": "High school",
+              "technical": "Technical/Vocational",
+              "professional": "Professional degree",
+              "postgraduate": "Postgraduate"
+            }
+          },
+          "salary_expectation": {
+            "title": "Tell us your salary expectations"
+          },
+          "availability": {
+            "title": "What is your availability to start?",
+            "options": {
+              "immediate": "Immediately",
+              "two_weeks": "2 weeks",
+              "one_month": "1 month",
+              "over_one_month": "More than 1 month"
+            }
+          },
+          "motivation": {
+            "title": "What motivates you to apply for this position?"
+          }
+        }
+      },
+      "diagnostic": {
+        "name": "Workplace climate diagnostic",
+        "description": "A survey with Likert scales to measure communication, leadership and work environment.",
+        "questions": {
+          "communication": { "title": "Communication within my team is clear and effective" },
+          "information": { "title": "I receive the information I need to do my job well" },
+          "feedback": { "title": "My direct leader gives me useful feedback" },
+          "trust": { "title": "I trust the decisions made by the company's leadership" },
+          "environment": { "title": "The work environment is positive and collaborative" },
+          "recognition": { "title": "I feel valued as a member of the team" },
+          "compensation": { "title": "My compensation is fair relative to my responsibilities" },
+          "benefits": { "title": "The benefits I receive meet my needs" }
+        },
+        "scale": {
+          "min_label": "Strongly disagree",
+          "max_label": "Strongly agree"
+        }
+      },
+      "registration": {
+        "name": "Registration form",
+        "description": "A simple survey to collect basic contact information.",
+        "questions": {
+          "full_name": { "title": "Full name" },
+          "email": { "title": "Email address" },
+          "position": { "title": "Job title" },
+          "company": { "title": "Company" }
+        }
+      }
+    },
+    "share": {
+      "title": "Your form is ready!",
+      "subtitle_encuesta": "Share this link to start collecting responses.",
+      "subtitle_convocatoria": "Now add candidates so they can respond.",
+      "copy_link": "Copy link",
+      "link_copied": "Copied!",
+      "go_to_builder_cta": "Edit form",
+      "create_another_encuesta_cta": "Create another survey",
+      "create_another_convocatoria_cta": "Create another process",
+      "go_to_dashboard_cta": "Go to dashboard"
     }
   },
   "auth": {

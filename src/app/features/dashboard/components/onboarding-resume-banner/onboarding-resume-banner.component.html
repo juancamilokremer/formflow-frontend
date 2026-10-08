@@ -1,0 +1,8 @@
+@if (visible) {
+  <div class="onboarding-resume-banner" role="status">
+    <span>{{ 'dashboard.onboarding_resume.message' | translate }}</span>
+    <a [routerLink]="onboardingPath" class="onboarding-resume-banner__cta">
+      {{ 'dashboard.onboarding_resume.cta' | translate }}
+    </a>
+  </div>
+}

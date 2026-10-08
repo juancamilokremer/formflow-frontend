@@ -1,0 +1,23 @@
+:host {
+  display: block;
+}
+
+.onboarding {
+  display: flex;
+  justify-content: center;
+  padding: 40px 16px;
+}
+
+.onboarding__card {
+  width: 100%;
+  max-width: 640px;
+  background: var(--ff-white);
+  border: 1px solid var(--ff-border);
+  border-radius: var(--ff-radius-lg);
+  padding: 32px;
+
+  > app-onboarding-progress-bar {
+    display: block;
+    margin-bottom: 28px;
+  }
+}

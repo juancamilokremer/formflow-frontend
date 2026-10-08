@@ -51,7 +51,7 @@
           "forms": "2 formularios",
           "responses": "50 respuestas/mes",
           "users": "1 usuario",
-          "convocatorias": "Convocatorias",
+          "convocatorias": "2 convocatorias",
           "export_csv": "Exportar CSV",
           "export_excel": "Exportar Excel"
         }
@@ -129,6 +129,114 @@
       "title": "Actividad reciente",
       "empty_title": "Todavía no hay actividad",
       "empty_subtitle": "Crea una convocatoria o encuesta para verla aquí."
+    },
+    "onboarding_resume": {
+      "message": "Todavía no terminaste de configurar tu cuenta.",
+      "cta": "Continuar configuración"
+    }
+  },
+  "onboarding": {
+    "title": "Primeros pasos",
+    "skip": "Saltar por ahora",
+    "welcome": {
+      "greeting": "¡Hola, {{name}}!",
+      "description": "Bienvenido a FormFlow. Te ayudamos a crear tu primer formulario en unos minutos.",
+      "cta": "Comenzar"
+    },
+    "company": {
+      "title": "Tu empresa",
+      "subtitle": "Confirma el nombre y el logo de tu empresa — podrás cambiarlos luego en Configuración.",
+      "name_label": "Nombre de la empresa"
+    },
+    "template": {
+      "title": "¿Qué quieres crear?",
+      "subtitle": "Elige una plantilla para empezar rápido, o arranca desde cero.",
+      "question_count": "{{count}} preguntas",
+      "use_cta": "Usar esta plantilla",
+      "start_blank_cta": "Empezar desde cero",
+      "error_generic": "No pudimos crear el formulario. Intenta de nuevo.",
+      "default_section_title": "Preguntas",
+      "blank_form_name": "Mi primer formulario"
+    },
+    "templates": {
+      "candidates": {
+        "name": "Evaluación de candidatos",
+        "description": "Convocatoria con preguntas típicas para evaluar aspirantes a un puesto.",
+        "questions": {
+          "experience": {
+            "title": "¿Cuántos años de experiencia tienes en este campo?",
+            "options": {
+              "under_1": "Menos de 1 año",
+              "one_to_two": "1-2 años",
+              "three_to_five": "3-5 años",
+              "over_five": "Más de 5 años"
+            }
+          },
+          "education": {
+            "title": "¿Cuál es tu nivel de formación más alto?",
+            "options": {
+              "high_school": "Bachillerato",
+              "technical": "Técnico/Tecnólogo",
+              "professional": "Profesional",
+              "postgraduate": "Posgrado"
+            }
+          },
+          "salary_expectation": {
+            "title": "Cuéntanos tus expectativas salariales"
+          },
+          "availability": {
+            "title": "¿Cuál es tu disponibilidad para iniciar?",
+            "options": {
+              "immediate": "Inmediata",
+              "two_weeks": "2 semanas",
+              "one_month": "1 mes",
+              "over_one_month": "Más de 1 mes"
+            }
+          },
+          "motivation": {
+            "title": "¿Qué te motiva a postularte a esta posición?"
+          }
+        }
+      },
+      "diagnostic": {
+        "name": "Diagnóstico de clima laboral",
+        "description": "Encuesta con escalas Likert para medir comunicación, liderazgo y ambiente de trabajo.",
+        "questions": {
+          "communication": { "title": "La comunicación dentro de mi equipo es clara y efectiva" },
+          "information": { "title": "Recibo la información que necesito para hacer bien mi trabajo" },
+          "feedback": { "title": "Mi líder directo me brinda retroalimentación útil" },
+          "trust": { "title": "Confío en las decisiones que toma el liderazgo de la empresa" },
+          "environment": { "title": "El ambiente de trabajo es positivo y colaborativo" },
+          "recognition": { "title": "Me siento valorado como miembro del equipo" },
+          "compensation": { "title": "Mi compensación es justa en relación con mis responsabilidades" },
+          "benefits": { "title": "Los beneficios que recibo satisfacen mis necesidades" }
+        },
+        "scale": {
+          "min_label": "Muy en desacuerdo",
+          "max_label": "Muy de acuerdo"
+        }
+      },
+      "registration": {
+        "name": "Formulario de registro",
+        "description": "Encuesta simple para recolectar datos básicos de contacto.",
+        "questions": {
+          "full_name": { "title": "Nombre completo" },
+          "email": { "title": "Correo electrónico" },
+          "position": { "title": "Cargo" },
+          "company": { "title": "Empresa" }
+        }
+      }
+    },
+    "share": {
+      "title": "¡Tu formulario está listo!",
+      "subtitle_encuesta": "Comparte este link para empezar a recibir respuestas.",
+      "subtitle_convocatoria": "Ahora agrega candidatos para que puedan responder.",
+      "copy_link": "Copiar link",
+      "link_copied": "¡Copiado!",
+      "go_to_builder_cta": "Editar formulario",
+      "create_another_encuesta_cta": "Crear otra encuesta",
+      "create_another_convocatoria_cta": "Crear otra convocatoria",
+      "go_to_dashboard_cta": "Ir al dashboard"
     }
   },
   "auth": {

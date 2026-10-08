@@ -7,6 +7,8 @@ import { provideTranslateService } from '@ngx-translate/core';
 import { RegisterComponent } from './register.component';
 import { AuthService } from '../../../../core/auth/auth.service';
 import { RegisterResponse } from '../../../../core/models/auth.model';
+import { StorageService } from '../../../../core/storage/storage.service';
+import { StorageKeys } from '../../../../core/storage/storage-keys.constants';
 
 const registeredResponse: RegisterResponse = {
   user: { id: 'u1', email: 'juan@empresa.com', fullName: 'Juan Pérez', role: 'TENANT_ADMIN', emailVerified: false, avatarUrl: null },
@@ -27,8 +29,11 @@ describe('RegisterComponent', () => {
     login: () => of(undefined),
   };
 
+  const mockStorageService = { set: vi.fn() };
+
   beforeEach(async () => {
     registerResult = of(registeredResponse);
+    mockStorageService.set = vi.fn();
 
     await TestBed.configureTestingModule({
       imports: [RegisterComponent],
@@ -37,6 +42,7 @@ describe('RegisterComponent', () => {
         provideAnimations(),
         provideTranslateService({ lang: 'es' }),
         { provide: AuthService, useValue: mockAuthService },
+        { provide: StorageService, useValue: mockStorageService },
       ],
     }).compileComponents();
 
@@ -132,6 +138,23 @@ describe('RegisterComponent', () => {
     expect((component as any).registered()).toBe(true);
     expect((component as any).registeredEmail).toBe(registeredResponse.user.email);
     expect((component as any).loading()).toBe(false);
+  });
+
+  it('marks onboarding as pending on successful registration', async () => {
+    registerResult = of(registeredResponse);
+    (component as any).form.setValue({
+      companyName: 'Mi Empresa',
+      slug: 'mi-empresa',
+      firstName: 'Juan',
+      lastName: 'Pérez',
+      email: 'juan@empresa.com',
+      password: 'Password1!',
+      confirmPassword: 'Password1!',
+      acceptedTerms: true,
+    });
+    (component as any).onSubmit();
+    await new Promise((r) => setTimeout(r, 0));
+    expect(mockStorageService.set).toHaveBeenCalledWith(StorageKeys.ONBOARDING_DONE, false);
   });
 
   it('sets error_conflict key on 409 response', async () => {

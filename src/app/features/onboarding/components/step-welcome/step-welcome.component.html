@@ -1,0 +1,8 @@
+<section class="step-welcome">
+  <app-icon name="rocket" [size]="40" />
+  <h1 class="step-welcome__title">
+    {{ 'onboarding.welcome.greeting' | translate: { name: authService.currentUser()?.firstName } }}
+  </h1>
+  <p class="step-welcome__subtitle">{{ 'onboarding.welcome.description' | translate }}</p>
+  <app-button (click)="onContinue()">{{ 'onboarding.welcome.cta' | translate }}</app-button>
+</section>

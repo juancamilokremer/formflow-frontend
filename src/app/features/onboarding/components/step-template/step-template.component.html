@@ -1,0 +1,27 @@
+<div class="step-template">
+  <h2 class="step-template__title">{{ 'onboarding.template.title' | translate }}</h2>
+  <p class="step-template__subtitle">{{ 'onboarding.template.subtitle' | translate }}</p>
+
+  @if (errorKey()) {
+    <p class="form-error">{{ errorKey()! | translate }}</p>
+  }
+
+  <div class="step-template__grid">
+    @for (template of templates; track template.id) {
+      <app-template-card
+        [template]="template"
+        [loading]="creatingTemplateId() === template.id"
+        (selected)="useTemplate(template)"
+      />
+    }
+  </div>
+
+  <div class="step-template__actions">
+    <app-button variant="secondary" [loading]="creatingBlank()" (click)="startBlank()">
+      {{ 'onboarding.template.start_blank_cta' | translate }}
+    </app-button>
+    <button type="button" class="step-template__skip" (click)="onSkip()">
+      {{ 'onboarding.skip' | translate }}
+    </button>
+  </div>
+</div>

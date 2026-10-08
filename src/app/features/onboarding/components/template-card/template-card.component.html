@@ -1,0 +1,13 @@
+<div class="template-card">
+  <div class="template-card__icon">
+    <app-icon [name]="icon()" [size]="24" />
+  </div>
+  <h3 class="template-card__name">{{ template().nameKey | translate }}</h3>
+  <p class="template-card__description">{{ template().descriptionKey | translate }}</p>
+  <p class="template-card__count">
+    {{ 'onboarding.template.question_count' | translate: { count: template().questions.length } }}
+  </p>
+  <app-button [fullWidth]="true" [loading]="loading()" (click)="onSelect()">
+    {{ 'onboarding.template.use_cta' | translate }}
+  </app-button>
+</div>

@@ -1,0 +1,45 @@
+.step-template__title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--ff-text-primary);
+  margin: 0 0 8px;
+}
+
+.step-template__subtitle {
+  font-size: 14px;
+  color: var(--ff-text-secondary);
+  margin: 0 0 24px;
+}
+
+.form-error {
+  color: var(--ff-error-text);
+  font-size: 13px;
+  margin: 0 0 16px;
+}
+
+.step-template__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+
+  @media (max-width: 767px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.step-template__actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.step-template__skip {
+  background: none;
+  border: none;
+  color: var(--ff-text-secondary);
+  font-size: 13px;
+  cursor: pointer;
+  text-decoration: underline;
+}
