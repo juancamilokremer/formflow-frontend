@@ -2,8 +2,8 @@ import { Component, inject, signal, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
 import { TemplateCardComponent } from '../template-card/template-card.component';
-import { OnboardingService, CreatedOnboardingForm } from '../../services/onboarding.service';
-import { ONBOARDING_TEMPLATES, OnboardingTemplate } from '../../models/onboarding.model';
+import { OnboardingService } from '../../services/onboarding.service';
+import { CreatedOnboardingForm, ONBOARDING_TEMPLATES, OnboardingTemplate } from '../../models/onboarding.model';
 
 const BLANK_FORM_NAME = 'Mi primer formulario';
 const ERROR_KEY = 'onboarding.template.error_generic';

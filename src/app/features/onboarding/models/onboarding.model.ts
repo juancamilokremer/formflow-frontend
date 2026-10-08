@@ -1,9 +1,16 @@
 import { ProcessType } from '../../convocatorias/models/convocatoria.model';
 import { AddQuestionRequest } from '../../forms/models/form.model';
+import { ContainerKind } from '../../../core/constants/route.constants';
 
 export type OnboardingStepId = 'welcome' | 'company' | 'template' | 'share';
 
 export const ONBOARDING_STEP_IDS: OnboardingStepId[] = ['welcome', 'company', 'template', 'share'];
+
+export interface CreatedOnboardingForm {
+  containerId: string;
+  containerKind: ContainerKind;
+  formId: string;
+}
 
 export interface OnboardingTemplate {
   id: string;

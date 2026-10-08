@@ -4,21 +4,9 @@ import { ConvocatoriaService } from '../../convocatorias/services/convocatoria.s
 import { FormsService } from '../../forms/services/forms.service';
 import { ContainerKind } from '../../../core/constants/route.constants';
 import { ProcessType } from '../../convocatorias/models/convocatoria.model';
-import { OnboardingTemplate } from '../models/onboarding.model';
-
-export interface CreatedOnboardingForm {
-  containerId: string;
-  containerKind: ContainerKind;
-  formId: string;
-}
+import { CreatedOnboardingForm, OnboardingTemplate } from '../models/onboarding.model';
 
 const DEFAULT_SECTION_TITLE = 'Preguntas';
-
-/** Registration-type containers route under /encuestas, everything else under
- *  /convocatorias — same split EncuestaCreateComponent/ConvocatoriaCreateComponent use. */
-function containerKindFor(type: ProcessType): ContainerKind {
-  return type === 'REGISTRATION' ? 'encuestas' : 'convocatorias';
-}
 
 /** No standalone "create form" endpoint exists — every form is born inside a
  *  convocatoria/encuesta container (create container, then create the form inside it). */
@@ -55,9 +43,15 @@ export class OnboardingService {
           .createForm(detail.id, { name, type, weight: 100, categoryWeights: [], minScore: null })
           .pipe(
             switchMap((form) =>
-              of({ containerId: detail.id, containerKind: containerKindFor(type), formId: form.formId })),
+              of({ containerId: detail.id, containerKind: this.containerKindFor(type), formId: form.formId })),
           ),
       ),
     );
+  }
+
+  /** Registration-type containers route under /encuestas, everything else under
+   *  /convocatorias — same split EncuestaCreateComponent/ConvocatoriaCreateComponent use. */
+  private containerKindFor(type: ProcessType): ContainerKind {
+    return type === 'REGISTRATION' ? 'encuestas' : 'convocatorias';
   }
 }

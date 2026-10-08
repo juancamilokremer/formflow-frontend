@@ -9,7 +9,7 @@ import {
   encuestaNewPath,
   formBuilderPath,
 } from '../../../../core/constants/route.constants';
-import { CreatedOnboardingForm } from '../../services/onboarding.service';
+import { CreatedOnboardingForm } from '../../models/onboarding.model';
 
 @Component({
   selector: 'app-step-share',

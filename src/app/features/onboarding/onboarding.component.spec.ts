@@ -5,7 +5,7 @@ import { OnboardingComponent } from './onboarding.component';
 import { StorageService } from '../../core/storage/storage.service';
 import { StorageKeys } from '../../core/storage/storage-keys.constants';
 import { AuthService } from '../../core/auth/auth.service';
-import { CreatedOnboardingForm } from './services/onboarding.service';
+import { CreatedOnboardingForm } from './models/onboarding.model';
 
 describe('OnboardingComponent', () => {
   let component: OnboardingComponent;

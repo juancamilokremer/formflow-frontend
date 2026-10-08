@@ -3,7 +3,7 @@ import { provideTranslateService } from '@ngx-translate/core';
 import { StepShareComponent } from './step-share.component';
 import { StorageService } from '../../../../core/storage/storage.service';
 import { StorageKeys } from '../../../../core/storage/storage-keys.constants';
-import { CreatedOnboardingForm } from '../../services/onboarding.service';
+import { CreatedOnboardingForm } from '../../models/onboarding.model';
 
 describe('StepShareComponent', () => {
   let component: StepShareComponent;

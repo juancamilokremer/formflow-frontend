@@ -2,8 +2,8 @@ import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { provideTranslateService } from '@ngx-translate/core';
 import { of, throwError } from 'rxjs';
 import { StepTemplateComponent } from './step-template.component';
-import { OnboardingService, CreatedOnboardingForm } from '../../services/onboarding.service';
-import { ONBOARDING_TEMPLATES } from '../../models/onboarding.model';
+import { OnboardingService } from '../../services/onboarding.service';
+import { CreatedOnboardingForm, ONBOARDING_TEMPLATES } from '../../models/onboarding.model';
 
 describe('StepTemplateComponent', () => {
   let component: StepTemplateComponent;
