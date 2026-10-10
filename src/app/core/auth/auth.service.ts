@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Observable, of, catchError, tap, map } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { TokenService } from './token.service';
+import { CrispService } from '../services/crisp.service';
 import { RouteConstants } from '../constants/route.constants';
 import { ApiResponse } from '../models/api-response.model';
 import { User, UserRole } from '../models/user.model';
@@ -24,6 +25,7 @@ export class AuthService {
   private readonly http = inject(HttpClient);
   private readonly tokenService = inject(TokenService);
   private readonly router = inject(Router);
+  private readonly crispService = inject(CrispService);
 
   readonly currentUser = signal<User | null>(null);
   readonly isAuthenticated = computed(() => this.currentUser() !== null);
@@ -95,6 +97,7 @@ export class AuthService {
   }
 
   logout(): void {
+    this.crispService.resetSession();
     this.tokenService.clearTokens();
     this.currentUser.set(null);
     this.router.navigate([`/${RouteConstants.LOGIN}`]);
@@ -140,7 +143,9 @@ export class AuthService {
       { accessToken: data.accessToken, refreshToken: data.refreshToken },
       tenantSlug
     );
-    this.currentUser.set(this.mapUser(data.user, data.tenant));
+    const user = this.mapUser(data.user, data.tenant);
+    this.currentUser.set(user);
+    this.crispService.identify(user);
   }
 
   private mapUser(user: AuthUserSummary, tenant: AuthTenantSummary): User {

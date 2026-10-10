@@ -7,6 +7,7 @@ import { routes } from './app.routes';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { languageInterceptor } from './core/interceptors/language.interceptor';
 import { AuthService } from './core/auth/auth.service';
+import { CrispService } from './core/services/crisp.service';
 import { readStoredLanguage } from './core/i18n/stored-language';
 
 export const appConfig: ApplicationConfig = {
@@ -17,5 +18,6 @@ export const appConfig: ApplicationConfig = {
     provideTranslateService({ lang: readStoredLanguage() }),
     provideTranslateHttpLoader({ prefix: './assets/i18n/', suffix: '.json' }),
     provideAppInitializer(() => inject(AuthService).initialize()),
+    provideAppInitializer(() => inject(CrispService).init()),
   ],
 };

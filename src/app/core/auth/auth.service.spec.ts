@@ -4,15 +4,18 @@ import { provideHttpClient } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
 import { AuthService } from './auth.service';
 import { TokenService } from './token.service';
+import { CrispService } from '../services/crisp.service';
 import { environment } from '../../../environments/environment';
 
 describe('AuthService', () => {
   let service: AuthService;
   let httpMock: HttpTestingController;
   let tokenService: TokenService;
+  let mockCrispService: { identify: ReturnType<typeof vi.fn>; resetSession: ReturnType<typeof vi.fn> };
 
   beforeEach(() => {
     localStorage.clear();
+    mockCrispService = { identify: vi.fn(), resetSession: vi.fn() };
     TestBed.configureTestingModule({
       providers: [
         provideHttpClient(),
@@ -20,6 +23,7 @@ describe('AuthService', () => {
         provideRouter([{ path: '**', redirectTo: '' }]),
         AuthService,
         TokenService,
+        { provide: CrispService, useValue: mockCrispService },
       ],
     });
     service = TestBed.inject(AuthService);
@@ -59,6 +63,7 @@ describe('AuthService', () => {
       expect(service.currentUser()?.tenantId).toBe('t1');
       expect(service.currentUser()?.avatarUrl).toBe('http://x/avatar.png');
       expect(tokenService.getRefreshToken()).toBe('ref');
+      expect(mockCrispService.identify).toHaveBeenCalledWith(service.currentUser());
     });
   });
 
@@ -174,9 +179,10 @@ describe('AuthService', () => {
   });
 
   describe('logout', () => {
-    it('clears tokens and resets currentUser', () => {
+    it('resets the Crisp session and clears tokens and currentUser', () => {
       tokenService.setTokens({ accessToken: 'acc', refreshToken: 'ref' }, 'acme');
       service.logout();
+      expect(mockCrispService.resetSession).toHaveBeenCalled();
       expect(service.currentUser()).toBeNull();
       expect(tokenService.getAccessToken()).toBeNull();
     });

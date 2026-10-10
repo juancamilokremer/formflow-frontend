@@ -2,6 +2,7 @@ import { Component, computed, inject, input, output } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { AuthService } from '../../../../core/auth/auth.service';
+import { CrispService } from '../../../../core/services/crisp.service';
 import { RouteConstants } from '../../../../core/constants/route.constants';
 import { UserRole } from '../../../../core/models/user.model';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
@@ -41,6 +42,7 @@ const NAV_ITEMS: NavItem[] = [
 })
 export class SidebarComponent {
   protected readonly authService = inject(AuthService);
+  private readonly crispService = inject(CrispService);
 
   readonly open = input(false);
   readonly closeRequested = output<void>();
@@ -70,5 +72,9 @@ export class SidebarComponent {
 
   protected logout(): void {
     this.authService.logout();
+  }
+
+  protected openHelpCenter(): void {
+    this.crispService.openHelpCenter();
   }
 }

@@ -231,6 +231,7 @@ export const routes: Routes = [
   },
   {
     path: `${RouteConstants.FORMS}/:formId/${RouteConstants.FORM_RESPOND}`,
+    data: { hideCrisp: true },
     loadComponent: () =>
       import('./features/responses/pages/anonymous-form-page/anonymous-form-page.component').then(
         (m) => m.AnonymousFormPageComponent,
@@ -238,6 +239,7 @@ export const routes: Routes = [
   },
   {
     path: `${RouteConstants.PUBLIC_FORM_PREFIX}/:convId/:token`,
+    data: { hideCrisp: true },
     loadComponent: () =>
       import('./features/responses/pages/candidate-form-page/candidate-form-page.component').then(
         (m) => m.CandidateFormPageComponent,

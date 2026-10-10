@@ -5,6 +5,9 @@
   </div>
 
   <div class="footer__links">
+    <button type="button" class="footer__link-button" (click)="openHelpCenter()">
+      {{ 'landing.footer.help_center' | translate }}
+    </button>
     <a [routerLink]="['/', routeConstants.TERMS]">{{ 'landing.footer.terms' | translate }}</a>
     <a [routerLink]="['/', routeConstants.PRIVACY]">{{ 'landing.footer.privacy' | translate }}</a>
     <a [href]="'mailto:' + supportEmail">{{ 'landing.footer.contact' | translate }}</a>

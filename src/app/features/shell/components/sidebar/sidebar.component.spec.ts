@@ -1,6 +1,7 @@
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { AuthService } from '../../../../core/auth/auth.service';
+import { CrispService } from '../../../../core/services/crisp.service';
 import { User, UserRole } from '../../../../core/models/user.model';
 import { SidebarComponent } from './sidebar.component';
 
@@ -18,13 +19,15 @@ const mockUser: User = {
 
 function setup(user: User | null = mockUser) {
   const mockLogout = vi.fn();
+  const mockOpenHelpCenter = vi.fn();
   TestBed.configureTestingModule({
     providers: [
       { provide: AuthService, useValue: { currentUser: signal(user), logout: mockLogout } },
+      { provide: CrispService, useValue: { openHelpCenter: mockOpenHelpCenter } },
     ],
   });
   const component = TestBed.runInInjectionContext(() => new SidebarComponent());
-  return { component, mockLogout };
+  return { component, mockLogout, mockOpenHelpCenter };
 }
 
 describe('SidebarComponent', () => {
@@ -49,6 +52,12 @@ describe('SidebarComponent', () => {
     const { component, mockLogout } = setup();
     (component as any).logout();
     expect(mockLogout).toHaveBeenCalled();
+  });
+
+  it('openHelpCenter should delegate to crispService', () => {
+    const { component, mockOpenHelpCenter } = setup();
+    (component as any).openHelpCenter();
+    expect(mockOpenHelpCenter).toHaveBeenCalled();
   });
 
   it('hides the Admin nav item for a regular TENANT_ADMIN', () => {
