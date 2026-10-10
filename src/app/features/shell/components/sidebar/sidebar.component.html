@@ -26,6 +26,10 @@
         <span>{{ item.labelKey | translate }}</span>
       </a>
     }
+    <button type="button" class="sidebar__nav-item" (click)="openHelpCenter()">
+      <app-icon name="help-circle" [size]="18" />
+      <span>{{ 'shell.nav.help_center' | translate }}</span>
+    </button>
   </nav>
 
   <div class="sidebar__footer">

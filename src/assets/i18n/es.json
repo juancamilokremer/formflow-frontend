@@ -348,7 +348,8 @@
       "settings": "Configuración",
       "billing": "Facturación",
       "form_builder": "Constructor de formulario",
-      "admin": "Admin"
+      "admin": "Admin",
+      "help_center": "Centro de ayuda"
     },
     "header": {
       "open_menu": "Abrir menú",
@@ -1305,6 +1306,7 @@
       "cta": "Crear cuenta gratis"
     },
     "footer": {
+      "help_center": "Centro de ayuda",
       "terms": "Términos",
       "privacy": "Privacidad",
       "contact": "Contacto",
