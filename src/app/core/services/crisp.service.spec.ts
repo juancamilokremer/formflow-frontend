@@ -27,6 +27,12 @@ describe('CrispService', () => {
     service = TestBed.inject(CrispService);
   }
 
+  // The real Kode Labs workspace id lives in environment.ts since frontend#23 shipped —
+  // start every test from a known blank state instead of assuming the module default.
+  beforeEach(() => {
+    environment.crispWebsiteId = '';
+  });
+
   afterEach(() => {
     environment.crispWebsiteId = '';
     window.$crisp = undefined;
